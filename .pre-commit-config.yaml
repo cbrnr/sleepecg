@@ -1,0 +1,34 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.3.0
+  hooks:
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: check-yaml
+  - id: check-toml
+  - id: end-of-file-fixer
+    exclude: "svg"
+  - id: trailing-whitespace
+  - id: mixed-line-ending
+  - id: double-quote-string-fixer
+  - id: check-builtin-literals
+
+- repo: https://github.com/asottile/add-trailing-comma
+  rev: v2.1.0
+  hooks:
+  - id: add-trailing-comma
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.8.0
+  hooks:
+  - id: isort
+
+- repo: https://github.com/pycqa/flake8
+  rev: 3.9.2
+  hooks:
+  - id: flake8
+
+- repo: https://github.com/pycqa/pydocstyle
+  rev: 6.1.1
+  hooks:
+  - id: pydocstyle
