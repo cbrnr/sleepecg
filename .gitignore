@@ -2,6 +2,7 @@
 !/.gitignore
 **/.ipynb_checkpoints/
 **/.vscode
+**/.idea
 build
 dist
 *.egg-info

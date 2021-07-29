@@ -1,47 +1,47 @@
 ![Py Version](https://img.shields.io/pypi/pyversions/sleepecg.svg?logo=python&logoColor=white)
 [![PyPI Version](https://img.shields.io/pypi/v/sleepecg)](https://pypi.org/project/sleepecg/)
 
-# sleepecg
-This package provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), it will feature a functional interface for
-- downloading and reading open polysomnography datasets (TODO),
+# SleepECG
+This package provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides a functional interface for
+- downloading and reading open polysomnography datasets (*TODO*),
 - detecting heartbeats from ECG signals, and
-- classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (TODO).
+- classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
 
 
 ## Installation
-You can install sleepecg from PyPI using pip:
+SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.io/en/stable/):
 ```
 pip install sleepecg
 ```
 
 
 ## Heartbeat detection
-Since ECG-based sleep staging relies on heartrate variability, a reliable and efficient heartbeat detector is essential. This package provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). Outsourcing performance-critical code to a C extension (wheels are provided) leads to substantially faster detections as compared to implementations in other Python packages. Benchmarks on [MITDB](https://physionet.org/content/mitdb/1.0.0/), [LTDB](https://physionet.org/content/ltdb/1.0.0/), and [GUDB](https://github.com/berndporr/ECG-GUDB) show that our implementation produces highly reliable detections and runtime scales linearly with signal length or sampling frequency.
-
+ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which leads to substantially faster detections as compared to implementations in pure Python.
 
 ### Usage
-The function `detect_heartbeats()` finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs`. It returns a one-dimensional NumPy array containing the indices of the detected heartbeats. A complete example including visualization and performance evaluation is available in `examples/heartbeat_detection.py`.
+The function `detect_heartbeats()` finds heartbeats in an unfiltered ECG signal `ecg` (a one-dimensional NumPy array) with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in `examples/heartbeat_detection.py`.
 ```python
 from sleepecg import detect_heartbeats
+
 detection = detect_heartbeats(ecg, fs)
 ```
 
 
-### Performance
-We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records which are at least 20 hours long. Error bars in the plot below correspond to the standard errors of the mean.
+### Performance evaluation
+We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. Our detector is by far the fastest implementation among all tested packages (note the y-axis is logarithmically scaled).
 
 ![LTDB runtimes](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/ltdb_runtime_logscale.svg)
 
-For the plots below, we evaluated detectors on all [MITDB](https://physionet.org/content/mitdb/1.0.0/) records. We defined a successful detection if a detection and corresponding annotation are within 100ms (i.e. 36 samples). Using a tolerance here is necessary because annotations usually do not coincide with the exact R peak locations. In terms of recall (i.e. sensitivity), our detector is on the same level as BioSPPy's hamilton-detector, NeuroKit's neurokit-detector and WFDB's xqrs. MNE generally finds fewer peaks than other detectors, so there are fewer false positives and higher precision. Comparing F1-scores shows that sleepecg performs as well as other commonly used Python heartbeat detectors.
+We also evaluated detection performance on all [MITDB](https://physionet.org/content/mitdb/1.0.0/) records. We defined a successful detection if it was within 100ms (i.e. 36 samples) of the corresponding annotation (using a tolerance here is necessary because annotations usually do not coincide with the exact R peak locations). In terms of recall, precision, and F1 score, our detector is among the best heartbeat detectors available.
 
 ![MITDB metrics](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/mitdb_metrics.svg)
 
-For analysis of heartrate variability, detecting the exact location of heartbeats is essential. As a measure of how well a detector can replicate correct RR intervals (RRI), we computed Pearson's correlation coefficient between resampled RRI time series deduced from annotated and detected beat locations from all [GUDB](https://github.com/berndporr/ECG-GUDB) records. In contrast to other databases, GUDB has annotations that are exactly at R peak locations. Our implementation detects peaks in the bandpass-filtered ECG signal, so it is able to produce stable RRI time series without any post-processing. MNE and pan_tompkins_detector from pyecgdetectors often detect an S-peak instead of the R-peak, leading to noisy RR intervals (and thus lower correlation).
+For analysis of heartrate variability, detecting the exact location of heartbeats is essential. As a measure of how accurate a detector is, we computed Pearson's correlation coefficient between resampled RRI time series deduced from annotated and detected beat locations from all [GUDB](https://github.com/berndporr/ECG-GUDB) records. Our implementation detects peaks in the bandpass-filtered ECG signal, so it produces stable RRI time series without any post-processing.
 
 ![GUDB pearson correlation](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/gudb_pearson.svg)
 
 
-We used the following detector calls for all benchmarks:
+We used the following detectors for our benchmarks:
 ```python
 # mne
 import mne  # https://pypi.org/project/mne/
