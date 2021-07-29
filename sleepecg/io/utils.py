@@ -79,6 +79,12 @@ def download_file(
         Type of the checksum, by default None.
     verbose : bool, optional
         If `True`, output information during download. By default False.
+
+    Raises
+    ------
+    RuntimeError
+        If the checksum verification fails.
+
     """
     if checksum is not None and checksum_type is not None:
         if _verify_checksum(target_filepath, checksum, checksum_type):
@@ -99,5 +105,4 @@ def download_file(
 
     if checksum is not None and checksum_type is not None:
         if not _verify_checksum(target_filepath, checksum, checksum_type):
-            print(f'checksum verification failed for {target_filepath}, downloading again')
-            download_file(url, target_filepath, checksum, checksum_type)
+            raise RuntimeError(f'Checksum mismatch for {target_filepath}.')
