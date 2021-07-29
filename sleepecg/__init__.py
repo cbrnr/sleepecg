@@ -7,3 +7,5 @@ __all__ = [
     'compare_heartbeats',
     'rri_similarity',
 ]
+
+__version__ = '0.1.0'
