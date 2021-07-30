@@ -14,6 +14,7 @@ env:
   CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
   CIBW_MANYLINUX_I686_IMAGE: manylinux2014
   CIBW_SKIP: pp*
+  CIBW_ARCHS_MACOS: x86_64 arm64
 
 
 jobs:
