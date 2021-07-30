@@ -18,32 +18,22 @@ _HASH_FUNCTIONS = {
 }
 
 
-def _verify_checksum(
-    filepath: Path,
-    checksum: str,
-    checksum_type: str,
-) -> bool:
+def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
     """
-    Verify a file with a given checksum.
+    Calculate the checksum for a file.
 
     Parameters
     ----------
     filepath : Path
-        Path to the file to verify.
-    checksum : str
-        The checksum, against which the file will be verified.
+        Location of the file.
     checksum_type : {'md5', 'sha256'}
-        Type of the checksum.
+        Type of the checksum to calculate.
 
     Returns
     -------
-    bool
-        `False` for nonexisting file or failed verification, `True`
-        otherwise.
+    str
+        The hexdigest of the checksum.
     """
-    if not filepath.is_file():
-        return False
-
     computed_hash = _HASH_FUNCTIONS[checksum_type]()
     with open(filepath, 'rb') as file:
         while True:
@@ -51,7 +41,7 @@ def _verify_checksum(
             if not chunk:
                 break
             computed_hash.update(chunk)
-    return checksum == computed_hash.hexdigest()
+    return computed_hash.hexdigest()
 
 
 def download_file(
@@ -86,11 +76,13 @@ def download_file(
         If the checksum verification fails.
 
     """
-    if checksum is not None and checksum_type is not None:
-        if _verify_checksum(target_filepath, checksum, checksum_type):
-            if verbose:
-                print(f'Skipping {url}, already downloaded')
-            return
+    if target_filepath.is_file():
+        if checksum is not None and checksum_type is not None:
+            calculated_checksum = _calculate_checksum(target_filepath, checksum)
+            if calculated_checksum == checksum:
+                if verbose:
+                    print(f'Skipping {url}, already downloaded.')
+                return
 
     target_filepath.parent.mkdir(parents=True, exist_ok=True)
 
@@ -104,5 +96,10 @@ def download_file(
         file.write(response.content)
 
     if checksum is not None and checksum_type is not None:
-        if not _verify_checksum(target_filepath, checksum, checksum_type):
-            raise RuntimeError(f'Checksum mismatch for {target_filepath}.')
+        calculated_checksum = _calculate_checksum(target_filepath, checksum)
+        if calculated_checksum != checksum:
+            raise RuntimeError(
+                f'Checksum mismatch for {target_filepath}:\n'
+                f'    {checksum!r} (excpected)\n'
+                f'    {calculated_checksum!r} (calcuated)',
+            )
