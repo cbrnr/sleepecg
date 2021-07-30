@@ -55,7 +55,7 @@ def download_file(
     Download a single file from `url` to `target_filepath`.
 
     In case `checksum` and `checksum_type` are provided, the downloaded
-    file is verified.
+    file is verified. Raises a `RuntimeError` in case verification fails.
 
     Parameters
     ----------
@@ -69,12 +69,6 @@ def download_file(
         Type of the checksum, by default None.
     verbose : bool, optional
         If `True`, output information during download. By default False.
-
-    Raises
-    ------
-    RuntimeError
-        If the checksum verification fails.
-
     """
     if target_filepath.is_file():
         if checksum is not None and checksum_type is not None:
