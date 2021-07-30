@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo ${{ github.event.head_commit.message }}
+          echo "${{ github.event.head_commit.message }}"
 
   # pre-commit:
   #   name: Pre-commit checks
