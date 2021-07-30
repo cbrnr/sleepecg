@@ -94,6 +94,6 @@ def download_file(
         if calculated_checksum != checksum:
             raise RuntimeError(
                 f'Checksum mismatch for {target_filepath}:\n'
-                f'    {checksum!r} (excpected)\n'
+                f'    {checksum!r} (expected)\n'
                 f'    {calculated_checksum!r} (calcuated)',
             )
