@@ -18,7 +18,7 @@ concurrency:
 jobs:
   debug:
     env:
-      commitmsg: $(git log --format=%B -n 1 ${{github.event.after}})
+      commitmsg: $(git log --format=%B -n 1 ${{pull_request.head.sha}})
     runs-on: ubuntu-latest
     steps:
       - name: checkout
