@@ -16,13 +16,15 @@ concurrency:
 
 
 jobs:
-  debug:
-    name: Debug
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "${{ github.event.head_commit.message }}"
-
+  env:
+    commitmsg: ${{ github.event.head_commit.message }}
+  runs-on: ubuntu-latest
+  steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: get commit message
+      run: |
+          echo Commit MSG = ${{ env.commitmsg }}
   # pre-commit:
   #   name: Pre-commit checks
   #   runs-on: ubuntu-latest
