@@ -33,11 +33,11 @@ jobs:
       CIBW_TEST_COMMAND: pytest {package}
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
       CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-      CIBW_SKIP: cp37*
+      CIBW_BUILD: cp37*
       CIBW_ARCHS_MACOS: x86_64 arm64
 
     needs: [pre-commit]
-    name: Build wheels on ${{ matrix.os }}
+    name: Build cp37 wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -67,7 +67,7 @@ jobs:
       CIBW_ARCHS_MACOS: x86_64 arm64
 
     needs: [pre-commit]
-    name: Build wheels on ${{ matrix.os }}
+    name: Build all wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
