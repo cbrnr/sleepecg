@@ -14,15 +14,6 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CIBW_TEST_REQUIRES: pytest
-  CIBW_TEST_EXTRAS: full
-  CIBW_TEST_COMMAND: pytest {package}
-  CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-  CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-  CIBW_SKIP: pp*
-  CIBW_ARCHS_MACOS: x86_64 arm64
-
 
 jobs:
   pre-commit:
@@ -34,7 +25,47 @@ jobs:
     - uses: pre-commit/action@v2.0.3
 
 
-  build_wheels:
+  build_wheels_37:
+    if: "!contains(github.event.head_commit.message, '[buildall]')"
+    env:
+      CIBW_TEST_REQUIRES: pytest
+      CIBW_TEST_EXTRAS: full
+      CIBW_TEST_COMMAND: pytest {package}
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+      CIBW_SKIP: cp37*
+      CIBW_ARCHS_MACOS: x86_64 arm64
+
+    needs: [pre-commit]
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v1.12.0
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+
+
+  build_wheels_all:
+    if: "contains(github.event.head_commit.message, '[buildall]')"
+    env:
+      CIBW_TEST_REQUIRES: pytest
+      CIBW_TEST_EXTRAS: full
+      CIBW_TEST_COMMAND: pytest {package}
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+      CIBW_SKIP: pp*
+      CIBW_ARCHS_MACOS: x86_64 arm64
+
     needs: [pre-commit]
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
