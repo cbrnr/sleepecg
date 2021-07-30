@@ -72,7 +72,7 @@ def download_file(
     """
     if target_filepath.is_file():
         if checksum is not None and checksum_type is not None:
-            calculated_checksum = _calculate_checksum(target_filepath, checksum)
+            calculated_checksum = _calculate_checksum(target_filepath, checksum_type)
             if calculated_checksum == checksum:
                 if verbose:
                     print(f'Skipping {url}, already downloaded.')
@@ -90,7 +90,7 @@ def download_file(
         file.write(response.content)
 
     if checksum is not None and checksum_type is not None:
-        calculated_checksum = _calculate_checksum(target_filepath, checksum)
+        calculated_checksum = _calculate_checksum(target_filepath, checksum_type)
         if calculated_checksum != checksum:
             raise RuntimeError(
                 f'Checksum mismatch for {target_filepath}:\n'
