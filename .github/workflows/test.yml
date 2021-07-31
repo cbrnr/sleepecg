@@ -10,6 +10,9 @@ on:
   workflow_dispatch:
     # allow manual runs on branches without a PR
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CIBW_TEST_REQUIRES: pytest
