@@ -26,7 +26,7 @@ def set_nsrr_token(token: str) -> None:
     """
     Set and verify the NSRR (sleepdata.org) download token.
 
-    Implemented accoding to the NSRR API documentation:
+    Implemented according to the NSRR API documentation:
     https://github.com/nsrr/sleepdata.org/wiki/api-v1-account
 
     Parameters
@@ -83,7 +83,7 @@ def list_nsrr_files(
 
     Specify a subfolder and/or a filename-pattern to filter results.
 
-    Implemented accoding to the NSRR API documentation:
+    Implemented according to the NSRR API documentation:
     https://github.com/nsrr/sleepdata.org/wiki/api-v1-datasets#list-files-in-folder
 
     Parameters
@@ -135,7 +135,7 @@ def download_nsrr_files(
 
     Specify a subfolder and/or a filename-pattern to filter results.
 
-    Implemented accoding to the NSRR API documentation:
+    Implemented according to the NSRR API documentation:
     https://github.com/nsrr/sleepdata.org/wiki/api-v1-datasets#download-a-file
 
     Parameters
