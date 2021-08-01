@@ -68,7 +68,7 @@ def get_nsrr_download_url(db_slug: str) -> str:
         The download URL.
     """
     if _nsrr_token is None:
-        raise RuntimeError('NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`!')
+        raise RuntimeError('NSRR token not set, use `sleepecg.io.set_nsrr_token(<token>)`!')
     return f'https://sleepdata.org/datasets/{db_slug}/files/a/{_nsrr_token}/m/sleepecg/'
 
 
