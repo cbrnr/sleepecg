@@ -1,6 +1,6 @@
 ## [UNRELEASED]
 ### Added
-- Add interface to download NSRR data ([#X](https://github.com/cbrnr/sleepecg/pull/X) by [Florian Hofer](https://github.com/hofaflo))
+- Add interface to download NSRR data ([#8](https://github.com/cbrnr/sleepecg/pull/8) by [Florian Hofer](https://github.com/hofaflo))
 ### Fixed
 - Fix MemoryError in case of invalid checksum ([#3](https://github.com/cbrnr/sleepecg/pull/3))
 
