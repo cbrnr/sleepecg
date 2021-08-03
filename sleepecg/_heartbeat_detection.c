@@ -63,7 +63,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
                                                   NPY_ANYORDER,
                                                   NULL,
                                                   0);
-    double *beat_mask = (double *)PyArray_DATA((PyArrayObject *)output_array);
+    double *output = (double *)PyArray_DATA((PyArrayObject *)output_array);
 
     // create a circular buffer to store values inside integration window
     double *integration_buffer = (double *)calloc(window_length,
@@ -89,7 +89,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
 
     for (int i = window_length_half; i < signal_len; ++i)
     {
-        beat_mask[i - window_length_half] = sum; // write to 'window center'
+        output[i - window_length_half] = sum; // write to 'window center'
         sum -= integration_buffer[i % window_length];
         square = input[i] * input[i];
         integration_buffer[i % window_length] = square;
@@ -101,7 +101,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
     // filled
     for (int i = (int)signal_len; i < signal_len + window_length_half; ++i)
     {
-        beat_mask[i - window_length_half] = sum;
+        output[i - window_length_half] = sum;
         sum -= integration_buffer[i % window_length];
     }
 

@@ -92,7 +92,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float) -> np.ndarray:
     signal_start = np.where(np.diff(np.signbit(filtered_ecg[:int(2 * fs)])))[0][0] + 1
     filtered_ecg[:signal_start] = 0
 
-    # scipy.signal.sosfilt returns an array with negative strides. Both
+    # scipy.signal.sosfiltfilt returns an array with negative strides. Both
     # `np.correlate` and `_thresholding` require contiguity, so ensuring
     # this here once reduces total runtime.
     filtered_ecg = np.ascontiguousarray(filtered_ecg)
