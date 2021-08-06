@@ -17,7 +17,6 @@ _backends = {'c', 'numba', 'py'}
 try:
     from ._heartbeat_detection import _squared_moving_integration, _thresholding
 except ImportError:
-    warnings.warn('C extension for heartbeat detection not available. ')
     _backends.remove('c')
 
 __all__ = [
@@ -653,5 +652,4 @@ try:
     _squared_moving_integration_numba = jit(_squared_moving_integration_py)
     _thresholding_numba = jit(_thresholding_py)
 except ImportError:
-    warnings.warn('numba acceleration for heartbeat detection not available. ')
     _backends.remove('numba')
