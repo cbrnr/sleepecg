@@ -1,6 +1,8 @@
 ## [UNRELEASED]
 ### Added
 - Add interface to download NSRR data ([#8](https://github.com/cbrnr/sleepecg/pull/8) by [Florian Hofer](https://github.com/hofaflo))
+- Add py/numba implementation of heartbeat detection ([#10](https://github.com/cbrnr/sleepecg/pull/10))
+
 ### Fixed
 - Fix MemoryError in case of invalid checksum ([#3](https://github.com/cbrnr/sleepecg/pull/3) by [Florian Hofer](https://github.com/hofaflo))
 
