@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""Simple interface for downloading PhysioNet data."""
+
 import fnmatch
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional

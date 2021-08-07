@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""I/O- and download-related utilities."""
+
 import hashlib
 from pathlib import Path
 from typing import Optional

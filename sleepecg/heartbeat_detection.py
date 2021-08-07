@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""Heartbeat detection and detector evaluation."""
+
 from typing import NamedTuple
 
 import numpy as np
