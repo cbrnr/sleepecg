@@ -24,7 +24,7 @@ def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
 
     Parameters
     ----------
-    filepath : Path
+    filepath : pathlib.Path
         Location of the file.
     checksum_type : {'md5', 'sha256'}
         Type of the checksum to calculate.
@@ -61,11 +61,11 @@ def download_file(
     ----------
     url : str
         URL to download from.
-    target_filepath : Path
+    target_filepath : pathlib.Path
         Location where the downloaded file will be stored.
-    checksum : Optional[str], optional
+    checksum : str, optional
         Checksum to verify the file against, by default None.
-    checksum_type : Optional[str], optional
+    checksum_type : str, optional
         Type of the checksum, by default None.
     verbose : bool, optional
         If `True`, output information during download. By default False.

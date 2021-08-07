@@ -58,7 +58,7 @@ def read_mitbih(
 
     Parameters
     ----------
-    data_dir : Union[str, Path]
+    data_dir : str | pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
         Short identifier of a database, e.g. 'mitdb'.
@@ -121,7 +121,7 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
 
     Parameters
     ----------
-    data_dir : Union[str, Path]
+    data_dir : str | pathlib.Path
         Directory where all datasets are stored.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be

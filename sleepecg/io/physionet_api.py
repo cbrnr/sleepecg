@@ -34,19 +34,19 @@ def list_physionet_records(
 
     Parameters
     ----------
-    data_dir : Path
+    data_dir : pathlib.Path
         Directory where all datasets are stored. Required to download the
         RECORDS-file.
     db_slug : str
         Short identifier of a database, e.g. 'mitdb'.
-    db_version : Optional[str], optional
+    db_version : str, optional
         Version of the database, by default '1.0.0'.
     pattern : str, optional
         Glob-like pattern to select record IDs, by default '*'.
 
     Returns
     -------
-    List[str]
+    list[str]
         List containing record IDs as strings.
     """
     data_dir = Path(data_dir)
@@ -77,15 +77,15 @@ def download_physionet_records(
 
     Parameters
     ----------
-    data_dir : Path
+    data_dir : pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
         Short identifier of a database, e.g. 'mitdb'.
-    requested_records : List[str]
+    requested_records : list[str]
         Records with those IDs are downloaded.
     extensions : Iterable[str]
         Files with those extensions are downloaded.
-    db_version : Optional[str], optional
+    db_version : str, optional
         Version of the database, by default '1.0.0'.
     """
     data_dir = Path(data_dir)
@@ -119,16 +119,16 @@ def _get_physionet_checksums(
 
     Parameters
     ----------
-    data_dir : Path
+    data_dir : pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
         Short identifier of a database, e.g. 'mitdb'.
-    db_version : Optional[str], optional
+    db_version : str, optional
         Version of the database, by default '1.0.0'.
 
     Returns
     -------
-    Dict[str, str]
+    dict[str, str]
         Mapping of filenames to checksums.
     """
     checksum_url = f'{PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{CHECKSUM_FILENAME}'
