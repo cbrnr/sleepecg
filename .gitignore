@@ -8,4 +8,4 @@ dist
 *.egg-info
 *.pyd
 *.so
-doc/_autosummary/
+doc/source/generated/
