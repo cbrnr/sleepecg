@@ -6,7 +6,6 @@
 
 import inspect
 import os
-import re
 import sys
 
 import sleepecg
@@ -59,65 +58,25 @@ html_theme_options = {
 
 def linkcode_resolve(domain, info):
     """
-    Determine the URL corresponding to Python object.
+    Determine the URL corresponding to a python object.
 
-    Adapted from SciPy (doc/source/conf.py).
+    Adapted from lasagne:
+    https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py
     """
-    if domain != 'py':
-        return None
-
-    modname = info['module']
-    fullname = info['fullname']
-
-    submod = sys.modules.get(modname)
-    if submod is None:
-        return None
-
-    obj = submod
-    for part in fullname.split('.'):
-        try:
+    def find_source():
+        obj = sys.modules[info['module']]
+        for part in info['fullname'].split('.'):
             obj = getattr(obj, part)
-        except Exception:
-            return None
-
-    try:
         fn = inspect.getsourcefile(obj)
-    except Exception:
-        fn = None
-    if not fn:
-        try:
-            fn = inspect.getsourcefile(sys.modules[obj.__module__])
-        except Exception:
-            fn = None
-    if not fn:
-        return None
-
-    try:
+        fn = os.path.relpath(fn, start=os.path.dirname(sleepecg.__file__))
         source, lineno = inspect.getsourcelines(obj)
-    except Exception:
-        lineno = None
+        return fn, lineno, lineno + len(source) - 1
 
-    if lineno:
-        linespec = '#L%d-L%d' % (lineno, lineno + len(source) - 1)
-    else:
-        linespec = ''
-
-    startdir = os.path.abspath('../../sleepecg')
-    fn = os.path.relpath(fn, start=startdir).replace(os.path.sep, '/')
-
-    if fn.startswith('sleepecg/'):
-        m = re.match(r'^.*dev0\+([a-f0-9]+)$', version)
-        if m:
-            return 'https://github.com/cbrnr/sleepecg/blob/%s/%s%s' % (
-                m.group(1), fn, linespec,
-            )
-        elif 'dev' in version:
-            return 'https://github.com/cbrnr/sleepecg/blob/main/%s%s' % (
-                fn, linespec,
-            )
-        else:
-            return 'https://github.com/cbrnr/sleepecg/blob/v%s/%s%s' % (
-                version, fn, linespec,
-            )
-    else:
+    if domain != 'py' or not info['module']:
         return None
+    try:
+        filename = 'sleepecg/%s#L%d-L%d' % find_source()
+    except Exception:
+        filename = info['module'].replace('.', '/') + '.py'
+    tag = 'main' if 'dev' in version else ('v' + version)
+    return 'https://github.com/cbrnr/sleepecg/blob/%s/%s' % (tag, filename)
