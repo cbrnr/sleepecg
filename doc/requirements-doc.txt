@@ -1,0 +1,4 @@
+m2r2
+numpydoc
+pydata_sphinx_theme
+sphinx
