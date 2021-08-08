@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""Tests for heartbeat detection and detector evaluation."""
+
 import sys
 
 import numpy as np
