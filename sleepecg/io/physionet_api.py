@@ -40,11 +40,11 @@ def list_physionet_records(
         Directory where all datasets are stored. Required to download the
         RECORDS-file.
     db_slug : str
-        Short identifier of a database, e.g. 'mitdb'.
+        Short identifier of a database, e.g. `'mitdb'`.
     db_version : str, optional
-        Version of the database, by default '1.0.0'.
+        Version of the database, by default `'1.0.0'`.
     pattern : str, optional
-        Glob-like pattern to select record IDs, by default '*'.
+        Glob-like pattern to select record IDs, by default `'*'`.
 
     Returns
     -------
@@ -82,13 +82,13 @@ def download_physionet_records(
     data_dir : pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
-        Short identifier of a database, e.g. 'mitdb'.
+        Short identifier of a database, e.g. `'mitdb'`.
     requested_records : list[str]
         Records with those IDs are downloaded.
     extensions : Iterable[str]
         Files with those extensions are downloaded.
     db_version : str, optional
-        Version of the database, by default '1.0.0'.
+        Version of the database, by default `'1.0.0'`.
     """
     data_dir = Path(data_dir)
     checksums = _get_physionet_checksums(data_dir, db_slug, db_version)
@@ -124,9 +124,9 @@ def _get_physionet_checksums(
     data_dir : pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
-        Short identifier of a database, e.g. 'mitdb'.
+        Short identifier of a database, e.g. `'mitdb'`.
     db_version : str, optional
-        Version of the database, by default '1.0.0'.
+        Version of the database, by default `'1.0.0'`.
 
     Returns
     -------

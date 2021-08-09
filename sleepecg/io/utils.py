@@ -66,11 +66,11 @@ def download_file(
     target_filepath : pathlib.Path
         Location where the downloaded file will be stored.
     checksum : str, optional
-        Checksum to verify the file against, by default None.
+        Checksum to verify the file against, by default `None`.
     checksum_type : str, optional
-        Type of the checksum, by default None.
+        Type of the checksum, by default `None`.
     verbose : bool, optional
-        If `True`, output information during download. By default False.
+        If `True`, output information during download. By default `False`.
     """
     if target_filepath.is_file():
         if checksum is not None and checksum_type is not None:

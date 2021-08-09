@@ -34,17 +34,17 @@ class ECGRecord:
         The sampling frequency.
     annotation : np.ndarray
         Indices of annotated heartbeats.
-    lead : Optional[str]
-        Which ECG lead the signal was recorded from.
-    id : Optional[str]
-        The record's ID.
+    lead : str, optional
+        Which ECG lead the signal was recorded from, by default `None`.
+    id : str, optional
+        The record's ID, by default `None`.
     """
 
     ecg: np.ndarray
     fs: float
     annotation: np.ndarray
-    lead: Optional[str] = ''
-    id: Optional[str] = ''
+    lead: Optional[str] = None
+    id: Optional[str] = None
 
 
 def read_mitbih(
@@ -56,25 +56,25 @@ def read_mitbih(
     """
     Lazily reads records from MIT-BIH datasets (e.g. MITDB, LTDB).
 
-    Required files are downloaded if not present in '<data_dir>/<db_slug>'.
+    Required files are downloaded if not present in `<data_dir>/<db_slug>`.
 
     Parameters
     ----------
     data_dir : str | pathlib.Path
         Directory where all datasets are stored.
     db_slug : str
-        Short identifier of a database, e.g. 'mitdb'.
+        Short identifier of a database, e.g. `'mitdb'`.
     records_pattern : str, optional
-        Glob-like pattern to select record IDs, by default '*'.
+        Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default False.
+        downloaded), by default `False`.
 
     Yields
     ------
     Iterator[ECGRecord]
-        Each element in the generator is of type ECGRecord and contains the
-        ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
+        Each element in the generator is of type `ECGRecord` and contains
+        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
     """
     import wfdb
@@ -119,7 +119,7 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
     """
     Lazily reads records from GUDB (https://berndporr.github.io/ECG-GUDB/).
 
-    Required files are downloaded if not present in '<data_dir>/gudb'.
+    Required files are downloaded if not present in `'<data_dir>/gudb'`.
 
     Parameters
     ----------
@@ -127,13 +127,13 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
         Directory where all datasets are stored.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default False.
+        downloaded), by default `False`.
 
     Yields
     ------
     Iterator[ECGRecord]
-        Each element in the generator is of type ECGRecord and contains the
-        ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
+        Each element in the generator is of type `ECGRecord` and contains
+        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
     """
     import pandas as pd

@@ -139,7 +139,7 @@ def compare_heartbeats(
         Annotated heartbeat indices.
     max_distance : int, optional
         Maximum distance between indices to consider as the same peak, by
-        default 0.
+        default `0`.
 
     Returns
     -------
