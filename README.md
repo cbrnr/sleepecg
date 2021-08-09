@@ -67,12 +67,12 @@ detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
 # neurokit2_nk
 import neurokit2  # https://pypi.org/project/neurokit2/
 clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
-peak_indices = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']
+detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']
 
 # neurokit2_kalidas2017
 import neurokit2  # https://pypi.org/project/neurokit2/
 clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
-peak_indices = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']
+detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']
 
 # sleepecg
 import sleepecg  # https://pypi.org/project/sleepecg/
