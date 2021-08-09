@@ -34,6 +34,8 @@ intersphinx_mapping = {
     'scipy': ('https://scipy.github.io/devdocs', None),
 }
 
+default_role = 'code'
+
 autoclass_content = 'class'
 autodoc_inherit_docstrings = False
 autodoc_mock_imports = ['scipy', 'tqdm']
