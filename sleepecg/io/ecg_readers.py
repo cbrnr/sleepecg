@@ -2,7 +2,7 @@
 #
 # License: BSD (3-clause)
 
-"""Functions for reading datasets containing ECG data and beat annotations."""
+"""Functions for reading datasets containing ECG and beat annotations."""
 
 from dataclasses import dataclass
 from pathlib import Path
