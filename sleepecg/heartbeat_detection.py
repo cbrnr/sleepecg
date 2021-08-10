@@ -63,7 +63,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     - Learning phase 1 is not described in detail in the original paper.
       This implementation uses maximum and mean values inside the first 2
       seconds to initialize SPKI/SPKF/NPKI/NPKF. Details are provided in
-      the C code.
+      the `_thresholding` code.
     - In addition to the original searchback criterion, a searchback is
       also performed if no peak is found during the first second of the
       signal or no second peak is found 1.5s after the first one. This
@@ -80,9 +80,9 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
         Sampling frequency in Hz.
     backend : {'c', 'numba', 'python'}
         Which implementation of the squared moving integration and
-        thresholding algorithm to use. If available, C is the fastest
-        implementation, Numba is about 25% slower, and Python is about 20
-        times slower but provided as a fallback. By default `'c'`.
+        thresholding algorithm to use. If available, `'c'` is the fastest
+        implementation, `'numba'` is about 25% slower, and `'python'` is
+        about 20 times slower but provided as a fallback. By default `'c'`.
 
     Returns
     -------
