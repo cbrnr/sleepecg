@@ -154,7 +154,7 @@ def mitdb_234_MLII(tmp_path_factory):
     return next(read_mitbih(tmpdir, 'mitdb', '234'))
 
 
-@pytest.mark.parametrize('backend', ['c', 'numba', 'py'])
+@pytest.mark.parametrize('backend', ['c', 'numba', 'python'])
 def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
     record = mitdb_234_MLII
