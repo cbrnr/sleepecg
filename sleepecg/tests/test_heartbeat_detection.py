@@ -147,10 +147,22 @@ def test_compare_heartbeats():
     assert np.all(FN == np.array([58, 99]))
 
 
-def test_detect_heartbeats(tmpdir):
+@pytest.fixture(scope='session')
+def mitdb_234_MLII(tmp_path_factory):
+    """Fetch record for detector tests."""
+    tmpdir = tmp_path_factory.mktemp('data')
+    return next(read_mitbih(tmpdir, 'mitdb', '234'))
+
+
+@pytest.mark.parametrize('backend', ['c', 'numba', 'python'])
+def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
-    record = next(read_mitbih(tmpdir, 'mitdb', '234'))
-    detection = sleepecg.heartbeat_detection.detect_heartbeats(record.ecg, record.fs)
+    record = mitdb_234_MLII
+    detection = sleepecg.heartbeat_detection.detect_heartbeats(
+        record.ecg,
+        record.fs,
+        backend=backend,
+    )
     TP, FP, FN = sleepecg.heartbeat_detection.compare_heartbeats(
         detection,
         record.annotation,
