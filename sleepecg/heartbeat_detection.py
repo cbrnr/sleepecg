@@ -12,12 +12,19 @@ import scipy.interpolate
 import scipy.signal
 import scipy.stats
 
-_backends = {'c', 'numba', 'py'}
+_all_backends = ('c', 'numba', 'python')
+_available_backends = list(_all_backends)
 
 try:
     from ._heartbeat_detection import _squared_moving_integration, _thresholding
 except ImportError:
-    _backends.remove('c')
+    _available_backends.remove('c')
+
+try:
+    from numba import jit
+except ImportError:
+    _available_backends.remove('numba')
+
 
 __all__ = [
     'compare_heartbeats',
@@ -71,25 +78,26 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
         ECG signal.
     fs : float
         Sampling frequency in Hz.
-    backend : {'c', 'numba', 'py'}
+    backend : {'c', 'numba', 'python'}
         Which implementation of the squared moving integration and
-        thresholding algorithm to use, by default 'c'.
+        thresholding algorithm to use. If available, C is the fastest
+        implementation, Numba is about 25% slower, and Python is about 20
+        times slower but provided as a fallback. By default `'c'`.
 
     Returns
     -------
     heartbeat_indices: np.ndarray
         Indices of detected heartbeats.
     """
-    if backend not in _backends:
-        for alternative in ('c', 'numba', 'py'):
-            if alternative in _backends:
-                warnings.warn(
-                    f'Invalid backend for heartbeat_detection: {backend!r}, '
-                    f'using {alternative!r} instead.\n'
-                    f'Possible options are: {_backends}.',
-                )
-                backend = alternative
-                break
+    if backend not in _all_backends:
+        raise ValueError(
+            f'Invalid backend for heartbeat_detection: {backend!r}. '
+            f'Possible options are: {_all_backends}.',
+        )
+    if backend not in _available_backends:
+        fallback = _available_backends[0]
+        warnings.warn(f'Backend {backend!r} not available, using {fallback!r} instead.')
+        backend = fallback
 
     # For short signals, creating the bandpass filter makes up a large part
     # of the total runtime. Therefore the filter is cached to a global
@@ -130,7 +138,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     elif backend == 'numba':
         integrated_ecg = _squared_moving_integration_numba(derivative, moving_window_width)
         beat_mask = _thresholding_numba(filtered_ecg, integrated_ecg, fs)
-    elif backend == 'py':
+    elif backend == 'python':
         integrated_ecg = np.convolve(
             derivative**2,
             np.ones(moving_window_width),
@@ -647,9 +655,6 @@ def _thresholding_py(
     return beat_mask
 
 
-try:
-    from numba import jit
+if 'numba' in _available_backends:
     _squared_moving_integration_numba = jit(_squared_moving_integration_py)
     _thresholding_numba = jit(_thresholding_py)
-except ImportError:
-    _backends.remove('numba')
