@@ -1,4 +1,4 @@
-"""A toolbox for sleep stage classification using ECG data."""
+"""A package for sleep stage classification using ECG data."""
 
 from . import io
 from .heartbeat_detection import compare_heartbeats, detect_heartbeats, rri_similarity

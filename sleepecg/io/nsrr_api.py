@@ -97,7 +97,7 @@ def list_nsrr_files(
         root folder).
     pattern : str, optional
         Glob-like pattern to select files (only applied to the basename,
-        not the dirname!), by default `'*'`.
+        not the dirname), by default `'*'`.
     shallow : bool, optional
         If `True`, only search in the given subfolder (i.e. no recursion),
         by default `False`.
@@ -105,9 +105,9 @@ def list_nsrr_files(
     Returns
     -------
     list[tuple[str, str]]
-        A list of tuples `(<filename>, <checksum>)`. `<filename>` is the
-        full filename (i.e. dirname and basename), `<checksum>` the
-        md5-checksum.
+        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the
+        full filename (i.e. dirname and basename) and `<checksum>` the
+        MD5 checksum.
     """
     api_url = f'https://sleepdata.org/api/v1/datasets/{db_slug}/files.json'
 
@@ -150,7 +150,7 @@ def download_nsrr_files(
         root folder).
     pattern : str, optional
         Glob-like pattern to select files (only applied to the basename,
-        not the dirname!), by default `'*'`.
+        not the dirname), by default `'*'`.
     shallow : bool, optional
         If `True`, only download files in the given subfolder (i.e. no
         recursion), by default `False`.
