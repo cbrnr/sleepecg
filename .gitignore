@@ -8,3 +8,4 @@ dist
 *.egg-info
 *.pyd
 *.so
+doc/source/generated/

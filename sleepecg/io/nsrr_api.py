@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""Interface for listing and downloading NSRR (sleepdata.org) data."""
+
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path
@@ -60,7 +62,7 @@ def get_nsrr_download_url(db_slug: str) -> str:
     Parameters
     ----------
     db_slug : str
-        Short identifier of a database, e.g. 'mesa'.
+        Short identifier of a database, e.g. `'mesa'`.
 
     Returns
     -------
@@ -89,22 +91,23 @@ def list_nsrr_files(
     Parameters
     ----------
     db_slug : str
-        Short identifier of a database, e.g. 'mesa'.
+        Short identifier of a database, e.g. `'mesa'`.
     subfolder : str, optional
-        The folder at which to start the search, by default '' (i.e. the
+        The folder at which to start the search, by default `''` (i.e. the
         root folder).
     pattern : str, optional
         Glob-like pattern to select files (only applied to the basename,
-        not the dirname!), by default '*'.
+        not the dirname), by default `'*'`.
     shallow : bool, optional
-        If True, only search in the given subfolder (i.e. no recursion), by
-        default False.
+        If `True`, only search in the given subfolder (i.e. no recursion),
+        by default `False`.
 
     Returns
     -------
-    List[Tuple[str, str]]
-        A list of tuples (<filename>, <checksum>). <filename> is the full
-        filename (i.e. dirname and basename), <checksum> the md5-checksum.
+    list[tuple[str, str]]
+        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the
+        full filename (i.e. dirname and basename) and `<checksum>` the
+        MD5 checksum.
     """
     api_url = f'https://sleepdata.org/api/v1/datasets/{db_slug}/files.json'
 
@@ -141,18 +144,18 @@ def download_nsrr_files(
     Parameters
     ----------
     db_slug : str
-        Short identifier of a database, e.g. 'mesa'.
+        Short identifier of a database, e.g. `'mesa'`.
     subfolder : str, optional
-        The folder at which to start the search, by default '' (i.e. the
+        The folder at which to start the search, by default `''` (i.e. the
         root folder).
     pattern : str, optional
         Glob-like pattern to select files (only applied to the basename,
-        not the dirname!), by default '*'.
+        not the dirname), by default `'*'`.
     shallow : bool, optional
-        If True, only download files in the given subfolder (i.e. no
-        recursion), by default False.
-    data_dir : Union[str, Path], optional
-        Directory where all datasets are stored, by default '.'.
+        If `True`, only download files in the given subfolder (i.e. no
+        recursion), by default `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored, by default `'.'`.
     """
     db_dir = Path(data_dir) / db_slug
 

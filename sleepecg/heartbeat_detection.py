@@ -2,6 +2,8 @@
 #
 # License: BSD (3-clause)
 
+"""Heartbeat detection and detector evaluation."""
+
 from typing import NamedTuple
 
 import numpy as np
@@ -137,7 +139,7 @@ def compare_heartbeats(
         Annotated heartbeat indices.
     max_distance : int, optional
         Maximum distance between indices to consider as the same peak, by
-        default 0.
+        default `0`.
 
     Returns
     -------
