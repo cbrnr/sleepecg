@@ -3,7 +3,7 @@
 [![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/latest/generated/sleepecg.html)
 
 # SleepECG
-This package provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides a functional interface for
+SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides a functions for
 - downloading and reading open polysomnography datasets (*TODO*),
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
@@ -17,10 +17,10 @@ pip install sleepecg
 
 
 ## Heartbeat detection
-ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which leads to substantially faster detections as compared to implementations in pure Python.
+ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast whereas the pure Python implementation is much slower).
 
 ### Usage
-The function `detect_heartbeats()` finds heartbeats in an unfiltered ECG signal `ecg` (a one-dimensional NumPy array) with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in `examples/heartbeat_detection.py`.
+The function [`detect_heartbeats()`](https://github.com/cbrnr/sleepecg/blob/main/sleepecg/heartbeat_detection.py#L40) finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://raw.githubusercontent.com/cbrnr/sleepecg/main/examples/heartbeat_detection.py).
 ```python
 from sleepecg import detect_heartbeats
 
@@ -29,7 +29,7 @@ detection = detect_heartbeats(ecg, fs)
 
 
 ### Performance evaluation
-We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. Our detector is by far the fastest implementation among all tested packages (note the y-axis is logarithmically scaled).
+We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. Our detector (we only show the C backend) is by far the fastest implementation among all tested packages (note that the *y*-axis is logarithmically scaled).
 
 ![LTDB runtimes](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/ltdb_runtime_logscale.svg)
 
