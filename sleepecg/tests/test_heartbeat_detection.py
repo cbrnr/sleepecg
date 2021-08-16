@@ -11,7 +11,7 @@ import pytest
 
 import sleepecg
 import sleepecg._heartbeat_detection
-from sleepecg import detect_heartbeats, compare_heartbeats
+from sleepecg import compare_heartbeats, detect_heartbeats
 from sleepecg.io import read_mitbih
 
 
