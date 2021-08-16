@@ -16,9 +16,9 @@ from .utils import download_file
 
 __all__ = [
     'set_nsrr_token',
-    'get_nsrr_download_url',
-    'list_nsrr_files',
-    'download_nsrr_files',
+    'get_nsrr_url',
+    'list_nsrr',
+    'download_nsrr',
 ]
 
 _nsrr_token = None
@@ -53,7 +53,7 @@ def set_nsrr_token(token: str) -> None:
         raise RuntimeError('Authentication at sleepdata.org failed, verify token!')
 
 
-def get_nsrr_download_url(db_slug: str) -> str:
+def get_nsrr_url(db_slug: str) -> str:
     """
     Get the download URL for a given NSRR database.
 
@@ -74,7 +74,7 @@ def get_nsrr_download_url(db_slug: str) -> str:
     return f'https://sleepdata.org/datasets/{db_slug}/files/a/{_nsrr_token}/m/sleepecg/'
 
 
-def list_nsrr_files(
+def list_nsrr(
     db_slug: str,
     subfolder: str = '',
     pattern: str = '*',
@@ -120,13 +120,13 @@ def list_nsrr_files(
     files = []
     for item in response_json:
         if not item['is_file'] and not shallow:
-            files.extend(list_nsrr_files(db_slug, item['full_path'], pattern))
+            files.extend(list_nsrr(db_slug, item['full_path'], pattern))
         elif fnmatch(item['file_name'], pattern):
             files.append((item['full_path'], item['file_checksum_md5']))
     return files
 
 
-def download_nsrr_files(
+def download_nsrr(
     db_slug: str,
     subfolder: str = '',
     pattern: str = '*',
@@ -159,8 +159,8 @@ def download_nsrr_files(
     """
     db_dir = Path(data_dir) / db_slug
 
-    download_url = get_nsrr_download_url(db_slug)
-    files_to_download = list_nsrr_files(db_slug, subfolder, pattern, shallow)
+    download_url = get_nsrr_url(db_slug)
+    files_to_download = list_nsrr(db_slug, subfolder, pattern, shallow)
     tqdm_description = f'Downloading {db_slug}/{subfolder or "."}/{pattern}'
 
     for filepath, checksum in tqdm(files_to_download, desc=tqdm_description):

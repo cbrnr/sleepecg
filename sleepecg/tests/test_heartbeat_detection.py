@@ -11,6 +11,7 @@ import pytest
 
 import sleepecg
 import sleepecg._heartbeat_detection
+from sleepecg import detect_heartbeats, compare_heartbeats
 from sleepecg.io import read_mitbih
 
 
@@ -136,11 +137,7 @@ def test_compare_heartbeats():
     annotation = np.array([20, 34, 58, 75, 99])
     max_distance = 3
 
-    TP, FP, FN = sleepecg.heartbeat_detection.compare_heartbeats(
-        detection,
-        annotation,
-        max_distance,
-    )
+    TP, FP, FN = compare_heartbeats(detection, annotation, max_distance)
 
     assert np.all(TP == np.array([20, 33, 73]))
     assert np.all(FP == np.array([43, 53]))
@@ -158,16 +155,8 @@ def mitdb_234_MLII(tmp_path_factory):
 def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
     record = mitdb_234_MLII
-    detection = sleepecg.heartbeat_detection.detect_heartbeats(
-        record.ecg,
-        record.fs,
-        backend=backend,
-    )
-    TP, FP, FN = sleepecg.heartbeat_detection.compare_heartbeats(
-        detection,
-        record.annotation,
-        int(record.fs/10),
-    )
+    detection = detect_heartbeats(record.ecg, record.fs, backend=backend)
+    TP, FP, FN = compare_heartbeats(detection, record.annotation, int(record.fs/10))
     # Changes in the heartbeat detector should not lead to worse results!
     assert len(TP) >= 2750
     assert len(FP) <= 3
