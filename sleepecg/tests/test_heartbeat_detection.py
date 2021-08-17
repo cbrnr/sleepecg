@@ -8,11 +8,12 @@ import sys
 import numpy as np
 import pytest
 
-from sleepecg._heartbeat_detection import _squared_moving_integration, _thresholding
+pytestmark = pytest.mark.c_extension
 
 
 def test_squared_moving_integration_args():
     """Test squared moving window integration argument parsing."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     x = np.array([0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0])
     window_length = 10
 
@@ -25,6 +26,7 @@ def test_squared_moving_integration_args():
 @pytest.mark.parametrize('window_length', [1, 4, 5, 20])
 def test_squared_moving_integration(window_length):
     """Test squared moving window integration calculation."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     x = np.array([0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0])
 
     ref = np.convolve(x**2, np.ones(window_length), mode='same')
@@ -42,6 +44,7 @@ def test_squared_moving_integration(window_length):
 )
 def test_squared_moving_integration_typechecks(x, window_length):
     """Test squared moving window integration typechecks."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     with pytest.raises(TypeError):
         _squared_moving_integration(x, window_length)
 
@@ -58,12 +61,14 @@ def test_squared_moving_integration_typechecks(x, window_length):
 )
 def test_squared_moving_integration_valuechecks(x, window_length):
     """Test squared moving window integration valuechecks."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     with pytest.raises(ValueError):
         _squared_moving_integration(x, window_length)
 
 
 def test_thresholding_args():
     """Test thresholding argument parsing."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg = np.arange(100)
     integrated_ecg = np.arange(100)
     fs = 10
@@ -84,6 +89,7 @@ def test_thresholding_args():
 )
 def test_thresholding_typechecks(filtered_ecg, integrated_ecg, fs):
     """Test thresholding typechecks."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg_refcount = sys.getrefcount(filtered_ecg)
     integrated_ecg_refcount = sys.getrefcount(integrated_ecg)
 
@@ -107,6 +113,7 @@ def test_thresholding_typechecks(filtered_ecg, integrated_ecg, fs):
 )
 def test_thresholding_valuechecks(filtered_ecg, integrated_ecg, fs):
     """Test thresholding valuechecks."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg_refcount = sys.getrefcount(filtered_ecg)
     integrated_ecg_refcount = sys.getrefcount(integrated_ecg)
 
