@@ -149,7 +149,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     return np.where(beat_mask)[0]
 
 
-class CompareHeartbeatsResult(NamedTuple):
+class _CompareHeartbeatsResult(NamedTuple):
     TP: np.ndarray
     FP: np.ndarray
     FN: np.ndarray
@@ -159,7 +159,7 @@ def compare_heartbeats(
     detection: np.ndarray,
     annotation: np.ndarray,
     max_distance: int = 0,
-) -> CompareHeartbeatsResult:
+) -> _CompareHeartbeatsResult:
     """
     Determine correctness of detection results.
 
@@ -190,7 +190,7 @@ def compare_heartbeats(
         False negatives, i.e. actual heartbeats not detected as heartbeats.
     """
     if len(detection) == 0:
-        return CompareHeartbeatsResult(
+        return _CompareHeartbeatsResult(
             TP=np.array([]),
             FP=np.array([]),
             FN=annotation.copy(),
@@ -206,14 +206,14 @@ def compare_heartbeats(
     detection_mask_fuzzy = np.convolve(detection_mask, fuzzy_filter, mode='same')
     annotation_mask_fuzzy = np.convolve(annotation_mask, fuzzy_filter, mode='same')
 
-    return CompareHeartbeatsResult(
+    return _CompareHeartbeatsResult(
         TP=np.where(detection_mask & annotation_mask_fuzzy)[0],
         FP=np.where(detection_mask & ~annotation_mask_fuzzy)[0],
         FN=np.where(annotation_mask & ~detection_mask_fuzzy)[0],
     )
 
 
-class RRISimilarityResult(NamedTuple):
+class _RRISimilarityResult(NamedTuple):
     pearsonr: float
     spearmanr: float
     rmse: float
@@ -223,7 +223,7 @@ def rri_similarity(
     detection: np.ndarray,
     annotation: np.ndarray,
     fs_resample: float = 4,
-) -> RRISimilarityResult:
+) -> _RRISimilarityResult:
     """
     Calculate measures of similarity between RR intervals.
 
@@ -264,7 +264,7 @@ def rri_similarity(
     det_resampled = interp_det(t_new)
     ann_resampled = interp_ann(t_new)
 
-    return RRISimilarityResult(
+    return _RRISimilarityResult(
         scipy.stats.pearsonr(det_resampled, ann_resampled)[0],
         scipy.stats.spearmanr(det_resampled, ann_resampled)[0],
         np.sqrt(np.mean((det_resampled - ann_resampled)**2)),
