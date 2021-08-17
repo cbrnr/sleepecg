@@ -66,7 +66,7 @@ def get_nsrr_url(db_slug: str) -> str:
 
     Returns
     -------
-    download_url : str
+    str
         The download URL.
     """
     if _nsrr_token is None:

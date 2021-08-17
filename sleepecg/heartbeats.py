@@ -86,7 +86,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
 
     Returns
     -------
-    heartbeat_indices: np.ndarray
+    np.ndarray
         Indices of detected heartbeats.
     """
     if backend not in _all_backends:
@@ -284,7 +284,7 @@ def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndar
 
     Returns
     -------
-    output : np.ndarray
+    np.ndarray
         The squared and integrated array.
     """
     signal_len = len(x)
@@ -346,7 +346,7 @@ def _thresholding_py(
 
     Returns
     -------
-    beat_mask : np.ndarray
+    np.ndarray
         Array containing `1` for every sample in `filtered_ecg` identified
         as a heartbeat (i.e. R-peak).
     """
