@@ -72,7 +72,7 @@ def read_mitbih(
 
     Yields
     ------
-    Iterator[ECGRecord]
+    ECGRecord
         Each element in the generator is of type `ECGRecord` and contains
         the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
@@ -131,7 +131,7 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
 
     Yields
     ------
-    Iterator[ECGRecord]
+    ECGRecord
         Each element in the generator is of type `ECGRecord` and contains
         the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
