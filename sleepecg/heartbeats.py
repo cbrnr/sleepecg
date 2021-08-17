@@ -91,7 +91,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     """
     if backend not in _all_backends:
         raise ValueError(
-            f'Invalid backend for heartbeat_detection: {backend!r}. '
+            f'Invalid backend for detect_heartbeats: {backend!r}. '
             f'Possible options are: {_all_backends}.',
         )
     if backend not in _available_backends:
