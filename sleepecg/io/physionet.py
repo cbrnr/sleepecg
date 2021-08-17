@@ -13,8 +13,8 @@ from tqdm import tqdm
 from .utils import download_file
 
 __all__ = [
-    'list_physionet_records',
-    'download_physionet_records',
+    'list_physionet',
+    'download_physionet',
 ]
 
 PHYSIONET_FILES_URL = 'https://physionet.org/files/'
@@ -23,7 +23,7 @@ RECORDS_FILENAME = 'RECORDS'
 CHECKSUM_TYPE = 'sha256'
 
 
-def list_physionet_records(
+def list_physionet(
     data_dir: Path,
     db_slug: str,
     db_version: Optional[str] = '1.0.0',
@@ -64,7 +64,7 @@ def list_physionet_records(
     return fnmatch.filter(all_records, pattern)
 
 
-def download_physionet_records(
+def download_physionet(
     data_dir: Path,
     db_slug: str,
     requested_records: List[str],

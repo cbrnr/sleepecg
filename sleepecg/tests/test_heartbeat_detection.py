@@ -2,42 +2,36 @@
 #
 # License: BSD (3-clause)
 
-"""Tests for heartbeat detection and detector evaluation."""
+"""Tests for heartbeat detection C extension."""
 
 import sys
 
 import numpy as np
 import pytest
 
-import sleepecg
-import sleepecg._heartbeat_detection
-from sleepecg.io import read_mitbih
+pytestmark = pytest.mark.c_extension
 
 
 def test_squared_moving_integration_args():
     """Test squared moving window integration argument parsing."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     x = np.array([0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0])
     window_length = 10
 
-    sleepecg._heartbeat_detection._squared_moving_integration(x, window_length)
-    sleepecg._heartbeat_detection._squared_moving_integration(
-        x=x, window_length=window_length,
-    )
-    sleepecg._heartbeat_detection._squared_moving_integration(
-        x, window_length=window_length,
-    )
-    sleepecg._heartbeat_detection._squared_moving_integration(
-        window_length=window_length, x=x,
-    )
+    _squared_moving_integration(x, window_length)
+    _squared_moving_integration(x=x, window_length=window_length)
+    _squared_moving_integration(x, window_length=window_length)
+    _squared_moving_integration(window_length=window_length, x=x)
 
 
 @pytest.mark.parametrize('window_length', [1, 4, 5, 20])
 def test_squared_moving_integration(window_length):
     """Test squared moving window integration calculation."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     x = np.array([0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0])
 
     ref = np.convolve(x**2, np.ones(window_length), mode='same')
-    res = sleepecg._heartbeat_detection._squared_moving_integration(x, window_length)
+    res = _squared_moving_integration(x, window_length)
     assert np.allclose(ref, res)
 
 
@@ -51,8 +45,9 @@ def test_squared_moving_integration(window_length):
 )
 def test_squared_moving_integration_typechecks(x, window_length):
     """Test squared moving window integration typechecks."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     with pytest.raises(TypeError):
-        sleepecg._heartbeat_detection._squared_moving_integration(x, window_length)
+        _squared_moving_integration(x, window_length)
 
 
 @pytest.mark.parametrize(
@@ -67,24 +62,22 @@ def test_squared_moving_integration_typechecks(x, window_length):
 )
 def test_squared_moving_integration_valuechecks(x, window_length):
     """Test squared moving window integration valuechecks."""
+    from sleepecg._heartbeat_detection import _squared_moving_integration
     with pytest.raises(ValueError):
-        sleepecg._heartbeat_detection._squared_moving_integration(x, window_length)
+        _squared_moving_integration(x, window_length)
 
 
 def test_thresholding_args():
     """Test thresholding argument parsing."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg = np.arange(100)
     integrated_ecg = np.arange(100)
     fs = 10
 
-    sleepecg._heartbeat_detection._thresholding(filtered_ecg, integrated_ecg, fs)
-    sleepecg._heartbeat_detection._thresholding(filtered_ecg, integrated_ecg, fs=fs)
-    sleepecg._heartbeat_detection._thresholding(
-        filtered_ecg, integrated_ecg=integrated_ecg, fs=fs,
-    )
-    sleepecg._heartbeat_detection._thresholding(
-        filtered_ecg=filtered_ecg, integrated_ecg=integrated_ecg, fs=fs,
-    )
+    _thresholding(filtered_ecg, integrated_ecg, fs)
+    _thresholding(filtered_ecg, integrated_ecg, fs=fs)
+    _thresholding(filtered_ecg, integrated_ecg=integrated_ecg, fs=fs)
+    _thresholding(filtered_ecg=filtered_ecg, integrated_ecg=integrated_ecg, fs=fs)
 
 
 @pytest.mark.parametrize(
@@ -97,11 +90,12 @@ def test_thresholding_args():
 )
 def test_thresholding_typechecks(filtered_ecg, integrated_ecg, fs):
     """Test thresholding typechecks."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg_refcount = sys.getrefcount(filtered_ecg)
     integrated_ecg_refcount = sys.getrefcount(integrated_ecg)
 
     with pytest.raises(TypeError):
-        sleepecg._heartbeat_detection._thresholding(filtered_ecg, integrated_ecg, fs)
+        _thresholding(filtered_ecg, integrated_ecg, fs)
 
     assert sys.getrefcount(filtered_ecg) == filtered_ecg_refcount
     assert sys.getrefcount(integrated_ecg) == integrated_ecg_refcount
@@ -120,55 +114,12 @@ def test_thresholding_typechecks(filtered_ecg, integrated_ecg, fs):
 )
 def test_thresholding_valuechecks(filtered_ecg, integrated_ecg, fs):
     """Test thresholding valuechecks."""
+    from sleepecg._heartbeat_detection import _thresholding
     filtered_ecg_refcount = sys.getrefcount(filtered_ecg)
     integrated_ecg_refcount = sys.getrefcount(integrated_ecg)
 
     with pytest.raises(ValueError):
-        sleepecg._heartbeat_detection._thresholding(filtered_ecg, integrated_ecg, fs)
+        _thresholding(filtered_ecg, integrated_ecg, fs)
 
     assert sys.getrefcount(filtered_ecg) == filtered_ecg_refcount
     assert sys.getrefcount(integrated_ecg) == integrated_ecg_refcount
-
-
-def test_compare_heartbeats():
-    """Test heartbeat comparison results."""
-    detection = np.array([20, 33, 43, 53, 73])
-    annotation = np.array([20, 34, 58, 75, 99])
-    max_distance = 3
-
-    TP, FP, FN = sleepecg.heartbeat_detection.compare_heartbeats(
-        detection,
-        annotation,
-        max_distance,
-    )
-
-    assert np.all(TP == np.array([20, 33, 73]))
-    assert np.all(FP == np.array([43, 53]))
-    assert np.all(FN == np.array([58, 99]))
-
-
-@pytest.fixture(scope='session')
-def mitdb_234_MLII(tmp_path_factory):
-    """Fetch record for detector tests."""
-    tmpdir = tmp_path_factory.mktemp('data')
-    return next(read_mitbih(tmpdir, 'mitdb', '234'))
-
-
-@pytest.mark.parametrize('backend', ['c', 'numba', 'python'])
-def test_detect_heartbeats(mitdb_234_MLII, backend):
-    """Test heartbeat detection on mitdb:234:MLII."""
-    record = mitdb_234_MLII
-    detection = sleepecg.heartbeat_detection.detect_heartbeats(
-        record.ecg,
-        record.fs,
-        backend=backend,
-    )
-    TP, FP, FN = sleepecg.heartbeat_detection.compare_heartbeats(
-        detection,
-        record.annotation,
-        int(record.fs/10),
-    )
-    # Changes in the heartbeat detector should not lead to worse results!
-    assert len(TP) >= 2750
-    assert len(FP) <= 3
-    assert len(FN) == 0

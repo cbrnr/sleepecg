@@ -12,7 +12,7 @@ import numpy as np
 import requests
 from tqdm import tqdm
 
-from .physionet_api import download_physionet_records, list_physionet_records
+from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
 __all__ = [
@@ -84,10 +84,10 @@ def read_mitbih(
 
     data_dir = Path(data_dir)
 
-    requested_records = list_physionet_records(data_dir, db_slug, pattern=records_pattern)
+    requested_records = list_physionet(data_dir, db_slug, pattern=records_pattern)
 
     if not offline:
-        download_physionet_records(
+        download_physionet(
             data_dir,
             db_slug,
             requested_records,
