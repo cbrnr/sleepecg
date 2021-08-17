@@ -20,7 +20,7 @@ pip install sleepecg
 ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast whereas the pure Python implementation is much slower).
 
 ### Usage
-The function [`detect_heartbeats()`](https://github.com/cbrnr/sleepecg/blob/main/sleepecg/heartbeat_detection.py#L40) finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://raw.githubusercontent.com/cbrnr/sleepecg/main/examples/heartbeat_detection.py).
+The function [`detect_heartbeats()`](https://github.com/cbrnr/sleepecg/blob/main/sleepecg/heartbeats.py#L40) finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://raw.githubusercontent.com/cbrnr/sleepecg/main/examples/heartbeat_detection.py).
 ```python
 from sleepecg import detect_heartbeats
 
