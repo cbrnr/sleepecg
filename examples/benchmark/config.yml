@@ -1,0 +1,61 @@
+runtime:
+  data_dir: ../datasets/
+  outfile_dir: ./results
+  db_slug: ltdb
+  detectors:
+    - mne
+    - wfdb_xqrs
+    - pyecg_pan_tompkins
+    - biosppy_hamilton
+    - heartpy
+    - neurokit2_nk
+    - neurokit2_kalidas2017
+    - sleepecg-c
+    - sleepecg-numba
+    - sleepecg-python
+  signal_lengths: # in minutes
+    - 5
+    - 10
+    - 15
+    - 30
+    - 60
+    - 120
+    - 300
+    - 600
+    - 900
+    - 1200
+
+
+metrics:
+  data_dir: ../datasets/
+  outfile_dir: ./results
+  db_slug: mitdb
+  detectors:
+    - mne
+    - wfdb_xqrs
+    - pyecg_pan_tompkins
+    - biosppy_hamilton
+    - heartpy
+    - neurokit2_nk
+    - neurokit2_kalidas2017
+    - sleepecg-c
+  signal_lengths: # in minutes
+    - 30
+
+
+rri_similarity:
+  data_dir: ../datasets/
+  outfile_dir: ./results
+  db_slug: gudb
+  calc_rri_similarity: True
+  detectors:
+    - mne
+    - wfdb_xqrs
+    - pyecg_pan_tompkins
+    - biosppy_hamilton
+    - heartpy
+    - neurokit2_nk
+    - neurokit2_kalidas2017
+    - sleepecg-c
+  signal_lengths: # in minutes
+    - 2
