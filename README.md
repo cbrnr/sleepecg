@@ -77,5 +77,5 @@ detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017'
 
 # sleepecg
 import sleepecg  # https://pypi.org/project/sleepecg/
-detection = sleepecg.heartbeat_detection.detect_heartbeats(ecg, fs)
+detection = sleepecg.detect_heartbeats(ecg, fs)
 ```
