@@ -1,6 +1,7 @@
 # Authors: Florian Hofer
 #
 # License: BSD (3-clause)
+
 """Tests for heartbeat detection and detector evaluation."""
 
 import numpy as np
