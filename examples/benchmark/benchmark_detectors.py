@@ -5,10 +5,10 @@
 """Runtime and detection quality benchmarks for heartbeat detectors."""
 
 import csv
-import os
 import sys
 import time
 import warnings
+from pathlib import Path
 
 import numpy as np
 import yaml
@@ -32,11 +32,12 @@ except KeyError:
 if cfg.get('suppress_warnings', False):
     warnings.filterwarnings('ignore')
 
-os.makedirs(cfg['outfile_dir'], exist_ok=True)
+outfile_dir = Path(cfg['outfile_dir'])
+outfile_dir.mkdir(parents=True, exist_ok=True)
 
 timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
-csv_filepath = f'{cfg["outfile_dir"]}/{benchmark}__{timestamp}.csv'
-print(f'Storing results to {os.path.abspath(csv_filepath)}')
+csv_filepath = outfile_dir / f'{benchmark}__{timestamp}.csv'
+print(f'Storing results to {csv_filepath.resolve()}')
 
 records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))[:25]
 
