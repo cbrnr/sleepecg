@@ -50,15 +50,15 @@ We used the following detectors for our benchmarks:
 import mne  # https://pypi.org/project/mne/
 detection = mne.preprocessing.ecg.qrs_detector(fs, ecg, verbose=False)
 
-# wfdb_xqrs
+# wfdb-xqrs
 import wfdb.processing  # https://pypi.org/project/wfdb/
 detection = wfdb.processing.xqrs_detect(ecg, fs, verbose=False)
 
-# pyecg_pan_tompkins
+# pyecg-pantompkins
 import ecgdetectors  # https://pypi.org/project/py-ecg-detectors/
 detection = ecgdetectors.Detectors(fs).pan_tompkins_detector(ecg)
 
-# biosppy_hamilton
+# biosppy-hamilton
 import biosppy  # https://pypi.org/project/biosppy/
 detection = biosppy.signals.ecg.hamilton_segmenter(ecg, fs)[0]
 
@@ -67,12 +67,12 @@ import heartpy  # https://pypi.org/project/heartpy/
 wd, m = heartpy.process(ecg, fs)
 detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
 
-# neurokit2_nk
+# neurokit2-nk
 import neurokit2  # https://pypi.org/project/neurokit2/
 clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
 detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']
 
-# neurokit2_kalidas2017
+# neurokit2-kalidas2017
 import neurokit2  # https://pypi.org/project/neurokit2/
 clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
 detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']

@@ -81,19 +81,19 @@ def _detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
     """
     if detector == 'mne':
         detection = mne.preprocessing.ecg.qrs_detector(fs, ecg, verbose=False)
-    elif detector == 'wfdb_xqrs':
+    elif detector == 'wfdb-xqrs':
         detection = wfdb.processing.xqrs_detect(ecg, fs, verbose=False)
-    elif detector == 'pyecg_pan_tompkins':
+    elif detector == 'pyecg-pantompkins':
         detection = ecgdetectors.Detectors(fs).pan_tompkins_detector(ecg)
-    elif detector == 'biosppy_hamilton':
+    elif detector == 'biosppy-hamilton':
         detection = biosppy.signals.ecg.hamilton_segmenter(ecg, fs)[0]
     elif detector == 'heartpy':
         wd, m = heartpy.process(ecg, fs)
         detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
-    elif detector == 'neurokit2_nk':
+    elif detector == 'neurokit2-nk':
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
         detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']  # noqa
-    elif detector == 'neurokit2_kalidas2017':
+    elif detector == 'neurokit2-kalidas2017':
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
         detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']  # noqa
     elif detector == 'sleepecg-c':
