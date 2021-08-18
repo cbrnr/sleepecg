@@ -12,7 +12,7 @@ import pandas as pd
 import plotly.express as px
 
 results_filepath = sys.argv[1]
-benchmark = Path(results_filepath).stem.split('_')[0]
+benchmark = Path(results_filepath).stem.split('__')[0]
 plot_filepath = Path(results_filepath).with_suffix('.svg')
 results = pd.read_csv(results_filepath).sort_values('detector')
 
