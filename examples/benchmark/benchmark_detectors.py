@@ -32,11 +32,13 @@ except KeyError:
 if cfg.get('suppress_warnings', False):
     warnings.filterwarnings('ignore')
 
-records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))[:25]
+os.makedirs(cfg['outfile_dir'], exist_ok=True)
 
 timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
 csv_filepath = f'{cfg["outfile_dir"]}/{benchmark}__{timestamp}.csv'
 print(f'Storing results to {os.path.abspath(csv_filepath)}')
+
+records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))[:25]
 
 with open(csv_filepath, 'w', newline='') as csv_file:
     writer = csv.DictWriter(
