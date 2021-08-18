@@ -56,7 +56,7 @@ def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
     if db_slug in ('mitdb', 'ltdb'):
         yield from sleepecg.io.read_mitbih(data_dir, db_slug)
     elif db_slug == 'gudb':
-        yield from sleepecg.io.read_gudb(data_dir)
+        yield from sleepecg.io.read_gudb(data_dir, offline=True)
     else:
         raise ValueError(f'Invalid db_slug: {db_slug}')
 
@@ -169,10 +169,10 @@ def evaluate_single(
             annotation,
             int(max_distance * record.fs),
         )
-        if calc_rri_similarity:
-            rri_similarity = sleepecg.rri_similarity(detection, annotation)
-
         error_message = ''
+
+        if calc_rri_similarity:
+            pearsonr, spearmanr, rmse = sleepecg.rri_similarity(detection, annotation)
 
     except Exception as error:
         if isinstance(error, TimeoutError):
@@ -184,11 +184,16 @@ def evaluate_single(
         FN = annotation
         error_message = repr(error)
 
+        if calc_rri_similarity:
+            pearsonr = np.nan
+            spearmanr = np.nan
+            rmse = np.nan
+
     finally:
         if os.name == 'posix':
             signal.alarm(0)
 
-    return {
+    result = {
         'record_id': record.id,
         'lead': record.lead,
         'fs': record.fs,
@@ -199,8 +204,12 @@ def evaluate_single(
         'TP': len(TP),
         'FP': len(FP),
         'FN': len(FN),
-        'pearsonr': rri_similarity.pearsonr if calc_rri_similarity else np.nan,
-        'spearmanr': rri_similarity.spearmanr if calc_rri_similarity else np.nan,
-        'rmse': rri_similarity.rmse if calc_rri_similarity else np.nan,
         'error_message': error_message,
     }
+    if calc_rri_similarity:
+        result.update({
+            'pearsonr': pearsonr,
+            'spearmanr': spearmanr,
+            'rmse': rmse,
+        })
+    return result

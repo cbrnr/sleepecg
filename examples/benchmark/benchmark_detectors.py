@@ -40,14 +40,18 @@ print(f'Storing results to {os.path.abspath(csv_filepath)}')
 
 records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))[:25]
 
+fieldnames = [
+    'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',
+    'FP', 'FN', 'error_message',
+]
+if cfg.get('calc_rri_similarity', False):
+    fieldnames += ['pearsonr', 'spearmanr', 'rmse']
+
+
 with open(csv_filepath, 'w', newline='') as csv_file:
     writer = csv.DictWriter(
         csv_file,
-        fieldnames=[
-            'record_id', 'lead', 'fs', 'num_samples', 'detector',
-            'max_distance', 'runtime', 'TP', 'FP', 'FN', 'pearsonr',
-            'spearmanr', 'rmse', 'error_message',
-        ],
+        fieldnames=fieldnames,
     )
     writer.writeheader()
     for signal_len in cfg['signal_lengths']:
