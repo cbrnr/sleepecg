@@ -103,7 +103,7 @@ def _detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
     elif detector == 'sleepecg-python':
         detection = sleepecg.detect_heartbeats(ecg, fs, backend='python')
     else:
-        raise ValueError(f'Unknown QRS-detector: {detector}')
+        raise ValueError(f'Unknown QRS detector: {detector}')
     return np.asarray(detection)
 
 
@@ -120,7 +120,7 @@ def evaluate_single(
     Evaluate a heartbeat detector on a given annotated ECG record.
 
     Optionally, similarity measures between detected and annotated
-    RR-intervals can be calculated. As this requires interpolation, it may
+    RR intervals can be calculated. As this requires interpolation, it may
     take some time for long signals. Setting a timeout only works on Unix
     systems.
 
