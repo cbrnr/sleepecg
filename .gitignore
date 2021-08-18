@@ -3,6 +3,8 @@
 **/.ipynb_checkpoints/
 **/.vscode
 **/.idea
+**/examples/datasets/
+**/examples/benchmark/results/
 build
 dist
 *.egg-info
