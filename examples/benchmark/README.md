@@ -1,5 +1,5 @@
 # Heartbeat Detection Benchmarks
-This example allows to reproduce the benchmarks shown in the repo's main [`README.md`](https://github.com/cbrnr/sleepecg#readme). The used package versions are listed in [`requirements-benchmark.txt`](https://github.com/cbrnr/sleepecg/blob/main/examples/benchmark/requirements-benchmark.py)
+This example allows to reproduce the benchmarks shown in the repo's main [`README.md`](https://github.com/cbrnr/sleepecg#readme).
 
 ## Usage
 To run the benchmark, (create a virtual enviroment), install the requirements using
