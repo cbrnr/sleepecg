@@ -61,7 +61,7 @@ def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
         raise ValueError(f'Invalid db_slug: {db_slug}')
 
 
-def _detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
+def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
     """
     Provide a common interface for different heartbeat detectors.
 
@@ -162,7 +162,7 @@ def evaluate_single(
         if os.name == 'posix':
             signal.alarm(timeout)
         start = time.perf_counter()
-        detection = _detector_dispatch(ecg, fs, detector)
+        detection = detector_dispatch(ecg, fs, detector)
         runtime = time.perf_counter()-start
         TP, FP, FN = sleepecg.compare_heartbeats(
             detection,

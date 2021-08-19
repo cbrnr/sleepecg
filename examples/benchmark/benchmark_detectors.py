@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 from tqdm import tqdm
-from utils import evaluate_single, reader_dispatch
+from utils import detector_dispatch, evaluate_single, reader_dispatch
 
 if len(sys.argv) != 2:
     print('Usage: python benchmark_detectors.py <benchmark>')
@@ -47,6 +47,10 @@ fieldnames = [
 ]
 if cfg.get('calc_rri_similarity', False):
     fieldnames += ['pearsonr', 'spearmanr', 'rmse']
+
+# Trigger jit compilation to make runtime benchmarks representative
+if 'sleepecg-numba' in cfg['detectors']:
+    detector_dispatch(records[0].ecg[:10*records[0].fs], records[0].fs, 'sleepecg-numba')
 
 
 with open(csv_filepath, 'w', newline='') as csv_file:
