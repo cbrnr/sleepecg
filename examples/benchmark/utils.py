@@ -9,7 +9,7 @@ import signal
 import time
 import warnings
 from collections import defaultdict
-from typing import Any, Iterator
+from typing import Any, Dict, Iterator
 
 import biosppy
 import ecgdetectors
@@ -115,7 +115,7 @@ def evaluate_single(
     calc_rri_similarity: bool,
     timeout: int,
     max_timeouts: int,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """
     Evaluate a heartbeat detector on a given annotated ECG record.
 
