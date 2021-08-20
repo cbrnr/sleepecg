@@ -56,7 +56,7 @@ def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
     if db_slug in ('mitdb', 'ltdb'):
         yield from sleepecg.io.read_mitbih(data_dir, db_slug)
     elif db_slug == 'gudb':
-        yield from sleepecg.io.read_gudb(data_dir, offline=True)
+        yield from sleepecg.io.read_gudb(data_dir)
     else:
         raise ValueError(f'Invalid db_slug: {db_slug}')
 
