@@ -15,7 +15,10 @@ SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.i
 ```
 pip install sleepecg
 ```
-
+Alternatively, install via [conda](https://docs.conda.io/en/latest/):
+```
+conda install -c conda-forge sleepecg
+```
 ## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
 
