@@ -1,5 +1,6 @@
 ![Py Version](https://img.shields.io/pypi/pyversions/sleepecg.svg?logo=python&logoColor=white)
 [![PyPI Version](https://img.shields.io/pypi/v/sleepecg)](https://pypi.org/project/sleepecg/)
+[![conda-forge version](https://img.shields.io/conda/v/conda-forge/sleepecg.svg?label=conda-forge)](https://anaconda.org/conda-forge/sleepecg)
 [![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/latest/generated/sleepecg.html)
 
 # SleepECG
@@ -14,7 +15,10 @@ SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.i
 ```
 pip install sleepecg
 ```
-
+Alternatively, install via [conda](https://docs.conda.io/en/latest/):
+```
+conda install -c conda-forge sleepecg
+```
 ## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
 
