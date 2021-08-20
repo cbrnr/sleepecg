@@ -27,7 +27,7 @@ def sigalrm_handler(signum, frame):
     raise TimeoutError('Execution terminated.')
 
 
-# Only Unix operating systems support sending SIGALRM.
+# Only Unix operating systems support sending SIGALRM
 if os.name == 'posix':
     signal.signal(signal.SIGALRM, sigalrm_handler)
 else:
@@ -163,7 +163,7 @@ def evaluate_single(
             signal.alarm(timeout)
         start = time.perf_counter()
         detection = detector_dispatch(ecg, fs, detector)
-        runtime = time.perf_counter()-start
+        runtime = time.perf_counter() - start
         TP, FP, FN = sleepecg.compare_heartbeats(
             detection,
             annotation,
