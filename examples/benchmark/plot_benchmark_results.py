@@ -18,7 +18,7 @@ results = pd.read_csv(results_filepath).sort_values('detector')
 
 if benchmark == 'runtime':
     results['signal_len'] = results['num_samples'] / (results['fs'] * 3600)
-    results['runtime_per_minute'] = results['runtime'] / results['signal_len'] * results['fs'] * 60  # noqa
+    results['runtime_per_minute'] = results['runtime'] / results['signal_len'] / 60  # noqa
     results = results.groupby(['detector', 'signal_len'], as_index=False).agg(
         mean_runtime=('runtime', 'mean'),
         std_runtime=('runtime', 'std'),
