@@ -31,8 +31,8 @@ A benchmark configuration is specified below a unique top-level key in `config.y
 |`signal_lengths`|`list[int]`||Length in minutes to which each ECG signal should be sliced. If a signal is too short, it is skipped.|
 |`max_distance`|`float`|`0.1`|Maximum temporal distance in seconds between detected and annotated beats to count as a successful detection.|
 |`suppress_warnings`|`bool`|`False`|Whether to suppress warnings during detector execution.|
-|`timeout`|`int`|`600`|Number of seconds after which to attempt cancelling execution using SIGALRM (only on Unix).|
-|`max_timeouts`|`int`|`3`|Number of timeouts after which a detector is skipped completely.|
+|`timeout`|`int`|`0`|Number of seconds after which to attempt cancelling execution using SIGALRM (only on Unix). `0` means no timeout will be used.|
+|`max_timeouts`|`int`|`np.inf`|Number of timeouts after which a detector is skipped completely.|
 |`calc_rri_similarity`|`bool`|`False`|Whether to calculate similarity measures between detected and annotated RR intervals (computationally expensive for long signals).|
 
 ## Known Issues
