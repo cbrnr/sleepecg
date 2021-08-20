@@ -17,7 +17,7 @@ Plots can be created by executing
 ```
 python plot_benchmark_results.py <results.csv>
 ```
-which will save the plot to `results.svg` at the same location as `results.csv`. Plot types and labels for the provided benchmarks are selected based on the filename, so renaming may lead to errors.
+which will save the plot to `<results>.svg` at the same location as `<results>.csv`. Plot types and labels for the provided benchmarks are selected based on the filename, so renaming may lead to errors.
 
 
 ## Configuration
