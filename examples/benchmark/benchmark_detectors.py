@@ -39,7 +39,7 @@ timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
 csv_filepath = outfile_dir / f'{benchmark}__{timestamp}.csv'
 print(f'Storing results to {csv_filepath.resolve()}')
 
-records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))[:25]
+records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))
 
 fieldnames = [
     'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',
