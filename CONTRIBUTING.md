@@ -13,12 +13,11 @@ Before you start working on your contribution, please make sure to follow the gu
 
 
 ### Add a feature or fix a bug
-- Create and switch to a new branch: `git switch -c branch-name`
-    - `branch-name` should be representative of what you are working on.
+- Create and switch to a new branch: `git switch -c branch-name` (`branch-name` should be representative of what you are working on).
 - Make changes and commit them.
 - Push the changes to your remote fork.
 - Create a [pull request (PR)](https://github.com/cbrnr/sleepecg/pulls).
-- Add an entry to `CHANGELOG.md` (section 'UNRELEASED') where you mention the corresponding PR and (if you desire) your name.
+- Add an entry to `CHANGELOG.md` (section "UNRELEASED") where you mention the corresponding PR and (if you desire) your name.
 
 
 ### Rebasing
@@ -37,7 +36,7 @@ Make sure to use Python 3.7. You might want to [create a virtual environment](ht
 pip install -e .[dev]
 ```
 
-When using the flag [`-e`](https://pip.pypa.io/en/stable/cli/pip_install/#install-editable), pip does not copy the package is to `site-packges`, but creates a link to your local repository. So any changes to the sourcecode are directly reflected in the 'installed' package. Installing the optional `[dev]` dependencies makes sure all tools for style checking, testing and building documentation locally are available.
+When using the flag [`-e`](https://pip.pypa.io/en/stable/cli/pip_install/#install-editable), pip does not copy the package to `site-packges`, but creates a link to your local repository. Any changes to the source code are directly reflected in the "installed" package. Installing the optional `[dev]` dependencies makes sure all tools for style checking, testing, and building documentation locally are available.
 
 
 ## Code style
@@ -55,7 +54,7 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/), with the
 - [Type hints](https://www.python.org/dev/peps/pep-0484/) are encouraged.
 - If a container literal, function definition or function call does not fit on one line:
     - Each argument or item is indented one level further than the function or container name.
-    - The last argument or item has a trailing comma
+    - The last argument or item has a trailing comma.
     - The closing parenthesis or bracket is indented at the same level as the starting line.
     ```python
     # Example
@@ -85,7 +84,7 @@ Coding and documentation style are checked via a CI job. To make sure your contr
 pre-commit install
 ```
 
-inside your local clone. After that, the checks required in the CI job will be run on all staged files when you commit - and abort the commit in case any issues are found.
+inside your local clone. After that, the checks required in the CI job will be run on all staged files when you commit – and abort the commit in case any issues are found (in which case you should fix the found issues and commit again).
 
 
 ## Tests
