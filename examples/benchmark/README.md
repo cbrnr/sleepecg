@@ -37,3 +37,4 @@ A benchmark configuration is specified below a unique top-level key in `config.y
 
 ## Known Issues
 - Cancelling the `heartpy` detector for ltdb:15814:ECG2 doesn't work for `signal_lengths` larger than some value between 600 and 900 minutes. Program execution has to be terminated manually.
+- For signal lengths starting somewhere between 300 and 600 minutes, `wfdb-xqrs` takes at least 20 times longer for ltdb:14134:ECG2 and ltdb:14184:ECG2 than for the other records. On a Unix OS, the detector will be interrupted by a timeout, but we don't know how long they would run without timeouts (i.e. on Windows).
