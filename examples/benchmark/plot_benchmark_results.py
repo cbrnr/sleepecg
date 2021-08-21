@@ -11,6 +11,10 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
+if len(sys.argv) != 2:
+    print('Usage: python plot_benchmark_results.py <results>.csv')
+    exit()
+
 results_filepath = Path(sys.argv[1])
 benchmark, db_slug, *_ = results_filepath.stem.split('__')
 plot_filepath = results_filepath.with_suffix('.svg')
