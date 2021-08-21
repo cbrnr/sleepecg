@@ -17,6 +17,7 @@ plot_filepath = results_filepath.with_suffix('.svg')
 results = pd.read_csv(results_filepath).sort_values('detector')
 
 if benchmark == 'runtime':
+    fs = results['fs'][0]
     results['signal_len'] = results['num_samples'] / (results['fs'] * 3600)
     results['runtime_per_minute'] = results['runtime'] / results['signal_len'] / 60  # noqa
     results = results.groupby(['detector', 'signal_len'], as_index=False).agg(
@@ -28,8 +29,6 @@ if benchmark == 'runtime':
     )
     results['error'] = results['std_runtime'] / np.sqrt(results['n'])
     results['error_per_minute'] = results['std_runtime_per_minute'] / np.sqrt(results['n'])
-
-    fs = results['fs'][0]
 
     fig = px.line(
         results,
