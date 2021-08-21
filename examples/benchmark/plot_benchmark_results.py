@@ -11,9 +11,9 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-results_filepath = sys.argv[1]
-benchmark = Path(results_filepath).stem.split('__')[0]
-plot_filepath = Path(results_filepath).with_suffix('.svg')
+results_filepath = Path(sys.argv[1])
+benchmark, db_slug, *_ = results_filepath.stem.split('__')
+plot_filepath = results_filepath.with_suffix('.svg')
 results = pd.read_csv(results_filepath).sort_values('detector')
 
 if benchmark == 'runtime':
@@ -29,6 +29,8 @@ if benchmark == 'runtime':
     results['error'] = results['std_runtime'] / np.sqrt(results['n'])
     results['error_per_minute'] = results['std_runtime_per_minute'] / np.sqrt(results['n'])
 
+    fs = results['fs'][0]
+
     fig = px.line(
         results,
         x='signal_len',
@@ -40,7 +42,7 @@ if benchmark == 'runtime':
             'signal_len': 'signal length in hours',
             'mean_runtime': 'mean runtime in s',
         },
-        title='Mean detector runtime for LTDB (fs=128Hz)',
+        title=f'Mean detector runtime for {db_slug.upper()} (fs={fs}Hz)',
         width=800,
         height=600,
         render_mode='svg',
@@ -59,7 +61,7 @@ if benchmark == 'runtime':
             'signal_len': 'signal length in hours',
             'mean_runtime_per_minute': 'mean runtime per minute in s',
         },
-        title='Mean detector runtime per signal minute for LTDB (fs=128Hz)',
+        title=f'Mean detector runtime per signal minute for {db_slug.upper()} (fs=128Hz)',
         width=800,
         height=600,
         render_mode='svg',
@@ -79,7 +81,7 @@ elif benchmark == 'metrics':
         facet_col='variable',
         width=1000,
         height=600,
-        title='Metrics for MITDB',
+        title=f'Metrics for {db_slug.upper()}',
     ).update_xaxes(range=[-0.4, 0.4]).update_yaxes(range=[0, 1.01])
     fig.for_each_annotation(lambda a: a.update(text=a.text.split('=')[1]))
     fig.write_image(plot_filepath, scale=1.5)
@@ -89,7 +91,7 @@ elif benchmark == 'rri_similarity':
         results,
         y='pearsonr',
         color='detector',
-        title="Pearson's correlation coefficient for RRI timeseries from GUDB",
+        title=f'Pearson correlation coefficient for RRI timeseries from {db_slug.upper()}',
     )
     fig.write_image(plot_filepath, scale=1.5)
 

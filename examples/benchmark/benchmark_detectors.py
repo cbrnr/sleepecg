@@ -35,12 +35,13 @@ if cfg.get('suppress_warnings', False):
 outfile_dir = Path(cfg['outfile_dir'])
 outfile_dir.mkdir(parents=True, exist_ok=True)
 
+db_slug = cfg['db_slug']
 timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
-csv_filepath = outfile_dir / f'{benchmark}__{timestamp}.csv'
+csv_filepath = outfile_dir / f'{benchmark}__{db_slug}__{timestamp}.csv'
 print(f'Storing results to {csv_filepath.resolve()}')
 
-records = list(reader_dispatch(cfg['data_dir'], cfg['db_slug']))
-print(f'Loaded {len(records)} records from {cfg["db_slug"]}.')
+records = list(reader_dispatch(cfg['data_dir'], db_slug))
+print(f'Loaded {len(records)} records from {db_slug}.')
 
 
 fieldnames = [
