@@ -76,8 +76,6 @@ with open(csv_filepath, 'w', newline='') as csv_file:
                         signal_len,
                         cfg.get('max_distance', 0.1),
                         cfg.get('calc_rri_similarity', False),
-                        cfg.get('timeout', 0),
-                        cfg.get('max_timeouts', np.inf),
                     ),
                 )
 

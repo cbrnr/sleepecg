@@ -4,11 +4,7 @@
 
 """Utilities for runtime and detection quality benchmarks."""
 
-import os
-import signal
 import time
-import warnings
-from collections import defaultdict
 from typing import Any, Dict, Iterator
 
 import biosppy
@@ -21,18 +17,6 @@ import wfdb.processing
 
 import sleepecg
 from sleepecg.io.ecg_readers import ECGRecord
-
-
-def sigalrm_handler(signum, frame):
-    raise TimeoutError('Execution terminated.')
-
-
-# Only Unix operating systems support sending SIGALRM
-if os.name == 'posix':
-    signal.signal(signal.SIGALRM, sigalrm_handler)
-else:
-    warnings.warn('Unix is required for timeouts, some functions may run indefinitely.')
-_timeouts = defaultdict(int)
 
 
 def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
@@ -113,16 +97,13 @@ def evaluate_single(
     signal_len: int,
     max_distance: float,
     calc_rri_similarity: bool,
-    timeout: int,
-    max_timeouts: int,
 ) -> Dict[str, Any]:
     """
     Evaluate a heartbeat detector on a given annotated ECG record.
 
     Optionally, similarity measures between detected and annotated
     RR intervals can be calculated. As this requires interpolation, it may
-    take some time for long signals. Setting a timeout only works on Unix
-    systems.
+    take some time for long signals.
 
     Parameters
     ----------
@@ -139,11 +120,6 @@ def evaluate_single(
         If `True`, calculate similarity measures between detected and
         annotated RR-intervals (computationally expensive for long
         signals).
-    timeout : int
-        Number of seconds after which to attempt cancelling execution using
-        SIGALRM.
-    max_timeouts : int
-        Number of timeouts after which a detector is skipped completely.
 
     Returns
     -------
@@ -156,11 +132,6 @@ def evaluate_single(
     fs = int(record.fs)
 
     try:
-        if _timeouts[detector] >= max_timeouts:
-            raise RuntimeError(f'{detector} already has {max_timeouts} timeouts, skipping.')
-
-        if os.name == 'posix':
-            signal.alarm(timeout)
         start = time.perf_counter()
         detection = detector_dispatch(ecg, fs, detector)
         runtime = time.perf_counter() - start
@@ -175,9 +146,6 @@ def evaluate_single(
             pearsonr, spearmanr, rmse = sleepecg.rri_similarity(detection, annotation)
 
     except Exception as error:
-        if isinstance(error, TimeoutError):
-            _timeouts[detector] += 1
-            print(f'Timeout: {detector}, {record.id}:{record.lead}')
         runtime = np.nan
         TP = []
         FP = []
@@ -188,10 +156,6 @@ def evaluate_single(
             pearsonr = np.nan
             spearmanr = np.nan
             rmse = np.nan
-
-    finally:
-        if os.name == 'posix':
-            signal.alarm(0)
 
     result = {
         'record_id': record.id,
