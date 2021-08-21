@@ -76,10 +76,10 @@ def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
         detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
     elif detector == 'neurokit2-nk':
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
-        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']  # noqa
+        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']  # noqa: E501
     elif detector == 'neurokit2-kalidas2017':
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
-        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']  # noqa
+        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']  # noqa: E501
     elif detector == 'sleepecg-c':
         detection = sleepecg.detect_heartbeats(ecg, fs, backend='c')
     elif detector == 'sleepecg-numba':

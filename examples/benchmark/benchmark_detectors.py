@@ -84,4 +84,4 @@ with open(csv_filepath, 'w', newline='') as csv_file:
                 csv_file.flush()
             mean_runtime = np.nanmean([x['runtime'] for x in detector_results])
             signal_mins_per_runtime_sec = signal_len / mean_runtime
-            print(f'  mean runtime: {mean_runtime:8.5f}s -> {signal_mins_per_runtime_sec:4.0f} minutes analyzed per second # {detector}')  # noqa
+            print(f'  mean runtime: {mean_runtime:8.5f}s -> {signal_mins_per_runtime_sec:4.0f} minutes analyzed per second # {detector}')  # noqa: E501
