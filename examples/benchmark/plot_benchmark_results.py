@@ -23,16 +23,12 @@ results = pd.read_csv(results_filepath).sort_values('detector')
 if benchmark == 'runtime':
     fs = results['fs'][0]
     results['signal_len'] = results['num_samples'] / (results['fs'] * 3600)
-    results['runtime_per_minute'] = results['runtime'] / results['signal_len'] / 60  # noqa
     results = results.groupby(['detector', 'signal_len'], as_index=False).agg(
         mean_runtime=('runtime', 'mean'),
         std_runtime=('runtime', 'std'),
-        mean_runtime_per_minute=('runtime_per_minute', 'mean'),
-        std_runtime_per_minute=('runtime_per_minute', 'std'),
         n=('runtime', 'count'),
     )
     results['error'] = results['std_runtime'] / np.sqrt(results['n'])
-    results['error_per_minute'] = results['std_runtime_per_minute'] / np.sqrt(results['n'])
 
     fig = px.line(
         results,
@@ -52,25 +48,6 @@ if benchmark == 'runtime':
     )
     fig.update_yaxes(rangemode='tozero')
     fig.write_image(plot_filepath)
-
-    fig = px.line(
-        results,
-        x='signal_len',
-        y='mean_runtime_per_minute',
-        error_y='error_per_minute',
-        color='detector',
-        log_y=True,
-        labels={
-            'signal_len': 'signal length in hours',
-            'mean_runtime_per_minute': 'mean runtime per minute in s',
-        },
-        title=f'Mean detector runtime per signal minute for {db_slug.upper()} (fs=128Hz)',
-        width=800,
-        height=600,
-        render_mode='svg',
-    )
-    fig.update_yaxes(rangemode='tozero')
-    fig.write_image(plot_filepath.with_name(plot_filepath.name.replace('runtime', 'runtime_per_minute')))  # noqa
 
 elif benchmark == 'metrics':
     results['recall'] = results['TP'] / (results['TP'] + results['FN'])
