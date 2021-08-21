@@ -21,7 +21,7 @@ which will save the plot to `<results>.svg` at the same location as `<results>.c
 
 
 ## Configuration
-A benchmark configuration is specified below a unique top-level key in `config.yml`. Parameters:
+A benchmark configuration is specified below a unique top-level key in `config.yml`.
 |Key|Type|Default|Description|
 |---|----|--------|-----------|
 |`data_dir`|`str`||Path where all datasets are stored.|

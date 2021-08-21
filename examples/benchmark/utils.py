@@ -118,7 +118,7 @@ def evaluate_single(
         beats to count as a successful detection.
     calc_rri_similarity : bool
         If `True`, calculate similarity measures between detected and
-        annotated RR-intervals (computationally expensive for long
+        annotated RR intervals (computationally expensive for long
         signals).
 
     Returns
