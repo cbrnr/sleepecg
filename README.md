@@ -23,6 +23,23 @@ conda install -c conda-forge sleepecg
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
 
 
+## Dataset reading
+The goal is to have a consistent functional interface for downloading and reading all common polysomnography datasets. While reader functions are a [WIP](https://github.com/cbrnr/sleepecg/pull/28), SleepECG already provides a Python interface for downloading datasets from the _National Sleep Research Resource_ (NSRR) on [sleepdata.org](https://sleepdata.org/), which replicates the functionality of the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem).
+
+The example below downloads all files within [`mesa/polysomnography/edfs`](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs) matching `*-00*` to a local folder `./datasets`:
+```python
+from sleepecg.io import download_nsrr, set_nsrr_token
+
+set_nsrr_token('<your-download-token-here>')
+download_nsrr(
+    db_slug='mesa',
+    subfolder='polysomnography/edfs',
+    pattern='*-00*',
+    data_dir='./datasets',
+)
+```
+
+
 ## Heartbeat detection
 ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast whereas the pure Python implementation is much slower).
 
