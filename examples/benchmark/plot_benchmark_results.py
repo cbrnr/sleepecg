@@ -76,4 +76,4 @@ elif benchmark == 'rri_similarity':
     fig.write_image(plot_filepath, scale=1.5)
 
 else:
-    raise ValueError(f'No plotting strategy defined for {results_filepath}')
+    raise ValueError(f'No plotting strategy defined for {results_filepath}.')
