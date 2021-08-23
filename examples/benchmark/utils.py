@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterator
 import biosppy
 import ecgdetectors
 import heartpy
+import heartpy.exceptions
 import mne
 import neurokit2
 import numpy as np
@@ -145,7 +146,7 @@ def evaluate_single(
         if calc_rri_similarity:
             pearsonr, spearmanr, rmse = sleepecg.rri_similarity(detection, annotation)
 
-    except Exception as error:
+    except heartpy.exceptions.BadSignalWarning as error:
         runtime = np.nan
         TP = []
         FP = []
