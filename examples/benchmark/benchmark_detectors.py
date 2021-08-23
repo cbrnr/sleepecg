@@ -32,7 +32,7 @@ except KeyError:
 if cfg.get('suppress_warnings', False):
     warnings.filterwarnings('ignore')
 
-outfile_dir = Path(cfg['outfile_dir'])
+outfile_dir = Path(cfg.get('outfile_dir', '.'))
 outfile_dir.mkdir(parents=True, exist_ok=True)
 
 db_slug = cfg['db_slug']

@@ -1,5 +1,4 @@
 runtime:
-  outfile_dir: ./results
   db_slug: ltdb
   detectors:
     - mne
@@ -23,7 +22,6 @@ runtime:
 
 
 metrics:
-  outfile_dir: ./results
   db_slug: mitdb
   detectors:
     - mne
@@ -39,7 +37,6 @@ metrics:
 
 
 rri_similarity:
-  outfile_dir: ./results
   db_slug: gudb
   calc_rri_similarity: True
   detectors:
