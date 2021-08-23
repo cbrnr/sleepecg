@@ -141,17 +141,15 @@ def evaluate_single(
             annotation,
             int(max_distance * record.fs),
         )
-        error_message = ''
 
         if calc_rri_similarity:
             pearsonr, spearmanr, rmse = sleepecg.rri_similarity(detection, annotation)
 
-    except heartpy.exceptions.BadSignalWarning as error:
+    except heartpy.exceptions.BadSignalWarning:
         runtime = np.nan
         TP = []
         FP = []
         FN = annotation
-        error_message = repr(error)
 
         if calc_rri_similarity:
             pearsonr = np.nan
@@ -169,7 +167,6 @@ def evaluate_single(
         'TP': len(TP),
         'FP': len(FP),
         'FN': len(FN),
-        'error_message': error_message,
     }
     if calc_rri_similarity:
         result.update({

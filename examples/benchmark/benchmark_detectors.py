@@ -46,7 +46,7 @@ print(f'Loaded {len(records)} records from {db_slug}.')
 
 fieldnames = [
     'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',
-    'FP', 'FN', 'error_message',
+    'FP', 'FN',
 ]
 if cfg.get('calc_rri_similarity', False):
     fieldnames += ['pearsonr', 'spearmanr', 'rmse']
