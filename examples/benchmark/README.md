@@ -1,4 +1,4 @@
-# Heartbeat Detection Benchmarks
+# Heartbeat detection benchmarks
 This example reproduces the benchmarks shown in the main [`README.md`](https://github.com/cbrnr/sleepecg#readme).
 
 ## Usage
