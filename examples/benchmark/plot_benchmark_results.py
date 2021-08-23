@@ -72,7 +72,7 @@ elif benchmark == 'rri_similarity':
         y='pearsonr',
         color='detector',
         title=f'Pearson correlation coefficient for RRI timeseries from {db_slug.upper()}',
-    )
+    ).update_yaxes(range=[-1.01, 1.01])
     fig.write_image(plot_filepath, scale=1.5)
 
 else:
