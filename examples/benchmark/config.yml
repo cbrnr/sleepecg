@@ -1,5 +1,4 @@
 runtime:
-  data_dir: ../datasets/
   outfile_dir: ./results
   db_slug: ltdb
   detectors:
@@ -24,7 +23,6 @@ runtime:
 
 
 metrics:
-  data_dir: ../datasets/
   outfile_dir: ./results
   db_slug: mitdb
   detectors:
@@ -41,7 +39,6 @@ metrics:
 
 
 rri_similarity:
-  data_dir: ../datasets/
   outfile_dir: ./results
   db_slug: gudb
   calc_rri_similarity: True

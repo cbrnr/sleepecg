@@ -40,7 +40,8 @@ timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
 csv_filepath = outfile_dir / f'{benchmark}__{db_slug}__{timestamp}.csv'
 print(f'Storing results to {csv_filepath.resolve()}')
 
-records = list(reader_dispatch(cfg['data_dir'], db_slug))
+data_dir = Path(cfg.get('data_dir', '~/.sleepecg/datasets')).expanduser()
+records = list(reader_dispatch(data_dir, db_slug))
 print(f'Loaded {len(records)} records from {db_slug}.')
 
 

@@ -24,7 +24,7 @@ which will save the plot to `<results>.svg` at the same location as `<results>.c
 A benchmark configuration is specified below a unique top-level key in `config.yml`.
 |Key|Type|Default|Description|
 |---|----|--------|-----------|
-|`data_dir`|`str`||Path where all datasets are stored.|
+|`data_dir`|`str`|`~/.sleepecg/datasets`|Path where all datasets are stored. Required files will be downloaded if they don't exist.|
 |`outfile_dir`|`str`||Path where the evaluation results should be stored.|
 |`db_slug`|`str`||Which dataset to use for evaluation. Possible values: [`mitdb`](https://physionet.org/content/mitdb/1.0.0/), [`ltdb`](https://physionet.org/content/ltdb/1.0.0/), [`gudb`](https://github.com/berndporr/ECG-GUDB).|
 |`detectors`|`list[str]`||Detectors to be evaluated. For possible options, see [`utils._detector_dispatch`](https://github.com/cbrnr/sleepecg/blob/main/examples/benchmark/benchmark_detectors.py).|
