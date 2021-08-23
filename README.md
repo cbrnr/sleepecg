@@ -39,6 +39,11 @@ download_nsrr(
 )
 ```
 
+### ECG dataset readers
+To facilitate evaluation of heartbeat detector performance, reader functions for the following annotated ECG datasets are provided:
+- [GUDB](https://github.com/berndporr/ECG-GUDB): [`sleepecg.io.read_gudb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_gudb.html)
+- [MITDB](https://physionet.org/content/mitdb/1.0.0/) and [LTDB](https://physionet.org/content/ltdb/1.0.0/): [`sleepecg.io.read_mitbih`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_mitbih.html)
+
 
 ## Heartbeat detection
 ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast whereas the pure Python implementation is much slower).
