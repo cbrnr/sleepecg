@@ -4,7 +4,7 @@
 [![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/latest/generated/sleepecg.html)
 
 # SleepECG
-SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides a functions for
+SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
 - downloading and reading open polysomnography datasets (*TODO*),
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
@@ -58,7 +58,9 @@ detection = detect_heartbeats(ecg, fs)
 
 
 ### Performance evaluation
-We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. Our detector (we only show the C backend) is by far the fastest implementation among all tested packages (note that the *y*-axis is logarithmically scaled).
+All code used for performance evaluation is available in [`examples/benchmark`](https://github.com/cbrnr/sleepecg/tree/main/examples/benchmark). The used package versions are listed in [`requirements-benchmark.txt`](https://github.com/cbrnr/sleepecg/blob/main/examples/benchmark/requirements-benchmark.py).
+
+We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. The C backend of our detector is by far the fastest implementation among all tested packages (note that the *y*-axis is logarithmically scaled). Runtime evaluation was performed on an [Intel® Xeon® Prozessor E5-2440 v2](https://ark.intel.com/content/www/us/en/ark/products/75263/intel-xeon-processor-e5-2440-v2-20m-cache-1-90-ghz.html) with 32 GiB RAM. No parallelization was used.
 
 ![LTDB runtimes](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/ltdb_runtime_logscale.svg)
 
@@ -69,42 +71,3 @@ We also evaluated detection performance on all [MITDB](https://physionet.org/con
 For analysis of heartrate variability, detecting the exact location of heartbeats is essential. As a measure of how accurate a detector is, we computed Pearson's correlation coefficient between resampled RRI time series deduced from annotated and detected beat locations from all [GUDB](https://github.com/berndporr/ECG-GUDB) records. Our implementation detects peaks in the bandpass-filtered ECG signal, so it produces stable RRI time series without any post-processing.
 
 ![GUDB pearson correlation](https://raw.githubusercontent.com/cbrnr/sleepecg/main/img/gudb_pearson.svg)
-
-
-We used the following detectors for our benchmarks:
-```python
-# mne
-import mne  # https://pypi.org/project/mne/
-detection = mne.preprocessing.ecg.qrs_detector(fs, ecg, verbose=False)
-
-# wfdb_xqrs
-import wfdb.processing  # https://pypi.org/project/wfdb/
-detection = wfdb.processing.xqrs_detect(ecg, fs, verbose=False)
-
-# pyecg_pan_tompkins
-import ecgdetectors  # https://pypi.org/project/py-ecg-detectors/
-detection = ecgdetectors.Detectors(fs).pan_tompkins_detector(ecg)
-
-# biosppy_hamilton
-import biosppy  # https://pypi.org/project/biosppy/
-detection = biosppy.signals.ecg.hamilton_segmenter(ecg, fs)[0]
-
-# heartpy
-import heartpy  # https://pypi.org/project/heartpy/
-wd, m = heartpy.process(ecg, fs)
-detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
-
-# neurokit2_nk
-import neurokit2  # https://pypi.org/project/neurokit2/
-clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
-detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']
-
-# neurokit2_kalidas2017
-import neurokit2  # https://pypi.org/project/neurokit2/
-clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
-detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']
-
-# sleepecg
-import sleepecg  # https://pypi.org/project/sleepecg/
-detection = sleepecg.detect_heartbeats(ecg, fs)
-```

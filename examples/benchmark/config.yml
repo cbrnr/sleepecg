@@ -1,0 +1,52 @@
+runtime:
+  db_slug: ltdb
+  detectors:
+    - mne
+    - wfdb-xqrs
+    - pyecg-pantompkins
+    - biosppy-hamilton
+    - heartpy
+    - neurokit2-nk
+    - neurokit2-kalidas2017
+    - sleepecg-c
+    - sleepecg-numba
+    - sleepecg-python
+  signal_lengths: # in minutes
+    - 5
+    - 10
+    - 15
+    - 30
+    - 60
+    - 120
+    - 300
+
+
+metrics:
+  db_slug: mitdb
+  detectors:
+    - mne
+    - wfdb-xqrs
+    - pyecg-pantompkins
+    - biosppy-hamilton
+    - heartpy
+    - neurokit2-nk
+    - neurokit2-kalidas2017
+    - sleepecg-c
+  signal_lengths: # in minutes
+    - 30
+
+
+rri_similarity:
+  db_slug: gudb
+  calc_rri_similarity: True
+  detectors:
+    - mne
+    - wfdb-xqrs
+    - pyecg-pantompkins
+    - biosppy-hamilton
+    - heartpy
+    - neurokit2-nk
+    - neurokit2-kalidas2017
+    - sleepecg-c
+  signal_lengths: # in minutes
+    - 2
