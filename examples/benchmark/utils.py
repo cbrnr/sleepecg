@@ -38,12 +38,14 @@ def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
         the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
     """
-    if db_slug in ('mitdb', 'ltdb'):
-        yield from sleepecg.io.read_mitbih(data_dir, db_slug)
-    elif db_slug == 'gudb':
-        yield from sleepecg.io.read_gudb(data_dir)
-    else:
+    readers = {
+        'gudb': sleepecg.io.read_gudb,
+        'ltdb': sleepecg.io.read_ltdb,
+        'mitdb': sleepecg.io.read_mitdb,
+    }
+    if db_slug not in readers:
         raise ValueError(f'Invalid db_slug: {db_slug}')
+    yield from readers[db_slug](data_dir)
 
 
 def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
