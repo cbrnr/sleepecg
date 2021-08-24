@@ -9,12 +9,17 @@ import os
 import sys
 
 import sleepecg
+import sleepecg._globals
 
 # -- Project information --------------------------------------------------
 project = 'SleepECG'
 author = 'Florian Hofer'
 copyright = '2021, SleepECG Developers'
 version = sleepecg.__version__
+
+rst_epilog = f"""
+.. |_DATA_DIR| replace:: `'{sleepecg._globals._DATA_DIR}'`
+"""
 
 # -- General configuration ------------------------------------------------
 extensions = [
