@@ -16,7 +16,8 @@ from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
 __all__ = [
-    'read_mitbih',
+    'read_ltdb',
+    'read_mitdb',
     'read_gudb',
 ]
 
@@ -47,7 +48,63 @@ class ECGRecord:
     id: Optional[str] = None
 
 
-def read_mitbih(
+def read_ltdb(
+    data_dir: Union[str, Path],
+    records_pattern: str = '*',
+    offline: bool = False,
+) -> Iterator[ECGRecord]:
+    """
+    Lazily read records from LTDB (https://physionet.org/content/ltdb/).
+
+    Parameters
+    ----------
+    data_dir : str | pathlib.Path
+        Directory where all datasets are stored.
+    records_pattern : str, optional
+        Glob-like pattern to select record IDs, by default `'*'`.
+    offline : bool, optional
+        If `True`, only local files will be used (i.e. no files will be
+        downloaded), by default `False`.
+
+    Yields
+    ------
+    ECGRecord
+        Each element in the generator is of type `ECGRecord` and contains
+        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
+        indices (`.annotations`), `.lead`, and `.id`.
+    """
+    yield from _read_mitbih(data_dir, 'ltdb', records_pattern, offline)
+
+
+def read_mitdb(
+    data_dir: Union[str, Path],
+    records_pattern: str = '*',
+    offline: bool = False,
+) -> Iterator[ECGRecord]:
+    """
+    Lazily read records from MITDB (https://physionet.org/content/mitdb/).
+
+    Parameters
+    ----------
+    data_dir : str | pathlib.Path
+        Directory where all datasets are stored.
+    records_pattern : str, optional
+        Glob-like pattern to select record IDs, by default `'*'`.
+    offline : bool, optional
+        If `True`, only local files will be used (i.e. no files will be
+        downloaded), by default `False`.
+
+    Yields
+    ------
+    ECGRecord
+        Each element in the generator is of type `ECGRecord` and contains
+        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
+        indices (`.annotations`), `.lead`, and `.id`.
+    """
+    yield from _read_mitbih(data_dir, 'mitdb', records_pattern, offline)
+
+
+def _read_mitbih(
     data_dir: Union[str, Path],
     db_slug: str,
     records_pattern: str = '*',
