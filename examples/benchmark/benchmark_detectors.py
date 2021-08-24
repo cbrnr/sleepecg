@@ -19,7 +19,7 @@ if len(sys.argv) != 2:
     print('Usage: python benchmark_detectors.py <benchmark>')
     exit()
 
-with open(Path(__file__).parent / 'config.yml') as config_file:
+with open('config.yml') as config_file:
     cfg = yaml.safe_load(config_file)
 
 benchmark = sys.argv[1]
