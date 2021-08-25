@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from sleepecg import compare_heartbeats, detect_heartbeats
-from sleepecg.io import read_mitbih
+from sleepecg.io import read_mitdb
 
 
 def test_compare_heartbeats():
@@ -28,7 +28,7 @@ def test_compare_heartbeats():
 def mitdb_234_MLII(tmp_path_factory):
     """Fetch record for detector tests."""
     tmpdir = tmp_path_factory.mktemp('data')
-    return next(read_mitbih(tmpdir, 'mitdb', '234'))
+    return next(read_mitdb(tmpdir, '234'))
 
 
 @pytest.mark.parametrize('backend', ['c', 'numba', 'python'])

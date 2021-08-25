@@ -42,7 +42,8 @@ download_nsrr(
 ### ECG dataset readers
 To facilitate evaluation of heartbeat detector performance, reader functions for the following annotated ECG datasets are provided:
 - [GUDB](https://github.com/berndporr/ECG-GUDB): [`sleepecg.io.read_gudb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_gudb.html)
-- [MITDB](https://physionet.org/content/mitdb/1.0.0/) and [LTDB](https://physionet.org/content/ltdb/1.0.0/): [`sleepecg.io.read_mitbih`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_mitbih.html)
+- [LTDB](https://physionet.org/content/ltdb/1.0.0/): [`sleepecg.io.read_ltdb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_ltdb.html)
+- [MITDB](https://physionet.org/content/mitdb/1.0.0/): [`sleepecg.io.read_mitdb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_mitdb.html)
 
 
 ## Heartbeat detection

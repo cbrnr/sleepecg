@@ -4,6 +4,7 @@
 
 ### Changed
 - Shorten names of some functions and modules ([#18](https://github.com/cbrnr/sleepecg/pull/18) by [Clemens Brunner](https://github.com/cbrnr) and [Florian Hofer](https://github.com/hofaflo))
+- Separate reader functions per database ([#32](https://github.com/cbrnr/sleepecg/pull/32) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.2.0] - 2021-08-11
 ### Added
