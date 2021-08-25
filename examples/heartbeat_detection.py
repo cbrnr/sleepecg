@@ -6,7 +6,7 @@ from sleepecg import compare_heartbeats, detect_heartbeats
 from sleepecg.io import read_mitdb
 
 # %% Download and read data, run detector
-record = list(read_mitdb('./datasets/', '234'))[1]
+record = list(read_mitdb(records_pattern='234'))[1]
 detection = detect_heartbeats(record.ecg, record.fs)
 
 
