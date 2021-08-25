@@ -12,7 +12,7 @@ import numpy as np
 import requests
 from tqdm import tqdm
 
-from ..globals import _DATA_DIR
+from ..globals import DATA_DIR
 from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
@@ -50,7 +50,7 @@ class ECGRecord:
 
 
 def read_ltdb(
-    data_dir: Union[str, Path] = _DATA_DIR,
+    data_dir: Union[str, Path] = DATA_DIR,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -60,7 +60,7 @@ def read_ltdb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |_DATA_DIR|
+        Directory where all datasets are stored, by default |DATA_DIR|
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -78,7 +78,7 @@ def read_ltdb(
 
 
 def read_mitdb(
-    data_dir: Union[str, Path] = _DATA_DIR,
+    data_dir: Union[str, Path] = DATA_DIR,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -88,7 +88,7 @@ def read_mitdb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |_DATA_DIR|
+        Directory where all datasets are stored, by default |DATA_DIR|
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -174,7 +174,7 @@ def _read_mitbih(
 
 
 def read_gudb(
-    data_dir: Union[str, Path] = _DATA_DIR,
+    data_dir: Union[str, Path] = DATA_DIR,
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
     """
@@ -185,7 +185,7 @@ def read_gudb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |_DATA_DIR|
+        Directory where all datasets are stored, by default |DATA_DIR|
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.

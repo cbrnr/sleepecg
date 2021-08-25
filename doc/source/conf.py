@@ -18,7 +18,7 @@ copyright = '2021, SleepECG Developers'
 version = sleepecg.__version__
 
 rst_epilog = f"""
-.. |_DATA_DIR| replace:: `'{sleepecg.globals._DATA_DIR}'`
+.. |DATA_DIR| replace:: `'{sleepecg.globals.DATA_DIR}'`
 """
 
 # -- General configuration ------------------------------------------------
