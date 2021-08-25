@@ -12,6 +12,7 @@ import numpy as np
 import requests
 from tqdm import tqdm
 
+from ..globals import DATA_DIR
 from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
@@ -49,7 +50,7 @@ class ECGRecord:
 
 
 def read_ltdb(
-    data_dir: Union[str, Path],
+    data_dir: Union[str, Path] = DATA_DIR,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -58,8 +59,8 @@ def read_ltdb(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path
-        Directory where all datasets are stored.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored, by default |DATA_DIR|
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -77,7 +78,7 @@ def read_ltdb(
 
 
 def read_mitdb(
-    data_dir: Union[str, Path],
+    data_dir: Union[str, Path] = DATA_DIR,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -86,8 +87,8 @@ def read_mitdb(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path
-        Directory where all datasets are stored.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored, by default |DATA_DIR|
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -139,7 +140,7 @@ def _read_mitbih(
     # https://archive.physionet.org/physiobank/database/html/mitdbdir/intro.htm#symbols
     BEAT_ANNOTATION_SYMBOLS = set('NLRAaJSFejE/fQ|')
 
-    data_dir = Path(data_dir)
+    data_dir = Path(data_dir).expanduser()
 
     requested_records = list_physionet(data_dir, db_slug, pattern=records_pattern)
 
@@ -172,7 +173,10 @@ def _read_mitbih(
             )
 
 
-def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECGRecord]:
+def read_gudb(
+    data_dir: Union[str, Path] = DATA_DIR,
+    offline: bool = False,
+) -> Iterator[ECGRecord]:
     """
     Lazily reads records from GUDB (https://berndporr.github.io/ECG-GUDB/).
 
@@ -180,8 +184,8 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path
-        Directory where all datasets are stored.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored, by default |DATA_DIR|
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.
@@ -199,7 +203,7 @@ def read_gudb(data_dir: Union[str, Path], offline: bool = False) -> Iterator[ECG
     EXPERIMENTS = ['sitting', 'maths', 'walking', 'hand_bike', 'jogging']
     FS = 250
 
-    db_dir = Path(data_dir) / 'gudb'
+    db_dir = Path(data_dir).expanduser() / 'gudb'
 
     for subject_id in tqdm(list(range(25)), desc='Reading GUDB'):
         for experiment in EXPERIMENTS:
