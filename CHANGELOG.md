@@ -1,4 +1,4 @@
-## [UNRELEASED]
+## [0.3.0] - 2021-08-25
 ### Added
 - Example containing code used for benchmarks ([#22](https://github.com/cbrnr/sleepecg/pull/22) by [Florian Hofer](https://github.com/hofaflo))
 

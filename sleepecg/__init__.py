@@ -10,4 +10,4 @@ __all__ = [
     'rri_similarity',
 ]
 
-__version__ = '0.3.0-dev'
+__version__ = '0.3.0'
