@@ -12,7 +12,7 @@ import numpy as np
 import requests
 from tqdm import tqdm
 
-from .._globals import _DATA_DIR
+from ..globals import _DATA_DIR
 from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
