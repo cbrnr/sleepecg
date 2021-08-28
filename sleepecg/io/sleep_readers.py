@@ -4,8 +4,8 @@
 
 """Read datasets containing ECG data and sleep stage annotations."""
 
+import datetime
 from dataclasses import dataclass
-from datetime import datetime
 from enum import IntEnum
 from pathlib import Path
 from typing import Iterator, NamedTuple, Optional, Union
@@ -52,22 +52,22 @@ class SleepRecord:
     fs_sleep_stages : float
         Sampling frequency of attribute `sleep_stages`.
     id : Optional[str] = ''
-        The record's ID, by default `''`
-    recording_start_time : Optional[np.datetime64] = None
-        Time at which the recording was started.
+        The record's ID, by default `''`.
+    recording_start_time : datetime.time, optional
+        Time at which the recording was started, by default `None`.
     """
 
     heartbeat_times: np.ndarray
     sleep_stages: np.ndarray
     fs_sleep_stages: float
     id: Optional[str] = ''
-    recording_start_time: Optional[np.datetime64] = None
+    recording_start_time: Optional[datetime.time] = None
 
 
 class _ParseNsrrXmlResult(NamedTuple):
     sleep_stages: np.ndarray
     fs_sleep_stages: float
-    recording_start_time: np.datetime64
+    recording_start_time: datetime.time
 
 
 def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
@@ -86,7 +86,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         defined by `SleepStage`.
     fs_sleep_stages : float
         Sampling frequency of `sleep_stages`.
-    recording_start_time : np.datetime64
+    recording_start_time : datetime.time
         Time at which the recording was started.
 
     """
@@ -114,7 +114,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     for event in root.find('ScoredEvents'):
         if event.find('EventConcept').text == 'Recording Start Time':
             start_time = event.find('ClockTime').text.split()[1]
-            start_time = datetime.strptime(start_time, '%H.%M.%S')
+            start_time = datetime.datetime.strptime(start_time, '%H.%M.%S').time()
 
         if event.find('EventType').text == 'Stages|Stages':
             epoch_duration = int(float(event.findtext('Duration')))
@@ -127,7 +127,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     return _ParseNsrrXmlResult(
         np.array(annot_stages, dtype=np.int8),
         1 / epoch_length,
-        np.datetime64(start_time),
+        start_time,
     )
 
 
