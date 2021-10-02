@@ -134,9 +134,9 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 def read_mesa(
     data_dir: Union[str, Path],
     records_pattern: str = '*',
-    use_preprocessed_heartbeats: Optional[bool] = True,
-    offline: Optional[bool] = False,
-    persist_edfs: Optional[bool] = False,
+    use_preprocessed_heartbeats: bool = True,
+    offline: bool = False,
+    persist_edfs: bool = False,
 ) -> Iterator[SleepRecord]:
     """
     Lazily reads records from MESA (https://sleepdata.org/datasets/mesa).
