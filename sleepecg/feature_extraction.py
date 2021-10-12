@@ -213,11 +213,11 @@ def _hrv_frequencydomain_features(
     }
     for name, min_window_length in min_window_lengths.items():
         if window_time < min_window_length:
-            warnings.warn(
+            msg = (
                 f'HR analysis window too short for estimating PSD in {name} range. '
-                f'{min_window_length:.1f}s required, got {window_time}s',
-                category=RuntimeWarning,
+                f'{min_window_length:.1f}s required, got {window_time}s'
             )
+            warnings.warn(msg, category=RuntimeWarning)
 
     rri_interp_times = np.arange(
         start=stage_times[0] - lookback,
