@@ -170,8 +170,6 @@ def _hrv_timedomain_features(
        interpretation and clinical use. circulation, 93, 1043-1065.
        https://doi.org/10.1161/01.CIR.93.5.1043
     """
-    # TODO: decide on biased/unbiased calculation of SDNN/SDSD
-
     NN = _split_into_windows(
         rri,
         rri_times,
@@ -186,11 +184,11 @@ def _hrv_timedomain_features(
     maxNN = np.max(NN, axis=1)
     minNN = np.min(NN, axis=1)
     rangeNN = maxNN - minNN
-    SDNN = np.nanstd(NN, axis=1)
+    SDNN = np.nanstd(NN, axis=1, ddof=1)
 
     SD = np.diff(NN)
     RMSSD = np.sqrt(np.nanmean(SD**2, axis=1))
-    SDSD = np.nanstd(SD, axis=1)
+    SDSD = np.nanstd(SD, axis=1, ddof=1)
     pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
 
     return np.vstack((meanNN, meanHR, maxNN, minNN, rangeNN, SDNN, RMSSD, SDSD, pNN50)).T
