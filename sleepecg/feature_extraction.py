@@ -193,7 +193,7 @@ def _hrv_timedomain_features(
     SDSD = np.nanstd(SD, axis=1)
     pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
 
-    return np.vstack((meanNN, meanHR, maxNN, minNN, rangeNN, SDNN, RMSSD, SDSD, pNN50)).T  # noqa: E501
+    return np.vstack((meanNN, meanHR, maxNN, minNN, rangeNN, SDNN, RMSSD, SDSD, pNN50)).T
 
 
 def _hrv_frequencydomain_features(
