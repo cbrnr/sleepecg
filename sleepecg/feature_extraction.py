@@ -170,7 +170,6 @@ def _hrv_timedomain_features(
        interpretation and clinical use. circulation, 93, 1043-1065.
        https://doi.org/10.1161/01.CIR.93.5.1043
     """
-    # TODO: decide on biased/unbiased calculation of pNN50
     # TODO: decide on biased/unbiased calculation of SDNN/SDSD
 
     NN = _split_into_windows(
@@ -182,8 +181,6 @@ def _hrv_timedomain_features(
     )
     NN = np.ma.masked_invalid(_create_ragged_array(NN))
 
-    n = np.sum(~np.isnan(NN), axis=1)
-
     meanNN = np.nanmean(NN, axis=1)
     meanHR = 60 / meanNN
     maxNN = np.max(NN, axis=1)
@@ -194,8 +191,7 @@ def _hrv_timedomain_features(
     SD = np.diff(NN)
     RMSSD = np.sqrt(np.nanmean(SD**2, axis=1))
     SDSD = np.nanstd(SD, axis=1)
-    NN50 = np.nansum(np.abs(SD) > 0.05, axis=1)
-    pNN50 = NN50 / n
+    pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
 
     return np.vstack((meanNN, meanHR, maxNN, minNN, rangeNN, SDNN, RMSSD, SDSD, pNN50)).T  # noqa: E501
 
