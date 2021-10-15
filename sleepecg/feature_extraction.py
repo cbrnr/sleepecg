@@ -5,12 +5,9 @@
 """Functions and utilities related to feature extraction."""
 
 import warnings
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
-import scipy.signal
-import scipy.stats
-import scipy.stats.mstats
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy.interpolate import interp1d
 
@@ -84,6 +81,53 @@ def _split_into_windows(
         windows.append(data[(start <= data_times) & (data_times < end)])
 
     return windows
+
+
+def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Compute power spectral density (PSD) along axis 1, ignoring NaNs.
+
+    The PSD is estimated via fourier transform and scaled to match the
+    output of `scipy.signal.periodogram` with `scaling='density'`. For rows
+    containing a fraction of NaNs higher than `max_nans`, the output array
+    `Pxx` is filled with `np.nan`.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        2d array where each row is treated as an individual signal.
+    fs : float
+        Sampling frequency in Hz.
+    max_nans : float, optional
+        Maximum fraction of NaNs in a signal (i.e. row of `x`), for which
+        the PSD computation is attempted. Should be a value between `0.0`
+        and `1.0`, by default `0`.
+
+    Returns
+    -------
+    f : np.ndarray
+        Array of sample frequencies.
+    Pxx : np.ndarray
+        One-sided power spectral density of x.
+    """
+    fft = np.full_like(x, np.nan, dtype=np.complex128)
+    nfft = x.shape[1]
+
+    nan_fraction = np.mean(np.isnan(x), axis=1)
+
+    # rows without any NaNs
+    full_rows_mask = nan_fraction == 0
+    fft[full_rows_mask] = np.fft.fft(x[full_rows_mask])
+
+    # remaining rows with less than max_nans NaNs
+    for i in np.where((nan_fraction <= max_nans) ^ full_rows_mask)[0]:
+        semi_valid_window = x[i]
+        valid_part = semi_valid_window[~np.isnan(semi_valid_window)]
+        fft[i] = np.fft.fft(valid_part, n=nfft)
+
+    f = np.fft.fftfreq(nfft, 1/fs)[:nfft//2]
+    Pxx = np.abs(fft)[:, :nfft//2] ** 2 / (nfft*2)
+    return f, Pxx
 
 
 def _hrv_timedomain_features(
@@ -163,6 +207,7 @@ def _hrv_frequencydomain_features(
     lookback: int = 0,
     lookforward: int = 30,
     fs_rri_resample: float = 4,
+    max_nans: float = 0,
 ) -> np.ndarray:
     """
     Calculate frequency domain heart rate variability (HRV) features.
@@ -187,6 +232,10 @@ def _hrv_frequencydomain_features(
     fs_rri_resample : float, optional
         Frequency in Hz at which the RRI time series should be resampled
         before spectral analysis, by default `4`.
+    max_nans : float, optional
+        Maximum fraction of NaNs in an analysis window, for which frequency
+        features are computed. Should be a value between `0.0` and `1.0`,
+        by default `0`.
 
     Returns
     -------
@@ -201,8 +250,6 @@ def _hrv_frequencydomain_features(
        interpretation and clinical use. circulation, 93, 1043-1065.
        https://doi.org/10.1161/01.CIR.93.5.1043
     """
-    # TODO: decide on value for parameter `nfft` of `scipy.signal.welch`
-
     # The recording should last for at least 10 times the wavelength of the
     # lower frequency bound of the investigated component.
     window_time = lookback + lookforward
@@ -236,12 +283,7 @@ def _hrv_frequencydomain_features(
     rri_windows = sliding_window_view(rri_interp, window_size)[::window_step]
 
     rri_no_baseline = rri_windows - np.nanmean(rri_windows, axis=1)[:, np.newaxis]
-
-    freq, psd = scipy.signal.welch(
-        x=rri_no_baseline,
-        fs=fs_rri_resample,
-        nfft=4096,  # taken from https://github.com/Aura-healthcare/hrv-analysis
-    )
+    freq, psd = _nanpsd(rri_no_baseline, fs_rri_resample, max_nans)
 
     total_power_mask = freq <= 0.4
     vlf_mask = (0.0033 < freq) & (freq <= 0.04)
