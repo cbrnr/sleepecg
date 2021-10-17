@@ -190,8 +190,20 @@ def _hrv_timedomain_features(
     RMSSD = np.sqrt(np.nanmean(SD**2, axis=1))
     SDSD = np.nanstd(SD, axis=1, ddof=1)
     pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
+    pNN20 = np.nanmean(np.abs(SD) > 0.02, axis=1)
 
-    return np.vstack((meanNN, meanHR, maxNN, minNN, rangeNN, SDNN, RMSSD, SDSD, pNN50)).T
+    medianNN = np.nanmedian(NN, axis=1)
+    madNN = np.nanmedian(np.abs(NN - medianNN[:, np.newaxis]), axis=1)
+    iqrNN = np.nanpercentile(NN, 75, axis=1) - np.nanpercentile(NN, 25, axis=1)
+
+    cvNN = SDNN / meanNN
+    cvSD = SDSD / np.nanmean(SD, axis=1)
+
+    return np.vstack((
+        meanNN, meanHR, maxNN, minNN, rangeNN, SDNN,
+        RMSSD, SDSD, pNN50, pNN20,
+        medianNN, madNN, iqrNN, cvNN, cvSD,
+    )).T
 
 
 def _hrv_frequencydomain_features(

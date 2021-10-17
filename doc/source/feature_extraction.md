@@ -17,6 +17,12 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`RMSSD`|square root of the mean of the sum of the squares of differences between adjacent NN intervals|SD|
 |`SDSD`|standard deviation of differences between adjacent NN intervals|SD|
 |`pNN50`|percentage of pairs of adjacent NN intervals differing by more than 50 ms|SD|
+|`pNN20`|percentage of pairs of adjacent NN intervals differing by more than 20 ms|SD|
+|`medianNN`|median of the NN intervals|NN|
+|`madNN`|median absolute deviation of the NN intervals|NN|
+|`iqrNN`|interquartile range (IQR) of the NN intervals|NN|
+|`cvNN`|coefficient of variation of the NN intervals|NN|
+|`cvSD`|coefficient of variation of differences between adjacent NN intervals|SD|
 
 ### Frequency domain
 Implemented in `sleepecg.feature_extraction._hrv_frequencydomain_features`.
