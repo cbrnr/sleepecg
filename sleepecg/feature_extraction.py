@@ -315,6 +315,7 @@ def extract_hrv_features(
     lookback: int = 0,
     lookforward: int = 30,
     fs_rri_resample: float = 4,
+    max_nans: float = 0,
     feature_groups: Optional[List[str]] = None,
 ) -> np.ndarray:
     """
@@ -340,6 +341,10 @@ def extract_hrv_features(
         Frequency in Hz at which the RRI time series should be resampled
         before spectral analysis. Only relevant for frequency domain
         features,  by default `4`.
+    max_nans : float, optional
+        Maximum fraction of NaNs in an analysis window, for which frequency
+        features are computed. Should be a value between `0.0` and `1.0`,
+        by default `0`.
     feature_groups : list[str], optional
         Which feature groups to extract. Allowed: `{'hrv-timedomain',
         'hrv-frequencydomain'}`. If `None` (default), all possible features
@@ -389,6 +394,7 @@ def extract_hrv_features(
                 lookback,
                 lookforward,
                 fs_rri_resample,
+                max_nans,
             ),
         )
 
