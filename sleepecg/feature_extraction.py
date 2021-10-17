@@ -177,7 +177,7 @@ def _hrv_timedomain_features(
         lookback,
         lookforward,
     )
-    NN = np.ma.masked_invalid(_create_ragged_array(NN))
+    NN = _create_ragged_array(NN)
 
     meanNN = np.nanmean(NN, axis=1)
     meanHR = 60 / meanNN
