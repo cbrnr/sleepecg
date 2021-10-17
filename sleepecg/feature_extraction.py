@@ -181,8 +181,8 @@ def _hrv_timedomain_features(
 
     meanNN = np.nanmean(NN, axis=1)
     meanHR = 60 / meanNN
-    maxNN = np.max(NN, axis=1)
-    minNN = np.min(NN, axis=1)
+    maxNN = np.nanmax(NN, axis=1)
+    minNN = np.nanmin(NN, axis=1)
     rangeNN = maxNN - minNN
     SDNN = np.nanstd(NN, axis=1, ddof=1)
 
