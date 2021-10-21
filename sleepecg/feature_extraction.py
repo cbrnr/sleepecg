@@ -180,7 +180,6 @@ def _hrv_timedomain_features(
     NN = _create_ragged_array(NN)
 
     meanNN = np.nanmean(NN, axis=1)
-    meanHR = 60 / meanNN
     maxNN = np.nanmax(NN, axis=1)
     minNN = np.nanmin(NN, axis=1)
     rangeNN = maxNN - minNN
@@ -189,6 +188,8 @@ def _hrv_timedomain_features(
     SD = np.diff(NN)
     RMSSD = np.sqrt(np.nanmean(SD**2, axis=1))
     SDSD = np.nanstd(SD, axis=1, ddof=1)
+    NN50 = np.nansum(np.abs(SD) > 0.05, axis=1)
+    NN20 = np.nansum(np.abs(SD) > 0.02, axis=1)
     pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
     pNN20 = np.nanmean(np.abs(SD) > 0.02, axis=1)
 
@@ -199,10 +200,16 @@ def _hrv_timedomain_features(
     cvNN = SDNN / meanNN
     cvSD = SDSD / np.nanmean(SD, axis=1)
 
+    meanHR = 60 / meanNN
+    maxHR = 60 / minNN
+    minHR = 60 / maxNN
+    stdHR = np.nanstd(60 / NN, axis=1, ddof=1)
+
     return np.vstack((
-        meanNN, meanHR, maxNN, minNN, rangeNN, SDNN,
-        RMSSD, SDSD, pNN50, pNN20,
+        meanNN, maxNN, minNN, rangeNN, SDNN,
+        RMSSD, SDSD, NN50, NN20, pNN50, pNN20,
         medianNN, madNN, iqrNN, cvNN, cvSD,
+        meanHR, maxHR, minHR, stdHR,
     )).T
 
 

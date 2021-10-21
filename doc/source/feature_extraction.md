@@ -9,13 +9,14 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |Feature identifier|Description|Signal|
 |-|-|-|
 |`meanNN`|average normal-normal (NN) interval|NN|
-|`meanHR`|average heart rate (HR)|NN|
 |`maxNN`|maximum NN interval|NN|
 |`minNN`|minimum NN interval|NN|
 |`rangeNN`|difference between the longest and shortest NN interval|NN|
 |`SDNN`|standard deviation of the NN intervals|NN|
 |`RMSSD`|square root of the mean of the sum of the squares of differences between adjacent NN intervals|SD|
 |`SDSD`|standard deviation of differences between adjacent NN intervals|SD|
+|`NN50`|number of pairs of adjacent NN intervals differing by more than 50 ms|SD|
+|`NN20`|number of pairs of adjacent NN intervals differing by more than 20 ms|SD|
 |`pNN50`|percentage of pairs of adjacent NN intervals differing by more than 50 ms|SD|
 |`pNN20`|percentage of pairs of adjacent NN intervals differing by more than 20 ms|SD|
 |`medianNN`|median of the NN intervals|NN|
@@ -23,6 +24,10 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`iqrNN`|interquartile range (IQR) of the NN intervals|NN|
 |`cvNN`|coefficient of variation of the NN intervals|NN|
 |`cvSD`|coefficient of variation of differences between adjacent NN intervals|SD|
+|`meanHR`|average heart rate ($HR=60/NN$)|NN|
+|`maxHR`|maximum heart rate|NN|
+|`minHR`|minimum heart rate|NN|
+|`stdHR`|standard deviation of the heart rate|NN|
 
 ### Frequency domain
 Implemented in `sleepecg.feature_extraction._hrv_frequencydomain_features`.
