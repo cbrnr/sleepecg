@@ -4,7 +4,7 @@
 See https://doi.org/10.1161/01.CIR.93.5.1043 for standards of HRV measurement and interpretation.
 ### Time domain
 Implemented in `sleepecg.feature_extraction._hrv_timedomain_features`.
-All time domain HRV features are either derived from the normal-to-normal (NN) intervals or from the successive differences between NN intervals (SD).
+All time domain HRV features are either derived from the normal-to-normal (NN) intervals, from the successive differences between NN intervals (SD) or from the Poincaré plot (PP).
 
 |Feature identifier|Description|Signal|
 |-|-|-|
@@ -28,6 +28,12 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`maxHR`|maximum heart rate|NN|
 |`minHR`|minimum heart rate|NN|
 |`stdHR`|standard deviation of the heart rate|NN|
+|`SD1`|standard deviation along the short axis of the ellipse (corresponding to short term variability, equivalent to `RMSSD`)|PP|
+|`SD2`|standard deviation along the long axis of the ellipse (corresponding to long term variability)|PP|
+|`S`|area of the ellipse|PP|
+|`SD1_SD2_ratio`|ratio of `SD1` to `SD2`|PP|
+|`CSI`|cardiac sympathetic index|PP|
+|`CVI`|cardiac vagal index|PP|
 
 ### Frequency domain
 Implemented in `sleepecg.feature_extraction._hrv_frequencydomain_features`.

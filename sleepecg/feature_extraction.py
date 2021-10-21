@@ -140,7 +140,7 @@ def _hrv_timedomain_features(
     """
     Calculate time domain heart rate variability (HRV) features.
 
-    Features are implemented according to [1]_.
+    Features are implemented according to [1]_, [2]_ and [3]_.
 
     Parameters
     ----------
@@ -169,6 +169,12 @@ def _hrv_timedomain_features(
        rate variability: standards of measurement, physiological
        interpretation and clinical use. circulation, 93, 1043-1065.
        https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
+       variability metrics and norms. Frontiers in public health, 258.
+    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
+       method of assessing cardiac autonomic function and its comparison
+       with spectral analysis and coefficient of variation of R–R interval.
+       Journal of the autonomic nervous system, 62(1-2), 79-84.
     """
     NN = _split_into_windows(
         rri,
@@ -205,11 +211,20 @@ def _hrv_timedomain_features(
     minHR = 60 / maxNN
     stdHR = np.nanstd(60 / NN, axis=1, ddof=1)
 
+    SD1 = SDSD**2 * 0.5
+    SD2 = (2 * SDNN**2 - SD1**2)**0.5
+    S = np.pi * SD1 * SD2
+    SD1_SD2_ratio = SD1 / SD2
+
+    CSI = SD2 / SD1
+    CVI = np.log10(SD1 * SD2 * 16)
+
     return np.vstack((
         meanNN, maxNN, minNN, rangeNN, SDNN,
         RMSSD, SDSD, NN50, NN20, pNN50, pNN20,
         medianNN, madNN, iqrNN, cvNN, cvSD,
         meanHR, maxHR, minHR, stdHR,
+        SD1, SD2, S, SD1_SD2_ratio, CSI, CVI,
     )).T
 
 
@@ -328,7 +343,8 @@ def extract_hrv_features(
     """
     Calculate heart rate variability (HRV) features.
 
-    Time and frequency domain features are calculated based on [1]_.
+    Time and frequency domain features are calculated based on [1]_, [2]_
+    and [3]_.
 
     Parameters
     ----------
@@ -369,6 +385,12 @@ def extract_hrv_features(
        rate variability: standards of measurement, physiological
        interpretation and clinical use. circulation, 93, 1043-1065.
        https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
+       variability metrics and norms. Frontiers in public health, 258.
+    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
+       method of assessing cardiac autonomic function and its comparison
+       with spectral analysis and coefficient of variation of R–R interval.
+       Journal of the autonomic nervous system, 62(1-2), 79-84.
     """
     # TODO: mask nonsense heartrates
     # TODO: remove windows with too many (or only) nans (?)
