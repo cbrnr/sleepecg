@@ -1,7 +1,7 @@
 # Feature extraction
 
 ## Heart rate variability (HRV) features
-See https://doi.org/10.1161/01.CIR.93.5.1043 for standards of HRV measurement and interpretation.
+See [Task Force of the European Society of Cardiology (1996)](https://doi.org/10.1161/01.CIR.93.5.1043) and [Shaffer & Ginsberg (2017)](https://doi.org/10.3389/fpubh.2017.00258) for standards of HRV measurement and interpretation.
 ### Time domain
 Implemented in `sleepecg.feature_extraction._hrv_timedomain_features`.
 All time domain HRV features are either derived from the normal-to-normal (NN) intervals, from the successive differences between NN intervals (SD) or from the Poincaré plot (PP).
