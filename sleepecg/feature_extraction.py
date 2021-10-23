@@ -171,10 +171,12 @@ def _hrv_timedomain_features(
        https://doi.org/10.1161/01.CIR.93.5.1043
     .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
        variability metrics and norms. Frontiers in public health, 258.
+       https://doi.org/10.3389/fpubh.2017.00258
     .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
        method of assessing cardiac autonomic function and its comparison
        with spectral analysis and coefficient of variation of R–R interval.
        Journal of the autonomic nervous system, 62(1-2), 79-84.
+       https://doi.org/10.1016/S0165-1838(96)00112-9
     """
     NN = _split_into_windows(
         rri,
@@ -387,10 +389,12 @@ def extract_hrv_features(
        https://doi.org/10.1161/01.CIR.93.5.1043
     .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
        variability metrics and norms. Frontiers in public health, 258.
+       https://doi.org/10.3389/fpubh.2017.00258
     .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
        method of assessing cardiac autonomic function and its comparison
        with spectral analysis and coefficient of variation of R–R interval.
        Journal of the autonomic nervous system, 62(1-2), 79-84.
+       https://doi.org/10.1016/S0165-1838(96)00112-9
     """
     # TODO: mask nonsense heartrates
     # TODO: remove windows with too many (or only) nans (?)
