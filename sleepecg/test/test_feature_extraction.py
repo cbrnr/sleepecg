@@ -40,14 +40,15 @@ def test_feature_ids():
     )
     assert X_time.shape[1] == len(_FEATURE_GROUPS['hrv-time'])
 
-    warnings.filterwarnings('ignore')
-    X_frequency = _hrv_frequencydomain_features(
-        rri,
-        rri_times,
-        stage_times,
-        lookback=0,
-        lookforward=30,
-        fs_rri_resample=4,
-        max_nans=0,
-    )
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore')
+        X_frequency = _hrv_frequencydomain_features(
+            rri,
+            rri_times,
+            stage_times,
+            lookback=0,
+            lookforward=30,
+            fs_rri_resample=4,
+            max_nans=0,
+        )
     assert X_frequency.shape[1] == len(_FEATURE_GROUPS['hrv-frequency'])
