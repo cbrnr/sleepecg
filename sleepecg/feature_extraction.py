@@ -249,10 +249,10 @@ def _hrv_frequencydomain_features(
     rri: np.ndarray,
     rri_times: np.ndarray,
     stage_times: np.ndarray,
-    lookback: int = 0,
-    lookforward: int = 30,
-    fs_rri_resample: float = 4,
-    max_nans: float = 0,
+    lookback: int,
+    lookforward: int,
+    fs_rri_resample: float,
+    max_nans: float,
 ) -> np.ndarray:
     """
     Calculate frequency domain heart rate variability (HRV) features.
@@ -268,19 +268,18 @@ def _hrv_frequencydomain_features(
     stage_times : np.ndarray
         1d-array containing sleep stage onset times in seconds. Distances
         between onsets must be regular.
-    lookback : int, optional
+    lookback : int
         Backward extension of the analysis window from each sleep stage
-        time, by default `0`.
-    lookforward : int, optional
+        time.
+    lookforward : int
         Forward extension of the analysis window from each sleep stage
-        time, by default `30`.
-    fs_rri_resample : float, optional
+        time.
+    fs_rri_resample : float
         Frequency in Hz at which the RRI time series should be resampled
-        before spectral analysis, by default `4`.
-    max_nans : float, optional
+        before spectral analysis.
+    max_nans : float
         Maximum fraction of NaNs in an analysis window, for which frequency
-        features are computed. Should be a value between `0.0` and `1.0`,
-        by default `0`.
+        features are computed. Should be a value between `0.0` and `1.0`.
 
     Returns
     -------
