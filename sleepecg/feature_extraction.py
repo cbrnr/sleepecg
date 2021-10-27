@@ -16,6 +16,21 @@ __all__ = [
 ]
 
 
+_FEATURE_GROUPS = {
+    'hrv-time': (
+        'meanNN', 'maxNN', 'minNN', 'rangeNN', 'SDNN',
+        'RMSSD', 'SDSD', 'NN50', 'NN20', 'pNN50', 'pNN20',
+        'medianNN', 'madNN', 'iqrNN', 'cvNN', 'cvSD',
+        'meanHR', 'maxHR', 'minHR', 'stdHR',
+        'SD1', 'SD2', 'S', 'SD1_SD2_ratio', 'CSI', 'CVI',
+    ),
+    'hrv-frequency': (
+        'total_power', 'VLF', 'LF', 'LF_norm', 'HF', 'HF_norm', 'LF_HF_ratio',
+    ),
+}
+_FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
+
+
 def _create_ragged_array(data: List[np.ndarray]) -> np.ndarray:
     """
     Convert an list of arrays with different lengths to a numpy array.
@@ -332,6 +347,33 @@ def _hrv_frequencydomain_features(
     return np.vstack((total_power, vlf, lf, lf_norm, hf, hf_norm, lf_hf_ratio)).T
 
 
+def _parse_feature_selection(
+    requested_ids: List[str],
+) -> Tuple[List[str], List[str], List[int]]:
+    # TODO: docstring
+    required_groups = set()
+    feature_ids = []
+
+    for id_ in requested_ids:
+        if id_ in _FEATURE_GROUPS:
+            required_groups.add(id_)
+            feature_ids.extend(_FEATURE_GROUPS[id_])
+        elif id_ in _FEATURE_ID_TO_GROUP:
+            required_groups.add(_FEATURE_ID_TO_GROUP[id_])
+            feature_ids.append(id_)
+        else:
+            raise ValueError(f'Invalid feature or group ID: {id_}')
+
+    all_cols = [id for group in required_groups for id in _FEATURE_GROUPS[group]]
+    sel_cols = [i for i, id in enumerate(all_cols) if id in feature_ids]
+
+    duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
+    if duplicate_ids:
+        warnings.warn(f'Duplicates in feature selection: {duplicate_ids}', RuntimeWarning)
+
+    return list(required_groups), feature_ids, sel_cols
+
+
 def extract_hrv_features(
     heartbeat_times: np.ndarray,
     sleep_stages: np.ndarray,
@@ -340,13 +382,13 @@ def extract_hrv_features(
     lookforward: int = 30,
     fs_rri_resample: float = 4,
     max_nans: float = 0,
-    feature_groups: Optional[List[str]] = None,
-) -> np.ndarray:
+    feature_selection: Optional[List[str]] = None,
+) -> Tuple[np.ndarray, List[str]]:
     """
     Calculate heart rate variability (HRV) features.
 
     Time and frequency domain features are calculated based on [1]_, [2]_
-    and [3]_.
+    and [3]_. :ref:`feature_extraction` lists all available features.
 
     Parameters
     ----------
@@ -370,16 +412,21 @@ def extract_hrv_features(
         Maximum fraction of NaNs in an analysis window, for which frequency
         features are computed. Should be a value between `0.0` and `1.0`,
         by default `0`.
-    feature_groups : list[str], optional
-        Which feature groups to extract. Allowed: `{'hrv-timedomain',
-        'hrv-frequencydomain'}`. If `None` (default), all possible features
-        are extracted.
+    feature_selection : list[str], optional
+        Which features to extract. Can be feature groups or single feature
+        identifiers, as listed :ref:`here<feature_extraction>`. If
+        `None` (default), all possible features are extracted.
 
     Returns
     -------
-    np.ndarray
-        Array of shape `(len(sleep_stages), 16)` containing the extracted
-        time and frequency domain features.
+    X : np.ndarray
+        Array of shape `(len(sleep_stages), <num_features>)` containing the
+        extracted features.
+    feature_ids : list[str]
+        A list containing the identifiers of the extracted features.
+        Feature groups passed in `feature_selection` are expanded to all
+        individual features they contain. The order matches the column
+        order of `X`.
 
     Notes
     -----
@@ -401,34 +448,37 @@ def extract_hrv_features(
     # TODO: DataFrame/dict/ndarray for X?
     # TODO: remove ectopic beats (?)
 
+    if feature_selection is None:
+        feature_selection = list(_FEATURE_GROUPS)
+
+    required_groups, feature_ids, sel_cols = _parse_feature_selection(feature_selection)
+
     rri = np.diff(heartbeat_times)
     rri_times = heartbeat_times[1:]
     stage_times = np.arange(len(sleep_stages)) / fs_sleep_stages
 
     X = []
-
-    if feature_groups is None or 'hrv-timedomain' in feature_groups:
-        X.append(
-            _hrv_timedomain_features(
-                rri,
-                rri_times,
-                stage_times,
-                lookback,
-                lookforward,
-            ),
-        )
-
-    if feature_groups is None or 'hrv-frequencydomain' in feature_groups:
-        X.append(
-            _hrv_frequencydomain_features(
-                rri,
-                rri_times,
-                stage_times,
-                lookback,
-                lookforward,
-                fs_rri_resample,
-                max_nans,
-            ),
-        )
-
-    return np.hstack(X)
+    for feature_group in required_groups:
+        if feature_group == 'hrv-time':
+            X.append(
+                _hrv_timedomain_features(
+                    rri,
+                    rri_times,
+                    stage_times,
+                    lookback,
+                    lookforward,
+                ),
+            )
+        elif feature_group == 'hrv-frequency':
+            X.append(
+                _hrv_frequencydomain_features(
+                    rri,
+                    rri_times,
+                    stage_times,
+                    lookback,
+                    lookforward,
+                    fs_rri_resample,
+                    max_nans,
+                ),
+            )
+    return np.hstack(X)[:, sel_cols], feature_ids
