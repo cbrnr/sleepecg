@@ -160,7 +160,7 @@ def _hrv_timedomain_features(
     Returns
     -------
     np.ndarray
-        Array of shape `(len(stage_times), 9)` containing the extracted
+        Array of shape `(len(stage_times), 26)` containing the extracted
         time domain features.
 
     Notes
