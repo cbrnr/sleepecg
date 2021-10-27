@@ -4,6 +4,8 @@
 ## Heart rate variability (HRV) features
 See [Task Force of the European Society of Cardiology (1996)](https://doi.org/10.1161/01.CIR.93.5.1043) and [Shaffer & Ginsberg (2017)](https://doi.org/10.3389/fpubh.2017.00258) for standards of HRV measurement and interpretation.
 ### Time domain
+Group identifier: `hrv-time`
+
 Implemented in `sleepecg.feature_extraction._hrv_timedomain_features`.
 All time domain HRV features are either derived from the normal-to-normal (NN) intervals, from the successive differences between NN intervals (SD) or from the Poincaré plot (PP).
 
@@ -37,6 +39,8 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`CVI`|cardiac vagal index|PP|
 
 ### Frequency domain
+Group identifier: `hrv-frequency`
+
 Implemented in `sleepecg.feature_extraction._hrv_frequencydomain_features`.
 For calculating the frequency domain HRV features, the RR time series is resampled at regular intervals, after which the power spectral density (PSD) is estimated using [Welch's method](https://en.wikipedia.org/wiki/Welch%27s_method).
 
