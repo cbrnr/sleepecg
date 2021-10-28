@@ -364,13 +364,13 @@ def _parse_feature_selection(
             raise ValueError(f'Invalid feature or group ID: {id_}')
 
     all_cols = [id for group in required_groups for id in _FEATURE_GROUPS[group]]
-    sel_cols = [i for i, id in enumerate(all_cols) if id in feature_ids]
+    selected_cols = [i for i, id in enumerate(all_cols) if id in feature_ids]
 
     duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
     if duplicate_ids:
         warnings.warn(f'Duplicates in feature selection: {duplicate_ids}', RuntimeWarning)
 
-    return list(required_groups), feature_ids, sel_cols
+    return list(required_groups), feature_ids, selected_cols
 
 
 def extract_hrv_features(
@@ -450,7 +450,7 @@ def extract_hrv_features(
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)
 
-    required_groups, feature_ids, sel_cols = _parse_feature_selection(feature_selection)
+    required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
 
     rri = np.diff(heartbeat_times)
     rri_times = heartbeat_times[1:]
@@ -480,4 +480,4 @@ def extract_hrv_features(
                     max_nans,
                 ),
             )
-    return np.hstack(X)[:, sel_cols], feature_ids
+    return np.hstack(X)[:, col_indices], feature_ids
