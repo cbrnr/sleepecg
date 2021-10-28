@@ -442,11 +442,6 @@ def extract_hrv_features(
        Journal of the autonomic nervous system, 62(1-2), 79-84.
        https://doi.org/10.1016/S0165-1838(96)00112-9
     """
-    # TODO: mask nonsense heartrates
-    # TODO: remove windows with too many (or only) nans (?)
-    # TODO: DataFrame/dict/ndarray for X?
-    # TODO: remove ectopic beats (?)
-
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)
 
