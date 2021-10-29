@@ -10,6 +10,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy.interpolate import interp1d
+from scipy.signal import periodogram
 
 __all__ = [
     'extract_hrv_features',
@@ -102,10 +103,8 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     """
     Compute power spectral density (PSD) along axis 1, ignoring NaNs.
 
-    The PSD is estimated via fourier transform and scaled to match the
-    output of `scipy.signal.periodogram` with `scaling='density'`. For rows
-    containing a fraction of NaNs higher than `max_nans`, the output array
-    `Pxx` is filled with `np.nan`.
+    For rows containing a fraction of NaNs higher than `max_nans`, the
+    output array `Pxx` is filled with `np.nan`.
 
     Parameters
     ----------
@@ -125,23 +124,22 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     Pxx : np.ndarray
         One-sided power spectral density of x.
     """
-    fft = np.full_like(x, np.nan, dtype=np.complex128)
     nfft = x.shape[1]
+    Pxx = np.full((x.shape[0], nfft // 2 + 1), np.nan)
 
     nan_fraction = np.mean(np.isnan(x), axis=1)
 
     # rows without any NaNs
     full_rows_mask = nan_fraction == 0
-    fft[full_rows_mask] = np.fft.fft(x[full_rows_mask])
+    f, Pxx[full_rows_mask] = periodogram(x=x[full_rows_mask], fs=fs)
 
     # remaining rows with less than max_nans NaNs
-    for i in np.where((nan_fraction <= max_nans) ^ full_rows_mask)[0]:
+    empty_rows_mask = nan_fraction == 1
+    for i in np.where((nan_fraction <= max_nans) & ~(full_rows_mask | empty_rows_mask))[0]:
         semi_valid_window = x[i]
         valid_part = semi_valid_window[~np.isnan(semi_valid_window)]
-        fft[i] = np.fft.fft(valid_part, n=nfft)
+        _, Pxx[i] = periodogram(valid_part, fs=fs, nfft=nfft)
 
-    f = np.fft.fftfreq(nfft, 1/fs)[:nfft//2]
-    Pxx = np.abs(fft)[:, :nfft//2] ** 2 / (nfft*2)
     return f, Pxx
 
 
@@ -326,8 +324,7 @@ def _hrv_frequencydomain_features(
     window_step = int(fs_rri_resample * sleep_stage_durations[0])
     rri_windows = sliding_window_view(rri_interp, window_size)[::window_step]
 
-    rri_no_baseline = rri_windows - np.nanmean(rri_windows, axis=1)[:, np.newaxis]
-    freq, psd = _nanpsd(rri_no_baseline, fs_rri_resample, max_nans)
+    freq, psd = _nanpsd(rri_windows, fs_rri_resample, max_nans)
 
     total_power_mask = freq <= 0.4
     vlf_mask = (0.0033 < freq) & (freq <= 0.04)
