@@ -18,6 +18,8 @@ from .nsrr import get_nsrr_url, list_nsrr
 from .utils import download_file
 
 __all__ = [
+    'SleepRecord',
+    'SleepStage',
     'read_mesa',
 ]
 
