@@ -140,7 +140,7 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     for i in np.where((nan_fraction <= max_nans) & ~(full_rows_mask | empty_rows_mask))[0]:
         semi_valid_window = x[i]
         valid_part = semi_valid_window[~np.isnan(semi_valid_window)]
-        _, Pxx[i] = periodogram(valid_part, fs=fs, nfft=nfft)
+        _, Pxx[i] = periodogram(valid_part, fs=fs, window='hann', nfft=nfft)
 
     return f, Pxx
 
