@@ -16,11 +16,10 @@ rec = SleepRecord(
     fs_sleep_stages=fs_sleep_stages,
 )
 
-X, names = next(
-    extract_features(
+features, names = extract_features(
         [rec],
         lookback=30,
         lookforward=90,
         feature_selection=['hrv-time', 'hrv-frequency'],
-    ),
 )
+X = features[0]

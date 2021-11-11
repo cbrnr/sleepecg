@@ -5,7 +5,7 @@
 """Functions and utilities related to feature extraction."""
 
 import warnings
-from typing import Iterable, Iterator, List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -379,7 +379,7 @@ def extract_features(
     fs_rri_resample: float = 4,
     max_nans: float = 0,
     feature_selection: Optional[List[str]] = None,
-) -> Iterator[Tuple[np.ndarray, List[str]]]:
+) -> Tuple[List[np.ndarray], List[str]]:
     """
     Calculate features from sleep data (e.g. heart rate).
 
@@ -411,11 +411,12 @@ def extract_features(
         identifiers, as listed :ref:`here<feature_extraction>`. If
         `None` (default), all possible features are extracted.
 
-    Yields
-    ------
-    X : np.ndarray
-        Array of shape `(len(sleep_stages), <num_features>)` containing the
-        extracted features per record.
+    Returns
+    -------
+    features : list[np.ndarray]
+        A list containing feature matrices which are arrays of shape
+        `(len(sleep_stages), <num_features>)` and contain the extracted
+        features per record.
     feature_ids : list[str]
         A list containing the identifiers of the extracted features.
         Feature groups passed in `feature_selection` are expanded to all
@@ -442,6 +443,8 @@ def extract_features(
 
     required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
     rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
+
+    features = []
 
     for record in records:
         stage_times = np.arange(len(record.sleep_stages)) / record.fs_sleep_stages
@@ -474,4 +477,5 @@ def extract_features(
                         max_nans,
                     ),
                 )
-        yield np.hstack(X)[:, col_indices], feature_ids
+        features.append(np.hstack(X)[:, col_indices])
+    return features, feature_ids
