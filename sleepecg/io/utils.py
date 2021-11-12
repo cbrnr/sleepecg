@@ -67,7 +67,7 @@ def download_file(
         Location where the downloaded file will be stored.
     checksum : str, optional
         Checksum to verify the file against, by default `None`.
-    checksum_type : str, optional
+    checksum_type : {'md5', 'sha256'}, optional
         Type of the checksum, by default `None`.
     verbose : bool, optional
         If `True`, output information during download. By default `False`.
