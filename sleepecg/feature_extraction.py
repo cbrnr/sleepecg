@@ -16,6 +16,7 @@ from .io import SleepRecord
 
 __all__ = [
     'extract_features',
+    'preprocess_rri',
 ]
 
 
