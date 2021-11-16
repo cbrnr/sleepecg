@@ -46,6 +46,8 @@ autodoc_typehints = 'none'
 autosummary_generate = True
 html_show_sourcelink = False
 
+add_function_parentheses = False
+
 numpydoc_class_members_toctree = False
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False

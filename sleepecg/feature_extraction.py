@@ -372,14 +372,49 @@ def _parse_feature_selection(
     return list(required_groups), feature_ids, selected_cols
 
 
+def preprocess_rri(
+    rri: np.ndarray,
+    min_rri: Optional[float] = None,
+    max_rri: Optional[float] = None,
+):
+    """
+    Replace invalid RRI samples with `np.nan`.
+
+    Parameters
+    ----------
+    rri : np.ndarray
+        An array containing consecutive RR interval lengths in seconds.
+    min_rri : float, optional
+        Minimum RRI in seconds to be considered valid. If `None` (default),
+        no lower bounds check is performed.
+    max_rri : float, optional
+        Maximum RRI in seconds to be considered valid. If `None` (default),
+        no upper bounds check is performed.
+
+    Returns
+    -------
+    np.ndarray
+        The cleaned RRI series.
+    """
+    invalid_rri = np.zeros_like(rri, dtype=bool)
+    if min_rri is not None:
+        invalid_rri |= rri < min_rri
+    if max_rri is not None:
+        invalid_rri |= rri > max_rri
+    rri[invalid_rri] = np.nan
+    return rri
+
+
 def extract_features(
     records: Iterable[SleepRecord],
     lookback: int = 0,
     lookforward: int = 30,
     sleep_stage_duration: int = 30,
-    fs_rri_resample: float = 4,
-    max_nans: float = 0,
     feature_selection: Optional[List[str]] = None,
+    fs_rri_resample: float = 4,
+    min_rri: Optional[float] = None,
+    max_rri: Optional[float] = None,
+    max_nans: float = 0,
 ) -> Tuple[List[np.ndarray], List[np.ndarray], List[str]]:
     """
     Calculate features from sleep data (e.g. heart rate).
@@ -402,18 +437,24 @@ def extract_features(
     sleep_stage_duration : int, optional
         Duration of a single sleep stage in the returned `stages` in
         seconds, by default `30`.
-    fs_rri_resample : float, optional
-        Frequency in Hz at which the RRI time series should be resampled
-        before spectral analysis. Only relevant for frequency domain
-        features, by default `4`.
-    max_nans : float, optional
-        Maximum fraction of NaNs in an analysis window, for which frequency
-        features are computed. Should be a value between `0.0` and `1.0`,
-        by default `0`.
     feature_selection : list[str], optional
         Which features to extract. Can be feature groups or single feature
         identifiers, as listed :ref:`here<feature_extraction>`. If
         `None` (default), all possible features are extracted.
+    fs_rri_resample : float, optional
+        Frequency in Hz at which the RRI time series should be resampled
+        before spectral analysis. Only relevant for frequency domain
+        features, by default `4`.
+    min_rri: float, optional
+        Minimum RRI value in seconds to be considered valid. Will be passed
+        to :func:`preprocess_rri`, by default `None`.
+    max_rri: float, optional
+        Maximum RRI value in seconds to be considered valid. Will be passed
+        to :func:`preprocess_rri`, by default `None`.
+    max_nans : float, optional
+        Maximum fraction of NaNs in an analysis window, for which frequency
+        features are computed. Should be a value between `0.0` and `1.0`,
+        by default `0`.
 
     Returns
     -------
@@ -423,8 +464,8 @@ def extract_features(
         features per record.
     stages : list[np.ndarray]
         A list containing label vectors, i.e. the annotated sleep stages.
-        For `SleepRecord`s without annotated stages, the corresponding list
-        entry will be `None`.
+        For any `SleepRecord` without annotated stages, the corresponding
+        list entry will be `None`.
     feature_ids : list[str]
         A list containing the identifiers of the extracted features.
         Feature groups passed in `feature_selection` are expanded to all
@@ -468,7 +509,11 @@ def extract_features(
         if rri_required:
             if record.heartbeat_times is None:
                 raise ValueError(f"Can't extract HRV features for record {record.id} without heartbeat_times.")  # noqa: E501
-            rri = np.diff(record.heartbeat_times)
+            rri = preprocess_rri(
+                np.diff(record.heartbeat_times),
+                min_rri=min_rri,
+                max_rri=max_rri,
+            )
             rri_times = record.heartbeat_times[1:]
 
         X = []
