@@ -56,8 +56,8 @@ class SleepRecord:
     recording_start_time : datetime.time, optional
         Time at which the recording was started, by default `None`.
     heartbeat_times : np.ndarray, optional
-        Times of heartbeats after ECG signal onset in seconds, by default
-        `None`.
+        Times of heartbeats relative to recording start in seconds, by
+        default `None`.
     """
 
     sleep_stages: Optional[np.ndarray] = None
