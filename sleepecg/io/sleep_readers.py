@@ -46,24 +46,25 @@ class SleepRecord:
 
     Attributes
     ----------
-    heartbeat_times : np.ndarray
-        Times of heartbeats after ECG signal onset in seconds.
-    sleep_stages : np.ndarray
+    sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`.
-    fs_sleep_stages : float
-        Sampling frequency of attribute `sleep_stages`.
-    id : Optional[str] = ''
-        The record's ID, by default `''`.
+        defined by `SleepStage`, by default `None`
+    fs_sleep_stages : float, optional
+        Sampling frequency of attribute `sleep_stages`, by default `None`
+    id : str, optional
+        The record's ID, by default `None`.
     recording_start_time : datetime.time, optional
         Time at which the recording was started, by default `None`.
+    heartbeat_times : np.ndarray, optional
+        Times of heartbeats after ECG signal onset in seconds, by default
+        `None`.
     """
 
-    heartbeat_times: np.ndarray
-    sleep_stages: np.ndarray
-    fs_sleep_stages: float
-    id: Optional[str] = ''
+    sleep_stages: Optional[np.ndarray] = None
+    fs_sleep_stages: Optional[float] = None
+    id: Optional[str] = None
     recording_start_time: Optional[datetime.time] = None
+    heartbeat_times: Optional[np.ndarray] = None
 
 
 class _ParseNsrrXmlResult(NamedTuple):
@@ -255,9 +256,9 @@ def read_mesa(
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
         yield SleepRecord(
-            heartbeat_times,
-            parsed_xml.sleep_stages,
-            parsed_xml.fs_sleep_stages,
+            sleep_stages=parsed_xml.sleep_stages,
+            fs_sleep_stages=parsed_xml.fs_sleep_stages,
             id=record_id,
             recording_start_time=parsed_xml.recording_start_time,
+            heartbeat_times=heartbeat_times,
         )
