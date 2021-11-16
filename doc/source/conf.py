@@ -9,7 +9,6 @@ import os
 import sys
 
 import sleepecg
-import sleepecg.globals
 
 # -- Project information --------------------------------------------------
 project = 'SleepECG'
@@ -18,7 +17,7 @@ copyright = '2021, SleepECG Developers'
 version = sleepecg.__version__
 
 rst_epilog = f"""
-.. |DATA_DIR| replace:: `'{sleepecg.globals.DATA_DIR}'`
+.. |DATA_DIR| replace:: `'{sleepecg.get_config('data_dir')}'`
 """
 
 # -- General configuration ------------------------------------------------

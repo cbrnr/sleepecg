@@ -12,7 +12,7 @@ import numpy as np
 import requests
 from tqdm import tqdm
 
-from ..globals import DATA_DIR
+from ..config import get_config
 from .physionet import download_physionet, list_physionet
 from .utils import download_file
 
@@ -50,7 +50,7 @@ class ECGRecord:
 
 
 def read_ltdb(
-    data_dir: Union[str, Path] = DATA_DIR,
+    data_dir: Union[str, Path] = get_config('data_dir'),
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -78,7 +78,7 @@ def read_ltdb(
 
 
 def read_mitdb(
-    data_dir: Union[str, Path] = DATA_DIR,
+    data_dir: Union[str, Path] = get_config('data_dir'),
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -174,7 +174,7 @@ def _read_mitbih(
 
 
 def read_gudb(
-    data_dir: Union[str, Path] = DATA_DIR,
+    data_dir: Union[str, Path] = get_config('data_dir'),
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
     """
