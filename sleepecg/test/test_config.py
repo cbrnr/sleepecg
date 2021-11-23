@@ -35,13 +35,13 @@ def test_get_set_del_config():
 
 def test_set_invalid_config():
     """Test trying to set an invalid configuration key."""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Trying to set invalid config key:'):
         set_config(invalid_key='some_value')
 
 
 def test_get_invalid_config():
     """Test trying to get an invalid configuration key."""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Trying to get invalid config key:'):
         get_config('invalid_key')
 
 
