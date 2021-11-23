@@ -13,6 +13,7 @@ from xml.etree import ElementTree
 
 import numpy as np
 
+from ..config import get_config
 from ..heartbeats import detect_heartbeats
 from .nsrr import get_nsrr_url, list_nsrr
 from .utils import download_file
@@ -135,7 +136,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
 
 def read_mesa(
-    data_dir: Union[str, Path],
+    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     use_preprocessed_heartbeats: bool = True,
     offline: bool = False,
@@ -154,7 +155,8 @@ def read_mesa(
     Parameters
     ----------
     data_dir : str | pathlib.Path
-        Directory where all datasets are stored.
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
     use_preprocessed_heartbeats : bool, optional
@@ -181,6 +183,9 @@ def read_mesa(
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
     HEARTBEATS_DIRNAME = 'preprocessed/heartbeats'
+
+    if data_dir is None:
+        data_dir = get_config('data_dir')
 
     if not offline:
         download_url = get_nsrr_url(DB_SLUG)
