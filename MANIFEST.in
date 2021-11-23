@@ -1,2 +1,3 @@
 graft examples
 prune **/__pycache__
+include sleepecg/config.yml

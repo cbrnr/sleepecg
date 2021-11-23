@@ -1,0 +1,2 @@
+data_dir: ~/.sleepecg/datasets
+testdata_dir: ~/.sleepecg/testdata
