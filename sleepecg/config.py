@@ -94,5 +94,6 @@ def set_config(**kwargs):
         else:
             user_config[key] = value
 
+    _USER_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(_USER_CONFIG_PATH, 'w') as user_config_file:
         yaml.dump(user_config, user_config_file)
