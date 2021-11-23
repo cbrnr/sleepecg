@@ -21,8 +21,6 @@ def temp_test_config(tmp_path):
     yield
 
     # cleanup
-    if sleepecg.config._USER_CONFIG_PATH.is_file():
-        sleepecg.config._USER_CONFIG_PATH.unlink()
     sleepecg.config._USER_CONFIG_PATH = user_config_path_backup
 
 
