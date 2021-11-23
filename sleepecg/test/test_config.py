@@ -4,21 +4,17 @@
 
 """Tests for the configuration interface."""
 
-from pathlib import Path
-
 import pytest
 
 import sleepecg.config
 from sleepecg import get_config, set_config
 
-_TESTCONFIG_PATH = '~/.sleepecg/testdata/testconfig.yml'
-
 
 @pytest.fixture(autouse=True)
-def temp_test_config():
+def temp_test_config(tmp_path):
     """Create, use and delete a temporary user config file for testing."""
     user_config_path_backup = sleepecg.config._USER_CONFIG_PATH
-    sleepecg.config._USER_CONFIG_PATH = Path(_TESTCONFIG_PATH).expanduser()
+    sleepecg.config._USER_CONFIG_PATH = tmp_path / 'testconfig.yml'
 
     yield
 
