@@ -25,6 +25,8 @@ def _read_yaml(path: Path) -> Dict[str, Any]:
         # empty .yml-files are loaded as `None`
         if cfg is None:
             return {}
+        if not isinstance(cfg, dict):
+            raise ValueError(f'Invalid YAML config file at {_USER_CONFIG_PATH}')
         return cfg
 
 
@@ -49,7 +51,11 @@ def get_config(key: Optional[str] = None) -> Any:
     """
     config = _read_yaml(_DEFAULT_CONFIG_PATH)
     with contextlib.suppress(FileNotFoundError):
-        config.update(_read_yaml(_USER_CONFIG_PATH))
+        user_config = _read_yaml(_USER_CONFIG_PATH)
+        for key in user_config:
+            if key not in config:
+                raise ValueError(f'Invalid key found in user config at {_USER_CONFIG_PATH}: {key}')  # noqa: E501
+        config.update(user_config)
 
     if key is None:
         return config
