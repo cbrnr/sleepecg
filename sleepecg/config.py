@@ -4,7 +4,6 @@
 
 """Functions for getting and setting configuration values."""
 
-import contextlib
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -20,14 +19,17 @@ _USER_CONFIG_PATH = Path('~/.sleepecg/config.yml').expanduser()
 
 
 def _read_yaml(path: Path) -> Dict[str, Any]:
-    with open(path) as file:
-        cfg = yaml.safe_load(file)
-        # empty .yml-files are loaded as `None`
-        if cfg is None:
-            return {}
-        if not isinstance(cfg, dict):
-            raise ValueError(f'Invalid YAML config file at {_USER_CONFIG_PATH}')
-        return cfg
+    try:
+        with open(path) as file:
+            cfg = yaml.safe_load(file)
+            # empty .yml-files are loaded as `None`
+            if cfg is None:
+                return {}
+            if not isinstance(cfg, dict):
+                raise ValueError(f'Invalid YAML config file at {_USER_CONFIG_PATH}')
+            return cfg
+    except FileNotFoundError:
+        return {}
 
 
 def get_config(key: Optional[str] = None) -> Any:
@@ -50,12 +52,11 @@ def get_config(key: Optional[str] = None) -> Any:
         The configuration value.
     """
     config = _read_yaml(_DEFAULT_CONFIG_PATH)
-    with contextlib.suppress(FileNotFoundError):
-        user_config = _read_yaml(_USER_CONFIG_PATH)
-        for key in user_config:
-            if key not in config:
-                raise ValueError(f'Invalid key found in user config at {_USER_CONFIG_PATH}: {key}')  # noqa: E501
-        config.update(user_config)
+    user_config = _read_yaml(_USER_CONFIG_PATH)
+    for key in user_config:
+        if key not in config:
+            raise ValueError(f'Invalid key found in user config at {_USER_CONFIG_PATH}: {key}')  # noqa: E501
+    config.update(user_config)
 
     if key is None:
         return config
@@ -83,10 +84,7 @@ def set_config(**kwargs):
     >>> set_config(data_dir='~/.sleepecg/datasets')
     """
     default_config = _read_yaml(_DEFAULT_CONFIG_PATH)
-    try:
-        user_config = _read_yaml(_USER_CONFIG_PATH)
-    except FileNotFoundError:
-        user_config = {}
+    user_config = _read_yaml(_USER_CONFIG_PATH)
 
     # validate all parameters before setting anything
     for key, value in kwargs.items():
