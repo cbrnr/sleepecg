@@ -16,10 +16,6 @@ author = 'Florian Hofer'
 copyright = '2021, SleepECG Developers'
 version = sleepecg.__version__
 
-rst_epilog = f"""
-.. |DATA_DIR| replace:: `'{sleepecg.get_config('data_dir')}'`
-"""
-
 # -- General configuration ------------------------------------------------
 extensions = [
     'sphinx.ext.autodoc',

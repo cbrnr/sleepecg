@@ -50,7 +50,7 @@ class ECGRecord:
 
 
 def read_ltdb(
-    data_dir: Union[str, Path] = get_config('data_dir'),
+    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -60,7 +60,8 @@ def read_ltdb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |DATA_DIR|
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -74,11 +75,13 @@ def read_ltdb(
         the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
     """
+    if data_dir is None:
+        data_dir = get_config('data_dir')
     yield from _read_mitbih(data_dir, 'ltdb', records_pattern, offline)
 
 
 def read_mitdb(
-    data_dir: Union[str, Path] = get_config('data_dir'),
+    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
@@ -88,7 +91,8 @@ def read_mitdb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |DATA_DIR|
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
@@ -102,6 +106,8 @@ def read_mitdb(
         the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
         indices (`.annotations`), `.lead`, and `.id`.
     """
+    if data_dir is None:
+        data_dir = get_config('data_dir')
     yield from _read_mitbih(data_dir, 'mitdb', records_pattern, offline)
 
 
@@ -174,7 +180,7 @@ def _read_mitbih(
 
 
 def read_gudb(
-    data_dir: Union[str, Path] = get_config('data_dir'),
+    data_dir: Optional[Union[str, Path]] = None,
     offline: bool = False,
 ) -> Iterator[ECGRecord]:
     """
@@ -185,7 +191,8 @@ def read_gudb(
     Parameters
     ----------
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored, by default |DATA_DIR|
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.
@@ -202,6 +209,9 @@ def read_gudb(
     DB_URL = 'https://berndporr.github.io/ECG-GUDB/experiment_data'
     EXPERIMENTS = ['sitting', 'maths', 'walking', 'hand_bike', 'jogging']
     FS = 250
+
+    if data_dir is None:
+        data_dir = get_config('data_dir')
 
     db_dir = Path(data_dir).expanduser() / 'gudb'
 
