@@ -61,11 +61,10 @@ def get_config(key: Optional[str] = None) -> Any:
 
     if key is None:
         return config
-    try:
-        return config[key]
-    except KeyError:
+    if key not in config:
         options = ', '.join(config)
-        raise ValueError(f'Trying to get invalid config key: {key!r}, possible options: {options}') from None  # noqa: E501
+        raise ValueError(f'Trying to get invalid config key: {key!r}, possible options: {options}')  # noqa: E501
+    return config[key]
 
 
 def set_config(**kwargs):
