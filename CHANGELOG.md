@@ -1,6 +1,6 @@
 ## [UNRELEASED]
 ### Added
-- Configuration via a yaml-file ([#39](https://github.com/cbrnr/sleepecg/pull/39) by [Florian Hofer](https://github.com/hofaflo))
+- Configuration via a YAML file ([#39](https://github.com/cbrnr/sleepecg/pull/39) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.3.0] - 2021-08-25
 ### Added
