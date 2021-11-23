@@ -22,14 +22,15 @@ def _read_yaml(path: Path) -> Dict[str, Any]:
     try:
         with open(path) as file:
             cfg = yaml.safe_load(file)
-            # empty .yml-files are loaded as `None`
-            if cfg is None:
-                return {}
-            if not isinstance(cfg, dict):
-                raise ValueError(f'Invalid YAML config file at {_USER_CONFIG_PATH}')
-            return cfg
     except FileNotFoundError:
         return {}
+
+    # empty .yml-files are loaded as `None`
+    if cfg is None:
+        return {}
+    if not isinstance(cfg, dict):
+        raise ValueError(f'Invalid YAML config file at {path}')
+    return cfg
 
 
 def get_config(key: Optional[str] = None) -> Any:
