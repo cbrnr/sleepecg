@@ -218,7 +218,7 @@ def read_mesa(
     else:
         xml_files = sorted(annotations_dir.glob(f'mesa-sleep-{records_pattern}-nsrr.xml'))
         requested_records = [file.stem[:-5] for file in xml_files]
-        if not use_preprocessed_heartbeats:
+        if not use_cached_heartbeats:
             edf_files = sorted(edf_dir.glob(f'mesa-sleep-{records_pattern}.edf'))
 
     for record_id in requested_records:
