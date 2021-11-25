@@ -21,7 +21,7 @@ def _dummy_mesa_edf(filename: str, hours: float):
     ecg_5_min = scipy.misc.electrocardiogram()
     seconds = int(hours * 60 * 60)
     ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[:seconds * ECG_FS, np.newaxis].T
-    signal_headers = highlevel.make_signal_headers(['EKG'], sample_rate=ECG_FS)
+    signal_headers = highlevel.make_signal_headers(['EKG'], sample_frequency=ECG_FS)
     highlevel.write_edf(filename, ecg, signal_headers)
 
 
