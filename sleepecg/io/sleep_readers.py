@@ -43,15 +43,15 @@ class SleepStage(IntEnum):
 @dataclass
 class SleepRecord:
     """
-    Dataclass to store a single sleep record.
+    Store a single sleep record.
 
     Attributes
     ----------
     sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`, by default `None`
+        defined by `SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
-        Duration of each sleep stage in seconds, by default `None`
+        Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
         The record's ID, by default `None`.
     recording_start_time : datetime.time, optional
@@ -76,7 +76,7 @@ class _ParseNsrrXmlResult(NamedTuple):
 
 def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     """
-    Parse NSRR xml sleep stage annotation file.
+    Parse NSRR XML sleep stage annotation file.
 
     Parameters
     ----------
@@ -88,8 +88,8 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     sleep_stages : np.ndarray
         Sleep stages according to AASM guidelines, stored as integers as
         defined by `SleepStage`.
-    fs_sleep_stages : float
-        Sampling frequency of `sleep_stages`.
+    sleep_stage_duration : int
+        Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
         Time at which the recording was started.
 
@@ -104,8 +104,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         'Unscored|9': SleepStage.UNDEFINED,
     }
 
-    tree = ElementTree.parse(xml_filepath)
-    root = tree.getroot()
+    root = ElementTree.parse(xml_filepath).getroot()
 
     epoch_length = root.findtext('EpochLength')
     if epoch_length is None:
@@ -138,29 +137,29 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 def read_mesa(
     data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
-    use_preprocessed_heartbeats: bool = True,
+    use_cached_heartbeats: bool = True,
     offline: bool = False,
     persist_edfs: bool = False,
 ) -> Iterator[SleepRecord]:
     """
-    Lazily reads records from MESA (https://sleepdata.org/datasets/mesa).
+    Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
 
-    Each MESA record consists of a `.edf` files containing raw
-    polysomnography data and an `.xml` files containing annotated events.
+    Each MESA record consists of a `.edf` file containing raw
+    polysomnography data and an `.xml` file containing annotated events.
     Since the entire MESA dataset requires about 385 GB of disk space,
-    `.edf` files can be deleted after the heartbeat times have been
-    extracted. Heartbeat times are stored to a `.npy` file in
+    `.edf` files can be deleted after heartbeat times have been
+    extracted. Heartbeat times are cached in a `.npy` file in
     `<data_dir>/mesa/preprocessed/heartbeats`.
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path
+    data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored. If `None` (default), the
         value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
-    use_preprocessed_heartbeats : bool, optional
-        If `True`, get heartbeat times directly from the stored `.npy`
+    use_cached_heartbeats : bool, optional
+        If `True`, get heartbeat times directly from the cached `.npy`
         file, so `.edf` files are only downloaded for records which have
         not yet been preprocessed. By default `True`.
     offline : bool, optional
@@ -224,7 +223,7 @@ def read_mesa(
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f'{record_id}.npy'
-        if use_preprocessed_heartbeats and heartbeats_file.is_file():
+        if use_cached_heartbeats and heartbeats_file.is_file():
             heartbeat_times = np.load(heartbeats_file)
         else:
             edf_filename = EDF_DIRNAME + f'/{record_id}.edf'
