@@ -172,9 +172,7 @@ def read_mesa(
     Yields
     ------
     SleepRecord
-        Each element in the generator is a `SleepRecord`, containing
-        heartbeat times, sleep stages, sleep stage sampling frequency,
-        record ID and record start time.
+        Each element in the generator is a :class:`SleepRecord`.
     """
     from mne.io import read_raw_edf
 
