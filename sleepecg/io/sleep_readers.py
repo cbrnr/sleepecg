@@ -144,7 +144,7 @@ def read_mesa(
     """
     Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
 
-    Each MESA record consists of a `.edf` file containing raw
+    Each MESA record consists of an `.edf` file containing raw
     polysomnography data and an `.xml` file containing annotated events.
     Since the entire MESA dataset requires about 385 GB of disk space,
     `.edf` files can be deleted after heartbeat times have been extracted.
