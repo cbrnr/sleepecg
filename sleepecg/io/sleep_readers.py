@@ -139,7 +139,7 @@ def read_mesa(
     records_pattern: str = '*',
     use_cached_heartbeats: bool = True,
     offline: bool = False,
-    persist_edfs: bool = False,
+    keep_edfs: bool = False,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
@@ -165,7 +165,7 @@ def read_mesa(
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR
         API, by default `False`.
-    persist_edfs : bool, optional
+    keep_edfs : bool, optional
         If `False`, remove `.edf` after heartbeat detection, by default
         `False`.
 
@@ -244,7 +244,7 @@ def read_mesa(
             heartbeat_times = heartbeat_indices / fs
             np.save(heartbeats_file, heartbeat_times)
 
-            if not edf_was_available and not persist_edfs:
+            if not edf_was_available and not keep_edfs:
                 edf_filepath.unlink()
 
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
