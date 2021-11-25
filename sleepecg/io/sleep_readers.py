@@ -147,8 +147,8 @@ def read_mesa(
     Each MESA record consists of a `.edf` file containing raw
     polysomnography data and an `.xml` file containing annotated events.
     Since the entire MESA dataset requires about 385 GB of disk space,
-    `.edf` files can be deleted after heartbeat times have been
-    extracted. Heartbeat times are cached in a `.npy` file in
+    `.edf` files can be deleted after heartbeat times have been extracted.
+    Heartbeat times are cached in a `.npy` file in
     `<data_dir>/mesa/preprocessed/heartbeats`.
 
     Parameters
