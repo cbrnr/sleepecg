@@ -4,6 +4,7 @@
 
 """Tests for sleep data reader functions."""
 
+import warnings
 from pathlib import Path
 from typing import List
 
@@ -20,9 +21,11 @@ def _dummy_mesa_edf(filename: str, hours: float):
     ECG_FS = 360
     ecg_5_min = scipy.misc.electrocardiogram()
     seconds = int(hours * 60 * 60)
-    ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[:seconds * ECG_FS, np.newaxis].T
+    ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[np.newaxis, :seconds * ECG_FS]
     signal_headers = highlevel.make_signal_headers(['EKG'], sample_frequency=ECG_FS)
-    highlevel.write_edf(filename, ecg, signal_headers)
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore')
+        highlevel.write_edf(filename, ecg, signal_headers)
 
 
 def _dummy_mesa_xml(filename: str, hours: float):
