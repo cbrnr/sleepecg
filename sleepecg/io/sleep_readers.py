@@ -185,7 +185,7 @@ def read_mesa(
     if not offline:
         download_url = get_nsrr_url(DB_SLUG)
 
-    db_dir = Path(data_dir) / DB_SLUG
+    db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
     edf_dir = db_dir / EDF_DIRNAME
     heartbeats_dir = db_dir / HEARTBEATS_DIRNAME
