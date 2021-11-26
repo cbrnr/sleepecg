@@ -28,7 +28,7 @@ def _dummy_mesa_edf(filename: str, hours: float):
         highlevel.write_edf(filename, ecg, signal_headers)
 
 
-def _dummy_mesa_xml(filename: str, hours: float, random_state):
+def _dummy_mesa_xml(filename: str, hours: float, random_state: int):
     EPOCH_LENGTH = 30
     STAGES = [
         'Wake|0',
@@ -79,7 +79,7 @@ def _dummy_mesa_xml(filename: str, hours: float, random_state):
         )
 
 
-def _create_dummy_mesa(data_dir: str, durations: List[float], random_state):
+def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int = 42):
     DB_SLUG = 'mesa'
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
@@ -103,7 +103,7 @@ def test_read_mesa():
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
-    _create_dummy_mesa(data_dir=data_dir, durations=durations, random_state=42)
+    _create_dummy_mesa(data_dir=data_dir, durations=durations)
     records = list(read_mesa(data_dir=data_dir, offline=True))
 
     assert len(records) == 2
