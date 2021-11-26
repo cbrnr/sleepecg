@@ -1,6 +1,7 @@
 ## [UNRELEASED]
 ### Added
 - Configuration via a YAML file ([#39](https://github.com/cbrnr/sleepecg/pull/39) by [Florian Hofer](https://github.com/hofaflo))
+- Add function for reading data from the [MESA](https://sleepdata.org/datasets/mesa) datasets ([#28](https://github.com/cbrnr/sleepecg/pull/28) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.3.0] - 2021-08-25
 ### Added
