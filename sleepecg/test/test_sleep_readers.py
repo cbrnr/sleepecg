@@ -79,11 +79,7 @@ def _dummy_mesa_xml(filename: str, hours: float, random_state):
         )
 
 
-def _create_dummy_mesa(
-    data_dir: str,
-    durations: List[float],
-    random_state,
-):
+def _create_dummy_mesa(data_dir: str, durations: List[float], random_state):
     DB_SLUG = 'mesa'
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
