@@ -28,7 +28,7 @@ def _dummy_mesa_edf(filename: str, hours: float):
         highlevel.write_edf(filename, ecg, signal_headers)
 
 
-def _dummy_mesa_xml(filename: str, hours: float):
+def _dummy_mesa_xml(filename: str, hours: float, random_state):
     EPOCH_LENGTH = 30
     STAGES = [
         'Wake|0',
@@ -39,6 +39,8 @@ def _dummy_mesa_xml(filename: str, hours: float):
         'REM sleep|5',
         'Unscored|9',
     ]
+
+    rng = np.random.default_rng(random_state)
 
     with open(filename, 'w') as xml_file:
         xml_file.write(
@@ -59,8 +61,8 @@ def _dummy_mesa_xml(filename: str, hours: float):
         while True:
             if start > record_duration:
                 break
-            epoch_duration = np.random.choice(np.arange(4, 21)) * EPOCH_LENGTH
-            stage = np.random.choice(STAGES)
+            epoch_duration = rng.choice(np.arange(4, 21)) * EPOCH_LENGTH
+            stage = rng.choice(STAGES)
             xml_file.write(
                 '<ScoredEvent>\n'
                 '<EventType>Stages|Stages</EventType>\n'
@@ -80,6 +82,7 @@ def _dummy_mesa_xml(filename: str, hours: float):
 def _create_dummy_mesa(
     data_dir: str,
     durations: List[float],
+    random_state,
 ):
     DB_SLUG = 'mesa'
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
@@ -95,7 +98,7 @@ def _create_dummy_mesa(
     for i, hours in enumerate(durations):
         record_id = f'mesa-sleep-dummy-{i:04}'
         _dummy_mesa_edf(f'{edf_dir}/{record_id}.edf', hours)
-        _dummy_mesa_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours)
+        _dummy_mesa_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
 
 
 def test_read_mesa():
@@ -104,7 +107,7 @@ def test_read_mesa():
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
-    _create_dummy_mesa(data_dir=data_dir, durations=durations)
+    _create_dummy_mesa(data_dir=data_dir, durations=durations, random_state=42)
     records = list(read_mesa(data_dir=data_dir, offline=True))
 
     assert len(records) == 2
