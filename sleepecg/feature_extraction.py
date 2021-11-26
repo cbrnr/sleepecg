@@ -12,7 +12,7 @@ from numpy.lib.stride_tricks import sliding_window_view
 from scipy.interpolate import interp1d
 from scipy.signal import periodogram
 
-from .io import SleepRecord
+from .io.sleep_readers import SleepRecord
 
 __all__ = [
     'extract_features',
