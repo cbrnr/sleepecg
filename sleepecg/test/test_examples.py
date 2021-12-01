@@ -1,4 +1,3 @@
-# %%
 # Authors: Florian Hofer
 #
 # License: BSD (3-clause)
