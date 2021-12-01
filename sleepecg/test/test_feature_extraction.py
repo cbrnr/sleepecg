@@ -49,5 +49,6 @@ def test_feature_ids():
         lookforward=30,
         fs_rri_resample=4,
         max_nans=0,
+        feature_ids=_FEATURE_GROUPS['hrv-frequency'],
     )
     assert X_frequency.shape[1] == len(_FEATURE_GROUPS['hrv-frequency'])
