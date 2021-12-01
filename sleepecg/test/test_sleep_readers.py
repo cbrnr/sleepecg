@@ -13,7 +13,7 @@ import scipy.misc
 from pyedflib import highlevel
 
 from sleepecg.io import read_mesa
-from sleepecg.io.sleep_readers import SleepStage
+from sleepecg.io.sleep_readers import _SleepStage
 
 
 def _dummy_mesa_edf(filename: str, hours: float):
@@ -99,7 +99,7 @@ def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int 
 def test_read_mesa(tmp_path):
     """Basic sanity checks for records read via read_mesa."""
     durations = [0.1, 0.2]  # hours
-    valid_stages = {int(s) for s in SleepStage}
+    valid_stages = {int(s) for s in _SleepStage}
 
     _create_dummy_mesa(data_dir=tmp_path, durations=durations)
     records = list(read_mesa(data_dir=tmp_path, offline=True))

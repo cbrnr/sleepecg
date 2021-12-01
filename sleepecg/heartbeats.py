@@ -25,7 +25,6 @@ try:
 except ImportError:
     _available_backends.remove('numba')
 
-
 __all__ = [
     'compare_heartbeats',
     'detect_heartbeats',

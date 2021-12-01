@@ -10,10 +10,6 @@ from typing import Optional
 
 import requests
 
-__all__ = [
-    'download_file',
-]
-
 _HASH_FUNCTIONS = {
     'md5': hashlib.md5,
     'sha256': hashlib.sha256,
@@ -46,7 +42,7 @@ def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
     return computed_hash.hexdigest()
 
 
-def download_file(
+def _download_file(
     url: str,
     target_filepath: Path,
     checksum: Optional[str] = None,

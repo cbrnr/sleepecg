@@ -13,8 +13,8 @@ import requests
 from tqdm import tqdm
 
 from ..config import get_config
-from .physionet import download_physionet, list_physionet
-from .utils import download_file
+from .physionet import _list_physionet, download_physionet
+from .utils import _download_file
 
 __all__ = [
     'read_ltdb',
@@ -148,7 +148,7 @@ def _read_mitbih(
 
     data_dir = Path(data_dir).expanduser()
 
-    requested_records = list_physionet(data_dir, db_slug, pattern=records_pattern)
+    requested_records = _list_physionet(data_dir, db_slug, pattern=records_pattern)
 
     if not offline:
         download_physionet(
@@ -227,7 +227,7 @@ def read_gudb(
                     ecg_file_url = f'{DB_URL}/{experiment_subdir}/{tsv_filename}'
                     target_filepath = db_dir / experiment_subdir / tsv_filename
                     try:
-                        download_file(ecg_file_url, target_filepath)
+                        _download_file(ecg_file_url, target_filepath)
                     except requests.exceptions.HTTPError as error:
                         print(error)
             ecg_data = pd.read_csv(

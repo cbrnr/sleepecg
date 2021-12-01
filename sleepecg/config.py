@@ -14,6 +14,7 @@ __all__ = [
     'set_config',
 ]
 
+
 _DEFAULT_CONFIG_PATH = Path(__file__).parent / 'config.yml'
 _USER_CONFIG_PATH = Path('~/.sleepecg/config.yml').expanduser()
 

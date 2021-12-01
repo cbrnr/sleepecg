@@ -15,15 +15,15 @@ import numpy as np
 
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
-from .nsrr import get_nsrr_url, list_nsrr
-from .utils import download_file
+from .nsrr import _get_nsrr_url, _list_nsrr
+from .utils import _download_file
 
 __all__ = [
     'read_mesa',
 ]
 
 
-class SleepStage(IntEnum):
+class _SleepStage(IntEnum):
     """
     Mapping of AASM sleep stages to integers.
 
@@ -47,7 +47,7 @@ class SleepRecord:
     ----------
     sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`, by default `None`.
+        defined by `_SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
         Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
@@ -85,7 +85,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     -------
     sleep_stages : np.ndarray
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`.
+        defined by `_SleepStage`.
     sleep_stage_duration : int
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
@@ -93,13 +93,13 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
     """
     STAGE_MAPPING = {
-        'Wake|0': SleepStage.WAKE,
-        'Stage 1 sleep|1': SleepStage.N1,
-        'Stage 2 sleep|2': SleepStage.N2,
-        'Stage 3 sleep|3': SleepStage.N3,
-        'Stage 4 sleep|4': SleepStage.N3,
-        'REM sleep|5': SleepStage.REM,
-        'Unscored|9': SleepStage.UNDEFINED,
+        'Wake|0': _SleepStage.WAKE,
+        'Stage 1 sleep|1': _SleepStage.N1,
+        'Stage 2 sleep|2': _SleepStage.N2,
+        'Stage 3 sleep|3': _SleepStage.N3,
+        'Stage 4 sleep|4': _SleepStage.N3,
+        'REM sleep|5': _SleepStage.REM,
+        'Unscored|9': _SleepStage.UNDEFINED,
     }
 
     root = ElementTree.parse(xml_filepath).getroot()
@@ -183,7 +183,7 @@ def read_mesa(
         data_dir = get_config('data_dir')
 
     if not offline:
-        download_url = get_nsrr_url(DB_SLUG)
+        download_url = _get_nsrr_url(DB_SLUG)
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
@@ -195,7 +195,7 @@ def read_mesa(
 
     if not offline:
         checksums = {}
-        xml_files = list_nsrr(
+        xml_files = _list_nsrr(
             DB_SLUG,
             ANNOTATION_DIRNAME,
             f'mesa-sleep-{records_pattern}-nsrr.xml',
@@ -204,7 +204,7 @@ def read_mesa(
         checksums.update(xml_files)
         requested_records = [Path(file).stem[:-5] for file, _ in xml_files]
 
-        edf_files = list_nsrr(
+        edf_files = _list_nsrr(
             DB_SLUG,
             EDF_DIRNAME,
             f'mesa-sleep-{records_pattern}.edf',
@@ -226,7 +226,7 @@ def read_mesa(
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
             if not offline:
-                download_file(
+                _download_file(
                     download_url + edf_filename,
                     edf_filepath,
                     checksums[edf_filename],
@@ -246,7 +246,7 @@ def read_mesa(
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
         xml_filepath = db_dir / xml_filename
         if not offline:
-            download_file(
+            _download_file(
                 download_url + xml_filename,
                 xml_filepath,
                 checksums[xml_filename],

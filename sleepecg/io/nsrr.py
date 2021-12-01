@@ -12,14 +12,13 @@ from typing import List, Tuple, Union
 import requests
 from tqdm import tqdm
 
-from .utils import download_file
+from .utils import _download_file
 
 __all__ = [
-    'set_nsrr_token',
-    'get_nsrr_url',
-    'list_nsrr',
     'download_nsrr',
+    'set_nsrr_token',
 ]
+
 
 _nsrr_token = None
 
@@ -53,7 +52,7 @@ def set_nsrr_token(token: str) -> None:
         raise RuntimeError('Authentication at sleepdata.org failed, verify token!')
 
 
-def get_nsrr_url(db_slug: str) -> str:
+def _get_nsrr_url(db_slug: str) -> str:
     """
     Get the download URL for a given NSRR database.
 
@@ -74,7 +73,7 @@ def get_nsrr_url(db_slug: str) -> str:
     return f'https://sleepdata.org/datasets/{db_slug}/files/a/{_nsrr_token}/m/sleepecg/'
 
 
-def list_nsrr(
+def _list_nsrr(
     db_slug: str,
     subfolder: str = '',
     pattern: str = '*',
@@ -120,7 +119,7 @@ def list_nsrr(
     files = []
     for item in response_json:
         if not item['is_file'] and not shallow:
-            files.extend(list_nsrr(db_slug, item['full_path'], pattern))
+            files.extend(_list_nsrr(db_slug, item['full_path'], pattern))
         elif fnmatch(item['file_name'], pattern):
             files.append((item['full_path'], item['file_checksum_md5']))
     return files
@@ -159,15 +158,15 @@ def download_nsrr(
     """
     db_dir = Path(data_dir) / db_slug
 
-    download_url = get_nsrr_url(db_slug)
-    files_to_download = list_nsrr(db_slug, subfolder, pattern, shallow)
+    download_url = _get_nsrr_url(db_slug)
+    files_to_download = _list_nsrr(db_slug, subfolder, pattern, shallow)
     tqdm_description = f'Downloading {db_slug}/{subfolder or "."}/{pattern}'
 
     for filepath, checksum in tqdm(files_to_download, desc=tqdm_description):
         target_filepath = db_dir / filepath
         url = download_url + filepath
         try:
-            download_file(url, target_filepath, checksum, 'md5')
+            _download_file(url, target_filepath, checksum, 'md5')
         except RuntimeError as error:
             # If the token is invalid for the requested dataset, the
             # request is redirected to a files-overview page. The response
