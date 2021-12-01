@@ -24,10 +24,10 @@ def test_feature_ids():
     """
     heartbeat_times = np.cumsum(np.random.uniform(0.5, 1.5, 60*60*8))
     sleep_stages = np.random.randint(1, 6, int(max(heartbeat_times))//30)
-    fs_sleep_stages = 1/30
+    sleep_stage_duration = 30
     rri = np.diff(heartbeat_times)
     rri_times = heartbeat_times[1:]
-    stage_times = np.arange(len(sleep_stages)) / fs_sleep_stages
+    stage_times = np.arange(len(sleep_stages)) * sleep_stage_duration
 
     X_time = _hrv_timedomain_features(
         rri,
