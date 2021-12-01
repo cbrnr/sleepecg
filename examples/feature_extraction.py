@@ -18,8 +18,8 @@ rec = SleepRecord(
 
 features, stages, feature_ids = extract_features(
         [rec],
-        lookback=30,
-        lookforward=90,
-        feature_selection=['hrv-time', 'hrv-frequency'],
+        lookback=240,
+        lookforward=60,
+        feature_selection=['hrv-time', 'LF_norm', 'HF_norm', 'LF_HF_ratio'],
 )
 X = features[0]
