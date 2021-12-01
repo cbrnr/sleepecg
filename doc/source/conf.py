@@ -23,10 +23,13 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
     'numpydoc',
-    'm2r2',
+    'myst_parser',
 ]
 
-source_suffix = ['.rst', '.md']
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
@@ -42,6 +45,8 @@ autodoc_mock_imports = ['scipy', 'tqdm']
 autodoc_typehints = 'none'
 autosummary_generate = True
 html_show_sourcelink = False
+
+add_function_parentheses = False
 
 numpydoc_class_members_toctree = False
 numpydoc_show_class_members = False
