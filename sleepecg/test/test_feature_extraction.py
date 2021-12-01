@@ -20,7 +20,7 @@ def test_feature_ids():
     Compare length of feature id lists with shape of feature matrices.
 
     If this fails, make sure the identifiers in
-    `feature_extraction.FEATURE_GROUPS` match the calculated features in
+    `feature_extraction._FEATURE_GROUPS` match the calculated features in
     the relevant function. Note that the test only compares lengths, so the
     order might still be incorrect.
     """
