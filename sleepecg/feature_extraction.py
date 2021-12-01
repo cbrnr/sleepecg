@@ -254,6 +254,7 @@ def _hrv_frequencydomain_features(
     lookforward: int,
     fs_rri_resample: float,
     max_nans: float,
+    feature_ids: List[str],
 ) -> np.ndarray:
     """
     Calculate seven frequency domain heart rate variability (HRV) features.
@@ -281,6 +282,11 @@ def _hrv_frequencydomain_features(
     max_nans : float
         Maximum fraction of NaNs in an analysis window, for which frequency
         features are computed. Should be a value between `0.0` and `1.0`.
+    feature_ids : list[str]
+        A list containing the identifiers of all features to be extracted.
+        This does not change the returned array. It is only used to avoid
+        issuing a warning about the analysis window being too short for
+        some frequency range which isn't requested.
 
     Returns
     -------
@@ -301,12 +307,18 @@ def _hrv_frequencydomain_features(
     min_window_lengths = {
         'VLF': 10 * (1 / 0.0033),
         'LF': 10 * (1 / 0.04),
+        'LF_norm': 10 * (1 / 0.04),
         'HF': 10 * (1 / 0.15),
+        'HF_norm': 10 * (1 / 0.04),
+        'LF_HF_ratio': 10 * (1 / 0.04),
     }
+
     for name, min_window_length in min_window_lengths.items():
+        if name not in feature_ids:
+            continue
         if window_time < min_window_length:
             msg = (
-                f'HR analysis window too short for estimating PSD in {name} range. '
+                f'HR analysis window too short for estimating PSD for feature {name}. '
                 f'{min_window_length:.1f}s required, got {window_time}s'
             )
             warnings.warn(msg, category=RuntimeWarning)
@@ -539,6 +551,7 @@ def extract_features(
                         lookforward,
                         fs_rri_resample,
                         max_nans,
+                        feature_ids,
                     ),
                 )
         features.append(np.hstack(X)[:, col_indices])
