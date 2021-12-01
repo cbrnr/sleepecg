@@ -304,22 +304,23 @@ def _hrv_frequencydomain_features(
     # The recording should last for at least 10 times the wavelength of the
     # lower frequency bound of the investigated component.
     window_time = lookback + lookforward
-    min_window_lengths = {
-        'VLF': 10 * (1 / 0.0033),
-        'LF': 10 * (1 / 0.04),
-        'LF_norm': 10 * (1 / 0.04),
-        'HF': 10 * (1 / 0.15),
-        'HF_norm': 10 * (1 / 0.04),
-        'LF_HF_ratio': 10 * (1 / 0.04),
+    min_frequencies = {
+        'VLF': 0.0033,
+        'LF': 0.04,
+        'LF_norm': 0.04,
+        'HF': 0.15,
+        'HF_norm': 0.04,
+        'LF_HF_ratio': 0.04,
     }
 
-    for name, min_window_length in min_window_lengths.items():
+    for name, min_frequency in min_frequencies.items():
+        min_window_time = 10 * (1 / min_frequency)
         if name not in feature_ids:
             continue
-        if window_time < min_window_length:
+        if window_time < min_window_time:
             msg = (
                 f'HR analysis window too short for estimating PSD for feature {name}. '
-                f'{min_window_length:.1f}s required, got {window_time}s'
+                f'{min_window_time:.1f}s required, got {window_time}s'
             )
             warnings.warn(msg, category=RuntimeWarning)
 
