@@ -37,7 +37,7 @@ _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for 
 
 def _create_ragged_array(data: List[np.ndarray]) -> np.ndarray:
     """
-    Convert an list of arrays with different lengths to a numpy array.
+    Convert a list of arrays with different lengths to a numpy array.
 
     Each element in `data` is a row in the resulting array. Rows shorter
     than the longest row will be padded with `np.nan`.
@@ -70,7 +70,7 @@ def _split_into_windows(
     Split (irregularly sampled) data into windows of equal temporal length.
 
     Make sure `data_times`, `window_times`, `lookback` and `lookforward`
-    use the same unit!
+    use the same units.
 
     Parameters
     ----------
@@ -154,7 +154,7 @@ def _hrv_timedomain_features(
     lookforward: int,
 ) -> np.ndarray:
     """
-    Calculate time domain heart rate variability (HRV) features.
+    Calculate 26 time domain heart rate variability (HRV) features.
 
     Features are implemented according to [1]_, [2]_ and [3]_.
 
@@ -256,7 +256,7 @@ def _hrv_frequencydomain_features(
     max_nans: float,
 ) -> np.ndarray:
     """
-    Calculate frequency domain heart rate variability (HRV) features.
+    Calculate seven frequency domain heart rate variability (HRV) features.
 
     Features are implemented according to [1]_.
 
@@ -427,8 +427,8 @@ def extract_features(
     Parameters
     ----------
     records : Iterable[SleepRecord]
-        An iterable of `SleepRecord` objects, as yielded by `sleepecg.io`'s
-        sleep reader functions.
+        An iterable of `SleepRecord` objects, as yielded by the various
+        reader functions in `sleepecg.io`.
     lookback : int, optional
         Backward extension of the analysis window from each sleep stage
         time in seconds, by default `0`.

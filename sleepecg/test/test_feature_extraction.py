@@ -22,7 +22,7 @@ def test_feature_ids():
     If this fails, make sure the identifiers in
     `feature_extraction.FEATURE_GROUPS` match the calculated features in
     the relevant function. Note that the test only compares lengths, so the
-    order might still incorrect.
+    order might still be incorrect.
     """
     heartbeat_times = np.cumsum(np.random.uniform(0.5, 1.5, 60*60*8))
     sleep_stages = np.random.randint(1, 6, int(max(heartbeat_times))//30)
