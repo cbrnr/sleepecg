@@ -362,7 +362,30 @@ def _hrv_frequencydomain_features(
 def _parse_feature_selection(
     requested_ids: List[str],
 ) -> Tuple[List[str], List[str], List[int]]:
-    # TODO: docstring
+    """
+    Parse a list containing feature group names and single feature IDs.
+
+    Each feature group is expanded to all its feature identifiers as listed
+    in `feature_extraction._FEATURE_GROUPS`, preserving input order. If an
+    invalid (group) ID is found, a `ValueError` is raised.
+
+    Parameters
+    ----------
+    requested_ids : list[str]
+        A list which can contain both feature group names and single
+        feature IDs in arbitrary order.
+
+    Returns
+    -------
+    required_groups : list[str]
+        The feature groups which have to be calculated to cover all
+        requested features.
+    feature_ids : list[str]
+        The expanded list containing only single feature IDs.
+    selected_cols : list[int]
+        The column indices of `feature_ids` in a list of all feature IDs in
+        all `required_groups`.
+    """
     required_groups = set()
     feature_ids = []
 
