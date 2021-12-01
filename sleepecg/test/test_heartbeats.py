@@ -7,7 +7,7 @@
 import numpy as np
 import pytest
 
-from sleepecg import compare_heartbeats, detect_heartbeats, get_config
+from sleepecg import compare_heartbeats, detect_heartbeats
 from sleepecg.io import read_mitdb
 
 
@@ -27,7 +27,7 @@ def test_compare_heartbeats():
 @pytest.fixture(scope='session')
 def mitdb_234_MLII():
     """Fetch record for detector tests."""
-    return next(read_mitdb(get_config('testdata_dir'), '234'))
+    return next(read_mitdb(records_pattern='234'))
 
 
 @pytest.mark.parametrize('backend', ['c', 'numba', 'python'])
