@@ -314,7 +314,7 @@ def _hrv_frequencydomain_features(
     }
 
     for name, min_frequency in min_frequencies.items():
-        min_window_time = 10 * (1 / min_frequency)
+        min_window_time = 10 / min_frequency
         if name not in feature_ids:
             continue
         if window_time < min_window_time:
