@@ -18,10 +18,6 @@ from ..heartbeats import detect_heartbeats
 from .nsrr import _get_nsrr_url, _list_nsrr
 from .utils import _download_file
 
-__all__ = [
-    'read_mesa',
-]
-
 
 class _SleepStage(IntEnum):
     """

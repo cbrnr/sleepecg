@@ -12,11 +12,6 @@ from tqdm import tqdm
 
 from .utils import _download_file
 
-__all__ = [
-    'download_physionet',
-]
-
-
 _PHYSIONET_FILES_URL = 'https://physionet.org/files/'
 _CHECKSUM_FILENAME = 'SHA256SUMS.txt'
 _RECORDS_FILENAME = 'RECORDS'

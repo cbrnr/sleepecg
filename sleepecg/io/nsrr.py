@@ -14,12 +14,6 @@ from tqdm import tqdm
 
 from .utils import _download_file
 
-__all__ = [
-    'download_nsrr',
-    'set_nsrr_token',
-]
-
-
 _nsrr_token = None
 
 
