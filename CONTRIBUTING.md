@@ -70,8 +70,8 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/), with the
 
 ## Public API
 - Every non-public member (i.e. every member not intended to be accessed by an end user) is prefixed with an underscore: `_`.
-- Modules export their public members explicitly (i.e. alphabetically list them in `__all__`). Otherwise their imports would be exported as well.
-- Inside a (sub-)package's `__init__.py`, `__all__` is _not_ set and module members are imported using `from .module import *`. This avoids listing member names multiple times.
+- Inside a (sub-)package's `__init__.py`, public module members are imported explicitly.
+- `__all__` is never set.
 
 
 ## Documentation
