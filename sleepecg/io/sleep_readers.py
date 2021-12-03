@@ -19,7 +19,7 @@ from .nsrr import _get_nsrr_url, _list_nsrr
 from .utils import _download_file
 
 
-class _SleepStage(IntEnum):
+class SleepStage(IntEnum):
     """
     Mapping of AASM sleep stages to integers.
 
@@ -43,7 +43,7 @@ class SleepRecord:
     ----------
     sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `_SleepStage`, by default `None`.
+        defined by `SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
         Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
@@ -81,7 +81,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     -------
     sleep_stages : np.ndarray
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `_SleepStage`.
+        defined by `SleepStage`.
     sleep_stage_duration : int
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
@@ -89,13 +89,13 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
     """
     STAGE_MAPPING = {
-        'Wake|0': _SleepStage.WAKE,
-        'Stage 1 sleep|1': _SleepStage.N1,
-        'Stage 2 sleep|2': _SleepStage.N2,
-        'Stage 3 sleep|3': _SleepStage.N3,
-        'Stage 4 sleep|4': _SleepStage.N3,
-        'REM sleep|5': _SleepStage.REM,
-        'Unscored|9': _SleepStage.UNDEFINED,
+        'Wake|0': SleepStage.WAKE,
+        'Stage 1 sleep|1': SleepStage.N1,
+        'Stage 2 sleep|2': SleepStage.N2,
+        'Stage 3 sleep|3': SleepStage.N3,
+        'Stage 4 sleep|4': SleepStage.N3,
+        'REM sleep|5': SleepStage.REM,
+        'Unscored|9': SleepStage.UNDEFINED,
     }
 
     root = ElementTree.parse(xml_filepath).getroot()
