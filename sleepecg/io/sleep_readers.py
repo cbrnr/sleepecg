@@ -15,12 +15,8 @@ import numpy as np
 
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
-from .nsrr import get_nsrr_url, list_nsrr
-from .utils import download_file
-
-__all__ = [
-    'read_mesa',
-]
+from .nsrr import _get_nsrr_url, _list_nsrr
+from .utils import _download_file
 
 
 class SleepStage(IntEnum):
@@ -183,7 +179,7 @@ def read_mesa(
         data_dir = get_config('data_dir')
 
     if not offline:
-        download_url = get_nsrr_url(DB_SLUG)
+        download_url = _get_nsrr_url(DB_SLUG)
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
@@ -195,7 +191,7 @@ def read_mesa(
 
     if not offline:
         checksums = {}
-        xml_files = list_nsrr(
+        xml_files = _list_nsrr(
             DB_SLUG,
             ANNOTATION_DIRNAME,
             f'mesa-sleep-{records_pattern}-nsrr.xml',
@@ -204,7 +200,7 @@ def read_mesa(
         checksums.update(xml_files)
         requested_records = [Path(file).stem[:-5] for file, _ in xml_files]
 
-        edf_files = list_nsrr(
+        edf_files = _list_nsrr(
             DB_SLUG,
             EDF_DIRNAME,
             f'mesa-sleep-{records_pattern}.edf',
@@ -226,7 +222,7 @@ def read_mesa(
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
             if not offline:
-                download_file(
+                _download_file(
                     download_url + edf_filename,
                     edf_filepath,
                     checksums[edf_filename],
@@ -246,7 +242,7 @@ def read_mesa(
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
         xml_filepath = db_dir / xml_filename
         if not offline:
-            download_file(
+            _download_file(
                 download_url + xml_filename,
                 xml_filepath,
                 checksums[xml_filename],

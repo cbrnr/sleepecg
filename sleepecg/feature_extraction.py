@@ -14,12 +14,6 @@ from scipy.signal import periodogram
 
 from .io.sleep_readers import SleepRecord
 
-__all__ = [
-    'extract_features',
-    'preprocess_rri',
-]
-
-
 _FEATURE_GROUPS = {
     'hrv-time': (
         'meanNN', 'maxNN', 'minNN', 'rangeNN', 'SDNN',

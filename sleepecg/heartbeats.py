@@ -26,13 +26,6 @@ except ImportError:
     _available_backends.remove('numba')
 
 
-__all__ = [
-    'compare_heartbeats',
-    'detect_heartbeats',
-    'rri_similarity',
-]
-
-
 # cache sos-filter created with scipy.signal.butter to reduce runtime
 _sos_filters = {}
 

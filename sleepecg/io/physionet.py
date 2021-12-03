@@ -10,20 +10,15 @@ from typing import Dict, Iterable, List, Optional
 
 from tqdm import tqdm
 
-from .utils import download_file
+from .utils import _download_file
 
-__all__ = [
-    'list_physionet',
-    'download_physionet',
-]
-
-PHYSIONET_FILES_URL = 'https://physionet.org/files/'
-CHECKSUM_FILENAME = 'SHA256SUMS.txt'
-RECORDS_FILENAME = 'RECORDS'
-CHECKSUM_TYPE = 'sha256'
+_PHYSIONET_FILES_URL = 'https://physionet.org/files/'
+_CHECKSUM_FILENAME = 'SHA256SUMS.txt'
+_RECORDS_FILENAME = 'RECORDS'
+_CHECKSUM_TYPE = 'sha256'
 
 
-def list_physionet(
+def _list_physionet(
     data_dir: Path,
     db_slug: str,
     db_version: Optional[str] = '1.0.0',
@@ -53,12 +48,12 @@ def list_physionet(
     """
     data_dir = Path(data_dir)
 
-    records_filepath = data_dir / db_slug / RECORDS_FILENAME
-    records_url = f'{PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{RECORDS_FILENAME}'
-    checksum = _get_physionet_checksums(data_dir, db_slug, db_version)[RECORDS_FILENAME]
+    records_filepath = data_dir / db_slug / _RECORDS_FILENAME
+    records_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_RECORDS_FILENAME}'
+    checksum = _get_physionet_checksums(data_dir, db_slug, db_version)[_RECORDS_FILENAME]
 
     if not records_filepath.is_file():
-        download_file(records_url, records_filepath, checksum, CHECKSUM_TYPE)
+        _download_file(records_url, records_filepath, checksum, _CHECKSUM_TYPE)
 
     all_records = records_filepath.read_text().splitlines()
     return fnmatch.filter(all_records, pattern)
@@ -92,18 +87,18 @@ def download_physionet(
     """
     data_dir = Path(data_dir)
     checksums = _get_physionet_checksums(data_dir, db_slug, db_version)
-    db_url = f'{PHYSIONET_FILES_URL}/{db_slug}/{db_version}'
+    db_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}'
 
     for record_id in tqdm(requested_records, desc=f'Downloading {db_slug}'):
         for extension in extensions:
             if not extension.startswith('.'):
                 extension = '.' + extension
             filepath = (data_dir / db_slug / record_id).with_suffix(extension)
-            download_file(
+            _download_file(
                 f'{db_url}/{filepath.name}',
                 filepath,
                 checksums[filepath.name],
-                checksum_type=CHECKSUM_TYPE,
+                checksum_type=_CHECKSUM_TYPE,
             )
 
 
@@ -133,11 +128,11 @@ def _get_physionet_checksums(
     dict[str, str]
         Mapping of filenames to checksums.
     """
-    checksum_url = f'{PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{CHECKSUM_FILENAME}'
-    checksum_filepath = data_dir / db_slug / CHECKSUM_FILENAME
+    checksum_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_CHECKSUM_FILENAME}'
+    checksum_filepath = data_dir / db_slug / _CHECKSUM_FILENAME
 
     if not checksum_filepath.is_file():
-        download_file(checksum_url, checksum_filepath)
+        _download_file(checksum_url, checksum_filepath)
 
     checksums = {}
     for line in checksum_filepath.read_text().splitlines():
