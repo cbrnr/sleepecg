@@ -4,6 +4,7 @@
 
 """Tests for sleep data reader functions."""
 
+import datetime
 import warnings
 from pathlib import Path
 from typing import List
@@ -12,7 +13,7 @@ import numpy as np
 import scipy.misc
 from pyedflib import highlevel
 
-from sleepecg.io import read_mesa
+from sleepecg.io import read_mesa, read_slpdb
 from sleepecg.io.sleep_readers import SleepStage
 
 
@@ -109,3 +110,12 @@ def test_read_mesa(tmp_path):
     for rec in records:
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
+
+
+def test_read_slpdb():
+    """Basic test for read_slpdb."""
+    rec = next(read_slpdb(records_pattern='slp01a'))
+    assert rec.sleep_stages.shape == (240,)
+    assert rec.sleep_stage_duration == 30
+    assert rec.id == 'slp01a'
+    assert rec.recording_start_time == datetime.time(23, 7)
