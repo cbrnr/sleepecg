@@ -15,9 +15,8 @@ import numpy as np
 
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
-from .nsrr import _get_nsrr_url, _list_nsrr
+from .nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr
 from .physionet import _list_physionet, download_physionet
-from .utils import _download_file
 
 
 class SleepStage(IntEnum):
@@ -223,11 +222,10 @@ def read_mesa(
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
             if not offline:
-                _download_file(
+                _download_nsrr_file(
                     download_url + edf_filename,
                     edf_filepath,
                     checksums[edf_filename],
-                    'md5',
                 )
 
             rec = read_raw_edf(edf_filepath, verbose=False)
@@ -243,11 +241,10 @@ def read_mesa(
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
         xml_filepath = db_dir / xml_filename
         if not offline:
-            _download_file(
+            _download_nsrr_file(
                 download_url + xml_filename,
                 xml_filepath,
                 checksums[xml_filename],
-                'md5',
             )
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
@@ -453,11 +450,10 @@ def read_shhs(
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
             if not offline:
-                _download_file(
+                _download_nsrr_file(
                     download_url + edf_filename,
                     edf_filepath,
                     checksums[edf_filename],
-                    'md5',
                 )
 
             rec = read_raw_edf(edf_filepath, verbose=False)
@@ -475,11 +471,10 @@ def read_shhs(
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
         xml_filepath = db_dir / xml_filename
         if not offline:
-            _download_file(
+            _download_nsrr_file(
                 download_url + xml_filename,
                 xml_filepath,
                 checksums[xml_filename],
-                'md5',
             )
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
