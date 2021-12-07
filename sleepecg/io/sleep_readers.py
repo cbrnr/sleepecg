@@ -16,6 +16,7 @@ import numpy as np
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
 from .nsrr import _get_nsrr_url, _list_nsrr
+from .physionet import _list_physionet, download_physionet
 from .utils import _download_file
 
 
@@ -256,5 +257,105 @@ def read_mesa(
             sleep_stage_duration=parsed_xml.sleep_stage_duration,
             id=record_id,
             recording_start_time=parsed_xml.recording_start_time,
+            heartbeat_times=heartbeat_times,
+        )
+
+
+def read_slpdb(
+    data_dir: Optional[Union[str, Path]] = None,
+    records_pattern: str = '*',
+    offline: bool = False,
+) -> Iterator[SleepRecord]:
+    """
+    Lazily read records from SLPDB (https://physionet.org/content/slpdb).
+
+    Required files are downloaded from PhysioNet to `<data_dir>/slpdb`.
+
+    Parameters
+    ----------
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
+    records_pattern : str, optional
+         Glob-like pattern to select record IDs, by default `'*'`.
+    offline : bool, optional
+        If `True`, search for local files only instead of downloading from
+        PhysioNet, by default `False`.
+
+    Yields
+    ------
+    SleepRecord
+        Each element in the generator is a :class:`SleepRecord`.
+    """
+    # https://physionet.org/content/slpdb/1.0.0/
+    import wfdb
+
+    DB_SLUG = 'slpdb'
+
+    STAGE_MAPPING = {
+        'W': SleepStage.WAKE,
+        'R': SleepStage.REM,
+        '1': SleepStage.N1,
+        '2': SleepStage.N2,
+        '3': SleepStage.N3,
+        '4': SleepStage.N3,
+    }
+
+    if data_dir is None:
+        data_dir = get_config('data_dir')
+
+    data_dir = Path(data_dir).expanduser()
+    db_dir = data_dir / DB_SLUG
+
+    requested_records = _list_physionet(
+        data_dir=data_dir,
+        db_slug=DB_SLUG,
+        pattern=records_pattern,
+    )
+
+    if not offline:
+        download_physionet(
+            data_dir=data_dir,
+            db_slug=DB_SLUG,
+            requested_records=requested_records,
+            extensions=['.hea', '.dat', '.st'],
+        )
+
+    for record_id in requested_records:
+        record_file = str(db_dir / record_id)
+
+        record = wfdb.rdrecord(record_file)
+        start_time = record.base_time
+        ecg = np.asarray(record.p_signal[:, record.sig_name.index('ECG')])
+        fs = record.fs
+
+        heartbeat_indices = detect_heartbeats(ecg, fs)
+        heartbeat_times = heartbeat_indices / fs
+
+        annot_st = wfdb.rdann(record_file, 'st')
+
+        # Some 30 second windows don't have a sleep stage annotation, so
+        # the annotation array is initialized with `SleepStage.UNDEFINED`
+        # for every 30 second window.
+        for sample_time, annotation in zip(annot_st.sample[::-1], annot_st.aux_note[::-1]):
+            if annotation[0] in STAGE_MAPPING:
+                number_of_sleep_stages = sample_time // (30 * fs) + 1
+                break
+
+        sleep_stages = np.full(number_of_sleep_stages, SleepStage.UNDEFINED)
+
+        # Most annotations are at sample indices which are multiples of
+        # 30*fs. However, annotations which would be at sample index 0, are
+        # at sample index 1. Integer divison is used when calculating the
+        # stage index to move these annotations to sample index 0.
+        for sample_time, annotation in zip(annot_st.sample, annot_st.aux_note):
+            if annotation[0] in STAGE_MAPPING:
+                sleep_stages[sample_time // (30 * fs)] = STAGE_MAPPING[annotation[0]]
+
+        yield SleepRecord(
+            sleep_stages=sleep_stages,
+            sleep_stage_duration=30,
+            id=record_id,
+            recording_start_time=start_time,
             heartbeat_times=heartbeat_times,
         )
