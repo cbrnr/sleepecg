@@ -17,12 +17,12 @@ from sleepecg.io import read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import SleepStage
 
 
-def _dummy_nsrr_edf(filename: str, hours: float):
+def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
     ECG_FS = 360
     ecg_5_min = scipy.misc.electrocardiogram()
     seconds = int(hours * 60 * 60)
     ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[np.newaxis, :seconds * ECG_FS]
-    signal_headers = highlevel.make_signal_headers(['EKG'], sample_frequency=ECG_FS)
+    signal_headers = highlevel.make_signal_headers([ecg_channel], sample_frequency=ECG_FS)
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore')
         highlevel.write_edf(filename, ecg, signal_headers)
@@ -93,7 +93,7 @@ def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int 
 
     for i, hours in enumerate(durations):
         record_id = f'mesa-sleep-dummy-{i:04}'
-        _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours)
+        _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='EKG')
         _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
 
 
@@ -113,7 +113,7 @@ def _create_dummy_shhs(data_dir: str, durations: List[float], random_state: int 
     for i, hours in enumerate(durations):
         for visit in ('shhs1', 'shhs2'):
             record_id = f'{visit}/{visit}-20{i:04}'
-            _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours)
+            _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='ECG')
             _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
 
 

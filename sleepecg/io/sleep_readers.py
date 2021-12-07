@@ -457,7 +457,7 @@ def read_shhs(
                 )
 
             rec = read_raw_edf(edf_filepath, verbose=False)
-            ecg = rec.get_data('EKG').ravel()
+            ecg = rec.get_data('ECG').ravel()
             fs = rec.info['sfreq']
             heartbeat_indices = detect_heartbeats(ecg, fs)
             heartbeat_times = heartbeat_indices / fs
