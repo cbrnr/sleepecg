@@ -13,22 +13,22 @@ import numpy as np
 import scipy.misc
 from pyedflib import highlevel
 
-from sleepecg.io import read_mesa, read_slpdb
+from sleepecg.io import read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import SleepStage
 
 
-def _dummy_mesa_edf(filename: str, hours: float):
+def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
     ECG_FS = 360
     ecg_5_min = scipy.misc.electrocardiogram()
     seconds = int(hours * 60 * 60)
     ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[np.newaxis, :seconds * ECG_FS]
-    signal_headers = highlevel.make_signal_headers(['EKG'], sample_frequency=ECG_FS)
+    signal_headers = highlevel.make_signal_headers([ecg_channel], sample_frequency=ECG_FS)
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore')
         highlevel.write_edf(filename, ecg, signal_headers)
 
 
-def _dummy_mesa_xml(filename: str, hours: float, random_state: int):
+def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
     EPOCH_LENGTH = 30
     STAGES = [
         'Wake|0',
@@ -93,8 +93,28 @@ def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int 
 
     for i, hours in enumerate(durations):
         record_id = f'mesa-sleep-dummy-{i:04}'
-        _dummy_mesa_edf(f'{edf_dir}/{record_id}.edf', hours)
-        _dummy_mesa_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
+        _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='EKG')
+        _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
+
+
+def _create_dummy_shhs(data_dir: str, durations: List[float], random_state: int = 42):
+    DB_SLUG = 'shhs'
+    ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
+    EDF_DIRNAME = 'polysomnography/edfs'
+
+    db_dir = Path(data_dir).expanduser() / DB_SLUG
+    annotations_dir = db_dir / ANNOTATION_DIRNAME
+    edf_dir = db_dir / EDF_DIRNAME
+
+    for directory in (annotations_dir, edf_dir):
+        for visit in ('shhs1', 'shhs2'):
+            (directory / visit).mkdir(parents=True, exist_ok=True)
+
+    for i, hours in enumerate(durations):
+        for visit in ('shhs1', 'shhs2'):
+            record_id = f'{visit}/{visit}-20{i:04}'
+            _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='ECG')
+            _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
 
 
 def test_read_mesa(tmp_path):
@@ -106,6 +126,21 @@ def test_read_mesa(tmp_path):
     records = list(read_mesa(data_dir=tmp_path, offline=True))
 
     assert len(records) == 2
+
+    for rec in records:
+        assert rec.sleep_stage_duration == 30
+        assert set(rec.sleep_stages) - valid_stages == set()
+
+
+def test_read_shhs(tmp_path):
+    """Basic sanity checks for records read via read_shhs."""
+    durations = [0.1, 0.2]  # hours
+    valid_stages = {int(s) for s in SleepStage}
+
+    _create_dummy_shhs(data_dir=tmp_path, durations=durations)
+    records = list(read_shhs(data_dir=tmp_path, offline=True))
+
+    assert len(records) == 4
 
     for rec in records:
         assert rec.sleep_stage_duration == 30

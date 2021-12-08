@@ -15,9 +15,8 @@ import numpy as np
 
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
-from .nsrr import _get_nsrr_url, _list_nsrr
+from .nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr
 from .physionet import _list_physionet, download_physionet
-from .utils import _download_file
 
 
 class SleepStage(IntEnum):
@@ -223,11 +222,10 @@ def read_mesa(
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
             if not offline:
-                _download_file(
+                _download_nsrr_file(
                     download_url + edf_filename,
                     edf_filepath,
                     checksums[edf_filename],
-                    'md5',
                 )
 
             rec = read_raw_edf(edf_filepath, verbose=False)
@@ -243,11 +241,10 @@ def read_mesa(
         xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
         xml_filepath = db_dir / xml_filename
         if not offline:
-            _download_file(
+            _download_nsrr_file(
                 download_url + xml_filename,
                 xml_filepath,
                 checksums[xml_filename],
-                'md5',
             )
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
@@ -357,5 +354,135 @@ def read_slpdb(
             sleep_stage_duration=30,
             id=record_id,
             recording_start_time=start_time,
+            heartbeat_times=heartbeat_times,
+        )
+
+
+def read_shhs(
+    data_dir: Optional[Union[str, Path]] = None,
+    records_pattern: str = '*',
+    use_cached_heartbeats: bool = True,
+    offline: bool = False,
+    keep_edfs: bool = False,
+) -> Iterator[SleepRecord]:
+    """
+    Lazily read records from SHHS (https://sleepdata.org/datasets/shhs).
+
+    Each SHHS record consists of an `.edf` file containing raw
+    polysomnography data and an `.xml` file containing annotated events.
+    Since the entire SHHS dataset requires about 356 GB of disk space,
+    `.edf` files can be deleted after heartbeat times have been extracted.
+    Heartbeat times are cached in an `.npy` file in
+    `<data_dir>/shhs/preprocessed/heartbeats`.
+
+    Parameters
+    ----------
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
+    records_pattern : str, optional
+         Glob-like pattern to select record IDs, by default `'*'`.
+    use_cached_heartbeats : bool, optional
+        If `True`, get heartbeat times directly from the cached `.npy`
+        file, so `.edf` files are only downloaded for records which have
+        not yet been preprocessed. By default `True`.
+    offline : bool, optional
+        If `True`, search for local files only instead of using the NSRR
+        API, by default `False`.
+    keep_edfs : bool, optional
+        If `False`, remove `.edf` after heartbeat detection, by default
+        `False`.
+
+    Yields
+    ------
+    SleepRecord
+        Each element in the generator is a :class:`SleepRecord`.
+    """
+    from mne.io import read_raw_edf
+
+    DB_SLUG = 'shhs'
+    ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
+    EDF_DIRNAME = 'polysomnography/edfs'
+    HEARTBEATS_DIRNAME = 'preprocessed/heartbeats'
+
+    if data_dir is None:
+        data_dir = get_config('data_dir')
+
+    if not offline:
+        download_url = _get_nsrr_url(DB_SLUG)
+
+    db_dir = Path(data_dir).expanduser() / DB_SLUG
+    annotations_dir = db_dir / ANNOTATION_DIRNAME
+    edf_dir = db_dir / EDF_DIRNAME
+    heartbeats_dir = db_dir / HEARTBEATS_DIRNAME
+
+    for directory in (annotations_dir, edf_dir, heartbeats_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+
+    if not offline:
+        checksums = {}
+        xml_files = _list_nsrr(
+            DB_SLUG,
+            ANNOTATION_DIRNAME,
+            f'{records_pattern}-nsrr.xml',
+            shallow=False,
+        )
+        checksums.update(xml_files)
+        requested_records = [file[-27:-9] for file, _ in xml_files]
+
+        edf_files = _list_nsrr(
+            DB_SLUG,
+            EDF_DIRNAME,
+            f'{records_pattern}.edf',
+            shallow=False,
+        )
+        checksums.update(edf_files)
+    else:
+        xml_files = sorted(annotations_dir.rglob(f'{records_pattern}-nsrr.xml'))
+        requested_records = [str(file)[-27:-9] for file in xml_files]
+
+    for record_id in requested_records:
+        heartbeats_file = heartbeats_dir / f'{record_id}.npy'
+        if use_cached_heartbeats and heartbeats_file.is_file():
+            heartbeat_times = np.load(heartbeats_file)
+        else:
+            edf_filename = EDF_DIRNAME + f'/{record_id}.edf'
+            edf_filepath = db_dir / edf_filename
+            edf_was_available = edf_filepath.is_file()
+            if not offline:
+                _download_nsrr_file(
+                    download_url + edf_filename,
+                    edf_filepath,
+                    checksums[edf_filename],
+                )
+
+            rec = read_raw_edf(edf_filepath, verbose=False)
+            ecg = rec.get_data('ECG').ravel()
+            fs = rec.info['sfreq']
+            heartbeat_indices = detect_heartbeats(ecg, fs)
+            heartbeat_times = heartbeat_indices / fs
+
+            heartbeats_file.parent.mkdir(parents=True, exist_ok=True)
+            np.save(heartbeats_file, heartbeat_times)
+
+            if not edf_was_available and not keep_edfs:
+                edf_filepath.unlink()
+
+        xml_filename = ANNOTATION_DIRNAME + f'/{record_id}-nsrr.xml'
+        xml_filepath = db_dir / xml_filename
+        if not offline:
+            _download_nsrr_file(
+                download_url + xml_filename,
+                xml_filepath,
+                checksums[xml_filename],
+            )
+
+        parsed_xml = _parse_nsrr_xml(xml_filepath)
+
+        yield SleepRecord(
+            sleep_stages=parsed_xml.sleep_stages,
+            sleep_stage_duration=parsed_xml.sleep_stage_duration,
+            id=record_id[6:],  # remove subdirectory
+            recording_start_time=parsed_xml.recording_start_time,
             heartbeat_times=heartbeat_times,
         )

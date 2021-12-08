@@ -119,6 +119,42 @@ def _list_nsrr(
     return files
 
 
+def _download_nsrr_file(
+    url: str,
+    target_filepath: Path,
+    checksum: str,
+):
+    """
+    Download a file from `url` to `target_filepath` and verify `checksum`.
+
+    This is a wrapper around `sleepecg.io.utils._download_file` to provide
+    a helpful error message in case the currently set token does not grant
+    access to the requested file.
+
+    Parameters
+    ----------
+    url : str
+        URL to download from.
+    target_filepath : pathlib.Path
+        Location where the downloaded file will be stored.
+    checksum : str
+        Checksum to verify the file against.
+    """
+    try:
+        _download_file(url, target_filepath, checksum, 'md5')
+    except RuntimeError as error:
+        # If the token is invalid for the requested dataset, the
+        # request is redirected to a files-overview page. The response
+        # is an HTML-page which doesn't have a "content-disposition"
+        # header.
+        response = requests.get(url, stream=True)
+        if 'content-disposition' not in response.headers:
+            db_slug = url.split('/')[4]
+            raise RuntimeError(f'Make sure you have access to {db_slug}!') from error
+        else:
+            raise
+
+
 def download_nsrr(
     db_slug: str,
     subfolder: str = '',
@@ -159,15 +195,4 @@ def download_nsrr(
     for filepath, checksum in tqdm(files_to_download, desc=tqdm_description):
         target_filepath = db_dir / filepath
         url = download_url + filepath
-        try:
-            _download_file(url, target_filepath, checksum, 'md5')
-        except RuntimeError as error:
-            # If the token is invalid for the requested dataset, the
-            # request is redirected to a files-overview page. The response
-            # is an HTML-page which doesn't have a "content-disposition"
-            # header.
-            response = requests.get(url, stream=True)
-            if 'content-disposition' not in response.headers:
-                raise RuntimeError(f'Make sure you have access to {db_slug}!') from error
-            else:
-                raise
+        _download_nsrr_file(url, target_filepath, checksum)
