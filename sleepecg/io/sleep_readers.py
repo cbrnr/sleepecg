@@ -253,6 +253,8 @@ def read_mesa(
                 skiprows=1,
                 usecols=18,  # column 18 ('seconds') contains the annotated heartbeat times
             )
+            # for some reason some (39) records have unsorted annotations
+            heartbeat_times.sort()
         elif heartbeats_source == 'cached':
             if not heartbeats_file.is_file():
                 print(f'Skipping {record_id} due to missing cached heartbeats.')
