@@ -131,7 +131,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 def read_mesa(
     data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
-    use_cached_heartbeats: bool = True,
+    heartbeats_source: str = 'annotation',
     offline: bool = False,
     keep_edfs: bool = False,
 ) -> Iterator[SleepRecord]:
@@ -152,10 +152,14 @@ def read_mesa(
         value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
-    use_cached_heartbeats : bool, optional
-        If `True`, get heartbeat times directly from the cached `.npy`
-        file, so `.edf` files are only downloaded for records which have
-        not yet been preprocessed. By default `True`.
+    heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
+        If `'annotation'` (default), get heartbeat times from
+        `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not
+        available for all records). If `'ecg'`, use
+        `sleepecg.detect_heartbeats` on the ecg contained in
+        `polysomnography/edfs/<record_id>.csv` and cache the result to
+        `precprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the
+        cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR
         API, by default `False`.
@@ -174,6 +178,14 @@ def read_mesa(
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
     HEARTBEATS_DIRNAME = 'preprocessed/heartbeats'
+    RPOINTS_DIRNAME = 'polysomnography/annotations-rpoints'
+
+    heartbeats_source_options = {'annotation', 'cached', 'ecg'}
+    if heartbeats_source not in heartbeats_source_options:
+        raise ValueError(
+            f'Invalid value for parameter `heartbeats_source`: {heartbeats_source}, '
+            f'possible options: {heartbeats_source_options}',
+        )
 
     if data_dir is None:
         data_dir = get_config('data_dir')
@@ -207,17 +219,46 @@ def read_mesa(
             shallow=True,
         )
         checksums.update(edf_files)
+
+        rpoints_files = _list_nsrr(
+            DB_SLUG,
+            RPOINTS_DIRNAME,
+            f'mesa-sleep-{records_pattern}-rpoint.csv',
+            shallow=True,
+        )
+        checksums.update(rpoints_files)
     else:
         xml_files = sorted(annotations_dir.glob(f'mesa-sleep-{records_pattern}-nsrr.xml'))
         requested_records = [file.stem[:-5] for file in xml_files]
-        if not use_cached_heartbeats:
-            edf_files = sorted(edf_dir.glob(f'mesa-sleep-{records_pattern}.edf'))
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f'{record_id}.npy'
-        if use_cached_heartbeats and heartbeats_file.is_file():
+        if heartbeats_source == 'annotation':
+            rpoints_filename = f'{RPOINTS_DIRNAME}/{record_id}-rpoint.csv'
+            rpoints_filepath = db_dir / rpoints_filename
+            if not rpoints_filepath.is_file():
+                if not offline and rpoints_filename in checksums:
+                    _download_nsrr_file(
+                        download_url + rpoints_filename,
+                        rpoints_filepath,
+                        checksums[rpoints_filename],
+                    )
+                else:
+                    print(f'Skipping {record_id} due to missing heartbeat annotations.')
+                    continue
+
+            heartbeat_times = np.loadtxt(
+                rpoints_filepath,
+                delimiter=',',
+                skiprows=1,
+                usecols=18,  # column 18 ('seconds') contains the annotated heartbeat times
+            )
+        elif heartbeats_source == 'cached':
+            if not heartbeats_file.is_file():
+                print(f'Skipping {record_id} due to missing cached heartbeats.')
+                continue
             heartbeat_times = np.load(heartbeats_file)
-        else:
+        elif heartbeats_source == 'ecg':
             edf_filename = EDF_DIRNAME + f'/{record_id}.edf'
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
