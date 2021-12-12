@@ -15,8 +15,8 @@ archs = 'x86_64'
 
 
 [tool.cibuildwheel.windows]
-archs-windows = 'AMD64'
+archs = 'AMD64'
 
 
 [tool.cibuildwheel.macos]
-archs-macos = 'x86_64 arm64'
+archs = 'x86_64 arm64'
