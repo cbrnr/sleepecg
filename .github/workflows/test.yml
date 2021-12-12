@@ -14,16 +14,6 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CIBW_TEST_REQUIRES: pytest
-  CIBW_TEST_EXTRAS: full
-  CIBW_TEST_COMMAND: pytest {package}
-  CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-  CIBW_SKIP: pp*
-  CIBW_ARCHS_LINUX: x86_64
-  CIBW_ARCHS_WINDOWS: AMD64
-  CIBW_ARCHS_MACOS: x86_64 arm64
-
 
 jobs:
   pre-commit:
