@@ -6,7 +6,7 @@ requires = ["setuptools", "wheel", "numpy"]
 test-requires = 'pytest'
 test-extras = 'full'
 test-command = 'pytest {package}'
-skip = 'pp* cp310-*'
+skip = 'pp* cp310-* *musllinux*'
 
 
 [tool.cibuildwheel.linux]
