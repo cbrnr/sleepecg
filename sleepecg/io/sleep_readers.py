@@ -34,6 +34,34 @@ class SleepStage(IntEnum):
     UNDEFINED = -1
 
 
+class Gender(IntEnum):
+    """Mapping of gender to integers."""
+
+    FEMALE = 0
+    MALE = 1
+
+
+@dataclass
+class SubjectData:
+    """
+    Store data about a single subject.
+
+    Attributes
+    ----------
+    gender : int, optional
+        The subject's gender, stored as an integer as defined by `Gender`,
+        by default `None`.
+    age : int, optional
+        The subject's age in years, by default `None`.
+    weight : int, optional
+        The subject's weight in kg, by default `None`.
+    """
+
+    gender: Optional[int] = None
+    age: Optional[int] = None
+    weight: Optional[int] = None
+
+
 @dataclass
 class SleepRecord:
     """
@@ -53,6 +81,9 @@ class SleepRecord:
     heartbeat_times : np.ndarray, optional
         Times of heartbeats relative to recording start in seconds, by
         default `None`.
+    subject_data : SubjectData, optional
+        Dataclass containing subject data, such as gender or age, by
+        default `SubjectData()` (without any values set).
     """
 
     sleep_stages: Optional[np.ndarray] = None
@@ -60,6 +91,7 @@ class SleepRecord:
     id: Optional[str] = None
     recording_start_time: Optional[datetime.time] = None
     heartbeat_times: Optional[np.ndarray] = None
+    subject_data: SubjectData = SubjectData()
 
 
 class _ParseNsrrXmlResult(NamedTuple):
@@ -180,6 +212,8 @@ def read_mesa(
     HEARTBEATS_DIRNAME = 'preprocessed/heartbeats'
     RPOINTS_DIRNAME = 'polysomnography/annotations-rpoints'
 
+    GENDER_MAPPING = {0: Gender.FEMALE, 1: Gender.MALE}
+
     heartbeats_source_options = {'annotation', 'cached', 'ecg'}
     if heartbeats_source not in heartbeats_source_options:
         raise ValueError(
@@ -190,9 +224,6 @@ def read_mesa(
     if data_dir is None:
         data_dir = get_config('data_dir')
 
-    if not offline:
-        download_url = _get_nsrr_url(DB_SLUG)
-
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
     edf_dir = db_dir / EDF_DIRNAME
@@ -202,6 +233,21 @@ def read_mesa(
         directory.mkdir(parents=True, exist_ok=True)
 
     if not offline:
+        download_url = _get_nsrr_url(DB_SLUG)
+
+        subject_data_filename, subject_data_checksum = _list_nsrr(
+            'mesa',
+            'datasets',
+            'mesa-sleep-dataset-*.csv',
+            shallow=True,
+        )[0]
+        subject_data_filepath = db_dir / subject_data_filename
+        _download_nsrr_file(
+            download_url + subject_data_filename,
+            target_filepath=subject_data_filepath,
+            checksum=subject_data_checksum,
+        )
+
         checksums = {}
         xml_files = _list_nsrr(
             DB_SLUG,
@@ -228,8 +274,24 @@ def read_mesa(
         )
         checksums.update(rpoints_files)
     else:
+        subject_data_filepath = next((db_dir / 'datasets').glob('mesa-sleep-dataset-*.csv'))
         xml_files = sorted(annotations_dir.glob(f'mesa-sleep-{records_pattern}-nsrr.xml'))
         requested_records = [file.stem[:-5] for file in xml_files]
+
+    subject_data_array = np.loadtxt(
+        subject_data_filepath,
+        delimiter=',',
+        skiprows=1,
+        usecols=[0, 3, 5],  # [mesaid, gender, age]
+        dtype=int,
+    )
+
+    subject_data = {}
+    for mesaid, gender, age in subject_data_array:
+        subject_data[f'mesa-sleep-{mesaid:04}'] = SubjectData(
+            gender=GENDER_MAPPING[gender],
+            age=age,
+        )
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f'{record_id}.npy'
@@ -298,6 +360,7 @@ def read_mesa(
             id=record_id,
             recording_start_time=parsed_xml.recording_start_time,
             heartbeat_times=heartbeat_times,
+            subject_data=subject_data[record_id],
         )
 
 
