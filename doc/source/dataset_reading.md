@@ -1,0 +1,52 @@
+(dataset_reading)=
+# Dataset reading
+SleepECG provides reader functions for various datasets. While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data request](#nsrr-data-access).
+
+## Sleep readers
+|Reader|Dataset name|Annotated records|Raw data size|Access|
+|-|-|-|-|-|
+|{doc}`read_mesa <../generated/sleepecg.io.sleep_readers.read_mesa>`|[Multi-Ethnic Study of Atherosclerosis](https://sleepdata.org/datasets/mesa/)|2056|385 GB|[request](https://sleepdata.org/data/requests/mesa/start)|
+|{doc}`read_shhs <../generated/sleepecg.io.sleep_readers.read_shhs>`|[Sleep Heart Health Study](https://sleepdata.org/datasets/mesa/)|8444|356 GB|[request](https://sleepdata.org/data/requests/shhs/start)|
+|{doc}`read_slpdb <../generated/sleepecg.io.sleep_readers.read_slpdb>`|[MIT-BIH Polysomnographic Database](https://physionet.org/content/slpdb)|18|632 MB|open|
+
+
+## ECG readers
+|Reader|Dataset name|Records|Signals|Raw data size|
+|-|-|-|-|-|
+|{doc}`read_gudb <../generated/sleepecg.io.ecg_readers.read_gudb>`|[Glasgow University ECG database ](https://berndporr.github.io/ECG-GUDB/)|335|335|550 MB|
+|{doc}`read_ltdb <../generated/sleepecg.io.ecg_readers.read_ltdb>`|[MIT-BIH Long-Term ECG Database](https://physionet.org/content/ltdb)|7|15|205 MB|
+|{doc}`read_mitdb <../generated/sleepecg.io.ecg_readers.read_mitdb>`|[MIT-BIH Arrhythmia Database](https://physionet.org/content/mitdb)|48|96|98.5 MB|
+
+
+## NSRR data access
+To gain access to a dataset provided by the [NSRR](https://sleepdata.org), complete the following steps:
+- Create an account [here](https://sleepdata.org/join).
+- To create a data access request, either
+    - go to the [datasets overview](https://sleepdata.org/datasets/) and click on "Request data access" for the desired dataset on the right side, or
+    - while browsing a dataset (e.g. [MESA](https://sleepdata.org/datasets/mesa)), click on "Request Data Access" on the top of the page, or
+    - follow the "request" link in the table [above](#sleep-readers).
+- Fill out the data access request and wait for approval (you will be notified via email).
+- Once the request is approved, you can
+    - download files manually from the "Files" tab on the respective dataset page (e.g. [MESA edfs](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs)) and
+    - use your [NSRR Token](https://sleepdata.org/token) to download files via the NSRR API.
+
+The code below shows how to read NSRR data with SleepECG:
+```python
+from sleepecg.io import read_mesa, set_nsrr_token
+
+set_nsrr_token('<your-download-token-here>')
+mesa = read_mesa()  # note that this is a generator
+```
+
+If you just want to download NSRR data (like with the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem)), use the workflow below. The example downloads all files within [`mesa/polysomnography/edfs`](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs) matching `*-00*` to a local folder `./datasets` (subfolders are created to preserve the dataset's directory structure).
+```python
+from sleepecg.io import download_nsrr, set_nsrr_token
+
+set_nsrr_token('<your-download-token-here>')
+download_nsrr(
+    db_slug='mesa',
+    subfolder='polysomnography/edfs',
+    pattern='*-00*',
+    data_dir='./datasets',
+)
+```

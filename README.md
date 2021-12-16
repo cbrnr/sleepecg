@@ -5,7 +5,7 @@
 
 # SleepECG
 SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
-- downloading and reading open polysomnography datasets (*TODO*),
+- downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
 
@@ -24,26 +24,7 @@ The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTIN
 
 
 ## Dataset reading
-SleepECG provides a consistent functional interface for downloading and reading common polysomnography datasets. While reader functions are a [WIP](https://github.com/cbrnr/sleepecg/pull/28), SleepECG already provides an interface for downloading datasets from the _National Sleep Research Resource_ (NSRR) on [sleepdata.org](https://sleepdata.org/), which replicates the functionality of the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem).
-
-The example below downloads all files within [`mesa/polysomnography/edfs`](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs) matching `*-00*` to a local folder `./datasets`:
-```python
-from sleepecg.io import download_nsrr, set_nsrr_token
-
-set_nsrr_token('<your-download-token-here>')
-download_nsrr(
-    db_slug='mesa',
-    subfolder='polysomnography/edfs',
-    pattern='*-00*',
-    data_dir='./datasets',
-)
-```
-
-### ECG dataset readers
-To facilitate evaluation of heartbeat detector performance, reader functions for the following annotated ECG datasets are provided:
-- [GUDB](https://github.com/berndporr/ECG-GUDB): [`sleepecg.io.read_gudb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_gudb.html)
-- [LTDB](https://physionet.org/content/ltdb/1.0.0/): [`sleepecg.io.read_ltdb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_ltdb.html)
-- [MITDB](https://physionet.org/content/mitdb/1.0.0/): [`sleepecg.io.read_mitdb`](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.io.ecg_readers.read_mitdb.html)
+SleepECG provides a consistent functional interface for downloading and reading common polysomnography datasets. While reader functions are a [WIP](https://github.com/cbrnr/sleepecg/pull/28), SleepECG already provides an interface for downloading datasets from the _National Sleep Research Resource_ (NSRR) on [sleepdata.org](https://sleepdata.org/), which replicates the functionality of the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem). For more information, see the {doc}`documentation <./dataset_reading>`
 
 
 ## Heartbeat detection
