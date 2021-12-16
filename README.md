@@ -23,7 +23,7 @@ conda install -c conda-forge sleepecg
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
 
 
-## Dataset reading
+## Datasets
 SleepECG provides a consistent functional interface for downloading and reading common polysomnography datasets. While reader functions are a [WIP](https://github.com/cbrnr/sleepecg/pull/28), SleepECG already provides an interface for downloading datasets from the _National Sleep Research Resource_ (NSRR) on [sleepdata.org](https://sleepdata.org/), which replicates the functionality of the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem). For more information, see the {doc}`documentation <./dataset_reading>`
 
 

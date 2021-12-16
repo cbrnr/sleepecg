@@ -3,7 +3,7 @@
 
    Home Page <self>
    API reference <generated/sleepecg>
-   Dataset reading <dataset_reading>
+   Datasets <datasets>
    Feature Extraction <feature_extraction>
 ```
 
