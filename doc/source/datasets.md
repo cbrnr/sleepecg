@@ -1,6 +1,6 @@
 (datasets)=
 # Datasets
-SleepECG provides reader functions for various datasets. While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access).
+SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified in `data_dir`. While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access).
 
 ## Sleep readers
 |Reader|Dataset name|Annotated records|Raw data size|Access|
