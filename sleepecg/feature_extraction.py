@@ -5,7 +5,7 @@
 """Functions and utilities related to feature extraction."""
 
 import warnings
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -13,6 +13,7 @@ from scipy.interpolate import interp1d
 from scipy.signal import periodogram
 
 from .io.sleep_readers import SleepRecord
+from .utils import _parallel
 
 _FEATURE_GROUPS = {
     'hrv-time': (
@@ -436,6 +437,132 @@ def preprocess_rri(
     return rri
 
 
+def _extract_features_single(
+    record: SleepRecord,
+    sleep_stage_duration: int,
+    min_rri: float,
+    max_rri: float,
+    required_groups: List[str],
+    lookback: int,
+    lookforward: int,
+    fs_rri_resample: float,
+    max_nans: float,
+    feature_ids: List[str],
+    col_indices: List[int],
+) -> Tuple[np.ndarray, Union[np.ndarray, None]]:
+    """
+    Calculate features for a single record.
+
+    This function is required to allow parallelizing feature extraction.
+
+    Parameters
+    ----------
+    record : SleepRecord
+        The record for which to calculate features.
+    sleep_stage_duration : int
+        Duration of a single sleep stage in the returned `stages` in
+        seconds.
+    min_rri: float, optional
+        Minimum RRI value in seconds to be considered valid. Will be passed
+        to :func:`preprocess_rri`.
+    max_rri: float, optional
+        Maximum RRI value in seconds to be considered valid. Will be passed
+        to :func:`preprocess_rri`.
+    required_groups : list[str]
+        The feature groups which have to be calculated to cover all
+        requested features.
+    lookback : int, optional
+        Backward extension of the analysis window from each sleep stage
+        time in seconds.
+    lookforward : int, optional
+        Forward extension of the analysis window from each sleep stage
+        time in seconds.
+    fs_rri_resample : float
+        Frequency in Hz at which the RRI time series should be resampled
+        before spectral analysis. Only relevant for frequency domain
+        features.
+    max_nans : float
+        Maximum fraction of NaNs in an analysis window, for which frequency
+        features are computed. Should be a value between `0.0` and `1.0`.
+    feature_ids : list[str]
+        A list containing the identifiers of all features to be extracted.
+        This is only used to avoid issuing a warning about the analysis
+        window being too short for some frequency range which isn't
+        requested.
+    col_indices : list[int]
+        The column indices of `feature_ids` in a list of all feature IDs in
+        all `required_groups`. Required to select the columns corresponding
+        to the requested `feature_ids` from the calculated feature matrix.
+
+    Returns
+    -------
+    features : np.ndarray
+        The feature matrix of shape `(len(sleep_stages), <num_features>)`
+        containing the extracted features.
+    stages : np.ndarray | None
+        Tge label vector, i.e. the annotated sleep stages. For a `record`
+        without annotated stages, this will be `None`.
+    """
+    rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
+
+    if record.sleep_stages is not None and record.sleep_stage_duration is not None:
+        record_duration = (len(record.sleep_stages) - 1) * record.sleep_stage_duration
+    elif record.heartbeat_times is not None:
+        record_duration = record.heartbeat_times[-1]
+    else:
+        raise ValueError(f"Record duration can't be inferred for {record.id}. ")
+    num_stages = record_duration // sleep_stage_duration
+    stage_times = np.arange(num_stages) * sleep_stage_duration
+
+    if rri_required:
+        if record.heartbeat_times is None:
+            raise ValueError(f"Can't extract HRV features for record {record.id} without heartbeat_times.")  # noqa: E501
+        rri = preprocess_rri(
+            np.diff(record.heartbeat_times),
+            min_rri=min_rri,
+            max_rri=max_rri,
+        )
+        rri_times = record.heartbeat_times[1:]
+
+    X = []
+    for feature_group in required_groups:
+        if feature_group == 'hrv-time':
+            X.append(
+                _hrv_timedomain_features(
+                    rri,
+                    rri_times,
+                    stage_times,
+                    lookback,
+                    lookforward,
+                ),
+            )
+        elif feature_group == 'hrv-frequency':
+            X.append(
+                _hrv_frequencydomain_features(
+                    rri,
+                    rri_times,
+                    stage_times,
+                    lookback,
+                    lookforward,
+                    fs_rri_resample,
+                    max_nans,
+                    feature_ids,
+                ),
+            )
+    features = np.hstack(X)[:, col_indices]
+
+    if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:
+        stages = record.sleep_stages
+    else:
+        stages = interp1d(
+            np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
+            record.sleep_stages,
+            kind='nearest',
+        )(stage_times)
+
+    return features, stages
+
+
 def extract_features(
     records: Iterable[SleepRecord],
     lookback: int = 0,
@@ -446,7 +573,8 @@ def extract_features(
     min_rri: Optional[float] = None,
     max_rri: Optional[float] = None,
     max_nans: float = 0,
-) -> Tuple[List[np.ndarray], List[np.ndarray], List[str]]:
+    n_jobs: int = 1,
+) -> Tuple[List[np.ndarray], List[Union[np.ndarray, None]], List[str]]:
     """
     Calculate features from sleep data (e.g. heart rate).
 
@@ -486,6 +614,9 @@ def extract_features(
         Maximum fraction of NaNs in an analysis window, for which frequency
         features are computed. Should be a value between `0.0` and `1.0`,
         by default `0`.
+    n_jobs : int, optional
+        The number of jobs to run in parallel. If `1` (default), no
+        parallelism is used. `-1` means using all processors.
 
     Returns
     -------
@@ -493,7 +624,7 @@ def extract_features(
         A list containing feature matrices which are arrays of shape
         `(len(sleep_stages), <num_features>)` and contain the extracted
         features per record.
-    stages : list[np.ndarray]
+    stages : list[np.ndarray | None]
         A list containing label vectors, i.e. the annotated sleep stages.
         For any `SleepRecord` without annotated stages, the corresponding
         list entry will be `None`.
@@ -522,65 +653,25 @@ def extract_features(
         feature_selection = list(_FEATURE_GROUPS)
 
     required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
-    rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
 
-    features = []
-    stages = []
-
-    for record in records:
-        if record.sleep_stages is not None and record.sleep_stage_duration is not None:
-            record_duration = (len(record.sleep_stages) - 1) * record.sleep_stage_duration
-        elif record.heartbeat_times is not None:
-            record_duration = record.heartbeat_times[-1]
-        else:
-            raise ValueError(f"Record duration can't be inferred for {record.id}. ")
-        num_stages = record_duration // sleep_stage_duration
-        stage_times = np.arange(num_stages) * sleep_stage_duration
-
-        if rri_required:
-            if record.heartbeat_times is None:
-                raise ValueError(f"Can't extract HRV features for record {record.id} without heartbeat_times.")  # noqa: E501
-            rri = preprocess_rri(
-                np.diff(record.heartbeat_times),
-                min_rri=min_rri,
-                max_rri=max_rri,
-            )
-            rri_times = record.heartbeat_times[1:]
-
-        X = []
-        for feature_group in required_groups:
-            if feature_group == 'hrv-time':
-                X.append(
-                    _hrv_timedomain_features(
-                        rri,
-                        rri_times,
-                        stage_times,
-                        lookback,
-                        lookforward,
-                    ),
-                )
-            elif feature_group == 'hrv-frequency':
-                X.append(
-                    _hrv_frequencydomain_features(
-                        rri,
-                        rri_times,
-                        stage_times,
-                        lookback,
-                        lookforward,
-                        fs_rri_resample,
-                        max_nans,
-                        feature_ids,
-                    ),
-                )
-        features.append(np.hstack(X)[:, col_indices])
-        if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:  # noqa: E501
-            stages.append(record.sleep_stages)
-        else:
-            interp_stages = interp1d(
-                np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
-                record.sleep_stages,
-                kind='nearest',
-            )(stage_times)
-            stages.append(interp_stages)
+    # _extract_features_single has two return values, so the list returned
+    # by _parallel needs to be unpacked
+    Xy = _parallel(
+        n_jobs,
+        _extract_features_single,
+        records,
+        sleep_stage_duration,
+        min_rri,
+        max_rri,
+        required_groups,
+        lookback,
+        lookforward,
+        fs_rri_resample,
+        max_nans,
+        feature_ids,
+        col_indices,
+    )
+    features = [X for X, _ in Xy]
+    stages = [y for _, y in Xy]
 
     return features, stages, feature_ids
