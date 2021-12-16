@@ -1,6 +1,6 @@
 (datasets)=
 # Datasets
-SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified in `data_dir`. While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access).
+SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified in `data_dir` (by default `~/.sleepecg/datasets`). While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access).
 
 ## Sleep readers
 |Reader|Dataset name|Annotated records|Raw data size|Access|
@@ -28,7 +28,7 @@ To gain access to a dataset provided by the [NSRR](https://sleepdata.org), compl
 - Fill out the data access request form and wait for approval (you will be notified via email).
 - Once the request is approved, you can
     - download files manually from the "Files" tab on the respective dataset page (e.g. [MESA EDFs](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs)) and
-    - use your [NSRR token](https://sleepdata.org/token) to download files via the NSRR API.
+    - use your [NSRR token](https://sleepdata.org/token) to download files via the NSRR API. Your token will always stay the same and is valid for all datasets you have been granted access to.
 
 The code below shows how to read all records in the [MESA](https://sleepdata.org/datasets/mesa) dataset with SleepECG:
 ```python
