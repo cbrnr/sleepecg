@@ -2,7 +2,7 @@
    :hidden:
 
    Home Page <self>
-   API reference <generated/sleepecg>
+   API reference <api>
    Datasets <datasets>
    Feature Extraction <feature_extraction>
    Configuration <configuration>
