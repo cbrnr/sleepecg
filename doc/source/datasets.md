@@ -45,7 +45,6 @@ from sleepecg.io import read_mesa, set_nsrr_token
 set_nsrr_token('<your-download-token-here>')
 mesa = read_mesa(records_pattern='00*')  # note that this is a generator
 ```
-If you want to read (and download) only a subset of a dataset, you can selec
 
 If you just want to download NSRR data (like with the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem)), use the workflow below. The example downloads all files within [`mesa/polysomnography/edfs`](https://sleepdata.org/datasets/mesa/files/polysomnography/edfs) matching `*-00*` to a local folder `./datasets` (subfolders are created to preserve the dataset's directory structure).
 ```python
