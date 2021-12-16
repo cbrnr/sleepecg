@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     paths-ignore:
-      - 'docs/**'
+      - 'doc/**'
   workflow_dispatch:
     # allow manual runs on branches without a PR
 
