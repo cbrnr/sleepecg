@@ -10,7 +10,7 @@
 ```
 
 # SleepECG
-Welcome! This is the documentation for SleepECG, a toolbox for sleep stage classification using ECG data.
+Welcome! This is the documentation for version **{{ version }}** of SleepECG, a toolbox for sleep stage classification using ECG data.
 
 - [**API reference**](./api) has detailed information about all public functions and classes in SleepECG.
 - [**Datasets**](./datasets) shows all avaiable datasets and instructions about retrieving NSRR data.
