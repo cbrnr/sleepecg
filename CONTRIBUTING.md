@@ -72,6 +72,7 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/), with the
 - Every non-public member (i.e. every member not intended to be accessed by an end user) is prefixed with an underscore: `_`.
 - Inside a (sub-)package's `__init__.py`, public module members are imported explicitly.
 - `__all__` is never set.
+- To add a function or class to the API reference, list its _public_ name (e.g. `sleepecg.detect_heartbeats`, not `sleepecg.heartbeat_detection.detect_heartbeats`) in `doc/source/api.rst`.
 
 
 ## Documentation
