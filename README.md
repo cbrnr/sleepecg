@@ -10,6 +10,10 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 - classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
 
 
+## Documentation
+Documentation for SleepECG is available on [readthedocs](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.html).
+
+
 ## Installation
 SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.io/en/stable/):
 ```
@@ -19,9 +23,7 @@ Alternatively, install via [conda](https://docs.conda.io/en/latest/):
 ```
 conda install -c conda-forge sleepecg
 ```
+
+
 ## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
-
-
-## Datasets
-SleepECG provides a consistent functional interface for downloading and reading common polysomnography datasets. While reader functions are a [WIP](https://github.com/cbrnr/sleepecg/pull/28), SleepECG already provides an interface for downloading datasets from the _National Sleep Research Resource_ (NSRR) on [sleepdata.org](https://sleepdata.org/), which replicates the functionality of the [NSRR Ruby Gem](https://github.com/nsrr/nsrr-gem). For more information, see the {doc}`documentation <./datasets>`
