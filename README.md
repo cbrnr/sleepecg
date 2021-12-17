@@ -1,7 +1,7 @@
 ![Py Version](https://img.shields.io/pypi/pyversions/sleepecg.svg?logo=python&logoColor=white)
 [![PyPI Version](https://img.shields.io/pypi/v/sleepecg)](https://pypi.org/project/sleepecg/)
 [![conda-forge version](https://img.shields.io/conda/v/conda-forge/sleepecg.svg?label=conda-forge)](https://anaconda.org/conda-forge/sleepecg)
-[![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/latest/generated/sleepecg.html)
+[![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/stable/index.html)
 
 # SleepECG
 SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
@@ -11,7 +11,7 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 
 
 ## Documentation
-Documentation for SleepECG is available on [readthedocs](https://sleepecg.readthedocs.io/en/stable/generated/sleepecg.html).
+Documentation for SleepECG is available on [readthedocs](https://sleepecg.readthedocs.io/en/stable/index.html).
 
 
 ## Installation
