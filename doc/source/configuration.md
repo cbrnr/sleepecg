@@ -1,6 +1,7 @@
 (configuration)=
 # Configuration
-SleepECG provides an interface to set and persist global configuration values. See {doc}`get_config <../generated/sleepecg.config.get_config>` and {doc}`set_config <../generated/sleepecg.config.set_config>` for usage instructions.
+SleepECG provides an interface to set and persist global configuration values. See
+[get_config](./generated/sleepecg.get_config) and [set_config](./generated/sleepecg.set_config) for usage instructions.
 
 This table lists the possible configuration settings and where they are used:
 

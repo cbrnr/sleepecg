@@ -1,13 +1,60 @@
-..
-   From https://github.com/JamesALeedham/Sphinx-Autosummary-Recursion
-   DO NOT DELETE THIS FILE! It contains the all-important `.. autosummary::` directive with `:recursive:` option, without
-   which API documentation wouldn't get extracted from docstrings by the `sphinx.ext.autosummary` engine. It is hidden
-   (not declared in any toctree) to remove an unnecessary intermediate page; index.rst instead points directly to the
-   package page. DO NOT REMOVE THIS FILE!
+SleepECG API Reference
+======================
+
+.. automodule:: sleepecg
+
+This page lists all public SleepECG functions and classes.
+
+Datasets
+--------
+See :ref:`Datasets <datasets>` for information about the available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
-   :toctree: generated
-   :template: custom-module-template.rst
-   :recursive:
+   :toctree: generated/
+   :nosignatures:
 
-   sleepecg
+   io.download_nsrr
+   io.download_physionet
+   io.read_gudb
+   io.read_ltdb
+   io.read_mesa
+   io.read_mitdb
+   io.read_shhs
+   io.read_slpdb
+   io.set_nsrr_token
+
+
+Feature extraction
+------------------
+Detailed information on the implemented features is available :ref:`here <feature_extraction>`.
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+
+   extract_features
+   preprocess_rri
+
+
+Heartbeat detection
+-------------------
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+
+   compare_heartbeats
+   detect_heartbeats
+   rri_similarity
+
+
+Configuration
+-------------
+Possible configuration settings are explained :ref:`here <configuration>`.
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+
+   get_config
+   set_config

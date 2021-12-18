@@ -31,6 +31,14 @@ source_suffix = {
     '.md': 'markdown',
 }
 
+myst_enable_extensions = [
+    'substitution',
+]
+
+myst_substitutions = {
+    'version': version,
+}
+
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'numpy': ('https://numpy.org/devdocs', None),
