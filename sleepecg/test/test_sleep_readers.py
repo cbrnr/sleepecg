@@ -13,7 +13,7 @@ import numpy as np
 import scipy.misc
 from pyedflib import highlevel
 
-from sleepecg.io import read_mesa, read_shhs, read_slpdb
+from sleepecg import read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import SleepStage
 
 

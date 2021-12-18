@@ -2,8 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sleepecg import compare_heartbeats, detect_heartbeats
-from sleepecg.io import read_mitdb
+from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
 
 # %% Download and read data, run detector
 record = list(read_mitdb(records_pattern='234'))[1]

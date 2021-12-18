@@ -39,9 +39,9 @@ def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
         indices (`.annotations`), `.lead`, and `.id`.
     """
     readers = {
-        'gudb': sleepecg.io.read_gudb,
-        'ltdb': sleepecg.io.read_ltdb,
-        'mitdb': sleepecg.io.read_mitdb,
+        'gudb': sleepecg.read_gudb,
+        'ltdb': sleepecg.read_ltdb,
+        'mitdb': sleepecg.read_mitdb,
     }
     if db_slug not in readers:
         raise ValueError(f'Invalid db_slug: {db_slug}')

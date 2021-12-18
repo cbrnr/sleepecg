@@ -13,15 +13,15 @@ See :ref:`Datasets <datasets>` for information about the available datasets and 
    :toctree: generated/
    :nosignatures:
 
-   io.download_nsrr
-   io.download_physionet
-   io.read_gudb
-   io.read_ltdb
-   io.read_mesa
-   io.read_mitdb
-   io.read_shhs
-   io.read_slpdb
-   io.set_nsrr_token
+   download_nsrr
+   download_physionet
+   read_gudb
+   read_ltdb
+   read_mesa
+   read_mitdb
+   read_shhs
+   read_slpdb
+   set_nsrr_token
 
 
 Feature extraction
