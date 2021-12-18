@@ -11,7 +11,7 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 
 
 ## Documentation
-Documentation for SleepECG is available on [readthedocs](https://sleepecg.readthedocs.io/en/stable/index.html).
+Documentation for SleepECG is available on [Read the Docs](https://sleepecg.readthedocs.io/en/stable/index.html).
 
 
 ## Installation

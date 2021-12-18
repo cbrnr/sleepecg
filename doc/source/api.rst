@@ -3,7 +3,7 @@ SleepECG API Reference
 
 .. automodule:: sleepecg
 
-This page gives an overview of all public SleepECG functions and classes.
+This page lists all public SleepECG functions and classes.
 
 Datasets
 --------
