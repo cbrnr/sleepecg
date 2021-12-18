@@ -22,6 +22,9 @@ See :ref:`Datasets <datasets>` for information about the available datasets and 
    read_shhs
    read_slpdb
    set_nsrr_token
+   ECGRecord
+   SleepRecord
+   SleepStage
 
 
 Feature extraction
