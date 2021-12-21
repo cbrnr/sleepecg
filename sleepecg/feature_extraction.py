@@ -395,7 +395,7 @@ def _parse_feature_selection(
             raise ValueError(f'Invalid feature or group ID: {id_}')
 
     all_cols = [id for group in required_groups for id in _FEATURE_GROUPS[group]]
-    selected_cols = [i for i, id in enumerate(all_cols) if id in feature_ids]
+    selected_cols = [all_cols.index(id_) for id_ in feature_ids]
 
     duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
     if duplicate_ids:
