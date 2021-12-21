@@ -506,7 +506,7 @@ def _extract_features_single(
     rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
 
     if record.sleep_stages is not None and record.sleep_stage_duration is not None:
-        record_duration = (len(record.sleep_stages) - 1) * record.sleep_stage_duration
+        record_duration = len(record.sleep_stages) * record.sleep_stage_duration
     elif record.heartbeat_times is not None:
         record_duration = record.heartbeat_times[-1]
     else:
@@ -558,6 +558,8 @@ def _extract_features_single(
             np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
             record.sleep_stages,
             kind='nearest',
+            bounds_error=False,
+            fill_value=(record.sleep_stages[0], record.sleep_stages[-1]),
         )(stage_times)
 
     return features, stages
