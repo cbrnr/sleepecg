@@ -224,7 +224,7 @@ def _hrv_timedomain_features(
     minHR = 60 / maxNN
     stdHR = np.nanstd(60 / NN, axis=1, ddof=1)
 
-    SD1 = SDSD**2 * 0.5
+    SD1 = (SDSD**2 * 0.5)**0.5
     SD2 = (2 * SDNN**2 - SD1**2)**0.5
     S = np.pi * SD1 * SD2
     SD1_SD2_ratio = SD1 / SD2
