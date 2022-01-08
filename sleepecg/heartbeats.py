@@ -362,24 +362,11 @@ def _thresholding_py(
     # respectively. Therefore, SPKF/SPKI are assumed to be the maximum
     # values of the filtered/integrated signal during the learning phase.
     # Accordingly, NPKF/NPKI are initialized to the mean values during the
-    # learning phase.
-    learning_phase_samples = int(2 * fs)  # 2 seconds
-    filtered_ecg_maximum = 0
-    filtered_ecg_sum = 0
-    integrated_ecg_maximum = 0
-    integrated_ecg_sum = 0
-    for i in range(learning_phase_samples):
-        if (filtered_ecg[i] > filtered_ecg_maximum):
-            filtered_ecg_maximum = filtered_ecg[i]
-        if (integrated_ecg[i] > integrated_ecg_maximum):
-            integrated_ecg_maximum = integrated_ecg[i]
-        filtered_ecg_sum += filtered_ecg[i]
-        integrated_ecg_sum += integrated_ecg[i]
-
-    SPKF = filtered_ecg_maximum
-    NPKF = filtered_ecg_sum / learning_phase_samples
-    SPKI = integrated_ecg_maximum
-    NPKI = integrated_ecg_sum / learning_phase_samples
+    # first two seconds.
+    SPKF = np.max(filtered_ecg[:int(2 * fs)])
+    NPKF = np.mean(filtered_ecg[:int(2 * fs)])
+    SPKI = np.max(integrated_ecg[:int(2 * fs)])
+    NPKI = np.mean(integrated_ecg[:int(2 * fs)])
     threshold_I1 = NPKI + 0.25 * (SPKI - NPKI)
     threshold_F1 = NPKF + 0.25 * (SPKF - NPKF)
 
