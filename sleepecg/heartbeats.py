@@ -625,7 +625,8 @@ def _thresholding_py(
                     threshold_F1 /= 2
                     threshold_I1 /= 2
 
-            # a signal peak has been found, so perform a searchback
+            # A signal peak has been found, so performing a searchback
+            # makes sense.
             do_searchback = True
 
             # previous peak index is required to calculate the RR interval
