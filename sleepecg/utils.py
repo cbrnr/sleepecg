@@ -22,8 +22,8 @@ def _parallel(
     """
     Apply a function to each element in an iterable in parallel.
 
-    joblib is used for parallelism. If it's not available, this falls back
-    to a pure python loop.
+    This uses joblib for parallelism. If the package is not available, it
+    falls back to a pure Python loop.
 
     Parameters
     ----------
@@ -67,9 +67,6 @@ def _parallel(
         from joblib import Parallel, delayed
     except ImportError:
         warnings.warn('joblib not installed, cannot run in parallel.')
-        n_jobs = 1
-
-    if n_jobs == 1:
         return [function(x, *args, **kwargs) for x in iterable]
 
     return Parallel(n_jobs=n_jobs)(
