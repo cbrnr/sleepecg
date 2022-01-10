@@ -190,7 +190,7 @@ def read_mesa(
         available for all records). If `'ecg'`, use
         `sleepecg.detect_heartbeats` on the ecg contained in
         `polysomnography/edfs/<record_id>.csv` and cache the result to
-        `precprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the
+        `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the
         cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR
