@@ -66,7 +66,8 @@ def _parallel(
     try:
         from joblib import Parallel, delayed
     except ImportError:
-        warnings.warn('joblib not installed, cannot run in parallel.')
+        if n_jobs != 1:
+            warnings.warn('joblib not installed, cannot run in parallel.')
         return [function(x, *args, **kwargs) for x in iterable]
 
     return Parallel(n_jobs=n_jobs)(
