@@ -161,11 +161,11 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
 
 def read_mesa(
-    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     heartbeats_source: str = 'annotation',
     offline: bool = False,
     keep_edfs: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
@@ -179,9 +179,6 @@ def read_mesa(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
@@ -198,6 +195,9 @@ def read_mesa(
     keep_edfs : bool, optional
         If `False`, remove `.edf` after heartbeat detection, by default
         `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------
@@ -365,9 +365,9 @@ def read_mesa(
 
 
 def read_slpdb(
-    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     offline: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from SLPDB (https://physionet.org/content/slpdb).
@@ -376,14 +376,14 @@ def read_slpdb(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
         If `True`, search for local files only instead of downloading from
         PhysioNet, by default `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------
@@ -465,11 +465,11 @@ def read_slpdb(
 
 
 def read_shhs(
-    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     use_cached_heartbeats: bool = True,
     offline: bool = False,
     keep_edfs: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from SHHS (https://sleepdata.org/datasets/shhs).
@@ -483,9 +483,6 @@ def read_shhs(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
     use_cached_heartbeats : bool, optional
@@ -498,6 +495,9 @@ def read_shhs(
     keep_edfs : bool, optional
         If `False`, remove `.edf` after heartbeat detection, by default
         `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------

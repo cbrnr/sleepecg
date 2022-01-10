@@ -44,23 +44,23 @@ class ECGRecord:
 
 
 def read_ltdb(
-    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     offline: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from LTDB (https://physionet.org/content/ltdb/).
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------
@@ -71,27 +71,27 @@ def read_ltdb(
     """
     if data_dir is None:
         data_dir = get_config('data_dir')
-    yield from _read_mitbih(data_dir, 'ltdb', records_pattern, offline)
+    yield from _read_mitbih('ltdb', records_pattern, offline, data_dir)
 
 
 def read_mitdb(
-    data_dir: Optional[Union[str, Path]] = None,
     records_pattern: str = '*',
     offline: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from MITDB (https://physionet.org/content/mitdb/).
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------
@@ -102,14 +102,14 @@ def read_mitdb(
     """
     if data_dir is None:
         data_dir = get_config('data_dir')
-    yield from _read_mitbih(data_dir, 'mitdb', records_pattern, offline)
+    yield from _read_mitbih('mitdb', records_pattern, offline, data_dir)
 
 
 def _read_mitbih(
-    data_dir: Union[str, Path],
     db_slug: str,
-    records_pattern: str = '*',
-    offline: bool = False,
+    records_pattern: str,
+    offline: bool,
+    data_dir: Union[str, Path],
 ) -> Iterator[ECGRecord]:
     """
     Lazily reads records from MIT-BIH datasets (e.g. MITDB, LTDB).
@@ -118,15 +118,15 @@ def _read_mitbih(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path
-        Directory where all datasets are stored.
     db_slug : str
         Short identifier of a database, e.g. `'mitdb'`.
-    records_pattern : str, optional
-        Glob-like pattern to select record IDs, by default `'*'`.
-    offline : bool, optional
+    records_pattern : str
+        Glob-like pattern to select record IDs.
+    offline : bool
         If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default `False`.
+        downloaded).
+    data_dir : str | pathlib.Path
+        Directory where all datasets are stored.
 
     Yields
     ------
@@ -174,8 +174,8 @@ def _read_mitbih(
 
 
 def read_gudb(
-    data_dir: Optional[Union[str, Path]] = None,
     offline: bool = False,
+    data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily reads records from GUDB (https://berndporr.github.io/ECG-GUDB/).
@@ -184,12 +184,12 @@ def read_gudb(
 
     Parameters
     ----------
-    data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
     offline : bool, optional
         If `True`, only local files will be used (i.e. no files will be
         downloaded), by default `False`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored. If `None` (default), the
+        value will be taken from the configuration.
 
     Yields
     ------
