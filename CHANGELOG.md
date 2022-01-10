@@ -8,6 +8,7 @@
 
 ### Changed
 - Export members of `sleepecg.io` to main package ([#56](https://github.com/cbrnr/sleepecg/pull/56) by [Florian Hofer](https://github.com/hofaflo))
+- Reader functions now have `records_pattern` as their first parameter and `data_dir` is the last one ([#65](https://github.com/cbrnr/sleepecg/pull/65) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.3.0] - 2021-08-25
 ### Added
