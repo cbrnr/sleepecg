@@ -10,7 +10,7 @@
 ```
 
 # SleepECG
-Welcome! This is the documentation for version **{{ version }}** of SleepECG, a toolbox for sleep stage classification using ECG data.
+Welcome! This is the documentation for version **{{ version }}** of SleepECG, a package for sleep stage classification using ECG data.
 
 SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.io/en/stable/):
 ```
