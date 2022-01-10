@@ -14,6 +14,7 @@ import scipy.misc
 from pyedflib import highlevel
 
 from sleepecg import SleepStage, read_mesa, read_shhs, read_slpdb
+from sleepecg.io.sleep_readers import Gender
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
@@ -160,3 +161,6 @@ def test_read_slpdb():
     assert rec.sleep_stage_duration == 30
     assert rec.id == 'slp01a'
     assert rec.recording_start_time == datetime.time(23, 7)
+    assert rec.subject_data.gender == Gender.MALE
+    assert rec.subject_data.age == 44
+    assert rec.subject_data.weight == 89
