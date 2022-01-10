@@ -224,7 +224,7 @@ def _hrv_timedomain_features(
     minHR = 60 / maxNN
     stdHR = np.nanstd(60 / NN, axis=1, ddof=1)
 
-    SD1 = SDSD**2 * 0.5
+    SD1 = (SDSD**2 * 0.5)**0.5
     SD2 = (2 * SDNN**2 - SD1**2)**0.5
     S = np.pi * SD1 * SD2
     SD1_SD2_ratio = SD1 / SD2
@@ -395,7 +395,7 @@ def _parse_feature_selection(
             raise ValueError(f'Invalid feature or group ID: {id_}')
 
     all_cols = [id for group in required_groups for id in _FEATURE_GROUPS[group]]
-    selected_cols = [i for i, id in enumerate(all_cols) if id in feature_ids]
+    selected_cols = [all_cols.index(id_) for id_ in feature_ids]
 
     duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
     if duplicate_ids:
@@ -506,7 +506,7 @@ def _extract_features_single(
     rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
 
     if record.sleep_stages is not None and record.sleep_stage_duration is not None:
-        record_duration = (len(record.sleep_stages) - 1) * record.sleep_stage_duration
+        record_duration = len(record.sleep_stages) * record.sleep_stage_duration
     elif record.heartbeat_times is not None:
         record_duration = record.heartbeat_times[-1]
     else:
@@ -558,6 +558,8 @@ def _extract_features_single(
             np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
             record.sleep_stages,
             kind='nearest',
+            bounds_error=False,
+            fill_value=(record.sleep_stages[0], record.sleep_stages[-1]),
         )(stage_times)
 
     return features, stages
