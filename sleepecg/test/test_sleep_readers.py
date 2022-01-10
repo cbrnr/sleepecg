@@ -83,18 +83,25 @@ def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int 
     DB_SLUG = 'mesa'
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
+    CSV_DIRNAME = 'datasets'
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
     edf_dir = db_dir / EDF_DIRNAME
+    csv_dir = db_dir / CSV_DIRNAME
 
-    for directory in (annotations_dir, edf_dir):
+    for directory in (annotations_dir, edf_dir, csv_dir):
         directory.mkdir(parents=True, exist_ok=True)
 
     for i, hours in enumerate(durations):
-        record_id = f'mesa-sleep-dummy-{i:04}'
+        record_id = f'mesa-sleep-{i:04}'
         _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='EKG')
         _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
+
+    with open(csv_dir / 'mesa-sleep-dataset-0.0.0.csv', 'w') as csv:
+        csv.write('mesaid,examnumber,race1c,gender1,cucmcn1c,sleepage5c\n')
+        for i in range(len(durations)):
+            csv.write(f'{i},5,0,0,0,77\n')
 
 
 def _create_dummy_shhs(data_dir: str, durations: List[float], random_state: int = 42):
@@ -123,7 +130,7 @@ def test_read_mesa(tmp_path):
     valid_stages = {int(s) for s in SleepStage}
 
     _create_dummy_mesa(data_dir=tmp_path, durations=durations)
-    records = list(read_mesa(data_dir=tmp_path, offline=True))
+    records = list(read_mesa(data_dir=tmp_path, heartbeats_source='ecg', offline=True))
 
     assert len(records) == 2
 
