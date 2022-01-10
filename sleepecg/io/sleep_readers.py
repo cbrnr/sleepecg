@@ -188,7 +188,7 @@ def read_mesa(
         If `'annotation'` (default), get heartbeat times from
         `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not
         available for all records). If `'ecg'`, use
-        `sleepecg.detect_heartbeats` on the ecg contained in
+        `sleepecg.detect_heartbeats` on the ECG contained in
         `polysomnography/edfs/<record_id>.csv` and cache the result to
         `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the
         cached heartbeats.
