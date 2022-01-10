@@ -1,8 +1,7 @@
 # %%
 import numpy as np
 
-from sleepecg import extract_features
-from sleepecg.io.sleep_readers import SleepRecord
+from sleepecg import SleepRecord, extract_features
 
 # Generate dummy data while we don't have reader functions for sleep data
 recording_hours = 8

@@ -7,8 +7,7 @@
 import numpy as np
 import pytest
 
-from sleepecg import compare_heartbeats, detect_heartbeats
-from sleepecg.io import read_mitdb
+from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
 
 
 def test_compare_heartbeats():

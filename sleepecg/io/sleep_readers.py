@@ -71,7 +71,7 @@ class SleepRecord:
     ----------
     sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`, by default `None`.
+        defined by :class:`SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
         Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
@@ -113,7 +113,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     -------
     sleep_stages : np.ndarray
         Sleep stages according to AASM guidelines, stored as integers as
-        defined by `SleepStage`.
+        defined by :class:`SleepStage`.
     sleep_stage_duration : int
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time

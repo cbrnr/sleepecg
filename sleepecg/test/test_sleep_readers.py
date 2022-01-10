@@ -13,8 +13,7 @@ import numpy as np
 import scipy.misc
 from pyedflib import highlevel
 
-from sleepecg.io import read_mesa, read_shhs, read_slpdb
-from sleepecg.io.sleep_readers import SleepStage
+from sleepecg import SleepStage, read_mesa, read_shhs, read_slpdb
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):

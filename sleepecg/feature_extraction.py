@@ -586,7 +586,7 @@ def extract_features(
     ----------
     records : Iterable[SleepRecord]
         An iterable of `SleepRecord` objects, as yielded by the various
-        reader functions in `sleepecg.io`.
+        reader functions in SleepECG.
     lookback : int, optional
         Backward extension of the analysis window from each sleep stage
         time in seconds, by default `0`.

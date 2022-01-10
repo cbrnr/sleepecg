@@ -6,6 +6,9 @@
 - Add reader function for [SLPDB](https://physionet.org/content/slpdb) ([#47](https://github.com/cbrnr/sleepecg/pull/47)) by [Florian Hofer](https://github.com/hofaflo))
 - Add reader function for [SHHS](https://sleepdata.org/datasets/shhs) ([#48](https://github.com/cbrnr/sleepecg/pull/48)) by [Florian Hofer](https://github.com/hofaflo))
 
+### Changed
+- Export members of `sleepecg.io` to main package ([#56](https://github.com/cbrnr/sleepecg/pull/56) by [Florian Hofer](https://github.com/hofaflo))
+
 ## [0.3.0] - 2021-08-25
 ### Added
 - Example containing code used for benchmarks ([#22](https://github.com/cbrnr/sleepecg/pull/22) by [Florian Hofer](https://github.com/hofaflo))
