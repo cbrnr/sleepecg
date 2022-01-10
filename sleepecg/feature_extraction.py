@@ -510,13 +510,13 @@ def _extract_features_single(
     elif record.heartbeat_times is not None:
         record_duration = record.heartbeat_times[-1]
     else:
-        raise ValueError(f"Record duration cannot be inferred for {record.id}. ")
+        raise ValueError(f'Record duration cannot be inferred for {record.id}.')
     num_stages = record_duration // sleep_stage_duration
     stage_times = np.arange(num_stages) * sleep_stage_duration
 
     if rri_required:
         if record.heartbeat_times is None:
-            raise ValueError(f"Cannot extract HRV features for record {record.id} without heartbeat_times.")  # noqa: E501
+            raise ValueError(f'Cannot extract HRV features for record {record.id} without heartbeat_times.')  # noqa: E501
         rri = preprocess_rri(
             np.diff(record.heartbeat_times),
             min_rri=min_rri,
