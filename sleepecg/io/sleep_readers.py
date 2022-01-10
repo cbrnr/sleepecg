@@ -83,7 +83,7 @@ class SleepRecord:
         default `None`.
     subject_data : SubjectData, optional
         Dataclass containing subject data, such as gender or age, by
-        default `SubjectData()` (without any values set).
+        default `None`.
     """
 
     sleep_stages: Optional[np.ndarray] = None
@@ -91,7 +91,7 @@ class SleepRecord:
     id: Optional[str] = None
     recording_start_time: Optional[datetime.time] = None
     heartbeat_times: Optional[np.ndarray] = None
-    subject_data: SubjectData = SubjectData()
+    subject_data: Optional[SubjectData] = None
 
 
 class _ParseNsrrXmlResult(NamedTuple):
