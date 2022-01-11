@@ -20,16 +20,16 @@ import sleepecg
 from sleepecg.io.ecg_readers import ECGRecord
 
 
-def reader_dispatch(data_dir: str, db_slug: str) -> Iterator[ECGRecord]:
+def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
     """
     Read ECG records from mitdb, ltdb or gudb.
 
     Parameters
     ----------
-    data_dir : str
-        Directory where all datasets are stored.
     db_slug : str
         Short identifier of a dataset, e.g. `'mitdb'`.
+    data_dir : str
+        Directory where all datasets are stored.
 
     Yields
     ------
