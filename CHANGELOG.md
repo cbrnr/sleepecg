@@ -1,3 +1,5 @@
+## [UNRELEASED]
+
 ## [0.4.0] - 2022-01-11
 ### Added
 - Configuration via a YAML file ([#39](https://github.com/cbrnr/sleepecg/pull/39) by [Florian Hofer](https://github.com/hofaflo))
