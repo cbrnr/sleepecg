@@ -455,12 +455,24 @@ def read_slpdb(
             if annotation[0] in STAGE_MAPPING:
                 sleep_stages[sample_time // (30 * fs)] = STAGE_MAPPING[annotation[0]]
 
+        # Age and weight are given in the last line of the header file,
+        # which is contained in record.comments[0] and looks like this:
+        # '44 M 89 32-01-89' ('<age> <gender> <weight> <unspecified>')
+        # For some records, age/weight is given as 'x'.
+        age, _, weight, _ = record.comments[0].split()
+        subject_data = SubjectData(
+            gender=Gender.MALE,  # all slpdb subjects were male
+            age=None if age == 'x' else int(age),
+            weight=None if weight == 'x' else int(weight),
+        )
+
         yield SleepRecord(
             sleep_stages=sleep_stages,
             sleep_stage_duration=30,
             id=record_id,
             recording_start_time=start_time,
             heartbeat_times=heartbeat_times,
+            subject_data=subject_data,
         )
 
 
