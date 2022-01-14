@@ -5,4 +5,4 @@ from .feature_extraction import extract_features, preprocess_rri
 from .heartbeats import compare_heartbeats, detect_heartbeats, rri_similarity
 from .io import *  # noqa: F403
 
-__version__ = '0.5.0-dev'
+__version__ = '0.4.1'
