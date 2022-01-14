@@ -1,4 +1,6 @@
 ## [UNRELEASED]
+### Fixed
+- Fix `reader_dispatch` in `examples/benchmark/utils.py` not yielding anything  ([#68](https://github.com/cbrnr/sleepecg/pull/68) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.4.0] - 2022-01-11
 ### Added

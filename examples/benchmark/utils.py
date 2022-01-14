@@ -45,7 +45,7 @@ def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
     }
     if db_slug not in readers:
         raise ValueError(f'Invalid db_slug: {db_slug}')
-    yield from readers[db_slug](data_dir)
+    yield from readers[db_slug](data_dir=data_dir)
 
 
 def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
