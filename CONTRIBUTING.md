@@ -114,7 +114,7 @@ Follow these steps to release a new version of SleepECG:
 - [Create a new release](https://github.com/cbrnr/sleepecg/releases/new) on GitHub.
     - Create a new tag where the target version is prefixed with a `v`, e.g. `v0.4.0`.
     - Use the tag as the release title.
-    - Mention the most important changes in the release decription and include a link to the changelog.
+    - Mention the most important changes in the release description and include a link to the changelog.
 - This triggers the [`release.yml`](https://github.com/cbrnr/sleepecg/blob/main/.github/workflows/release.yml) workflow which builds the wheels and publishes the package on [PyPI](https://pypi.org/project/sleepecg).
 
 This concludes the new release. Now prepare the source for the next planned release as follows:
