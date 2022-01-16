@@ -53,3 +53,14 @@ For calculating the frequency domain HRV features, the RR time series is resampl
 |`LF_norm`|LF power in normalized units ($\frac{LF}{LF+HF}\cdot100$)|$[0.04,0.15)Hz$|
 |`HF_norm`|HF power in normalized units ($\frac{HF}{LF+HF}\cdot100$)|$[0.15,0.4)Hz$|
 |`LF_HF_ratio`|ratio of LF:HF|-|
+
+
+## Metadata features
+Group identifier: `metadata`
+
+|Feature identifier|Description|
+|-|-|
+|`recording_start_time`|time at which the recording was started, given in seconds (`0` corresponds to `00:00:00` and `86399` to `23:59:59`)|
+|`age`|age of the subject in years|
+|`gender`|`0` -> female, `1` -> male|
+|`weight`|weight of the subject in kg|

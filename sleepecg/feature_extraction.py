@@ -13,7 +13,7 @@ from scipy.interpolate import interp1d
 from scipy.signal import periodogram
 
 from .io.sleep_readers import SleepRecord
-from .utils import _parallel
+from .utils import _parallel, _time_to_sec
 
 _FEATURE_GROUPS = {
     'hrv-time': (
@@ -26,6 +26,7 @@ _FEATURE_GROUPS = {
     'hrv-frequency': (
         'total_power', 'VLF', 'LF', 'LF_norm', 'HF', 'HF_norm', 'LF_HF_ratio',
     ),
+    'metadata': ('recording_start_time', 'age', 'gender', 'weight'),
 }
 _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
 
@@ -354,6 +355,49 @@ def _hrv_frequencydomain_features(
     return np.vstack((total_power, vlf, lf, lf_norm, hf, hf_norm, lf_hf_ratio)).T
 
 
+def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
+    """
+    Create a feature matrix from record metadata.
+
+    Recording start time, gender, age and weight are used as (constant)
+    features. In case of missing information (i.e. the required attribute
+    of `SleepRecord` is `None`), the corresponding column is filled with
+    `np.nan`.
+
+    Parameters
+    ----------
+    record : SleepRecord
+        The record from which to extract metadata features.
+    num_stages : int
+        The length (number of rows) of the feature matrix to be created.
+
+    Returns
+    -------
+    np.ndarray
+        Array of shape `(num_stages, 4)` containing the extracted features.
+    """
+    feature_ids = _FEATURE_GROUPS['metadata']
+
+    X = np.full((num_stages, len(feature_ids)), np.nan)
+
+    # recording start time
+    if record.recording_start_time is not None:
+        X[:, 0] = _time_to_sec(record.recording_start_time)
+
+    if record.subject_data is None:
+        return X
+
+    # subject data features
+    if record.subject_data.age is not None:
+        X[:, 1] = record.subject_data.age
+    if record.subject_data.gender is not None:
+        X[:, 2] = record.subject_data.gender
+    if record.subject_data.weight is not None:
+        X[:, 3] = record.subject_data.weight
+
+    return X
+
+
 def _parse_feature_selection(
     requested_ids: List[str],
 ) -> Tuple[List[str], List[str], List[int]]:
@@ -549,6 +593,8 @@ def _extract_features_single(
                     feature_ids,
                 ),
             )
+        elif feature_group == 'metadata':
+            X.append(_metadata_features(record, num_stages))
     features = np.hstack(X)[:, col_indices]
 
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:

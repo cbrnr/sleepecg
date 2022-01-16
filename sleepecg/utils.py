@@ -5,6 +5,7 @@
 """Utility functions."""
 
 
+import datetime
 import warnings
 from typing import Callable, Iterable, List, TypeVar
 
@@ -73,3 +74,7 @@ def _parallel(
     return Parallel(n_jobs=n_jobs)(
         delayed(function)(x, *args, **kwargs) for x in iterable
     )
+
+
+def _time_to_sec(time: datetime.time):
+    return time.hour * 3600 + time.minute * 60 + time.second
