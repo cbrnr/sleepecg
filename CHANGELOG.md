@@ -1,4 +1,4 @@
-## [UNRELEASED]
+## [UNRELEASED] - YYYY-MM-DD
 
 ## [0.4.1] - 2022-01-14
 ### Fixed

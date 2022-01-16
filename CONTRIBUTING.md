@@ -104,3 +104,20 @@ in the project or package root. The tests for the C extension can be excluded us
 ```
 pytest -m "not c_extension"
 ```
+
+## Releasing
+Follow these steps to release a new version of SleepECG:
+- In `sleepecg/__init__.py` remove the `-dev` suffix in `__version__`.
+    - In case of a patch release, modify the version number accordingly.
+- In `CHANGELOG.md`, update `## [UNRELEASED] - YYYY-MM-DD` to contain the version number and current date.
+- Commit these changes as `Prepare vX.Y.Z release` and push.
+- [Create a new release](https://github.com/cbrnr/sleepecg/releases/new) on GitHub.
+    - Create a new tag where the target version is prefixed with a `v`, e.g. `v0.4.0`.
+    - Use the tag as the release title.
+    - Mention the most important changes in the release description and include a link to the changelog.
+- This triggers the [`release.yml`](https://github.com/cbrnr/sleepecg/blob/main/.github/workflows/release.yml) workflow which builds the wheels and publishes the package on [PyPI](https://pypi.org/project/sleepecg).
+
+This concludes the new release. Now prepare the source for the next planned release as follows:
+- Update `__version__` in `sleepecg/__init__.py` to the next planned version and append `-dev`.
+- Start a new section at the top of `CHANGELOG.md` titled `## [UNRELEASED] - YYYY-MM-DD`.
+- Commit these changes as `Prepare vX.Y.Z-dev` and push.
