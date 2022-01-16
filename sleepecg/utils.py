@@ -77,4 +77,19 @@ def _parallel(
 
 
 def _time_to_sec(time: datetime.time):
+    """
+    Convert a `datetime.time` to seconds.
+
+    `00:00:00` corresponds to `0` and `23:59:59` to `86399`.
+
+    Parameters
+    ----------
+    time : datetime.time
+        A `datetime.time` to convert.
+
+    Returns
+    -------
+    int
+        Time of day in seconds.
+    """
     return time.hour * 3600 + time.minute * 60 + time.second
