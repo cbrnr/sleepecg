@@ -145,7 +145,7 @@ def test_read_shhs(tmp_path):
     valid_stages = {int(s) for s in SleepStage}
 
     _create_dummy_shhs(data_dir=tmp_path, durations=durations)
-    records = list(read_shhs(data_dir=tmp_path, offline=True))
+    records = list(read_shhs(data_dir=tmp_path, heartbeats_source='ecg', offline=True))
 
     assert len(records) == 4
 

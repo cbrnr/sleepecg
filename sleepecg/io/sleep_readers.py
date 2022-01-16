@@ -478,7 +478,7 @@ def read_slpdb(
 
 def read_shhs(
     records_pattern: str = '*',
-    use_cached_heartbeats: bool = True,
+    heartbeats_source: str = 'annotation',
     offline: bool = False,
     keep_edfs: bool = False,
     data_dir: Optional[Union[str, Path]] = None,
@@ -497,10 +497,14 @@ def read_shhs(
     ----------
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
-    use_cached_heartbeats : bool, optional
-        If `True`, get heartbeat times directly from the cached `.npy`
-        file, so `.edf` files are only downloaded for records which have
-        not yet been preprocessed. By default `True`.
+    heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
+        If `'annotation'` (default), get heartbeat times from
+        `polysomnography/annotations-rpoints/shhsX/<record_id>-rpoints.csv`
+        (not available for all records). If `'ecg'`, use
+        `sleepecg.detect_heartbeats` on the ECG contained in
+        `polysomnography/edfs/shhsX/<record_id>.edf` and cache the result
+        to `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`,
+        get the cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR
         API, by default `False`.
@@ -522,6 +526,14 @@ def read_shhs(
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
     HEARTBEATS_DIRNAME = 'preprocessed/heartbeats'
+    RPOINTS_DIRNAME = 'polysomnography/annotations-rpoints'
+
+    heartbeats_source_options = {'annotation', 'cached', 'ecg'}
+    if heartbeats_source not in heartbeats_source_options:
+        raise ValueError(
+            f'Invalid value for parameter `heartbeats_source`: {heartbeats_source}, '
+            f'possible options: {heartbeats_source_options}',
+        )
 
     if data_dir is None:
         data_dir = get_config('data_dir')
@@ -555,15 +567,45 @@ def read_shhs(
             shallow=False,
         )
         checksums.update(edf_files)
+
+        rpoints_files = _list_nsrr(
+            DB_SLUG,
+            RPOINTS_DIRNAME,
+            f'{records_pattern}-rpoint.csv',
+            shallow=False,
+        )
+        checksums.update(rpoints_files)
     else:
         xml_files = sorted(annotations_dir.rglob(f'{records_pattern}-nsrr.xml'))
         requested_records = [str(file)[-27:-9] for file in xml_files]
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f'{record_id}.npy'
-        if use_cached_heartbeats and heartbeats_file.is_file():
-            heartbeat_times = np.load(heartbeats_file)
-        else:
+        if heartbeats_source == 'annotation':
+            rpoints_filename = f'{RPOINTS_DIRNAME}/{record_id}-rpoint.csv'
+            rpoints_filepath = db_dir / rpoints_filename
+            if not rpoints_filepath.is_file():
+                if not offline and rpoints_filename in checksums:
+                    _download_nsrr_file(
+                        download_url + rpoints_filename,
+                        rpoints_filepath,
+                        checksums[rpoints_filename],
+                    )
+                else:
+                    print(f'Skipping {record_id} due to missing heartbeat annotations.')
+                    continue
+            print(record_id)
+            heartbeat_times = np.loadtxt(
+                rpoints_filepath,
+                delimiter=',',
+                skiprows=1,
+                usecols=19,  # column 19 ('seconds') contains the annotated heartbeat times
+            )
+        elif heartbeats_source == 'cached':
+            if not heartbeats_file.is_file():
+                print(f'Skipping {record_id} due to missing cached heartbeats.')
+                continue
+        elif heartbeats_source == 'ecg':
             edf_filename = EDF_DIRNAME + f'/{record_id}.edf'
             edf_filepath = db_dir / edf_filename
             edf_was_available = edf_filepath.is_file()
