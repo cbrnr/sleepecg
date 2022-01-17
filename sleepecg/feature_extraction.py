@@ -359,7 +359,7 @@ def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
     """
     Create a feature matrix from record metadata.
 
-    Recording start time, gender, age and weight are used as (constant)
+    Recording start time, gender, age, and weight are used as (constant)
     features. In case of missing information (i.e. the required attribute
     of `SleepRecord` is `None`), the corresponding column is filled with
     `np.nan`.
