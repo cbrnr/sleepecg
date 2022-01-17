@@ -16,7 +16,7 @@ from tqdm import tqdm
 from utils import detector_dispatch, evaluate_single, reader_dispatch
 
 if len(sys.argv) == 1:
-    print("No benchmark specified, executing 'runtime' benchmark.")
+    print('No benchmark specified, executing "runtime" benchmark.')
     benchmark = 'runtime'
 elif len(sys.argv) > 2:
     print('Usage: python benchmark_detectors.py [<benchmark>]')
@@ -53,7 +53,7 @@ if cfg.get('export_records', False):
         np.savetxt(
             outfile_dir / f"{record.id}-{record.lead}.txt",
             np.atleast_2d(record.ecg),
-            fmt="%.3f"
+            fmt="%.3f",
         )
 
 fieldnames = [
