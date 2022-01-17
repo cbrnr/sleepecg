@@ -15,14 +15,18 @@ import yaml
 from tqdm import tqdm
 from utils import detector_dispatch, evaluate_single, reader_dispatch
 
-if len(sys.argv) != 2:
-    print('Usage: python benchmark_detectors.py <benchmark>')
+if len(sys.argv) == 1:
+    print("No benchmark specified, executing 'runtime' benchmark.")
+    benchmark = 'runtime'
+elif len(sys.argv) > 2:
+    print('Usage: python benchmark_detectors.py [<benchmark>]')
     exit()
+else:
+    benchmark = sys.argv[1]
 
 with open('config.yml') as config_file:
     cfg = yaml.safe_load(config_file)
 
-benchmark = sys.argv[1]
 try:
     cfg = cfg[benchmark]
 except KeyError:
@@ -44,6 +48,13 @@ data_dir = Path(cfg.get('data_dir', '~/.sleepecg/datasets')).expanduser()
 records = list(reader_dispatch(db_slug, data_dir))
 print(f'Loaded {len(records)} records from {db_slug}.')
 
+if cfg.get('export_records', False):
+    for record in records:
+        np.savetxt(
+            outfile_dir / f"{record.id}-{record.lead}.txt",
+            np.atleast_2d(record.ecg),
+            fmt="%.3f"
+        )
 
 fieldnames = [
     'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',

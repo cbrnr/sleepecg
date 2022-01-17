@@ -27,6 +27,7 @@ A benchmark configuration is specified below a unique top-level key in `config.y
 |`data_dir`|`str`|`'~/.sleepecg/datasets'`|Path where all datasets are stored. Required files will be downloaded if they don't exist.|
 |`outfile_dir`|`str`|`'.'`|Path where the evaluation results should be stored.|
 |`db_slug`|`str`||Which dataset to use for evaluation. Possible values: [`mitdb`](https://physionet.org/content/mitdb/1.0.0/), [`ltdb`](https://physionet.org/content/ltdb/1.0.0/), [`gudb`](https://github.com/berndporr/ECG-GUDB).|
+|`export_records`|`bool`|`False`|Whether to export all records used in the benchmark as text files.|
 |`detectors`|`list[str]`||Detectors to be evaluated. For possible options, see [`utils.detector_dispatch`](https://github.com/cbrnr/sleepecg/blob/main/examples/benchmark/utils.py#L51-L94).|
 |`signal_lengths`|`list[int]`||Length in minutes to which each ECG signal should be sliced. If a signal is too short, it is skipped.|
 |`max_distance`|`float`|`0.1`|Maximum temporal distance in seconds between detected and annotated beats to count as a successful detection.|
