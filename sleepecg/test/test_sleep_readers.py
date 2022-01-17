@@ -108,20 +108,32 @@ def _create_dummy_shhs(data_dir: str, durations: List[float], random_state: int 
     DB_SLUG = 'shhs'
     ANNOTATION_DIRNAME = 'polysomnography/annotations-events-nsrr'
     EDF_DIRNAME = 'polysomnography/edfs'
+    CSV_DIRNAME = 'datasets'
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
     edf_dir = db_dir / EDF_DIRNAME
+    csv_dir = db_dir / CSV_DIRNAME
 
     for directory in (annotations_dir, edf_dir):
         for visit in ('shhs1', 'shhs2'):
             (directory / visit).mkdir(parents=True, exist_ok=True)
+    csv_dir.mkdir(parents=True, exist_ok=True)
 
     for i, hours in enumerate(durations):
         for visit in ('shhs1', 'shhs2'):
             record_id = f'{visit}/{visit}-20{i:04}'
             _dummy_nsrr_edf(f'{edf_dir}/{record_id}.edf', hours, ecg_channel='ECG')
             _dummy_nsrr_xml(f'{annotations_dir}/{record_id}-nsrr.xml', hours, random_state)
+
+    with open(csv_dir / 'shhs1-dataset-0.0.0.csv', 'w') as csv:
+        csv.write('nsrrid,age_s1,gender,weight\n')
+        for i in range(len(durations)):
+            csv.write(f'2{i:05},55,1,77\n')
+    with open(csv_dir / 'shhs2-dataset-0.0.0.csv', 'w') as csv:
+        csv.write('nsrrid,age_s2,gender,weight\n')
+        for i in range(len(durations)):
+            csv.write(f'2{i:05},61,2,\n')
 
 
 def test_read_mesa(tmp_path):
@@ -145,7 +157,7 @@ def test_read_shhs(tmp_path):
     valid_stages = {int(s) for s in SleepStage}
 
     _create_dummy_shhs(data_dir=tmp_path, durations=durations)
-    records = list(read_shhs(data_dir=tmp_path, offline=True))
+    records = list(read_shhs(data_dir=tmp_path, heartbeats_source='ecg', offline=True))
 
     assert len(records) == 4
 
