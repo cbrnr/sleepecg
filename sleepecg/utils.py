@@ -76,7 +76,7 @@ def _parallel(
     )
 
 
-def _time_to_sec(time: datetime.time):
+def _time_to_sec(time: datetime.time) -> int:
     """
     Convert a `datetime.time` to seconds.
 
