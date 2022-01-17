@@ -51,9 +51,9 @@ print(f'Loaded {len(records)} records from {db_slug}.')
 if cfg.get('export_records', False):
     for record in records:
         np.savetxt(
-            outfile_dir / f"{record.id}-{record.lead}.txt",
+            outfile_dir / f'{record.id}-{record.lead}.txt',
             np.atleast_2d(record.ecg),
-            fmt="%.3f",
+            fmt='%.3f',
         )
 
 fieldnames = [
