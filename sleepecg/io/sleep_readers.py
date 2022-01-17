@@ -631,7 +631,6 @@ def read_shhs(
                 else:
                     print(f'Skipping {record_id} due to missing heartbeat annotations.')
                     continue
-            print(record_id)
             heartbeat_times = np.loadtxt(
                 rpoints_filepath,
                 delimiter=',',
