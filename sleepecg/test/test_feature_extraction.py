@@ -4,13 +4,18 @@
 
 """Tests for feature extraction."""
 
+import datetime
+
 import numpy as np
+import pytest
 
 from sleepecg.feature_extraction import (
     _FEATURE_GROUPS,
     _hrv_frequencydomain_features,
     _hrv_timedomain_features,
+    _metadata_features,
 )
+from sleepecg.io.sleep_readers import SleepRecord, SubjectData
 
 
 def test_feature_ids():
@@ -52,3 +57,32 @@ def test_feature_ids():
         feature_ids=_FEATURE_GROUPS['hrv-frequency'],
     )
     assert X_frequency.shape[1] == len(_FEATURE_GROUPS['hrv-frequency'])
+
+
+@pytest.mark.parametrize(
+    ['metadata', 'feature_vec'],
+    [
+        (
+            {'start_time': None, 'age': None, 'gender': None, 'weight': None},
+            [np.nan] * 4,
+        ),
+        (
+            {'start_time': datetime.time(23, 15, 20), 'age': 55, 'gender': 1, 'weight': 99},
+            [83720, 55, 1, 99],
+        ),
+    ],
+)
+def test_metadata_features(metadata, feature_vec):
+    """Test metadata feature extraction."""
+    num_stages = 10
+    rec = SleepRecord(
+        subject_data=SubjectData(
+            gender=metadata['gender'],
+            age=metadata['age'],
+            weight=metadata['weight'],
+        ),
+        recording_start_time=metadata['start_time'],
+    )
+    X = _metadata_features(rec, num_stages)
+    assert X.shape == (num_stages, 4)
+    assert np.allclose(X, np.array(feature_vec), equal_nan=True)
