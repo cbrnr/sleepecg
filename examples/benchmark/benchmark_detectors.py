@@ -42,13 +42,14 @@ outfile_dir.mkdir(parents=True, exist_ok=True)
 db_slug = cfg['db_slug']
 timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
 csv_filepath = outfile_dir / f'{benchmark}__{db_slug}__{timestamp}.csv'
-print(f'Storing results to {csv_filepath.resolve()}')
+print(f'Storing results to {csv_filepath.resolve()}.')
 
 data_dir = Path(cfg.get('data_dir', '~/.sleepecg/datasets')).expanduser()
 records = list(reader_dispatch(db_slug, data_dir))
 print(f'Loaded {len(records)} records from {db_slug}.')
 
 if cfg.get('export_records', False):
+    print(f'Exporting records to {outfile_dir.resolve()}.')
     for record in records:
         np.savetxt(
             outfile_dir / f'{record.id}-{record.lead}.txt',
