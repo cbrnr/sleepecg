@@ -1,6 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ### Added
 - Add metadata feature extraction ([#70](https://github.com/cbrnr/sleepecg/pull/70) by [Florian Hofer](https://github.com/hofaflo))
+- Add ability to read annotated heartbeats and subject data from SHHS ([#72](https://github.com/cbrnr/sleepecg/pull/72) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.4.1] - 2022-01-14
 ### Fixed
