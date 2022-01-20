@@ -17,32 +17,6 @@ from .physionet import _list_physionet, download_physionet
 from .utils import _download_file
 
 
-def export_record(record: 'ECGRecord', filename: Union[str, Path]) -> None:
-    """
-    Export record to a CSV file.
-
-    Parameters
-    ----------
-    record : ECGRecord
-        ECG record to export.
-    filename : str | pathlib.Path
-        File name to write to.
-    """
-    if Path(filename).suffix.lower() != '.csv':
-        filename = filename + '.csv'
-
-    rpeaks = np.zeros_like(record.ecg, dtype=int)
-    rpeaks[record.annotation] = 1
-
-    np.savetxt(
-        filename,
-        np.vstack((record.ecg, rpeaks)).T,
-        fmt='%.3f,%d',
-        header=f'# fs: {record.fs}Hz\necg,rpeak',
-        comments='',
-    )
-
-
 @dataclass
 class ECGRecord:
     """
@@ -67,6 +41,32 @@ class ECGRecord:
     annotation: np.ndarray
     lead: Optional[str] = None
     id: Optional[str] = None
+
+
+def export_record(record: ECGRecord, filename: Union[str, Path]) -> None:
+    """
+    Export record to a CSV file.
+
+    Parameters
+    ----------
+    record : ECGRecord
+        ECG record to export.
+    filename : str | pathlib.Path
+        File name to write to.
+    """
+    if Path(filename).suffix.lower() != '.csv':
+        filename = filename + '.csv'
+
+    rpeaks = np.zeros_like(record.ecg, dtype=int)
+    rpeaks[record.annotation] = 1
+
+    np.savetxt(
+        filename,
+        np.vstack((record.ecg, rpeaks)).T,
+        fmt='%.3f,%d',
+        header=f'# fs: {record.fs}Hz\necg,rpeak',
+        comments='',
+    )
 
 
 def read_ltdb(
