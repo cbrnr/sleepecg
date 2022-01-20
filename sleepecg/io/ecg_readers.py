@@ -43,7 +43,7 @@ class ECGRecord:
     id: Optional[str] = None
 
 
-def export_record(record: ECGRecord, filename: Union[str, Path]) -> None:
+def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
     """
     Export record to a CSV file.
 
@@ -54,7 +54,7 @@ def export_record(record: ECGRecord, filename: Union[str, Path]) -> None:
     filename : str | pathlib.Path
         File name to write to.
     """
-    if Path(filename).suffix.lower() != '.csv':
+    if not Path(filename).suffix:
         filename = filename + '.csv'
 
     rpeaks = np.zeros_like(record.ecg, dtype=int)
