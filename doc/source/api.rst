@@ -15,6 +15,7 @@ See :ref:`Datasets <datasets>` for information about the available datasets and 
 
    download_nsrr
    download_physionet
+   export_ecg_record
    read_gudb
    read_ltdb
    read_mesa
