@@ -49,13 +49,10 @@ records = list(reader_dispatch(db_slug, data_dir))
 print(f'Loaded {len(records)} records from {db_slug}.')
 
 if cfg.get('export_records', False):
+    from sleepecg import export_record
     print(f'Exporting records to {outfile_dir.resolve()}.')
     for record in records:
-        np.savetxt(
-            outfile_dir / f'{record.id}-{record.lead}.txt',
-            np.atleast_2d(record.ecg),
-            fmt='%.3f',
-        )
+        export_record(record, outfile_dir / f'{record.id}-{record.lead}.txt')
 
 fieldnames = [
     'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',
