@@ -63,6 +63,7 @@ numpydoc_xref_param_type = True
 
 # -- Options for HTML output ----------------------------------------------
 html_theme = 'furo'
+html_title = 'SleepECG'
 
 
 def linkcode_resolve(domain, info):
