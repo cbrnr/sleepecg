@@ -61,8 +61,6 @@ numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_xref_param_type = True
 
-templates_path = ['_templates']
-
 # -- Options for HTML output ----------------------------------------------
 html_theme = 'furo'
 
