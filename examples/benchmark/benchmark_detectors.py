@@ -15,14 +15,18 @@ import yaml
 from tqdm import tqdm
 from utils import detector_dispatch, evaluate_single, reader_dispatch
 
-if len(sys.argv) != 2:
-    print('Usage: python benchmark_detectors.py <benchmark>')
+if len(sys.argv) == 1:
+    print('No benchmark specified, executing "runtime" benchmark.')
+    benchmark = 'runtime'
+elif len(sys.argv) > 2:
+    print('Usage: python benchmark_detectors.py [<benchmark>]')
     exit()
+else:
+    benchmark = sys.argv[1]
 
 with open('config.yml') as config_file:
     cfg = yaml.safe_load(config_file)
 
-benchmark = sys.argv[1]
 try:
     cfg = cfg[benchmark]
 except KeyError:
@@ -38,12 +42,17 @@ outfile_dir.mkdir(parents=True, exist_ok=True)
 db_slug = cfg['db_slug']
 timestamp = time.strftime('%Y_%m_%d__%H_%M_%S')
 csv_filepath = outfile_dir / f'{benchmark}__{db_slug}__{timestamp}.csv'
-print(f'Storing results to {csv_filepath.resolve()}')
+print(f'Storing results to {csv_filepath.resolve()}.')
 
 data_dir = Path(cfg.get('data_dir', '~/.sleepecg/datasets')).expanduser()
 records = list(reader_dispatch(db_slug, data_dir))
 print(f'Loaded {len(records)} records from {db_slug}.')
 
+if cfg.get('export_records', False):
+    from sleepecg import export_ecg_record
+    print(f'Exporting records to {outfile_dir.resolve()}.')
+    for record in records:
+        export_ecg_record(record, outfile_dir / f'{record.id}-{record.lead}.txt')
 
 fieldnames = [
     'record_id', 'lead', 'fs', 'num_samples', 'detector', 'max_distance', 'runtime', 'TP',
