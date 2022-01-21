@@ -7,6 +7,7 @@
    Feature Extraction <feature_extraction>
    Configuration <configuration>
    API <api>
+   GitHub Repository <https://github.com/cbrnr/sleepecg>
 ```
 
 # SleepECG
