@@ -24,6 +24,18 @@ Alternatively, install via [conda](https://docs.conda.io/en/latest/):
 conda install -c conda-forge sleepecg
 ```
 
+Optional dependencies provide additional features if installed:
+- joblib≥1.0.0 (parallelized feature extraction)
+- mne≥0.23.0 (read data from [MESA](https://sleepdata.org/datasets/mesa), [SHHS](https://sleepdata.org/datasets/shhs))
+- numba≥0.53.0 (JIT-compiled heartbeat detector)
+- pandas≥1.2.0 (read data from [GUDB](https://berndporr.github.io/ECG-GUDB))
+- wfdb≥3.3.0 (read data from [SLPDB](https://physionet.org/content/slpdb), [MITDB](https://physionet.org/content/mitdb), [LTDB](https://physionet.org/content/ltdb))
+
+All optional dependencies can be installed with
+```
+pip install sleepecg[full]
+```
+
 
 ## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.

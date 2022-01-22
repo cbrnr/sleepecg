@@ -95,7 +95,8 @@ inside your local clone. After that, the checks required in the CI job will be r
 
 
 ## Tests
-SleepECG uses [`pytest`](https://docs.pytest.org/) for unit tests. The structure of `sleepecg/tests/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/tests/io/test_nsrr.py`.
+SleepECG uses [`pytest`](https://docs.pytest.org/) for unit tests. The structure of `sleepecg/tests/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/tests/io/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies (i.e. listed under `install_requires` in `setup.cfg`), make sure to add it to the optional requirement categories `dev` and `cibw`.
+
 To run the tests, execute
 ```
 pytest
