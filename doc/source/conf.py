@@ -61,14 +61,9 @@ numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_xref_param_type = True
 
-templates_path = ['_templates']
-
 # -- Options for HTML output ----------------------------------------------
-html_theme = 'pydata_sphinx_theme'
-html_theme_options = {
-    'github_url': 'https://github.com/cbrnr/sleepecg',
-    'show_prev_next': False,
-}
+html_theme = 'furo'
+html_title = 'SleepECG'
 
 
 def linkcode_resolve(domain, info):
