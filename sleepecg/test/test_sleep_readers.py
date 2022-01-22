@@ -5,7 +5,6 @@
 """Tests for sleep data reader functions."""
 
 import datetime
-import warnings
 from pathlib import Path
 from typing import List
 
@@ -23,9 +22,7 @@ def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
     seconds = int(hours * 60 * 60)
     ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[np.newaxis, :seconds * ECG_FS]
     signal_headers = highlevel.make_signal_headers([ecg_channel], sample_frequency=ECG_FS)
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore')
-        highlevel.write_edf(filename, ecg, signal_headers)
+    highlevel.write_edf(filename, ecg, signal_headers)
 
 
 def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
