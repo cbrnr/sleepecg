@@ -2,11 +2,12 @@
    :hidden:
 
    Home <self>
-   API <api>
    Datasets <datasets>
    Heartbeat Detection <heartbeat_detection>
    Feature Extraction <feature_extraction>
    Configuration <configuration>
+   API <api>
+   GitHub Repository <https://github.com/cbrnr/sleepecg>
 ```
 
 # SleepECG
