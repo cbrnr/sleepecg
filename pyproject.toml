@@ -1,12 +1,12 @@
 [build-system]
-requires = ["setuptools", "wheel", "numpy<1.21.5"]
+requires = ['setuptools', 'wheel', 'oldest-supported-numpy']
 
 
 [tool.cibuildwheel]
 test-requires = 'pytest'
 test-extras = 'full'
 test-command = 'pytest {package}'
-skip = 'pp* cp310-* *musllinux*'
+skip = 'pp* *musllinux*'
 
 
 [tool.cibuildwheel.linux]
