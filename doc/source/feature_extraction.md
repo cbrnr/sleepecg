@@ -16,7 +16,7 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`minNN`|minimum NN interval|NN|
 |`rangeNN`|difference between the longest and shortest NN interval|NN|
 |`SDNN`|standard deviation of the NN intervals|NN|
-|`RMSSD`|square root of the mean of the sum of the squares of differences between adjacent NN intervals|SD|
+|`RMSSD`|square root of the mean of the squares of differences between adjacent NN intervals|SD|
 |`SDSD`|standard deviation of differences between adjacent NN intervals|SD|
 |`NN50`|number of pairs of adjacent NN intervals differing by more than 50 ms|SD|
 |`NN20`|number of pairs of adjacent NN intervals differing by more than 20 ms|SD|
