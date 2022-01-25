@@ -11,11 +11,8 @@ from tempfile import TemporaryDirectory
 from typing import Any, Dict, List, Optional, Tuple, Union
 from zipfile import ZipFile
 
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
 import numpy as np
 import yaml
-from matplotlib.figure import Figure
 
 from .config import get_config
 from .feature_extraction import extract_features
@@ -470,7 +467,7 @@ def _cohen_kappa(confmat: np.ndarray) -> float:
     return 1 - k
 
 
-def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]) -> Figure:
+def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]):
     """
     Create a labeled plot of a confusion matrix.
 
@@ -486,6 +483,8 @@ def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]) -> Figur
     matplotlib.figure.Figure
         The figure containing the confusion matrix plot.
     """
+    import matplotlib.pyplot as plt
+
     classes = np.arange(len(confmat))
 
     fig, ax = plt.subplots()
@@ -641,7 +640,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-) -> Figure:
+):
     """
     Plot a hypnogram for a single record.
 
@@ -673,6 +672,9 @@ def plot_hypnogram(
     matplotlib.figure.Figure
         The figure containing the hypnogram plot.
     """
+    import matplotlib.dates as mdates
+    import matplotlib.pyplot as plt
+
     stages_pred_probs = None
     num_subplots = 1
     if stages_pred.ndim == 2:
