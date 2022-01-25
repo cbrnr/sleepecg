@@ -32,7 +32,7 @@ class SleepStage(IntEnum):
     N1 = 3
     N2 = 2
     N3 = 1
-    UNDEFINED = -1
+    UNDEFINED = 0
 
 
 class Gender(IntEnum):
