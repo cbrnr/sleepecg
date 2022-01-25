@@ -20,6 +20,6 @@ from sleepecg.classification import _merge_sleep_stages
     ],
 )
 def test_merge_sleep_stages(mode, output):
-    """todo."""
+    """Test if the sleep stage mapping works correctly."""
     stages = [np.array([0, 1, 2, 3, 4, 5])]
     assert (_merge_sleep_stages(stages, mode)[0] == np.array(output)).all()
