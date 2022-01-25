@@ -7,7 +7,6 @@
 - Add functions for classification ([#78](https://github.com/cbrnr/sleepecg/pull/78) by [Florian Hofer](https://github.com/hofaflo))
 - Add a WAKE-SLEEP classifier trained on MESA ([#78](https://github.com/cbrnr/sleepecg/pull/78) by [Florian Hofer](https://github.com/hofaflo))
 
-
 ## [0.4.1] - 2022-01-14
 ### Fixed
 - Fix `reader_dispatch` in `examples/benchmark/utils.py` not yielding anything  ([#68](https://github.com/cbrnr/sleepecg/pull/68) by [Florian Hofer](https://github.com/hofaflo))
