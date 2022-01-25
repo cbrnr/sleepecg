@@ -5,6 +5,7 @@
    Datasets <datasets>
    Heartbeat Detection <heartbeat_detection>
    Feature Extraction <feature_extraction>
+   Classification <classification>
    Configuration <configuration>
    API <api>
    GitHub Repository <https://github.com/cbrnr/sleepecg>
@@ -43,6 +44,8 @@ The [**changelog**](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) an
 [**Heartbeat Detection**](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
 
 [**Feature Extraction**](./feature_extraction) lists the implemented HRV features.
+
+[**Classification**](./classification) describes the included sleep stage classifiers and how to use the classification API.
 
 [**Configuration**](./configuration) explains the possible configuration settings in SleepECG.
 
