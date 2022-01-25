@@ -52,6 +52,24 @@ Heartbeat detection
    rri_similarity
 
 
+Sleep stage classification
+--------------------------
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+
+   evaluate
+   list_classifiers
+   load_classifier
+   plot_hypnogram
+   prepare_data_keras
+   print_class_balance
+   save_classifier
+   stage
+   SleepClassifier
+
+
 Configuration
 -------------
 Possible configuration settings are explained :ref:`here <configuration>`.

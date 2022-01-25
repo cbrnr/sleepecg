@@ -8,3 +8,4 @@ This table lists the possible configuration settings and where they are used:
 |Key|Default value|Description|Used in|
 |-|-|-|-|
 |`data_dir`|`'~/.sleepecg/datasets'`|Used as the default location to store the files downloaded by all reader functions. Data downloaded for tests is also stored there.|`read_ltdb`, `read_mitdb`, `read_gudb`, `read_mesa`, `read_shhs`, `read_slpdb`|
+|`classifiers_dir`|`'~/.sleepecg/classifiers'`|Used as the default location to save and load `SleepClassifer` objects..|`list_classifiers`, `load_classifier`, `save_classifier`|
