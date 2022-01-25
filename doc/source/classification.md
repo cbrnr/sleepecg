@@ -8,7 +8,7 @@ Note that the performance metrics are averages, so a classifier might perform mu
 
 |Identifier|Stages|Model|Training set (nights)|Test set (nights)|Acc.|κ|Source|
 |-|-|-|-|-|-|-|-|
-|`ws-gru-mesa`|WAKE-SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/sleepecg_mesa_gru.py)|
+|`ws-gru-mesa`|WAKE-SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_mesa_gru.py)|
 
 
 ## Usage examples
