@@ -6,7 +6,7 @@
 SleepECG contains classifiers trained on large open sleep datasets.
 Note that the performance metrics are averages, so a classifier might perform much better or much worse for an individual record.
 
-|Identifier|Stages|Model|Training set (nights)|Test set (nights)|Acc.|κ|Source|
+|Identifier|Stages|Model|Training set (nights)|Test set (nights)|Acc|κ|Source|
 |-|-|-|-|-|-|-|-|
 |`ws-gru-mesa`|WAKE-SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_mesa_gru.py)|
 
@@ -26,7 +26,7 @@ Make sure it contains the following elements:
 - An entry in the table above.
 
 
-## Sleep stage labels & `stages_mode`
+## Sleep stage labels and `stages_mode`
 Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`SleepStage`](./generated/sleepecg.SleepStage).
 To facilitate working on classifiers which do not discrimate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
 
@@ -46,4 +46,4 @@ Most functions related to classification take a parameter `stages_mode` to ensur
 
 The decision against keeping the integer values for `REM` and `WAKE` constant between modes was made because labels starting at 0 and without gaps simplify working with one-hot encoded stages (or probabilities) and avoid issues when calculating sample weights.
 
-When working with SleepECG you usually will not need to worry about this, just remember to pass the correct `stages_mode` to the functions expecting the parameter :)
+When working with SleepECG, you usually will not need to worry about this, just remember to pass the correct `stages_mode` to the functions expecting the parameter.

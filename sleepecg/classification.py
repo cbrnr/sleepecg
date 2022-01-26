@@ -102,13 +102,13 @@ def prepare_data_keras(
     mask_value: int = -1,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Mask+pad data and calculate sample weights for use with a keras model.
+    Mask and pad data and calculate sample weights for a keras model.
 
     The following steps are performed:
 
     - Merge sleep stages in `stages` according to `stage_mode`.
     - Set features corresponding to `SleepStage.UNDEFINED` to `mask_value`.
-    - Replace `np.nan` and `np.inf` in `features` with `mask_value`
+    - Replace `np.nan` and `np.inf` in `features` with `mask_value`.
     - Pad to a common length, where `mask_value` is used for `features` and
       `SleepStage.UNDEFINED` (i.e `0`) is used for stages.
     - One-hot encode stages.
@@ -233,11 +233,11 @@ def save_classifier(
         and `keras.layers.Masking`, by default `None`.
     classifiers_dir : str | pathlib.Path, optional
         Directory in which the `.zip` file is stored. If `None`
-        (default), the value is be taken from the configuration.
+        (default), the value is taken from the configuration.
 
     See Also
     --------
-    load_classifier : Load classifiers saved with this function
+    load_classifier : Load classifiers saved with this function.
     """
     if classifiers_dir is None:
         classifiers_dir = get_config('classifiers_dir')
@@ -442,7 +442,7 @@ def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, N: int) -> np.ndar
 
 def _cohen_kappa(confmat: np.ndarray) -> float:
     """
-    Cohen's kappa: a statistic that measures inter-annotator agreement.
+    Compute Cohen's kappa (which measures inter-annotator agreement).
 
     Implementation modified from `sklearn.metrics.cohen_kappa_score`.
 
@@ -514,7 +514,7 @@ def evaluate(
     """
     Evaluate the performance of a sleep stage classifier.
 
-    Prints overall accuracy, cohen's kappa, confusion matrix and per-class
+    Prints overall accuracy, Cohen's kappa, confusion matrix and per-class
     precision, recall and F1 score. In an interactive environment, the
     confusion matrix is additionally shown as a labeled plot.
 
