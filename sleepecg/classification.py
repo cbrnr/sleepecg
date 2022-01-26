@@ -301,14 +301,6 @@ class SleepClassifier:
     source_file: Optional[str] = None
 
     def __str__(self) -> str:
-        """
-        Create a string representation of a `SleepClassifier`.
-
-        Returns
-        -------
-        str
-            The string representation.
-        """
         features = ', '.join(self.feature_extraction_params['feature_selection'])
         return (
             f'SleepClassifier for {self.stages_mode.upper()}\n'
