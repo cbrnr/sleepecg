@@ -16,20 +16,24 @@ from sleepecg import (
 # %% Read data and extract features
 records = list(read_mesa())
 
-features_train, stages_train, feature_ids = extract_features(
-    tqdm(records),
-    lookback=240,
-    lookforward=270,
-    feature_selection=[
+feature_extraction_params = {
+    'lookback': 240,
+    'lookforward': 270,
+    'feature_selection': [
         'hrv-time',
         'hrv-frequency',
         'recording_start_time',
         'age',
         'gender',
     ],
-    min_rri=0.3,
-    max_rri=2,
-    max_nans=0.5,
+    'min_rri': 0.3,
+    'max_rri': 2,
+    'max_nans': 0.5,
+}
+
+features_train, stages_train, feature_ids = extract_features(
+    tqdm(records),
+    **feature_extraction_params,
 )
 
 # %% Merge sleep stages, pad and mask data as preparation for keras NN
@@ -77,20 +81,7 @@ save_classifier(
     name='ws-gru-mesa',
     model=model,
     stages_mode=stages_mode,
-    feature_extraction_params={
-        'lookback': 240,
-        'lookforward': 270,
-        'feature_selection': [
-            'hrv-time',
-            'hrv-frequency',
-            'recording_start_time',
-            'age',
-            'gender',
-        ],
-        'min_rri': 0.3,
-        'max_rri': 2,
-        'max_nans': 0.5,
-    },
+    feature_extraction_params=feature_extraction_params,
     mask_value=-1,
     classifiers_dir='./classifiers',
 )
