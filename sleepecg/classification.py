@@ -288,7 +288,7 @@ class SleepClassifier:
     mask_value : int, optional
         Only required for models of type `'keras'`, as passed to
         `prepare_data_keras` and `keras.layers.Masking`, by default `None`.
-    source_file : str, optional
+    source_file : pathlib.Path, optional
         The file from which the classifier was loaded using
         :func:`load_classifier`, by default `None`.
     """
@@ -298,7 +298,12 @@ class SleepClassifier:
     feature_extraction_params: Dict[str, Any]
     model_type: str
     mask_value: Optional[int] = None
-    source_file: Optional[str] = None
+    source_file: Optional[Path] = None
+
+    def __repr__(self) -> str:
+        if self.source_file is not None:
+            return f'<SleepClassifier | {self.stages_mode}, {self.model_type}, {self.source_file.name}>'  # noqa: E501
+        return f'<SleepClassifier | {self.stages_mode}, {self.model_type}>'
 
     def __str__(self) -> str:
         features = ', '.join(self.feature_extraction_params['feature_selection'])
@@ -362,7 +367,7 @@ def load_classifier(
 
     return SleepClassifier(
         model=classifier,
-        source_file=str(soure_file),
+        source_file=soure_file,
         **classifier_info,
     )
 
