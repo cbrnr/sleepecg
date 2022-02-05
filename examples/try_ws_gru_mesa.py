@@ -1,6 +1,8 @@
 # %%
 from sleepecg import load_classifier, plot_hypnogram, read_slpdb, stage
 
+# The model was built using tensorflow 2.7, running on higher versions
+# might create warnings but should not influence the results.
 clf = load_classifier('ws-gru-mesa', 'SleepECG')
 
 # %% Load record
