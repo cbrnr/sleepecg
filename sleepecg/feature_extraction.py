@@ -555,7 +555,7 @@ def _extract_features_single(
         record_duration = record.heartbeat_times[-1]
     else:
         raise ValueError(f'Record duration cannot be inferred for {record.id}.')
-    num_stages = record_duration // sleep_stage_duration
+    num_stages = int(record_duration // sleep_stage_duration)
     stage_times = np.arange(num_stages) * sleep_stage_duration
 
     if rri_required:

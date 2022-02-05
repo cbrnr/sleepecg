@@ -7,7 +7,7 @@
 SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
 - downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
-- classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline) (*TODO*).
+- classifying sleep stages (which includes the complete preprocessing, feature extraction, and classification pipeline).
 
 
 ## Documentation
@@ -26,9 +26,11 @@ conda install -c conda-forge sleepecg
 
 Optional dependencies provide additional features if installed:
 - joblib≥1.0.0 (parallelized feature extraction)
+- matplotlib≥3.4.0 (plot hypnograms and confusion matrices)
 - mne≥0.23.0 (read data from [MESA](https://sleepdata.org/datasets/mesa), [SHHS](https://sleepdata.org/datasets/shhs))
 - numba≥0.53.0 (JIT-compiled heartbeat detector)
 - pandas≥1.2.0 (read data from [GUDB](https://berndporr.github.io/ECG-GUDB))
+- tensorflow≥2.7.0 (sleep stage classification with keras models)
 - wfdb≥3.3.0 (read data from [SLPDB](https://physionet.org/content/slpdb), [MITDB](https://physionet.org/content/mitdb), [LTDB](https://physionet.org/content/ltdb))
 
 All optional dependencies can be installed with

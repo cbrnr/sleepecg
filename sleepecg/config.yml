@@ -1,1 +1,2 @@
 data_dir: ~/.sleepecg/datasets
+classifiers_dir: ~/.sleepecg/classifiers

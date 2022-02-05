@@ -13,6 +13,8 @@ import pytest
 
 EXCLUDE = [
     '*/benchmark/*',
+    '*/classifiers/*',
+    '*/try_ws_gru_mesa.py',
 ]
 
 examples_dir = (Path(__file__).parent / '../../examples').resolve()
