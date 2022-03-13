@@ -65,6 +65,9 @@ numpydoc_xref_param_type = True
 html_theme = 'furo'
 html_title = 'SleepECG'
 
+html_static_path = ['_static']
+html_css_files = ['custom.css']
+
 
 def linkcode_resolve(domain, info):
     """
