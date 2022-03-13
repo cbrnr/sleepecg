@@ -37,16 +37,16 @@ pip install sleepecg[full]
 ```
 
 ## Documentation overview
-The [**changelog**](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) and a [**contributing guide**](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) are available in the [GitHub repo](https://github.com/cbrnr/sleepecg).
+The [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) and a [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) are available in the [GitHub repo](https://github.com/cbrnr/sleepecg).
 
-[**Datasets**](./datasets) shows all avaiable datasets and instructions about retrieving NSRR data.
+[Datasets](./datasets) shows all avaiable datasets and instructions about retrieving NSRR data.
 
-[**Heartbeat Detection**](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
+[Heartbeat Detection](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
 
-[**Feature Extraction**](./feature_extraction) lists the implemented HRV features.
+[Feature Extraction](./feature_extraction) lists the implemented HRV features.
 
-[**Classification**](./classification) describes the included sleep stage classifiers and how to use the classification API.
+[Classification](./classification) describes the included sleep stage classifiers and how to use the classification API.
 
-[**Configuration**](./configuration) explains the possible configuration settings in SleepECG.
+[Configuration](./configuration) explains the possible configuration settings in SleepECG.
 
-[**API**](./api) has detailed information about all public functions and classes in SleepECG.
+[API](./api) has detailed information about all public functions and classes in SleepECG.
