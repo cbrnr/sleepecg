@@ -64,6 +64,7 @@ numpydoc_xref_param_type = True
 # -- Options for HTML output ----------------------------------------------
 html_theme = 'furo'
 html_title = 'SleepECG'
+html_last_updated_fmt = '%Y-%m-%d'
 
 html_static_path = ['_static']
 html_css_files = ['custom.css']
