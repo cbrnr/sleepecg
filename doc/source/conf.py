@@ -12,8 +12,7 @@ import sleepecg
 
 # -- Project information --------------------------------------------------
 project = 'SleepECG'
-author = 'Florian Hofer'
-copyright = '2021, SleepECG Developers'
+copyright = 'SleepECG Developers'
 version = sleepecg.__version__
 
 # -- General configuration ------------------------------------------------
@@ -64,6 +63,7 @@ numpydoc_xref_param_type = True
 # -- Options for HTML output ----------------------------------------------
 html_theme = 'furo'
 html_title = 'SleepECG'
+html_last_updated_fmt = '%Y-%m-%d'
 
 html_static_path = ['_static']
 html_css_files = ['custom.css']
