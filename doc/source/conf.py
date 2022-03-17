@@ -12,7 +12,6 @@ import sleepecg
 
 # -- Project information --------------------------------------------------
 project = 'SleepECG'
-author = 'Florian Hofer'
 copyright = 'SleepECG Developers'
 version = sleepecg.__version__
 
