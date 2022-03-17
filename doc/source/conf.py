@@ -13,7 +13,7 @@ import sleepecg
 # -- Project information --------------------------------------------------
 project = 'SleepECG'
 author = 'Florian Hofer'
-copyright = '2021, SleepECG Developers'
+copyright = 'SleepECG Developers'
 version = sleepecg.__version__
 
 # -- General configuration ------------------------------------------------
