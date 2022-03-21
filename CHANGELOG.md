@@ -6,6 +6,7 @@
 - Add support for Python 3.10 ([#75](https://github.com/cbrnr/sleepecg/pull/75) by [Florian Hofer](https://github.com/hofaflo))
 - Add functions for classification ([#78](https://github.com/cbrnr/sleepecg/pull/78) by [Florian Hofer](https://github.com/hofaflo))
 - Add a WAKE-SLEEP classifier trained on MESA ([#78](https://github.com/cbrnr/sleepecg/pull/78) by [Florian Hofer](https://github.com/hofaflo))
+- Add two WAKE-REM-NREM classifiers trained on MESA ([#84](https://github.com/cbrnr/sleepecg/pull/84) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.4.1] - 2022-01-14
 ### Fixed
