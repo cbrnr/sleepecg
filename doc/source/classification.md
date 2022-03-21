@@ -15,9 +15,9 @@ Note that the performance metrics are averages, so a classifier might perform mu
 
 ### Notes
 As REM is much less common than NREM and WAKE, the current models show limited performance in WAKE-REM-NREM classification.
-Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM, as shown in the confusion matrix below (left).
+Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM as shown in the confusion matrix below (left).
 With sample weights inversely proportional to class frequency in `wrn-gru-mesa-weighted`, the confusion matrix (right) is more symmetrical.
-While the values normalized over "true" classes (given in parentheses) look promising, note that the number of actual NREM stages identified as REM is larger than the number of correctly identified REM stages (i.e. the model has low precision for REM).
+While the values normalized over true classes (given in parentheses) look promising, the number of actual NREM stages identified as REM is larger than the number of correctly identified REM stages (i.e. the model has low precision for REM).
 A weaker weighting approach is likely required to find the optimal middle way.
 
 ![wrn-gru-mesa confusion matrix](./img/wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./img/wrn-gru-mesa-weighted.svg)
