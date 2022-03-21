@@ -20,7 +20,7 @@ With sample weights inversely proportional to class frequency in `wrn-gru-mesa-w
 While the values normalized over "true" classes (given in parentheses) look promising, note that the number of actual NREM stages identified as REM is larger than the number of correctly identified REM stages (i.e. the model has low precision for REM).
 A weaker weighting approach is likely required to find the optimal middle way.
 
-![wrn-gru-mesa confusion matrix](./wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./wrn-gru-mesa-weighted.svg)
+![wrn-gru-mesa confusion matrix](./img/wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./img/wrn-gru-mesa-weighted.svg)
 
 
 ## Usage examples
