@@ -27,7 +27,7 @@ All time domain HRV features are either derived from the normal-to-normal (NN) i
 |`iqrNN`|interquartile range (IQR) of the NN intervals|NN|
 |`cvNN`|coefficient of variation of the NN intervals|NN|
 |`cvSD`|coefficient of variation of differences between adjacent NN intervals|SD|
-|`meanHR`|average heart rate ($\text{HR}=60/\text{NN}$)|NN|
+|`meanHR`|average heart rate (HR = 60 / NN)|NN|
 |`maxHR`|maximum heart rate|NN|
 |`minHR`|minimum heart rate|NN|
 |`stdHR`|standard deviation of the heart rate|NN|
@@ -46,12 +46,12 @@ For calculating the frequency domain HRV features, the RR time series is resampl
 
 |Feature identifier|Description|Frequency range|
 |-|-|-|
-|`total_power`|variance of NN intervals over the temporal segment|$\leq 0.4\,\text{Hz}$|
-|`VLF`|power in very low frequency (VLF) range|$[0.0033,0.04)\,\text{Hz}$|
-|`LF`|power in low frequency (LF) range|$[0.04,0.15)\,\text{Hz}$|
-|`HF`|power in high frequency (HF) range|$[0.15,0.4)\,\text{Hz}$|
-|`LF_norm`|LF power in normalized units ($\frac{\text{LF}}{\text{LF}+\text{HF}}\cdot100$)|$[0.04,0.15)\,\text{Hz}$|
-|`HF_norm`|HF power in normalized units ($\frac{\text{HF}}{\text{LF}+\text{HF}}\cdot100$)|$[0.15,0.4)\,\text{Hz}$|
+|`total_power`|variance of NN intervals over the temporal segment|≤ 0.4 Hz|
+|`VLF`|power in very low frequency (VLF) range|[0.0033, 0.04) Hz|
+|`LF`|power in low frequency (LF) range|[0.04, 0.15) Hz|
+|`HF`|power in high frequency (HF) range|[0.15, 0.4) Hz|
+|`LF_norm`|LF power in normalized units ($\frac{\text{LF}}{\text{LF}+\text{HF}}\cdot100$)|[0.04, 0.15) Hz|
+|`HF_norm`|HF power in normalized units ($\frac{\text{HF}}{\text{LF}+\text{HF}}\cdot100$)|[0.15, 0.4) Hz|
 |`LF_HF_ratio`|ratio of LF:HF|-|
 
 
