@@ -32,6 +32,7 @@ source_suffix = {
 
 myst_enable_extensions = [
     'substitution',
+    'dollarmath',
 ]
 
 myst_substitutions = {
