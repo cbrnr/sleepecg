@@ -5,12 +5,13 @@
 """Tests for heartbeat detection."""
 
 import sys
-import pytest
+
 import numpy as np
+import pytest
 from scipy.misc import electrocardiogram
 from scipy.signal import resample_poly
 
-from sleepecg import detect_heartbeats, compare_heartbeats
+from sleepecg import compare_heartbeats, detect_heartbeats
 
 pytestmark = pytest.mark.c_extension
 ecg = electrocardiogram()
@@ -40,7 +41,7 @@ def test_resampling():
         beats = detect_heartbeats(ecg_res, fs_new)
         beats = np.round(beats / res).astype(int)
         f1 = f1_score(beats, y_true)
-        assert f1 > 0.95, "F1-score after resampling to {fs_new} Hz is below 0.90."
+        assert f1 > 0.95, 'F1-score after resampling to {fs_new} Hz is below 0.90.'
 
 
 def test_rescaling():
@@ -48,7 +49,7 @@ def test_rescaling():
     for scale in np.logspace(-4, 4, 9):
         beats = detect_heartbeats(ecg * scale, fs)
         f1 = f1_score(beats, y_true)
-        assert f1 == 1, "F1-score after rescaling by {scale} is not 1."
+        assert f1 == 1, 'F1-score after rescaling by {scale} is not 1.'
 
 
 def test_squared_moving_integration_args():
