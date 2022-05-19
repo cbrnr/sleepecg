@@ -11,7 +11,7 @@ from sleepecg import detect_heartbeats
 detection = detect_heartbeats(ecg, fs)
 ```
 
-For best results, we recommend a sampling frequency of at least 100 Hz. Please note that the algorithm will return similar results regardless of the scaling of the data.
+For best results, we recommend a sampling frequency of at least 100 Hz. The algorithm will return similar results regardless of the scaling of the data.
 
 
 ## Performance evaluation
