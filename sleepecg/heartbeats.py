@@ -68,9 +68,12 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     Parameters
     ----------
     ecg : np.ndarray
-        ECG signal.
+        ECG signal. Note that the unit of the data does not matter. The
+        algorithm will return similar results regardless of the scaling of
+        the data.
     fs : float
-        Sampling frequency in Hz.
+        Sampling frequency in Hz. For best results, a sampling frequency
+        of at least 100 Hz is recommended.
     backend : {'c', 'numba', 'python'}
         Which implementation of the squared moving integration and
         thresholding algorithm to use. If available, `'c'` is the fastest
