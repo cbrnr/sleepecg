@@ -5,11 +5,54 @@
 """Tests for heartbeat detection C extension."""
 
 import sys
-
-import numpy as np
 import pytest
+import numpy as np
+from scipy.misc import electrocardiogram
+from scipy.signal import resample_poly
+
+from sleepecg import detect_heartbeats, compare_heartbeats
 
 pytestmark = pytest.mark.c_extension
+
+
+def f1_score(y_pred, y_true, max_distance=5):
+    """Calculate the F1-score."""
+    tp, fp, fn = compare_heartbeats(y_pred, y_true, max_distance=max_distance)
+    tp, fp, fn = len(tp), len(fp), len(fn)
+    f1 = tp / (tp + 0.5 * (fp + fn))
+    return f1
+
+
+ecg = electrocardiogram()
+sf = 360
+y_true = detect_heartbeats(ecg, sf)
+
+
+def test_resampling():
+    """Test the impact of resampling on the heartbeat detection."""
+    for new_sf in [72, 90, 120, 180, 360, 720, 1080, 3600]:
+        res = new_sf / sf
+        if new_sf < sf:
+            up = 1
+            down = 1 / res
+        else:
+            down = 1
+            up = res
+        ecg_res = resample_poly(ecg, up, down)
+        pks = detect_heartbeats(ecg_res, new_sf)
+        # Compare the original SF
+        pks = np.round(pks / res).astype(int)
+        f1 = f1_score(pks, y_true)
+        assert f1 > 0.95, "F1-score after resampling to {new_sf} Hz is below 0.90."
+
+
+def test_rescaling():
+    """Test the impact of rescaling on the heartbeat detection."""
+    for scale in [1e-4, 1e-3, 1e-2, 0.1, 1, 10, 1e2, 1e3, 1e4]:
+        pks = detect_heartbeats(ecg * scale, sf)
+        # Compare the original SF
+        f1 = f1_score(pks, y_true)
+        assert f1 == 1, "F1-score after rescaling by {scale} is not 1."
 
 
 def test_squared_moving_integration_args():
