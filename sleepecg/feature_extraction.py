@@ -471,13 +471,20 @@ def preprocess_rri(
     -------
     np.ndarray
         The cleaned RRI series.
+
+    Examples
+    --------
+    Mask RR intervals outside the range of 0.4 to 2 seconds (= 30 to 150 bpm)
+
+    >>> from sleepecg import preprocess_rri
+    >>> preprocess_rri([0.5, 0.2, 0.8, 2.5, 0.6], min_rri=0.4, max_rri=2)  # noqa
+    array([0.5, nan, 0.8, nan, 0.6])
     """
-    invalid_rri = np.zeros_like(rri, dtype=bool)
+    rri = np.asarray(rri, dtype=float)
     if min_rri is not None:
-        invalid_rri |= rri < min_rri
+        rri[rri < min_rri] = np.nan
     if max_rri is not None:
-        invalid_rri |= rri > max_rri
-    rri[invalid_rri] = np.nan
+        rri[rri > max_rri] = np.nan
     return rri
 
 
