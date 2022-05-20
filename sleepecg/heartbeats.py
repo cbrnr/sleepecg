@@ -84,6 +84,24 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     -------
     np.ndarray
         Indices of detected heartbeats.
+
+    Examples
+    --------
+    Apply the detection on a 5 minute long electrocardiogram
+
+    >>> from scipy.misc import electrocardiogram
+    >>> from sleepecg import detect_heartbeats
+    >>> ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
+    >>> fs = 360
+    >>> heartbeats = detect_heartbeats(ecg, fs)
+    >>> print(f"{len(heartbeats)} heartbeats detected (first 5 = {heartbeats[0:5]})")  # noqa
+    478 heartbeats detected (first 5 = [125 342 551 748 944])
+
+    Calculate the RR intervals in milliseconds
+
+    >>> rri = 1000 * np.diff(heartbeats) / fs
+    >>> np.round(rri[0:10])  # Show the first 10 RR intervals
+    array([602, 580, 547, 544, 516, 516, 511, 527, 525, 513])
     """
     if backend not in _all_backends:
         raise ValueError(
@@ -184,6 +202,45 @@ def compare_heartbeats(
         False positives, i.e. non-heartbeats detected as heartbeats.
     FN : np.ndarray
         False negatives, i.e. actual heartbeats not detected as heartbeats.
+
+    Examples
+    --------
+    Apply the detection on a 5 minute long electrocardiogram
+
+    >>> import numpy as np
+    >>> from scipy.misc import electrocardiogram
+    >>> from sleepecg import detect_heartbeats
+    >>> ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
+    >>> fs = 360
+    >>> heartbeats = detect_heartbeats(ecg, fs)
+    >>> print(f"{len(heartbeats)} heartbeats detected")
+    478 heartbeats detected
+
+    Now add some random noise to the electrocardiogram
+
+    >>> np.random.seed(42)
+    >>> ecg_noisy = ecg + np.random.rand(ecg.size)
+    >>> heartbeats_noisy = detect_heartbeats(ecg_noisy, fs)
+    >>> print(f"{len(heartbeats_noisy)} heartbeats detected")
+    506 heartbeats detected
+
+    Compare the two detections
+
+    >>> from sleepecg import compare_heartbeats
+    >>> # TP = True Positive, FP = False Positive, FN = False Negative
+    >>> tp, fp, fn = compare_heartbeats(heartbeats_noisy, heartbeats)
+    >>> print(f"{len(tp)} TP, {len(fp)} FP and {len(fn)} FN")
+    305 TP, 201 FP and 173 FN
+
+    Calculate the F1-score. The F1-score is a measure of accuracy.
+    It is defined as the harmonic mean of precision and recall.
+    The highest possible value of an F-score is 1.0, indicating perfect
+    precision and recall, and the lowest possible value is 0, if either the
+    precision or the recall is zero.
+
+    >>> f1 = len(tp) / (len(tp) + 0.5 * (len(fp) + len(fn)))
+    >>> print(f"F1-score = {f1:.3f}")
+    F1-score = 0.620
     """
     if len(detection) == 0:
         return _CompareHeartbeatsResult(
