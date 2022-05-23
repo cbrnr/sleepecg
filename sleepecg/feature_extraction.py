@@ -480,7 +480,7 @@ def preprocess_rri(
     >>> preprocess_rri([0.5, 0.2, 0.8, 2.5, 0.6], min_rri=0.4, max_rri=2)  # noqa
     array([0.5, nan, 0.8, nan, 0.6])
     """
-    rri = np.asarray(rri, dtype=float)
+    rri = np.array(rri, dtype=float)
     if min_rri is not None:
         rri[rri < min_rri] = np.nan
     if max_rri is not None:
