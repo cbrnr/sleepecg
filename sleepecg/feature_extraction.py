@@ -474,14 +474,13 @@ def preprocess_rri(
 
     Examples
     --------
-    Mask RR intervals outside the range of 0.4 to 2 seconds
-    (= 30 to 150 bpm)
+    Mask RR intervals outside the range of 0.4 to 2 s (= 30 to 150 bpm):
 
     >>> from sleepecg import preprocess_rri
     >>> preprocess_rri([0.5, 0.2, 0.8, 2.5, 0.6], min_rri=0.4, max_rri=2)
     array([0.5, nan, 0.8, nan, 0.6])
     """
-    rri = np.array(rri, dtype=float)
+    rri = np.array(rri, dtype=float)  # make a copy
     if min_rri is not None:
         rri[rri < min_rri] = np.nan
     if max_rri is not None:

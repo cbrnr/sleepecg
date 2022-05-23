@@ -1,5 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ### Added
+- The `preprocess_rri` function no longer operates in-place and instead returns a copy of the input array ([#91](https://github.com/cbrnr/sleepecg/pull/91) by [Raphael Vallat](https://github.com/raphaelvallat))
 - Add more tests and documentation for the Pan-Tompkins detector ([#89](https://github.com/cbrnr/sleepecg/pull/89) by [Raphael Vallat](https://github.com/raphaelvallat))
 
 ## [0.5.0] - 2022-03-22
