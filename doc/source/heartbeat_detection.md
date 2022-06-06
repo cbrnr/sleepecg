@@ -15,37 +15,40 @@ For best results, we recommend a sampling frequency of at least 100 Hz. The algo
 
 ## Examples
 
-Apply the detection on a 5 minute long electrocardiogram
+Let's detect heartbeats in a 5 minute long electrocardiogram:
 
 ```python
->>> from scipy.misc import electrocardiogram
->>> from sleepecg import detect_heartbeats
->>> ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
->>> fs = 360
->>> heartbeats = detect_heartbeats(ecg, fs)
->>> print(f"{len(heartbeats)} heartbeats detected (first 5 = {heartbeats[0:5]})")  # noqa
-478 heartbeats detected (first 5 = [125 342 551 748 944])
+from scipy.misc import electrocardiogram
+from sleepecg import detect_heartbeats
+
+ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
+fs = 360
+beats = detect_heartbeats(ecg, fs)
+print(f"{len(beats)} heartbeats detected ({", ".join(beats[0:5])}, ...)")
+# 478 heartbeats detected (125, 342, 551, 748, 944, ...)
 ```
 
-Calculate the RR intervals in milliseconds
+Next, we can calculate the RR intervals in milliseconds:
 
 ```python
->>> rri = 1000 * np.diff(heartbeats) / fs
->>> np.round(rri[0:10])  # Show the first 10 RR intervals
-array([602, 580, 547, 544, 516, 516, 511, 527, 525, 513])
+rri = 1000 * np.diff(beats) / fs
+print(np.round(rri[:10]))  # show the first 10 RR intervals
+# array([602, 580, 547, 544, 516, 516, 511, 527, 525, 513])
 ```
 
-Now add some random noise to the electrocardiogram and compare the heartbeat detection with and without noise
+Now let's add some random noise to the electrocardiogram and compare the heartbeat detection with and without noise:
 
 ```python
->>> np.random.seed(42)
->>> ecg_noisy = ecg + np.random.rand(ecg.size)
->>> heartbeats_noisy = detect_heartbeats(ecg_noisy, fs)
->>> from sleepecg import compare_heartbeats
->>> # TP = True Positive, FP = False Positive, FN = False Negative
->>> tp, fp, fn = compare_heartbeats(heartbeats_noisy, heartbeats)
->>> print(f"{len(tp)} TP, {len(fp)} FP and {len(fn)} FN")
-305 TP, 201 FP and 173 FN
+import numpy as np
+from sleepecg import compare_heartbeats
+
+np.random.seed(42)
+ecg_noisy = ecg + np.random.rand(ecg.size)
+beats_noisy = detect_heartbeats(ecg_noisy, fs)
+# tp = true positive, fp = false positive, fn = false negative
+tp, fp, fn = compare_heartbeats(beats_noisy, beats)
+print(f"{len(tp)} TP, {len(fp)} FP, {len(fn)} FN")
+# 305 TP, 201 FP, 173 FN
 ```
 
 ## Performance evaluation

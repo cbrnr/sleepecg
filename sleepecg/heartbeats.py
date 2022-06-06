@@ -87,15 +87,15 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
 
     Examples
     --------
-    Apply the detection on a 5 minute long electrocardiogram
+    Detect heartbeats in a 5 minute long electrocardiogram:
 
     >>> from scipy.misc import electrocardiogram
     >>> from sleepecg import detect_heartbeats
     >>> ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
     >>> fs = 360
     >>> heartbeats = detect_heartbeats(ecg, fs)
-    >>> print(f"{len(heartbeats)} heartbeats detected (first 5 = {heartbeats[0:5]})")  # noqa
-    478 heartbeats detected (first 5 = [125 342 551 748 944])
+    >>> print(f"{len(heartbeats)} heartbeats detected")
+    478 heartbeats detected
     """
     if backend not in _all_backends:
         raise ValueError(
