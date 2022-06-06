@@ -105,7 +105,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     # Check for flat data at the beginning of the recording, which can
     # mess up the detection thresholds.
     # https://github.com/cbrnr/sleepecg/issues/87
-    assert len(ecg), 'ECG signal has no length.'
+    assert len(ecg) > 1, 'ECG signal must have more than one sample.'
     if ecg[1] == ecg[0]:
         idx_nonflat = np.nonzero(ecg != ecg[0])[0]
         if not len(idx_nonflat):
