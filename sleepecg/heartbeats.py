@@ -85,8 +85,8 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     np.ndarray
         Indices of detected heartbeats.
 
-    Example
-    -------
+    Examples
+    --------
     Detect heartbeats in a 5 minute long electrocardiogram:
 
     >>> from scipy.misc import electrocardiogram
