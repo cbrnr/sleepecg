@@ -105,10 +105,14 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     # Check for flat data at the beginning of the recording, which can
     # mess up the detection thresholds.
     # https://github.com/cbrnr/sleepecg/issues/87
-    idx_nonflat = np.nonzero(ecg != ecg[0])[0]
-    if not len(idx_nonflat):
-        raise ValueError('ECG signal is flat. Please check your data.')
-    first_nonflat = idx_nonflat[0]  # First non-flat index
+    assert len(ecg), 'ECG signal has no length.'
+    if ecg[1] == ecg[0]:
+        idx_nonflat = np.nonzero(ecg != ecg[0])[0]
+        if not len(idx_nonflat):
+            raise ValueError('ECG signal is flat. Please check your data.')
+        first_nonflat = idx_nonflat[0]  # First non-flat index
+    else:
+        first_nonflat = 0
 
     # For short signals, creating the bandpass filter makes up a large part
     # of the total runtime. Therefore the filter is cached in a global
