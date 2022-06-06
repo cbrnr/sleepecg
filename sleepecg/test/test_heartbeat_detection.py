@@ -73,6 +73,10 @@ def test_flat_data():
     with pytest.raises(ValueError):
         detect_heartbeats(np.ones(10000), fs)
 
+    # ecg is empty
+    with pytest.raises(ValueError):
+        detect_heartbeats([], fs)
+
 
 def test_squared_moving_integration_args():
     """Test squared moving window integration argument parsing."""
