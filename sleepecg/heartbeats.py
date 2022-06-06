@@ -107,8 +107,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     # https://github.com/cbrnr/sleepecg/issues/87
     idx_nonflat = np.nonzero(ecg != ecg[0])[0]
     if not len(idx_nonflat):
-        raise ValueError(
-            'The ECG signal is flat for the entire recording. Please check your data.')
+        raise ValueError('ECG signal is flat. Please check your data.')
     first_nonflat = idx_nonflat[0]  # First non-flat index
 
     # For short signals, creating the bandpass filter makes up a large part
