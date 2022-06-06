@@ -24,7 +24,7 @@ from sleepecg import detect_heartbeats
 ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
 fs = 360
 beats = detect_heartbeats(ecg, fs)
-print(f"{len(beats)} heartbeats detected ({", ".join(beats[0:5])}, ...)")
+print(f"{len(beats)} heartbeats detected ({', '.join(beats[0:5])}, ...)")
 # 478 heartbeats detected (125, 342, 551, 748, 944, ...)
 ```
 
