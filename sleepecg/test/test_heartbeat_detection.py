@@ -5,8 +5,9 @@
 """Tests for heartbeat detection."""
 
 import sys
-import pytest
+
 import numpy as np
+import pytest
 from scipy.misc import electrocardiogram
 from scipy.signal import resample_poly
 
@@ -54,12 +55,12 @@ def test_rescaling():
 def test_flat_data():
     """Test the impact of flat data on heartbeat detection."""
     # Flat data at the beginning
-    ecg_pad_before = np.pad(ecg, pad_width=(ecg.size, 0), mode="edge")
+    ecg_pad_before = np.pad(ecg, pad_width=(ecg.size, 0), mode='edge')
     pks_before = detect_heartbeats(ecg_pad_before, fs)
     assert f1_score(pks_before - ecg.size, y_true) == 1
 
     # Flat data at the end
-    ecg_pad_after = np.pad(ecg, pad_width=(0, ecg.size), mode="edge")
+    ecg_pad_after = np.pad(ecg, pad_width=(0, ecg.size), mode='edge')
     pks_after = detect_heartbeats(ecg_pad_after, fs)
     assert f1_score(pks_after, y_true) == 1
 
