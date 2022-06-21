@@ -371,7 +371,7 @@ def _hrv_frequencydomain_features(
     if np.any(sleep_stage_durations != sleep_stage_durations[0]):
         raise ValueError("Sleep stages must be sampled regularly!")
 
-    window_size = (lookback + lookforward) * fs_rri_resample
+    window_size = int((lookback + lookforward) * fs_rri_resample)
     window_step = int(fs_rri_resample * sleep_stage_durations[0])
     rri_windows = sliding_window_view(rri_interp, window_size)[::window_step]
 
