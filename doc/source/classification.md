@@ -11,8 +11,6 @@ Note that the performance metrics are averages, so a classifier might perform mu
 |`wrn-gru-mesa`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.75|0.54|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa.py)|
 |`wrn-gru-mesa-weighted`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.70|0.53|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)|
 
-
-### Notes
 As REM is much less common than NREM and WAKE, the current models show limited performance in WAKE-REM-NREM classification.
 Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM as shown in the confusion matrix below (left).
 With sample weights inversely proportional to class frequency in `wrn-gru-mesa-weighted`, the confusion matrix (right) is more symmetrical.
@@ -37,7 +35,7 @@ Make sure it contains the following elements:
 - An entry in the table above.
 
 
-## Sleep stage labels and `stages_mode`
+## Sleep stage labels
 Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`SleepStage`](./generated/sleepecg.SleepStage).
 To facilitate working on classifiers which do not discrimate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
 
