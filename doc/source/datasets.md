@@ -1,8 +1,8 @@
 (datasets)=
-# Datasets
+## Datasets
 SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified in `data_dir` (by default `~/.sleepecg/datasets`). While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access). More reader functions [will be added in the future](https://github.com/cbrnr/sleepecg/issues/35).
 
-## Sleep readers
+### Sleep readers
 |Reader|Dataset name|Annotated records|Raw data size|Access|
 |-|-|-|-|-|
 |[`read_mesa`](./generated/sleepecg.read_mesa)|[Multi-Ethnic Study of Atherosclerosis](https://sleepdata.org/datasets/mesa/)|2056|385 GB|[request](https://sleepdata.org/data/requests/mesa/start)|
@@ -10,7 +10,7 @@ SleepECG provides reader functions for various datasets. All required files will
 |[`read_slpdb`](./generated/sleepecg.read_slpdb)|[MIT-BIH Polysomnographic Database](https://physionet.org/content/slpdb)|18|632 MB|open|
 
 
-## ECG readers
+### ECG readers
 |Reader|Dataset name|Records|Signals|Raw data size|
 |-|-|-|-|-|
 |[`read_gudb`](./generated/sleepecg.read_gudb)|[Glasgow University ECG database ](https://berndporr.github.io/ECG-GUDB/)|335|335|550 MB|
@@ -18,7 +18,7 @@ SleepECG provides reader functions for various datasets. All required files will
 |[`read_mitdb`](./generated/sleepecg.read_mitdb)|[MIT-BIH Arrhythmia Database](https://physionet.org/content/mitdb)|48|96|98.5 MB|
 
 
-## NSRR data access
+### NSRR data access
 To gain access to a dataset provided by the [NSRR](https://sleepdata.org), complete the following steps:
 - Create an account [here](https://sleepdata.org/join).
 - To create a data access request, either

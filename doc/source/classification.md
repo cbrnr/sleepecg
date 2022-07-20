@@ -1,8 +1,7 @@
 (classification)=
-# Classification
+## Classification
 
-
-## Included classifiers
+### Included classifiers
 SleepECG contains classifiers trained on large open sleep datasets.
 Note that the performance metrics are averages, so a classifier might perform much better or much worse for an individual record.
 
@@ -13,7 +12,7 @@ Note that the performance metrics are averages, so a classifier might perform mu
 |`wrn-gru-mesa-weighted`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.70|0.53|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)|
 
 
-### Notes
+#### Notes
 As REM is much less common than NREM and WAKE, the current models show limited performance in WAKE-REM-NREM classification.
 Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM as shown in the confusion matrix below (left).
 With sample weights inversely proportional to class frequency in `wrn-gru-mesa-weighted`, the confusion matrix (right) is more symmetrical.
@@ -23,13 +22,13 @@ A weaker weighting approach is likely required to find the optimal middle way.
 ![wrn-gru-mesa confusion matrix](./img/wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./img/wrn-gru-mesa-weighted.svg)
 
 
-## Usage examples
+### Usage examples
 |File|Description|
 |-|-|
 |[`try_ws_gru_mesa.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/try_ws_gru_mesa.py)|This example demonstrates how to use the WAKE-SLEEP classifier `ws-gru-mesa`, a GRU-based classifier bundled with SleepECG which was trained on 1971 nights of the [MESA](https://sleepdata.org/datasets/mesa/) dataset.|
 
 
-## Contributing
+### Contributing
 You are very welcome to add new classifiers to SleepECG!
 To do so, please submit a [pull request](https://github.com/cbrnr/sleepecg/pulls).
 Make sure it contains the following elements:
@@ -38,7 +37,7 @@ Make sure it contains the following elements:
 - An entry in the table above.
 
 
-## Sleep stage labels and `stages_mode`
+### Sleep stage labels and `stages_mode`
 Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`SleepStage`](./generated/sleepecg.SleepStage).
 To facilitate working on classifiers which do not discrimate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
 

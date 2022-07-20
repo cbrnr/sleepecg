@@ -1,5 +1,5 @@
 (configuration)=
-# Configuration
+## Configuration
 SleepECG provides an interface to set and persist global configuration values. See
 [get_config](./generated/sleepecg.get_config) and [set_config](./generated/sleepecg.set_config) for usage instructions.
 

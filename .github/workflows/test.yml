@@ -20,9 +20,9 @@ jobs:
     name: Pre-commit checks
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - uses: pre-commit/action@v3.0.0
 
 
   test:
@@ -35,11 +35,11 @@ jobs:
         os: [ubuntu-20.04, windows-2019, macos-10.15]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build wheels and run pytest
-        uses: pypa/cibuildwheel@v2.3.0
+        uses: pypa/cibuildwheel@v2.8.1
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
