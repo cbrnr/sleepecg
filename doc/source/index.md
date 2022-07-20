@@ -8,7 +8,7 @@
    Classification <classification>
    Configuration <configuration>
    API <api>
-   GitHub Repository <https://github.com/cbrnr/sleepecg>
+   About <about>
 ```
 
 # SleepECG
