@@ -71,6 +71,10 @@ html_css_files = ['custom.css']
 
 templates_path = ['_templates']
 
+html_theme_options = {
+    'top_of_page_button': None,
+}
+
 
 def linkcode_resolve(domain, info):
     """
