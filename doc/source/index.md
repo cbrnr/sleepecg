@@ -11,16 +11,24 @@
    GitHub Repository <https://github.com/cbrnr/sleepecg>
 ```
 
-## SleepECG
+# SleepECG
 SleepECG {{ version }} provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
 - downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes the entire preprocessing, feature extraction, and classification pipeline).
 
-### Changelog
+## Overview
+- [Datasets](./datasets) shows all available datasets and instructions for retrieving NSRR data.
+- [Heartbeat Detection](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
+- [Feature Extraction](./feature_extraction) lists all implemented HRV features.
+- [Classification](./classification) describes the included sleep stage classifiers and how to use the classification API.
+- [Configuration](./configuration) explains configuration settings in SleepECG.
+- [API](./api) has detailed information about all public functions and classes in SleepECG.
+
+## Changelog
 Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) to learn what we added, changed, or fixed.
 
-### Dependencies
+## Dependencies
 SleepECG requires Python ≥ 3.8 and the following packages:
 - [numpy](http://www.numpy.org/) ≥ 1.20.0
 - [requests](https://requests.readthedocs.io/en/latest/) >= 2.25.0
@@ -37,7 +45,7 @@ Optional dependencies provide additional features:
 - [tensorflow](https://www.tensorflow.org/) ≥ 2.7.0 (sleep stage classification with Keras models)
 - [wfdb](https://github.com/MIT-LCP/wfdb-python/) ≥ 3.4.0 (read data from [SLPDB](https://physionet.org/content/slpdb), [MITDB](https://physionet.org/content/mitdb), and [LTDB](https://physionet.org/content/ltdb))
 
-### Installation
+## Installation
 SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.io/en/stable/):
 
 ```
@@ -62,13 +70,5 @@ If you want the latest development version, use the following command:
 pip install git+https://github.com/cbrnr/sleepecg
 ```
 
-### Contributing
+## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
-
-### Overview
-- [Datasets](./datasets) shows all available datasets and instructions for retrieving NSRR data.
-- [Heartbeat Detection](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
-- [Feature Extraction](./feature_extraction) lists all implemented HRV features.
-- [Classification](./classification) describes the included sleep stage classifiers and how to use the classification API.
-- [Configuration](./configuration) explains configuration settings in SleepECG.
-- [API](./api) has detailed information about all public functions and classes in SleepECG.
