@@ -30,7 +30,7 @@ If another PR is merged while you are working on something, a merge conflict may
 
 
 ## Development enviroment
-Make sure to use Python 3.7. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of installing everything into your main environment. In the root of the local clone of your fork, run
+Make sure to use Python 3.8. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of installing everything into your main environment. In the root of the local clone of your fork, run
 
 ```
 pip install -e .[dev]

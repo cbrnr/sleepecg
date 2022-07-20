@@ -69,10 +69,16 @@ html_last_updated_fmt = '%Y-%m-%d'
 html_static_path = ['_static']
 html_css_files = ['custom.css']
 
+templates_path = ['_templates']
+
+html_theme_options = {
+    'top_of_page_button': None,
+}
+
 
 def linkcode_resolve(domain, info):
     """
-    Determine the URL corresponding to a python object.
+    Determine the URL corresponding to a Python object.
 
     Adapted from lasagne:
     https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py

@@ -1,13 +1,11 @@
-SleepECG API Reference
-======================
+SleepECG API
+============
 
 .. automodule:: sleepecg
 
-This page lists all public SleepECG functions and classes.
-
 Datasets
 --------
-See :ref:`Datasets <datasets>` for information about the available datasets and instructions for retrieving NSRR data.
+See :ref:`Datasets <datasets>` for information about available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
    :toctree: generated/
@@ -30,7 +28,7 @@ See :ref:`Datasets <datasets>` for information about the available datasets and 
 
 Feature extraction
 ------------------
-Detailed information on the implemented features is available :ref:`here <feature_extraction>`.
+Detailed information on implemented features is available :ref:`here <feature_extraction>`.
 
 .. autosummary::
    :toctree: generated/
@@ -72,7 +70,7 @@ Sleep stage classification
 
 Configuration
 -------------
-Possible configuration settings are explained :ref:`here <configuration>`.
+Configuration settings are explained :ref:`here <configuration>`.
 
 .. autosummary::
    :toctree: generated/
