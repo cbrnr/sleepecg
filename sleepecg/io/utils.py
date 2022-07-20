@@ -34,10 +34,7 @@ def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
     """
     computed_hash = _HASH_FUNCTIONS[checksum_type]()
     with open(filepath, 'rb') as file:
-        while True:
-            chunk = file.read(8192)
-            if not chunk:
-                break
+        while chunk := file.read(8192):
             computed_hash.update(chunk)
     return computed_hash.hexdigest()
 
