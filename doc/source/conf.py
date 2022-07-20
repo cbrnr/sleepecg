@@ -71,10 +71,6 @@ html_css_files = ['custom.css']
 
 templates_path = ['_templates']
 
-html_theme_options = {
-    'last_updated': False,
-}
-
 
 def linkcode_resolve(domain, info):
     """
