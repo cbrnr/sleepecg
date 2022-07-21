@@ -1,4 +1,4 @@
-## [UNRELEASED] - YYYY-MM-DD
+## [0.5.1] - 2022-07-21
 ### Added
 - Add more tests and documentation for the Pan-Tompkins detector ([#89](https://github.com/cbrnr/sleepecg/pull/89) by [Raphael Vallat](https://github.com/raphaelvallat))
 
