@@ -1,4 +1,4 @@
-# Authors: Florian Hofer
+# © SleepECG developers
 #
 # License: BSD (3-clause)
 

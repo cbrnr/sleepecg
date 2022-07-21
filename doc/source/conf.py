@@ -76,8 +76,7 @@ def linkcode_resolve(domain, info):
     """
     Determine the URL corresponding to a Python object.
 
-    Adapted from lasagne:
-    https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py
+    Adapted from https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py.
     """
 
     def find_source():
@@ -92,8 +91,9 @@ def linkcode_resolve(domain, info):
     if domain != "py" or not info["module"]:
         return None
     try:
-        filename = "sleepecg/%s#L%d-L%d" % find_source()
+        fn, start, end = find_source()
+        filename = f"sleepecg/{fn}#L{start}-L{end}"
     except Exception:
         filename = info["module"].replace(".", "/") + ".py"
     tag = "main" if "dev" in version else ("v" + version)
-    return "https://github.com/cbrnr/sleepecg/blob/%s/%s" % (tag, filename)
+    return f"https://github.com/cbrnr/sleepecg/blob/{tag}/{filename}"
