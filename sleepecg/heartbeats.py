@@ -12,25 +12,25 @@ import scipy.interpolate
 import scipy.signal
 import scipy.stats
 
-_all_backends = ('c', 'numba', 'python')
+_all_backends = ("c", "numba", "python")
 _available_backends = list(_all_backends)
 
 try:
     from ._heartbeat_detection import _squared_moving_integration, _thresholding
 except ImportError:
-    _available_backends.remove('c')
+    _available_backends.remove("c")
 
 try:
     from numba import jit
 except ImportError:
-    _available_backends.remove('numba')
+    _available_backends.remove("numba")
 
 
 # cache sos-filter created with scipy.signal.butter to reduce runtime
 _sos_filters = {}
 
 
-def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndarray:
+def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndarray:
     """
     Detect heartbeats in an ECG signal.
 
@@ -99,12 +99,12 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     """
     if backend not in _all_backends:
         raise ValueError(
-            f'Invalid backend for detect_heartbeats: {backend!r}. '
-            f'Possible options are: {_all_backends}.',
+            f"Invalid backend for detect_heartbeats: {backend!r}. "
+            f"Possible options are: {_all_backends}.",
         )
     if backend not in _available_backends:
         fallback = _available_backends[0]
-        warnings.warn(f'Backend {backend!r} not available, using {fallback!r} instead.')
+        warnings.warn(f"Backend {backend!r} not available, using {fallback!r} instead.")
         backend = fallback
 
     # For short signals, creating the bandpass filter makes up a large part
@@ -116,8 +116,8 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
         sos = scipy.signal.butter(
             N=2,
             Wn=(5, 30),
-            btype='bandpass',
-            output='sos',
+            btype="bandpass",
+            output="sos",
             fs=fs,
         )
         _sos_filters[fs] = sos
@@ -127,7 +127,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
 
     # Set everything until the first zero-crossing to zero. For efficiency,
     # only the first 2 seconds are checked.
-    signal_start = np.where(np.diff(np.signbit(filtered_ecg[:int(2 * fs)])))[0][0] + 1
+    signal_start = np.where(np.diff(np.signbit(filtered_ecg[: int(2 * fs)])))[0][0] + 1
     filtered_ecg[:signal_start] = 0
 
     # scipy.signal.sosfiltfilt returns an array with negative strides. Both
@@ -136,21 +136,21 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = 'c') -> np.ndar
     filtered_ecg = np.ascontiguousarray(filtered_ecg)
 
     # five-point derivative as described by Pan & Tompkins
-    derivative = np.correlate(filtered_ecg, np.array([-1, -2, 0, 2, 1]), mode='same')
+    derivative = np.correlate(filtered_ecg, np.array([-1, -2, 0, 2, 1]), mode="same")
 
     moving_window_width = int(0.15 * fs)  # 150ms
 
-    if backend == 'c':
+    if backend == "c":
         integrated_ecg = _squared_moving_integration(derivative, moving_window_width)
         beat_mask = _thresholding(filtered_ecg, integrated_ecg, fs)
-    elif backend == 'numba':
+    elif backend == "numba":
         integrated_ecg = _squared_moving_integration_numba(derivative, moving_window_width)
         beat_mask = _thresholding_numba(filtered_ecg, integrated_ecg, fs)
-    elif backend == 'python':
+    elif backend == "python":
         integrated_ecg = np.convolve(
             derivative**2,
             np.ones(moving_window_width),
-            mode='same',
+            mode="same",
         )
         beat_mask = _thresholding_py(filtered_ecg, integrated_ecg, fs)
 
@@ -211,8 +211,8 @@ def compare_heartbeats(
     annotation_mask[annotation] = 1
 
     fuzzy_filter = np.ones(max_distance * 2 + 1, dtype=bool)
-    detection_mask_fuzzy = np.convolve(detection_mask, fuzzy_filter, mode='same')
-    annotation_mask_fuzzy = np.convolve(annotation_mask, fuzzy_filter, mode='same')
+    detection_mask_fuzzy = np.convolve(detection_mask, fuzzy_filter, mode="same")
+    annotation_mask_fuzzy = np.convolve(annotation_mask, fuzzy_filter, mode="same")
 
     return _CompareHeartbeatsResult(
         TP=np.where(detection_mask & annotation_mask_fuzzy)[0],
@@ -265,7 +265,7 @@ def rri_similarity(
 
     start = max(min(t_ann), min(t_det))
     end = min(max(t_ann), max(t_det))
-    t_new = np.arange(start, end, 1/fs_resample)
+    t_new = np.arange(start, end, 1 / fs_resample)
 
     interp_det = scipy.interpolate.interp1d(t_det, rr_det)
     interp_ann = scipy.interpolate.interp1d(t_ann, rr_ann)
@@ -275,7 +275,7 @@ def rri_similarity(
     return _RRISimilarityResult(
         scipy.stats.pearsonr(det_resampled, ann_resampled)[0],
         scipy.stats.spearmanr(det_resampled, ann_resampled)[0],
-        np.sqrt(np.mean((det_resampled - ann_resampled)**2)),
+        np.sqrt(np.mean((det_resampled - ann_resampled) ** 2)),
     )
 
 
@@ -297,7 +297,7 @@ def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndar
     """
     signal_len = len(x)
     if not 0 < window_length <= signal_len:
-        raise ValueError('window_length has to be 0 < window_length <= len(x)')
+        raise ValueError("window_length has to be 0 < window_length <= len(x)")
 
     output = np.empty_like(x)
 
@@ -328,7 +328,7 @@ def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndar
     # the end of the x signal is reached, so the integration window is
     # built down and the last `window_length/2` entries of the output are
     # filled
-    for i in range(signal_len, signal_len+window_length_half):
+    for i in range(signal_len, signal_len + window_length_half):
         output[i - window_length_half] = sum
         sum -= integration_buffer[i % window_length]
 
@@ -378,10 +378,10 @@ def _thresholding_py(
     # values of the filtered/integrated signal during the learning phase.
     # Accordingly, NPKF/NPKI are initialized to the mean values during the
     # first two seconds.
-    SPKF = np.max(filtered_ecg[:int(2 * fs)])
-    NPKF = np.mean(filtered_ecg[:int(2 * fs)])
-    SPKI = np.max(integrated_ecg[:int(2 * fs)])
-    NPKI = np.mean(integrated_ecg[:int(2 * fs)])
+    SPKF = np.max(filtered_ecg[: int(2 * fs)])
+    NPKF = np.mean(filtered_ecg[: int(2 * fs)])
+    SPKI = np.max(integrated_ecg[: int(2 * fs)])
+    NPKI = np.mean(integrated_ecg[: int(2 * fs)])
     threshold_I1 = NPKI + 0.25 * (SPKI - NPKI)
     threshold_F1 = NPKF + 0.25 * (SPKF - NPKF)
 
@@ -391,7 +391,7 @@ def _thresholding_py(
     # Therefore, all RR intervals are stored. As the algorithm enforces a
     # refractory period, the maximum number of heartbeats is equal to
     # signal_len / refractory_samples.
-    RR_intervals = np.zeros(signal_len//REFRACTORY_SAMPLES)
+    RR_intervals = np.zeros(signal_len // REFRACTORY_SAMPLES)
 
     # tracking the number of peaks found is required to calculate the
     # average RR intervals correctly during the first 8 beats (also needed
@@ -451,9 +451,15 @@ def _thresholding_py(
         #   searchback is triggered in two cases: (1) if there is no peak
         #   during the first second, and (2) if there is no peak 1.5s
         #   after the first peak.
-        if ((num_peaks_found > 1 and index - previous_peak_index > RR_missed_limit and do_searchback) or  # original criterion  # noqa: E501
-                (num_peaks_found == 0 and index > fs) or                             # (1)
-                (num_peaks_found == 1 and index - previous_peak_index > 1.5 * fs)):  # (2)
+        if (
+            (
+                num_peaks_found > 1
+                and index - previous_peak_index > RR_missed_limit
+                and do_searchback
+            )
+            or (num_peaks_found == 0 and index > fs)  # original criterion
+            or (num_peaks_found == 1 and index - previous_peak_index > 1.5 * fs)  # (1)
+        ):  # (2)
 
             for i in range(1, 16):
                 found_a_candidate = False
@@ -473,12 +479,21 @@ def _thresholding_py(
                             # one signal is between the reduced and
                             # original threshold, the other one above the
                             # reduced threshold
-                            if ((threshold_F1 / searchback_divisor < PEAKF and PEAKF < threshold_F1 and threshold_I1 / searchback_divisor < PEAKI) or  # noqa: E501
-                                    (threshold_I1 / searchback_divisor < PEAKI and PEAKI < threshold_I1 and threshold_F1 / searchback_divisor < PEAKF)):   # noqa: E501
+                            if (
+                                threshold_F1 / searchback_divisor < PEAKF
+                                and PEAKF < threshold_F1
+                                and threshold_I1 / searchback_divisor < PEAKI
+                            ) or (
+                                threshold_I1 / searchback_divisor < PEAKI
+                                and PEAKI < threshold_I1
+                                and threshold_F1 / searchback_divisor < PEAKF
+                            ):
                                 if PEAKF > best_candidate_amplitude:
                                     # highest one so far
                                     best_searchback_index = searchback_index
-                                    best_candidate_amplitude = filtered_ecg[searchback_index]  # noqa: E501
+                                    best_candidate_amplitude = filtered_ecg[
+                                        searchback_index
+                                    ]
                                     found_a_candidate = True
 
                         # the amplitude of the next sample is lower, so it
@@ -558,7 +573,7 @@ def _thresholding_py(
                     if amplitude_before > amplitude_here:
                         break
                     slope = amplitude_here - amplitude_before
-                    if (slope > max_slope_in_previous_peak):
+                    if slope > max_slope_in_previous_peak:
                         max_slope_in_previous_peak = slope
                     reverse_index -= 1
 
@@ -649,6 +664,6 @@ def _thresholding_py(
     return beat_mask
 
 
-if 'numba' in _available_backends:
+if "numba" in _available_backends:
     _squared_moving_integration_numba = jit(_squared_moving_integration_py)
     _thresholding_numba = jit(_thresholding_py)

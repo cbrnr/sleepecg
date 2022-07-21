@@ -16,17 +16,44 @@ from .io.sleep_readers import SleepRecord
 from .utils import _parallel, _time_to_sec
 
 _FEATURE_GROUPS = {
-    'hrv-time': (
-        'meanNN', 'maxNN', 'minNN', 'rangeNN', 'SDNN',
-        'RMSSD', 'SDSD', 'NN50', 'NN20', 'pNN50', 'pNN20',
-        'medianNN', 'madNN', 'iqrNN', 'cvNN', 'cvSD',
-        'meanHR', 'maxHR', 'minHR', 'stdHR',
-        'SD1', 'SD2', 'S', 'SD1_SD2_ratio', 'CSI', 'CVI',
+    "hrv-time": (
+        "meanNN",
+        "maxNN",
+        "minNN",
+        "rangeNN",
+        "SDNN",
+        "RMSSD",
+        "SDSD",
+        "NN50",
+        "NN20",
+        "pNN50",
+        "pNN20",
+        "medianNN",
+        "madNN",
+        "iqrNN",
+        "cvNN",
+        "cvSD",
+        "meanHR",
+        "maxHR",
+        "minHR",
+        "stdHR",
+        "SD1",
+        "SD2",
+        "S",
+        "SD1_SD2_ratio",
+        "CSI",
+        "CVI",
     ),
-    'hrv-frequency': (
-        'total_power', 'VLF', 'LF', 'LF_norm', 'HF', 'HF_norm', 'LF_HF_ratio',
+    "hrv-frequency": (
+        "total_power",
+        "VLF",
+        "LF",
+        "LF_norm",
+        "HF",
+        "HF_norm",
+        "LF_HF_ratio",
     ),
-    'metadata': ('recording_start_time', 'age', 'gender', 'weight'),
+    "metadata": ("recording_start_time", "age", "gender", "weight"),
 }
 _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
 
@@ -51,7 +78,7 @@ def _create_ragged_array(data: List[np.ndarray]) -> np.ndarray:
     max_len = max(len(x) for x in data)
     ragged_array = np.full((len(data), max_len), fill_value=np.nan)
     for row_index, row in enumerate(data):
-        ragged_array[row_index, :len(row)] = row
+        ragged_array[row_index, : len(row)] = row
     return ragged_array
 
 
@@ -137,7 +164,7 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     for i in np.where((nan_fraction <= max_nans) & ~(full_rows_mask | empty_rows_mask))[0]:
         semi_valid_window = x[i]
         valid_part = semi_valid_window[~np.isnan(semi_valid_window)]
-        _, Pxx[i] = periodogram(valid_part, fs=fs, window='hann', nfft=nfft)
+        _, Pxx[i] = periodogram(valid_part, fs=fs, window="hann", nfft=nfft)
 
     return f, Pxx
 
@@ -225,21 +252,44 @@ def _hrv_timedomain_features(
     minHR = 60 / maxNN
     stdHR = np.nanstd(60 / NN, axis=1, ddof=1)
 
-    SD1 = (SDSD**2 * 0.5)**0.5
-    SD2 = (2 * SDNN**2 - SD1**2)**0.5
+    SD1 = (SDSD**2 * 0.5) ** 0.5
+    SD2 = (2 * SDNN**2 - SD1**2) ** 0.5
     S = np.pi * SD1 * SD2
     SD1_SD2_ratio = SD1 / SD2
 
     CSI = SD2 / SD1
     CVI = np.log10(SD1 * SD2 * 16)
 
-    return np.vstack((
-        meanNN, maxNN, minNN, rangeNN, SDNN,
-        RMSSD, SDSD, NN50, NN20, pNN50, pNN20,
-        medianNN, madNN, iqrNN, cvNN, cvSD,
-        meanHR, maxHR, minHR, stdHR,
-        SD1, SD2, S, SD1_SD2_ratio, CSI, CVI,
-    )).T
+    return np.vstack(
+        (
+            meanNN,
+            maxNN,
+            minNN,
+            rangeNN,
+            SDNN,
+            RMSSD,
+            SDSD,
+            NN50,
+            NN20,
+            pNN50,
+            pNN20,
+            medianNN,
+            madNN,
+            iqrNN,
+            cvNN,
+            cvSD,
+            meanHR,
+            maxHR,
+            minHR,
+            stdHR,
+            SD1,
+            SD2,
+            S,
+            SD1_SD2_ratio,
+            CSI,
+            CVI,
+        )
+    ).T
 
 
 def _hrv_frequencydomain_features(
@@ -301,12 +351,12 @@ def _hrv_frequencydomain_features(
     # lower frequency bound of the investigated component.
     window_time = lookback + lookforward
     min_frequencies = {
-        'VLF': 0.0033,
-        'LF': 0.04,
-        'LF_norm': 0.04,
-        'HF': 0.15,
-        'HF_norm': 0.04,
-        'LF_HF_ratio': 0.04,
+        "VLF": 0.0033,
+        "LF": 0.04,
+        "LF_norm": 0.04,
+        "HF": 0.15,
+        "HF_norm": 0.04,
+        "LF_HF_ratio": 0.04,
     }
 
     for name, min_frequency in min_frequencies.items():
@@ -315,8 +365,8 @@ def _hrv_frequencydomain_features(
             continue
         if window_time < min_window_time:
             msg = (
-                f'HR analysis window too short for estimating PSD for feature {name}. '
-                f'{min_window_time:.1f}s required, got {window_time}s'
+                f"HR analysis window too short for estimating PSD for feature {name}. "
+                f"{min_window_time:.1f}s required, got {window_time}s"
             )
             warnings.warn(msg, category=RuntimeWarning)
 
@@ -330,7 +380,7 @@ def _hrv_frequencydomain_features(
     # create (overlapping) windows, 1 per sleep stage
     sleep_stage_durations = np.diff(stage_times)
     if np.any(sleep_stage_durations != sleep_stage_durations[0]):
-        raise ValueError('Sleep stages must be sampled regularly!')
+        raise ValueError("Sleep stages must be sampled regularly!")
 
     window_size = (lookback + lookforward) * fs_rri_resample
     window_step = int(fs_rri_resample * sleep_stage_durations[0])
@@ -376,7 +426,7 @@ def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
     np.ndarray
         Array of shape `(num_stages, 4)` containing the extracted features.
     """
-    feature_ids = _FEATURE_GROUPS['metadata']
+    feature_ids = _FEATURE_GROUPS["metadata"]
 
     X = np.full((num_stages, len(feature_ids)), np.nan)
 
@@ -436,14 +486,14 @@ def _parse_feature_selection(
             required_groups.add(_FEATURE_ID_TO_GROUP[id_])
             feature_ids.append(id_)
         else:
-            raise ValueError(f'Invalid feature or group ID: {id_}')
+            raise ValueError(f"Invalid feature or group ID: {id_}")
 
     all_cols = [id for group in required_groups for id in _FEATURE_GROUPS[group]]
     selected_cols = [all_cols.index(id_) for id_ in feature_ids]
 
     duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
     if duplicate_ids:
-        warnings.warn(f'Duplicates in feature selection: {duplicate_ids}', RuntimeWarning)
+        warnings.warn(f"Duplicates in feature selection: {duplicate_ids}", RuntimeWarning)
 
     return list(required_groups), feature_ids, selected_cols
 
@@ -554,20 +604,22 @@ def _extract_features_single(
         The label vector, i.e. the annotated sleep stages. For a `record`
         without annotated stages, this will be `None`.
     """
-    rri_required = 'hrv-time' in required_groups or 'hrv-frequency' in required_groups
+    rri_required = "hrv-time" in required_groups or "hrv-frequency" in required_groups
 
     if record.sleep_stages is not None and record.sleep_stage_duration is not None:
         record_duration = len(record.sleep_stages) * record.sleep_stage_duration
     elif record.heartbeat_times is not None:
         record_duration = record.heartbeat_times[-1]
     else:
-        raise ValueError(f'Record duration cannot be inferred for {record.id}.')
+        raise ValueError(f"Record duration cannot be inferred for {record.id}.")
     num_stages = int(record_duration // sleep_stage_duration)
     stage_times = np.arange(num_stages) * sleep_stage_duration
 
     if rri_required:
         if record.heartbeat_times is None:
-            raise ValueError(f'Cannot extract HRV features for record {record.id} without heartbeat_times.')  # noqa: E501
+            raise ValueError(
+                f"Cannot extract HRV features for {record.id} without heartbeat_times."
+            )
         rri = preprocess_rri(
             np.diff(record.heartbeat_times),
             min_rri=min_rri,
@@ -577,7 +629,7 @@ def _extract_features_single(
 
     X = []
     for feature_group in required_groups:
-        if feature_group == 'hrv-time':
+        if feature_group == "hrv-time":
             X.append(
                 _hrv_timedomain_features(
                     rri,
@@ -587,7 +639,7 @@ def _extract_features_single(
                     lookforward,
                 ),
             )
-        elif feature_group == 'hrv-frequency':
+        elif feature_group == "hrv-frequency":
             X.append(
                 _hrv_frequencydomain_features(
                     rri,
@@ -600,7 +652,7 @@ def _extract_features_single(
                     feature_ids,
                 ),
             )
-        elif feature_group == 'metadata':
+        elif feature_group == "metadata":
             X.append(_metadata_features(record, num_stages))
     features = np.hstack(X)[:, col_indices]
 
@@ -610,7 +662,7 @@ def _extract_features_single(
         stages = interp1d(
             np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
             record.sleep_stages,
-            kind='nearest',
+            kind="nearest",
             bounds_error=False,
             fill_value=(record.sleep_stages[0], record.sleep_stages[-1]),
         )(stage_times)

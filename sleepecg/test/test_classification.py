@@ -11,12 +11,12 @@ from sleepecg.classification import _merge_sleep_stages
 
 
 @pytest.mark.parametrize(
-    ['mode', 'output'],
+    ["mode", "output"],
     [
-        ('wake-sleep', [0, 1, 1, 1, 1, 2]),
-        ('wake-rem-nrem', [0, 1, 1, 1, 2, 3]),
-        ('wake-rem-light-n3', [0, 1, 2, 2, 3, 4]),
-        ('wake-rem-n1-n2-n3', [0, 1, 2, 3, 4, 5]),
+        ("wake-sleep", [0, 1, 1, 1, 1, 2]),
+        ("wake-rem-nrem", [0, 1, 1, 1, 2, 3]),
+        ("wake-rem-light-n3", [0, 1, 2, 2, 3, 4]),
+        ("wake-rem-n1-n2-n3", [0, 1, 2, 3, 4, 5]),
     ],
 )
 def test_merge_sleep_stages(mode, output):

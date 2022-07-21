@@ -1,4 +1,4 @@
-# Authors: Florian Hofer
+# © SleepECG developers
 #
 # License: BSD (3-clause)
 
@@ -29,28 +29,28 @@ from .utils import _time_to_sec
 # weights and losses.
 
 _SLEEP_STAGE_MAPPING = {
-    'wake-sleep': {
+    "wake-sleep": {
         SleepStage.WAKE: 2,
         SleepStage.REM: 1,
         SleepStage.N1: 1,
         SleepStage.N2: 1,
         SleepStage.N3: 1,
     },
-    'wake-rem-nrem': {
+    "wake-rem-nrem": {
         SleepStage.WAKE: 3,
         SleepStage.REM: 2,
         SleepStage.N1: 1,
         SleepStage.N2: 1,
         SleepStage.N3: 1,
     },
-    'wake-rem-light-n3': {
+    "wake-rem-light-n3": {
         SleepStage.WAKE: 4,
         SleepStage.REM: 3,
         SleepStage.N1: 2,
         SleepStage.N2: 2,
         SleepStage.N3: 1,
     },
-    'wake-rem-n1-n2-n3': {
+    "wake-rem-n1-n2-n3": {
         SleepStage.WAKE: 5,
         SleepStage.REM: 4,
         SleepStage.N1: 3,
@@ -61,7 +61,7 @@ _SLEEP_STAGE_MAPPING = {
 
 # These two dicts are used for plotting and labeling of evaluation results
 _STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items()}
-_STAGE_NAMES = {m: m.upper().split('-')[::-1] for m in _SLEEP_STAGE_MAPPING}
+_STAGE_NAMES = {m: m.upper().split("-")[::-1] for m in _SLEEP_STAGE_MAPPING}
 
 
 def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.ndarray]:
@@ -84,7 +84,7 @@ def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.n
     """
     if stages_mode not in _SLEEP_STAGE_MAPPING:
         options = list(_SLEEP_STAGE_MAPPING.keys())
-        raise ValueError(f'Invalid stages_mode: {stages_mode}. Possible options: {options}')
+        raise ValueError(f"Invalid stages_mode: {stages_mode}. Possible options: {options}")
 
     new_stages = []
     for array in stages:
@@ -185,18 +185,21 @@ def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -
         stages = stages.argmax(2)
 
     if stages_mode is not None:
-        stage_names = stage_names = ['UNDEFINED'] + _STAGE_NAMES[stages_mode]
+        stage_names = stage_names = ["UNDEFINED"] + _STAGE_NAMES[stages_mode]
     else:
         stage_names = np.arange(6)
 
-    print('Class balance:')
+    print("Class balance:")
 
     unique_stages, counts = np.unique(stages, return_counts=True)
     max_len_counts = len(str(max(counts)))
     max_len_stages = max(len(str(s)) for s in stage_names)
     total_count = counts.sum()
-    for stage, count, fraction in zip(unique_stages, counts, counts/total_count):
-        print(f'    {stage_names[stage]:>{max_len_stages}}: {count:{max_len_counts}} ({fraction:3.0%})')  # noqa: E501
+    for stage, count, fraction in zip(unique_stages, counts, counts / total_count):
+        print(
+            f"    {stage_names[stage]:>{max_len_stages}}: {count:{max_len_counts}} "
+            f"({fraction:3.0%})"
+        )
 
 
 def save_classifier(
@@ -240,29 +243,29 @@ def save_classifier(
     load_classifier : Load classifiers saved with this function.
     """
     if classifiers_dir is None:
-        classifiers_dir = get_config('classifiers_dir')
+        classifiers_dir = get_config("classifiers_dir")
 
     target_file = Path(classifiers_dir).expanduser() / name
 
-    model_type = model.__module__.split('.')[0]
+    model_type = model.__module__.split(".")[0]
     classifier_info = {
-        'model_type': model_type,
-        'stages_mode': stages_mode,
-        'feature_extraction_params': feature_extraction_params,
+        "model_type": model_type,
+        "stages_mode": stages_mode,
+        "feature_extraction_params": feature_extraction_params,
     }
     if mask_value is not None:
-        classifier_info['mask_value'] = mask_value
+        classifier_info["mask_value"] = mask_value
 
     with TemporaryDirectory() as tmpdir:
-        with open(f'{tmpdir}/info.yml', 'w') as infofile:
+        with open(f"{tmpdir}/info.yml", "w") as infofile:
             yaml.dump(classifier_info, infofile)
 
-        if model_type == 'keras':
-            model.save(f'{tmpdir}/classifier')
+        if model_type == "keras":
+            model.save(f"{tmpdir}/classifier")
         else:
-            raise ValueError(f'Saving model of type {type(model)} is not supported')
+            raise ValueError(f"Saving model of type {type(model)} is not supported")
 
-        shutil.make_archive(target_file, 'zip', tmpdir)
+        shutil.make_archive(target_file, "zip", tmpdir)
 
 
 @dataclass
@@ -302,16 +305,19 @@ class SleepClassifier:
 
     def __repr__(self) -> str:
         if self.source_file is not None:
-            return f'<SleepClassifier | {self.stages_mode}, {self.model_type}, {self.source_file.name}>'  # noqa: E501
-        return f'<SleepClassifier | {self.stages_mode}, {self.model_type}>'
+            return (
+                f"<SleepClassifier | {self.stages_mode}, {self.model_type}, "
+                f"{self.source_file.name}>"
+            )
+        return f"<SleepClassifier | {self.stages_mode}, {self.model_type}>"
 
     def __str__(self) -> str:
-        features = ', '.join(self.feature_extraction_params['feature_selection'])
+        features = ", ".join(self.feature_extraction_params["feature_selection"])
         return (
-            f'SleepClassifier for {self.stages_mode.upper()}\n'
-            f'    features: {features}\n'
-            f'    model type: {self.model_type}\n'
-            f'    source file: {self.source_file}\n'
+            f"SleepClassifier for {self.stages_mode.upper()}\n"
+            f"    features: {features}\n"
+            f"    model type: {self.model_type}\n"
+            f"    source file: {self.source_file}\n"
         )
 
 
@@ -345,25 +351,28 @@ def load_classifier(
     --------
     list_classifiers : Show information about available classifiers.
     """
-    if classifiers_dir == 'SleepECG':
-        classifiers_dir = Path(__file__).parent / 'classifiers'
+    if classifiers_dir == "SleepECG":
+        classifiers_dir = Path(__file__).parent / "classifiers"
     elif classifiers_dir is None:
-        classifiers_dir = get_config('classifiers_dir')
+        classifiers_dir = get_config("classifiers_dir")
 
-    soure_file = Path(classifiers_dir).expanduser() / f'{name}.zip'
+    soure_file = Path(classifiers_dir).expanduser() / f"{name}.zip"
 
     with TemporaryDirectory() as tmpdir:
         shutil.unpack_archive(soure_file, tmpdir)
 
-        with open(f'{tmpdir}/info.yml') as infofile:
+        with open(f"{tmpdir}/info.yml") as infofile:
             classifier_info = yaml.safe_load(infofile)
 
-        if classifier_info['model_type'] == 'keras':
+        if classifier_info["model_type"] == "keras":
             from tensorflow import keras
-            classifier = keras.models.load_model(f'{tmpdir}/classifier')
+
+            classifier = keras.models.load_model(f"{tmpdir}/classifier")
 
         else:
-            raise ValueError(f'Loading model of type {classifier_info["model_type"]} is not supported')  # noqa: E501
+            raise ValueError(
+                f"Loading model of type {classifier_info['model_type']} is not supported"
+            )
 
     return SleepClassifier(
         model=classifier,
@@ -390,27 +399,29 @@ def list_classifiers(classifiers_dir: Optional[Union[str, Path]] = None) -> None
     --------
     load_classifier : Load classifiers.
     """
-    if classifiers_dir == 'SleepECG':
-        classifiers_dir = Path(__file__).parent / 'classifiers'
-        print('Classifiers in SleepECG:')
+    if classifiers_dir == "SleepECG":
+        classifiers_dir = Path(__file__).parent / "classifiers"
+        print("Classifiers in SleepECG:")
     elif classifiers_dir is None:
-        classifiers_dir = get_config('classifiers_dir')
-        print(f'Classifiers in {classifiers_dir}:')
+        classifiers_dir = get_config("classifiers_dir")
+        print(f"Classifiers in {classifiers_dir}:")
     else:
-        print(f'Classifiers in {classifiers_dir}:')
+        print(f"Classifiers in {classifiers_dir}:")
 
     classifiers_dir = Path(classifiers_dir).expanduser()
 
-    for classifier_filepath in classifiers_dir.glob('*.zip'):
-        with ZipFile(classifier_filepath, 'r') as zip_file:
-            with zip_file.open('info.yml') as infofile:
+    for classifier_filepath in classifiers_dir.glob("*.zip"):
+        with ZipFile(classifier_filepath, "r") as zip_file:
+            with zip_file.open("info.yml") as infofile:
                 classifier_info = yaml.safe_load(infofile)
-                features = ', '.join(classifier_info['feature_extraction_params']['feature_selection'])  # noqa: E501
+                features = ", ".join(
+                    classifier_info["feature_extraction_params"]["feature_selection"]
+                )
                 print(
-                    f'  {classifier_filepath.stem}\n'
-                    f'      stages_mode: {classifier_info["stages_mode"].upper()}\n'
-                    f'      model type: {classifier_info["model_type"]}\n'
-                    f'      features: {features}\n',  # noqa: E501
+                    f"  {classifier_filepath.stem}\n"
+                    f"      stages_mode: {classifier_info['stages_mode'].upper()}\n"
+                    f"      model type: {classifier_info['model_type']}\n"
+                    f"      features: {features}\n"
                 )
 
 
@@ -434,7 +445,7 @@ def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, N: int) -> np.ndar
         number of samples with true label being i-th class and predicted
         label being j-th class.
     """
-    return np.bincount(N * y_true + y_pred, minlength=N*N).reshape(N, N)
+    return np.bincount(N * y_true + y_pred, minlength=N * N).reshape(N, N)
 
 
 def _cohen_kappa(confmat: np.ndarray) -> float:
@@ -485,18 +496,18 @@ def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]):
     classes = np.arange(len(confmat))
 
     fig, ax = plt.subplots()
-    ax.imshow(confmat, cmap='Blues', vmin=0, vmax=confmat[1:, 1:].max())
+    ax.imshow(confmat, cmap="Blues", vmin=0, vmax=confmat[1:, 1:].max())
     for i in range(len(stage_names)):
         for j in range(len(stage_names)):
-            ax.text(j, i, f'{confmat[i, j]}', ha='center', va='center', color='k')
+            ax.text(j, i, f"{confmat[i, j]}", ha="center", va="center", color="k")
 
-    ax.set_ylabel('Annotated Stage')
-    ax.set_xlabel('Predicted Stage')
+    ax.set_ylabel("Annotated Stage")
+    ax.set_xlabel("Predicted Stage")
     ax.set_xticks(classes)
     ax.set_yticks(classes)
     ax.set_xticklabels(stage_names)
     ax.set_yticklabels(stage_names)
-    ax.xaxis.set_label_position('top')
+    ax.xaxis.set_label_position("top")
     ax.xaxis.tick_top()
 
     return fig
@@ -544,13 +555,13 @@ def evaluate(
     confmat_full = _confusion_matrix(
         stages_true.ravel(),
         stages_pred.ravel(),
-        len(stage_names)+1,
+        len(stage_names) + 1,
     )
     confmat = confmat_full[1:, 1:]
 
-    print(f'Confusion matrix ({stages_mode.upper()}):')
+    print(f"Confusion matrix ({stages_mode.upper()}):")
     if show_undefined:
-        _plot_confusion_matrix(confmat_full, ['UNDEFINED'] + stage_names)
+        _plot_confusion_matrix(confmat_full, ["UNDEFINED"] + stage_names)
         print(confmat_full)
     else:
         _plot_confusion_matrix(confmat, stage_names)
@@ -567,18 +578,21 @@ def evaluate(
     f1 = 2 / (recall**-1 + precision**-1)
     support = confmat.sum(1)
 
-    print(f'Accuracy: {acc:.4f}')
+    print(f"Accuracy: {acc:.4f}")
     print(f"Cohen's kappa: {kappa:.4f}")
-    print('       precision    recall  f1-score    support')
+    print("       precision    recall  f1-score    support")
     for i, stage_name in enumerate(stage_names):
-        print(f'{stage_name:>5}{precision[i]:11.2f}{recall[i]:10.2f}{f1[i]:10.2f}{support[i]:11}')  # noqa: E501
-    print(f'{support.sum():47}')
+        print(
+            f"{stage_name:>5}{precision[i]:11.2f}{recall[i]:10.2f}{f1[i]:10.2f}"
+            f"{support[i]:11}"
+        )
+    print(f"{support.sum():47}")
 
 
 def stage(
     clf: SleepClassifier,
     record: SleepRecord,
-    return_mode: str = 'int',
+    return_mode: str = "int",
 ) -> np.ndarray:
     """
     Predict sleep stages for a single record.
@@ -609,23 +623,25 @@ def stage(
     not necessarily follow the stage-to-integer mapping defined in
     :class:`SleepStage`. See :ref:`classification` for details.
     """
-    return_modes = {'int', 'prob', 'str'}
+    return_modes = {"int", "prob", "str"}
     if return_mode not in return_modes:
-        raise ValueError(f'Invalid return_mode: {return_mode!r}. Possible options: {return_modes}')  # noqa: E501
+        raise ValueError(
+            f"Invalid return_mode: {return_mode!r}. Possible options: {return_modes}"
+        )
 
-    stage_names = ['UNDEFINED'] + _STAGE_NAMES[clf.stages_mode]
+    stage_names = ["UNDEFINED"] + _STAGE_NAMES[clf.stages_mode]
 
     features = extract_features(records=[record], **clf.feature_extraction_params)[0][0]
-    if clf.model_type == 'keras':
+    if clf.model_type == "keras":
         features[~np.isfinite(features)] = clf.mask_value
         stages_pred_proba = clf.model.predict(features[np.newaxis, ...])[0]
         stages_pred = stages_pred_proba.argmax(-1)
     else:
-        raise ValueError(f'Staging with model of type {type(clf)} is not supported')
+        raise ValueError(f"Staging with model of type {type(clf)} is not supported")
 
-    if return_mode == 'prob':
+    if return_mode == "prob":
         return stages_pred_proba
-    elif return_mode == 'str':
+    elif return_mode == "str":
         return np.array([stage_names[s] for s in stages_pred])
     return stages_pred
 
@@ -689,13 +705,13 @@ def plot_hypnogram(
 
     # predicted stages
     t_stages_pred = np.arange(len(stages_pred)) * stages_pred_duration + start_time
-    t_stages_pred = t_stages_pred.astype('datetime64[s]')
+    t_stages_pred = t_stages_pred.astype("datetime64[s]")
     stages_pred = stages_pred.astype(float)
     stages_pred[stages_pred == SleepStage.UNDEFINED] = np.nan
     ax[0].plot(t_stages_pred, stages_pred)
     ax[0].set_yticks(_STAGE_INTS[stages_mode])
     ax[0].set_yticklabels(_STAGE_NAMES[stages_mode])
-    ax[0].set_ylabel('predicted')
+    ax[0].set_ylabel("predicted")
     ax[0].yaxis.tick_right()
 
     row = 1
@@ -707,7 +723,7 @@ def plot_hypnogram(
             stages_pred_probs[:, 1:].T,
             labels=_STAGE_NAMES[stages_mode],
         )
-        ax[row].set_ylabel('probabilities')
+        ax[row].set_ylabel("probabilities")
         legend_handles, legend_labels = ax[row].get_legend_handles_labels()
         ax[row].legend(legend_handles[::-1], legend_labels[::-1], loc=(1.01, 0))
         ax[row].set_ylim(0, 1)
@@ -717,37 +733,39 @@ def plot_hypnogram(
     # annotated stages
     if record.sleep_stages is not None:
         stages_true = record.sleep_stages
-        t_stages_true = np.arange(len(stages_true)) * record.sleep_stage_duration + start_time  # noqa: E501
-        t_stages_true = t_stages_true.astype('datetime64[s]')
+        t_stages_true = (
+            np.arange(len(stages_true)) * record.sleep_stage_duration + start_time
+        )
+        t_stages_true = t_stages_true.astype("datetime64[s]")
         if merge_annotations:
             stages_true = _merge_sleep_stages([stages_true], stages_mode)[0]
             stages_mode_true = stages_mode
         else:
-            stages_mode_true = 'wake-rem-n1-n2-n3'
+            stages_mode_true = "wake-rem-n1-n2-n3"
         stages_true = stages_true.astype(float)
         stages_true[stages_true == SleepStage.UNDEFINED] = np.nan
 
         ax[row].plot(t_stages_true, stages_true)
         ax[row].set_yticks(_STAGE_INTS[stages_mode_true])
         ax[row].set_yticklabels(_STAGE_NAMES[stages_mode_true])
-        ax[row].set_ylabel('annotated')
+        ax[row].set_ylabel("annotated")
         ax[row].yaxis.tick_right()
 
         row += 1
 
     # heartrate
     if show_bpm:
-        t_ecg = (record.heartbeat_times[1:] + start_time).astype('datetime64[s]')
+        t_ecg = (record.heartbeat_times[1:] + start_time).astype("datetime64[s]")
         ax[row].plot(t_ecg, 60 / np.diff(record.heartbeat_times))
-        ax[row].set_ylabel('beats per minute')
+        ax[row].set_ylabel("beats per minute")
         ax[row].yaxis.tick_right()
 
     # x axis ticks and label
-    ax[-1].xaxis.set_major_formatter(mdates.DateFormatter('%H'))
+    ax[-1].xaxis.set_major_formatter(mdates.DateFormatter("%H"))
     if record.recording_start_time is None:
-        ax[-1].set_xlabel('time since recording start in hours')
+        ax[-1].set_xlabel("time since recording start in hours")
     else:
-        ax[-1].set_xlabel('time of day in hours')
+        ax[-1].set_xlabel("time of day in hours")
     ax[-1].set_xlim(t_stages_pred[0], t_stages_pred[-1])
 
     return fig

@@ -15,22 +15,22 @@ from sleepecg import (
 )
 
 # %% Read data and extract features
-set_nsrr_token('your-token-here')
+set_nsrr_token("your-token-here")
 records = list(read_mesa())
 
 feature_extraction_params = {
-    'lookback': 120,
-    'lookforward': 150,
-    'feature_selection': [
-        'hrv-time',
-        'hrv-frequency',
-        'recording_start_time',
-        'age',
-        'gender',
+    "lookback": 120,
+    "lookforward": 150,
+    "feature_selection": [
+        "hrv-time",
+        "hrv-frequency",
+        "recording_start_time",
+        "age",
+        "gender",
     ],
-    'min_rri': 0.3,
-    'max_rri': 2,
-    'max_nans': 0.5,
+    "min_rri": 0.3,
+    "max_rri": 2,
+    "max_nans": 0.5,
 }
 
 features_train, stages_train, feature_ids = extract_features(
@@ -40,7 +40,7 @@ features_train, stages_train, feature_ids = extract_features(
 )
 
 # %% Merge sleep stages, pad and mask data as preparation for keras NN
-stages_mode = 'wake-rem-nrem'
+stages_mode = "wake-rem-nrem"
 
 features_train_pad, stages_train_pad, _ = prepare_data_keras(
     features_train,
@@ -50,23 +50,23 @@ features_train_pad, stages_train_pad, _ = prepare_data_keras(
 print_class_balance(stages_train_pad, stages_mode)
 
 # %% Define and train model
-model = models.Sequential([
-    layers.Input((None, features_train_pad.shape[2])),
-    layers.Masking(-1),
-    layers.BatchNormalization(),
-
-    layers.Dense(64),
-    layers.ReLU(),
-    layers.Bidirectional(layers.GRU(8, return_sequences=True)),
-    layers.Bidirectional(layers.GRU(8, return_sequences=True)),
-
-    layers.Dense(stages_train_pad.shape[-1], activation='softmax'),
-])
+model = models.Sequential(
+    [
+        layers.Input((None, features_train_pad.shape[2])),
+        layers.Masking(-1),
+        layers.BatchNormalization(),
+        layers.Dense(64),
+        layers.ReLU(),
+        layers.Bidirectional(layers.GRU(8, return_sequences=True)),
+        layers.Bidirectional(layers.GRU(8, return_sequences=True)),
+        layers.Dense(stages_train_pad.shape[-1], activation="softmax"),
+    ]
+)
 
 model.compile(
-    optimizer='rmsprop',
-    loss='categorical_crossentropy',
-    metrics=['accuracy'],
+    optimizer="rmsprop",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"],
 )
 model.build()
 model.summary()
@@ -80,16 +80,16 @@ model.fit(
 
 # %% Store classifier
 save_classifier(
-    name='wrn-gru-mesa',
+    name="wrn-gru-mesa",
     model=model,
     stages_mode=stages_mode,
     feature_extraction_params=feature_extraction_params,
     mask_value=-1,
-    classifiers_dir='./classifiers',
+    classifiers_dir="./classifiers",
 )
 
 # %% Load classifier from disk for validation
-clf = load_classifier('wrn-gru-mesa', './classifiers')
+clf = load_classifier("wrn-gru-mesa", "./classifiers")
 
 # %% Read data and extract features
 shhs = list(read_shhs())

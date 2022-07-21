@@ -11,46 +11,46 @@ import sys
 import sleepecg
 
 # -- Project information --------------------------------------------------
-project = 'SleepECG'
-copyright = 'SleepECG Developers'
+project = "SleepECG"
+copyright = "SleepECG Developers"
 version = sleepecg.__version__
 
 # -- General configuration ------------------------------------------------
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.linkcode',
-    'numpydoc',
-    'myst_parser',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "numpydoc",
+    "myst_parser",
 ]
 
 source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    ".rst": "restructuredtext",
+    ".md": "markdown",
 }
 
 myst_enable_extensions = [
-    'substitution',
-    'dollarmath',
+    "substitution",
+    "dollarmath",
 ]
 
 myst_substitutions = {
-    'version': version,
+    "version": version,
 }
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'numpy': ('https://numpy.org/devdocs', None),
-    'scipy': ('https://scipy.github.io/devdocs', None),
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/devdocs", None),
+    "scipy": ("https://scipy.github.io/devdocs", None),
 }
 
-default_role = 'code'
+default_role = "code"
 
-autoclass_content = 'class'
+autoclass_content = "class"
 autodoc_inherit_docstrings = False
-autodoc_mock_imports = ['scipy', 'tqdm']
-autodoc_typehints = 'none'
+autodoc_mock_imports = ["scipy", "tqdm"]
+autodoc_typehints = "none"
 autosummary_generate = True
 html_show_sourcelink = False
 
@@ -61,18 +61,14 @@ numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
 numpydoc_xref_param_type = True
 
-# -- Options for HTML output ----------------------------------------------
-html_theme = 'furo'
-html_title = 'SleepECG'
-html_last_updated_fmt = '%Y-%m-%d'
-
-html_static_path = ['_static']
-html_css_files = ['custom.css']
-
-templates_path = ['_templates']
-
+html_theme = "furo"
+html_title = "SleepECG"
+html_last_updated_fmt = "%Y-%m-%d"
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+templates_path = ["_templates"]
 html_theme_options = {
-    'top_of_page_button': None,
+    "top_of_page_button": None,
 }
 
 
@@ -83,20 +79,21 @@ def linkcode_resolve(domain, info):
     Adapted from lasagne:
     https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py
     """
+
     def find_source():
-        obj = sys.modules[info['module']]
-        for part in info['fullname'].split('.'):
+        obj = sys.modules[info["module"]]
+        for part in info["fullname"].split("."):
             obj = getattr(obj, part)
         fn = inspect.getsourcefile(obj)
         fn = os.path.relpath(fn, start=os.path.dirname(sleepecg.__file__))
         source, lineno = inspect.getsourcelines(obj)
         return fn, lineno, lineno + len(source) - 1
 
-    if domain != 'py' or not info['module']:
+    if domain != "py" or not info["module"]:
         return None
     try:
-        filename = 'sleepecg/%s#L%d-L%d' % find_source()
+        filename = "sleepecg/%s#L%d-L%d" % find_source()
     except Exception:
-        filename = info['module'].replace('.', '/') + '.py'
-    tag = 'main' if 'dev' in version else ('v' + version)
-    return 'https://github.com/cbrnr/sleepecg/blob/%s/%s' % (tag, filename)
+        filename = info["module"].replace(".", "/") + ".py"
+    tag = "main" if "dev" in version else ("v" + version)
+    return "https://github.com/cbrnr/sleepecg/blob/%s/%s" % (tag, filename)

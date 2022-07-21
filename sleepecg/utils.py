@@ -10,7 +10,7 @@ import warnings
 from typing import Callable, Iterable, List, TypeVar
 
 # required to propagate the return type annotation through _parallel
-_Returnable = TypeVar('_Returnable')
+_Returnable = TypeVar("_Returnable")
 
 
 def _parallel(
@@ -68,12 +68,10 @@ def _parallel(
         from joblib import Parallel, delayed
     except ImportError:
         if n_jobs != 1:
-            warnings.warn('joblib not installed, cannot run in parallel.')
+            warnings.warn("joblib not installed, cannot run in parallel.")
         return [function(x, *args, **kwargs) for x in iterable]
 
-    return Parallel(n_jobs=n_jobs)(
-        delayed(function)(x, *args, **kwargs) for x in iterable
-    )
+    return Parallel(n_jobs=n_jobs)(delayed(function)(x, *args, **kwargs) for x in iterable)
 
 
 def _time_to_sec(time: datetime.time) -> int:

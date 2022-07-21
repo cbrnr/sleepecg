@@ -12,17 +12,17 @@ from tqdm import tqdm
 
 from .utils import _download_file
 
-_PHYSIONET_FILES_URL = 'https://physionet.org/files/'
-_CHECKSUM_FILENAME = 'SHA256SUMS.txt'
-_RECORDS_FILENAME = 'RECORDS'
-_CHECKSUM_TYPE = 'sha256'
+_PHYSIONET_FILES_URL = "https://physionet.org/files/"
+_CHECKSUM_FILENAME = "SHA256SUMS.txt"
+_RECORDS_FILENAME = "RECORDS"
+_CHECKSUM_TYPE = "sha256"
 
 
 def _list_physionet(
     data_dir: Path,
     db_slug: str,
-    db_version: Optional[str] = '1.0.0',
-    pattern='*',
+    db_version: Optional[str] = "1.0.0",
+    pattern="*",
 ) -> List[str]:
     """
     List record IDs for a PhysioNet database.
@@ -49,7 +49,7 @@ def _list_physionet(
     data_dir = Path(data_dir)
 
     records_filepath = data_dir / db_slug / _RECORDS_FILENAME
-    records_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_RECORDS_FILENAME}'
+    records_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_RECORDS_FILENAME}"
     checksum = _get_physionet_checksums(data_dir, db_slug, db_version)[_RECORDS_FILENAME]
 
     if not records_filepath.is_file():
@@ -64,7 +64,7 @@ def download_physionet(
     db_slug: str,
     requested_records: List[str],
     extensions: Iterable[str],
-    db_version: Optional[str] = '1.0.0',
+    db_version: Optional[str] = "1.0.0",
 ) -> None:
     """
     Download requested files from PhysioNet.
@@ -87,15 +87,15 @@ def download_physionet(
     """
     data_dir = Path(data_dir)
     checksums = _get_physionet_checksums(data_dir, db_slug, db_version)
-    db_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}'
+    db_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}"
 
-    for record_id in tqdm(requested_records, desc=f'Downloading {db_slug}'):
+    for record_id in tqdm(requested_records, desc=f"Downloading {db_slug}"):
         for extension in extensions:
-            if not extension.startswith('.'):
-                extension = '.' + extension
+            if not extension.startswith("."):
+                extension = "." + extension
             filepath = (data_dir / db_slug / record_id).with_suffix(extension)
             _download_file(
-                f'{db_url}/{filepath.name}',
+                f"{db_url}/{filepath.name}",
                 filepath,
                 checksums[filepath.name],
                 checksum_type=_CHECKSUM_TYPE,
@@ -105,7 +105,7 @@ def download_physionet(
 def _get_physionet_checksums(
     data_dir: Path,
     db_slug: str,
-    db_version: Optional[str] = '1.0.0',
+    db_version: Optional[str] = "1.0.0",
 ) -> Dict[str, str]:
     """
     Parse PhysioNet checksums into a dictionary.
@@ -128,7 +128,7 @@ def _get_physionet_checksums(
     dict[str, str]
         Mapping of filenames to checksums.
     """
-    checksum_url = f'{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_CHECKSUM_FILENAME}'
+    checksum_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_CHECKSUM_FILENAME}"
     checksum_filepath = data_dir / db_slug / _CHECKSUM_FILENAME
 
     if not checksum_filepath.is_file():

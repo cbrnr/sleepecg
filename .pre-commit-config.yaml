@@ -10,7 +10,6 @@ repos:
     exclude: "svg"
   - id: trailing-whitespace
   - id: mixed-line-ending
-  - id: double-quote-string-fixer
   - id: check-builtin-literals
 
 - repo: https://github.com/asottile/add-trailing-comma
