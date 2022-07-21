@@ -1,3 +1,7 @@
+# © SleepECG developers
+#
+# License: BSD (3-clause)
+
 """Functions for downloading and reading datasets."""
 
 from .ecg_readers import ECGRecord, export_ecg_record, read_gudb, read_ltdb, read_mitdb

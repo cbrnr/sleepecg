@@ -1,4 +1,4 @@
-# Authors: Florian Hofer
+# © SleepECG developers
 #
 # License: BSD (3-clause)
 
@@ -10,7 +10,7 @@ import warnings
 from typing import Callable, Iterable, List, TypeVar
 
 # required to propagate the return type annotation through _parallel
-_Returnable = TypeVar('_Returnable')
+_Returnable = TypeVar("_Returnable")
 
 
 def _parallel(
@@ -23,14 +23,14 @@ def _parallel(
     """
     Apply a function to each element in an iterable in parallel.
 
-    This uses joblib for parallelism. If the package is not available, it
-    falls back to a pure Python loop.
+    This uses joblib for parallelism. If the package is not available, it falls back to a
+    pure Python loop.
 
     Parameters
     ----------
     n_jobs : int
-        The number of jobs to run in parallel. If `1` (default), no
-        parallelism is used. `-1` means using all processors.
+        The number of jobs to run in parallel. If `1` (default), no parallelism is used.
+        `-1` means using all processors.
     function : Callable
         The function to call.
     iterable : Iterable
@@ -47,9 +47,8 @@ def _parallel(
 
     Warnings
     --------
-    Note that in case the `function` is very simple, the cost for spawning
-    workers will make the parallel execution slower than the standard
-    execution.
+    Note that in case the `function` is very simple, the cost for spawning workers will make
+    the parallel execution slower than the standard execution.
 
     Examples
     --------
@@ -68,12 +67,10 @@ def _parallel(
         from joblib import Parallel, delayed
     except ImportError:
         if n_jobs != 1:
-            warnings.warn('joblib not installed, cannot run in parallel.')
+            warnings.warn("joblib not installed, cannot run in parallel.")
         return [function(x, *args, **kwargs) for x in iterable]
 
-    return Parallel(n_jobs=n_jobs)(
-        delayed(function)(x, *args, **kwargs) for x in iterable
-    )
+    return Parallel(n_jobs=n_jobs)(delayed(function)(x, *args, **kwargs) for x in iterable)
 
 
 def _time_to_sec(time: datetime.time) -> int:

@@ -1,4 +1,4 @@
-# Authors: Florian Hofer
+# © SleepECG developers
 #
 # License: BSD (3-clause)
 
@@ -34,17 +34,17 @@ def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     readers = {
-        'gudb': sleepecg.read_gudb,
-        'ltdb': sleepecg.read_ltdb,
-        'mitdb': sleepecg.read_mitdb,
+        "gudb": sleepecg.read_gudb,
+        "ltdb": sleepecg.read_ltdb,
+        "mitdb": sleepecg.read_mitdb,
     }
     if db_slug not in readers:
-        raise ValueError(f'Invalid db_slug: {db_slug}')
+        raise ValueError(f"Invalid db_slug: {db_slug}")
     yield from readers[db_slug](data_dir=data_dir)
 
 
@@ -66,31 +66,35 @@ def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
     np.ndarray
         Indices of detected heartbeats.
     """
-    if detector == 'mne':
+    if detector == "mne":
         detection = mne.preprocessing.ecg.qrs_detector(fs, ecg, verbose=False)
-    elif detector == 'wfdb-xqrs':
+    elif detector == "wfdb-xqrs":
         detection = wfdb.processing.xqrs_detect(ecg, fs, verbose=False)
-    elif detector == 'pyecg-pantompkins':
+    elif detector == "pyecg-pantompkins":
         detection = ecgdetectors.Detectors(fs).pan_tompkins_detector(ecg)
-    elif detector == 'biosppy-hamilton':
+    elif detector == "biosppy-hamilton":
         detection = biosppy.signals.ecg.hamilton_segmenter(ecg, fs)[0]
-    elif detector == 'heartpy':
+    elif detector == "heartpy":
         wd, m = heartpy.process(ecg, fs)
-        detection = np.array(wd['peaklist'])[wd['binary_peaklist'].astype(bool)]
-    elif detector == 'neurokit2-nk':
-        clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='neurokit')
-        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='neurokit')['ECG_R_Peaks']  # noqa: E501
-    elif detector == 'neurokit2-kalidas2017':
-        clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method='kalidas2017')
-        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method='kalidas2017')['ECG_R_Peaks']  # noqa: E501
-    elif detector == 'sleepecg-c':
-        detection = sleepecg.detect_heartbeats(ecg, fs, backend='c')
-    elif detector == 'sleepecg-numba':
-        detection = sleepecg.detect_heartbeats(ecg, fs, backend='numba')
-    elif detector == 'sleepecg-python':
-        detection = sleepecg.detect_heartbeats(ecg, fs, backend='python')
+        detection = np.array(wd["peaklist"])[wd["binary_peaklist"].astype(bool)]
+    elif detector == "neurokit2-nk":
+        clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method="neurokit")
+        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method="neurokit")[
+            "ECG_R_Peaks"
+        ]
+    elif detector == "neurokit2-kalidas2017":
+        clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method="kalidas2017")
+        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method="kalidas2017")[
+            "ECG_R_Peaks"
+        ]
+    elif detector == "sleepecg-c":
+        detection = sleepecg.detect_heartbeats(ecg, fs, backend="c")
+    elif detector == "sleepecg-numba":
+        detection = sleepecg.detect_heartbeats(ecg, fs, backend="numba")
+    elif detector == "sleepecg-python":
+        detection = sleepecg.detect_heartbeats(ecg, fs, backend="python")
     else:
-        raise ValueError(f'Unknown QRS detector: {detector}')
+        raise ValueError(f"Unknown QRS detector: {detector}")
     return np.asarray(detection)
 
 
@@ -104,9 +108,8 @@ def evaluate_single(
     """
     Evaluate a heartbeat detector on a given annotated ECG record.
 
-    Optionally, similarity measures between detected and annotated
-    RR intervals can be calculated. As this requires interpolation, it may
-    take some time for long signals.
+    Optionally, similarity measures between detected and annotated RR intervals can be
+    calculated. As this requires interpolation, it may take some time for long signals.
 
     Parameters
     ----------
@@ -117,19 +120,18 @@ def evaluate_single(
     signal_len : int
         Length to which the signal should be sliced.
     max_distance : float
-        Maximum temporal distance in seconds between detected and annotated
-        beats to count as a successful detection.
+        Maximum temporal distance in seconds between detected and annotated beats to count
+        as a successful detection.
     calc_rri_similarity : bool
-        If `True`, calculate similarity measures between detected and
-        annotated RR intervals (computationally expensive for long
-        signals).
+        If `True`, calculate similarity measures between detected and annotated RR intervals
+        (computationally expensive for long signals).
 
     Returns
     -------
     dict[str, Any]
         A dictionary containing evaluation results.
     """
-    signal_len_samples = int(signal_len * record.fs*60)
+    signal_len_samples = int(signal_len * record.fs * 60)
     ecg = record.ecg[:signal_len_samples]
     annotation = record.annotation[record.annotation < signal_len_samples]
     fs = int(record.fs)
@@ -159,21 +161,23 @@ def evaluate_single(
             rmse = np.nan
 
     result = {
-        'record_id': record.id,
-        'lead': record.lead,
-        'fs': record.fs,
-        'num_samples': len(ecg),
-        'detector': detector,
-        'max_distance': max_distance,
-        'runtime': runtime,
-        'TP': len(TP),
-        'FP': len(FP),
-        'FN': len(FN),
+        "record_id": record.id,
+        "lead": record.lead,
+        "fs": record.fs,
+        "num_samples": len(ecg),
+        "detector": detector,
+        "max_distance": max_distance,
+        "runtime": runtime,
+        "TP": len(TP),
+        "FP": len(FP),
+        "FN": len(FN),
     }
     if calc_rri_similarity:
-        result.update({
-            'pearsonr': pearsonr,
-            'spearmanr': spearmanr,
-            'rmse': rmse,
-        })
+        result.update(
+            {
+                "pearsonr": pearsonr,
+                "spearmanr": spearmanr,
+                "rmse": rmse,
+            }
+        )
     return result
