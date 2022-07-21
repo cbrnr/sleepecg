@@ -15,7 +15,7 @@
 SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
 - downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
-- classifying sleep stages (which includes the entire preprocessing, feature extraction, and classification pipeline).
+- classifying sleep stages (which includes preprocessing, feature extraction, and classification).
 
 ## Overview
 - [Datasets](./datasets) shows all available datasets and instructions for retrieving NSRR data.
