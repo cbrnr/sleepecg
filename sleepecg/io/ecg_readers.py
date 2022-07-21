@@ -82,18 +82,18 @@ def read_ltdb(
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
-        If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default `False`.
+        If `True`, only local files will be used (i.e. no files will be downloaded), by
+        default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     if data_dir is None:
         data_dir = get_config("data_dir")
@@ -113,18 +113,18 @@ def read_mitdb(
     records_pattern : str, optional
         Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
-        If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default `False`.
+        If `True`, only local files will be used (i.e. no files will be downloaded), by
+        default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     if data_dir is None:
         data_dir = get_config("data_dir")
@@ -149,17 +149,16 @@ def _read_mitbih(
     records_pattern : str
         Glob-like pattern to select record IDs.
     offline : bool
-        If `True`, only local files will be used (i.e. no files will be
-        downloaded).
+        If `True`, only local files will be used (i.e. no files will be downloaded).
     data_dir : str | pathlib.Path
         Directory where all datasets are stored.
 
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     import wfdb
 
@@ -211,18 +210,18 @@ def read_gudb(
     Parameters
     ----------
     offline : bool, optional
-        If `True`, only local files will be used (i.e. no files will be
-        downloaded), by default `False`.
+        If `True`, only local files will be used (i.e. no files will be downloaded), by
+        default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     import pandas as pd
 

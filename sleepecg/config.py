@@ -32,16 +32,15 @@ def get_config(key: Optional[str] = None) -> Any:
     """
     Read SleepECG preferences from the configuration file.
 
-    For parameters not set in the user configuration file
-    (`~/.sleepecg/config.yml`), this falls back to the default values
-    defined in `site-packages/sleepecg/config.yml`. See
+    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
+    falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
     :ref:`configuration` for a list of possible settings.
 
     Parameters
     ----------
     key : str, optional
-        The configuration key to look for. If `None`, all configuration
-        settings are returned in a dictionary, by default `None`.
+        The configuration key to look for. If `None`, all configuration settings are
+        returned in a dictionary, by default `None`.
 
     Returns
     -------
@@ -71,9 +70,8 @@ def set_config(**kwargs):
     """
     Set SleepECG preferences and store them to the user configuration file.
 
-    If a value is `None`, the corresponding key is deleted from the user
-    configuration. See :ref:`configuration` for a list of possible
-    settings.
+    If a value is `None`, the corresponding key is deleted from the user configuration. See
+    :ref:`configuration` for a list of possible settings.
 
     Parameters
     ----------

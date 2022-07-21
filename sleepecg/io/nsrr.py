@@ -27,9 +27,7 @@ def set_nsrr_token(token: str) -> None:
     Parameters
     ----------
     token : str
-        NSRR (sleepdata.org) download token (get it from
-        https://sleepdata.org/token).
-
+        NSRR (sleepdata.org) download token (get it from https://sleepdata.org/token).
     """
     response = requests.get(
         "https://sleepdata.org/api/v1/account/profile.json",
@@ -86,21 +84,19 @@ def _list_nsrr(
     db_slug : str
         Short identifier of a database, e.g. `'mesa'`.
     subfolder : str, optional
-        The folder at which to start the search, by default `''` (i.e. the
-        root folder).
+        The folder at which to start the search, by default `''` (i.e. the root folder).
     pattern : str, optional
-        Glob-like pattern to select files (only applied to the basename,
-        not the dirname), by default `'*'`.
+        Glob-like pattern to select files (only applied to the basename, not the dirname),
+        by default `'*'`.
     shallow : bool, optional
-        If `True`, only search in the given subfolder (i.e. no recursion),
-        by default `False`.
+        If `True`, only search in the given subfolder (i.e. no recursion), by default
+        `False`.
 
     Returns
     -------
     list[tuple[str, str]]
-        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the
-        full filename (i.e. dirname and basename) and `<checksum>` the
-        MD5 checksum.
+        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the full filename (i.e.
+        dirname and basename) and `<checksum>` the MD5 checksum.
     """
     api_url = f"https://sleepdata.org/api/v1/datasets/{db_slug}/files.json"
 
@@ -127,9 +123,8 @@ def _download_nsrr_file(
     """
     Download a file from `url` to `target_filepath` and verify `checksum`.
 
-    This is a wrapper around `sleepecg.io.utils._download_file` to provide
-    a helpful error message in case the currently set token does not grant
-    access to the requested file.
+    This is a wrapper around `sleepecg.io.utils._download_file` to provide a helpful error
+    message in case the currently set token does not grant access to the requested file.
 
     Parameters
     ----------
@@ -143,10 +138,9 @@ def _download_nsrr_file(
     try:
         _download_file(url, target_filepath, checksum, "md5")
     except RuntimeError as error:
-        # If the token is invalid for the requested dataset, the
-        # request is redirected to a files-overview page. The response
-        # is an HTML-page which doesn't have a "content-disposition"
-        # header.
+        # If the token is invalid for the requested dataset, the request is redirected to a
+        # files overview page. The response is an HTML-page which doesn't have a
+        # "content-disposition" header.
         response = requests.get(url, stream=True)
         if "content-disposition" not in response.headers:
             db_slug = url.split("/")[4]
@@ -175,14 +169,13 @@ def download_nsrr(
     db_slug : str
         Short identifier of a database, e.g. `'mesa'`.
     subfolder : str, optional
-        The folder at which to start the search, by default `''` (i.e. the
-        root folder).
+        The folder at which to start the search, by default `''` (i.e. the root folder).
     pattern : str, optional
-        Glob-like pattern to select files (only applied to the basename,
-        not the dirname), by default `'*'`.
+        Glob-like pattern to select files (only applied to the basename, not the dirname),
+        by default `'*'`.
     shallow : bool, optional
-        If `True`, only download files in the given subfolder (i.e. no
-        recursion), by default `False`.
+        If `True`, only download files in the given subfolder (i.e. no recursion), by
+        default `False`.
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored, by default `'.'`.
     """

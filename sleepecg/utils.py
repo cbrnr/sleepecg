@@ -23,14 +23,14 @@ def _parallel(
     """
     Apply a function to each element in an iterable in parallel.
 
-    This uses joblib for parallelism. If the package is not available, it
-    falls back to a pure Python loop.
+    This uses joblib for parallelism. If the package is not available, it falls back to a
+    pure Python loop.
 
     Parameters
     ----------
     n_jobs : int
-        The number of jobs to run in parallel. If `1` (default), no
-        parallelism is used. `-1` means using all processors.
+        The number of jobs to run in parallel. If `1` (default), no parallelism is used.
+        `-1` means using all processors.
     function : Callable
         The function to call.
     iterable : Iterable
@@ -47,9 +47,8 @@ def _parallel(
 
     Warnings
     --------
-    Note that in case the `function` is very simple, the cost for spawning
-    workers will make the parallel execution slower than the standard
-    execution.
+    Note that in case the `function` is very simple, the cost for spawning workers will make
+    the parallel execution slower than the standard execution.
 
     Examples
     --------

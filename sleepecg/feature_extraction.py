@@ -62,8 +62,8 @@ def _create_ragged_array(data: List[np.ndarray]) -> np.ndarray:
     """
     Convert a list of arrays with different lengths to a numpy array.
 
-    Each element in `data` is a row in the resulting array. Rows shorter
-    than the longest row will be padded with `np.nan`.
+    Each element in `data` is a row in the resulting array. Rows shorter than the longest
+    row will be padded with `np.nan`.
 
     Parameters
     ----------
@@ -92,8 +92,7 @@ def _split_into_windows(
     """
     Split (irregularly sampled) data into windows of equal temporal length.
 
-    Make sure `data_times`, `window_times`, `lookback` and `lookforward`
-    use the same units.
+    Make sure `data_times`, `window_times`, `lookback` and `lookforward` use the same units.
 
     Parameters
     ----------
@@ -111,9 +110,8 @@ def _split_into_windows(
     Returns
     -------
     list[np.ndarray]
-        A list containing each window as an array. Note that each window
-        may contain a different number of elements in case the data is
-        sampled irregularly.
+        A list containing each window as an array. Note that each window may contain a
+        different number of elements in case the data is sampled irregularly.
     """
     window_start_times = window_times - lookback
     window_end_times = window_times + lookforward
@@ -129,8 +127,8 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     """
     Compute power spectral density (PSD) along axis 1, ignoring NaNs.
 
-    For rows containing a fraction of NaNs higher than `max_nans`, the
-    output array `Pxx` is filled with `np.nan`.
+    For rows containing a fraction of NaNs higher than `max_nans`, the output array `Pxx` is
+    filled with `np.nan`.
 
     Parameters
     ----------
@@ -139,9 +137,8 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, 
     fs : float
         Sampling frequency in Hz.
     max_nans : float, optional
-        Maximum fraction of NaNs in a signal (i.e. row of `x`), for which
-        the PSD computation is attempted. Should be a value between `0.0`
-        and `1.0`, by default `0`.
+        Maximum fraction of NaNs in a signal (i.e. row of `x`), for which the PSD
+        computation is attempted. Should be a value between `0.0` and `1.0`, by default `0`.
 
     Returns
     -------
@@ -190,32 +187,28 @@ def _hrv_timedomain_features(
     stage_times : np.ndarray
         1d-array containing sleep stage onset times in seconds.
     lookback : int
-        Backward extension of the analysis window from each sleep stage
-        time.
+        Backward extension of the analysis window from each sleep stage time.
     lookforward : int
-        Forward extension of the analysis window from each sleep stage
-        time.
+        Forward extension of the analysis window from each sleep stage time.
 
     Returns
     -------
     np.ndarray
-        Array of shape `(len(stage_times), 26)` containing the extracted
-        time domain features.
+        Array of shape `(len(stage_times), 26)` containing the extracted time domain
+        features.
 
     Notes
     -----
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart
-       rate variability: standards of measurement, physiological
-       interpretation and clinical use. circulation, 93, 1043-1065.
-       https://doi.org/10.1161/01.CIR.93.5.1043
-    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
-       variability metrics and norms. Frontiers in public health, 258.
+    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
+       standards of measurement, physiological interpretation and clinical use. Circulation,
+       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability
+       metrics and norms. Frontiers in Public Health, 258.
        https://doi.org/10.3389/fpubh.2017.00258
-    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
-       method of assessing cardiac autonomic function and its comparison
-       with spectral analysis and coefficient of variation of R–R interval.
-       Journal of the autonomic nervous system, 62(1-2), 79-84.
-       https://doi.org/10.1016/S0165-1838(96)00112-9
+    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of
+       assessing cardiac autonomic function and its comparison with spectral analysis and
+       coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
+       62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
     """
     NN = _split_into_windows(
         rri,
@@ -314,41 +307,37 @@ def _hrv_frequencydomain_features(
     rri_times : np.ndarray
         1d-array containing sample times of `rri` in seconds.
     stage_times : np.ndarray
-        1d-array containing sleep stage onset times in seconds. Distances
-        between onsets must be regular.
+        1d-array containing sleep stage onset times in seconds. Distances between onsets
+        must be regular.
     lookback : int
-        Backward extension of the analysis window from each sleep stage
-        time.
+        Backward extension of the analysis window from each sleep stage time.
     lookforward : int
-        Forward extension of the analysis window from each sleep stage
-        time.
+        Forward extension of the analysis window from each sleep stage time.
     fs_rri_resample : float
-        Frequency in Hz at which the RRI time series should be resampled
-        before spectral analysis.
+        Frequency in Hz at which the RRI time series should be resampled before spectral
+        analysis.
     max_nans : float
-        Maximum fraction of NaNs in an analysis window, for which frequency
-        features are computed. Should be a value between `0.0` and `1.0`.
+        Maximum fraction of NaNs in an analysis window, for which frequency features are
+        computed. Should be a value between `0.0` and `1.0`.
     feature_ids : list[str]
-        A list containing the identifiers of all features to be extracted.
-        This does not change the returned array. It is only used to avoid
-        issuing a warning about the analysis window being too short for
-        some frequency range which isn't requested.
+        A list containing the identifiers of all features to be extracted. This does not
+        change the returned array. It is only used to avoid issuing a warning about the
+        analysis window being too short for some frequency range which is not requested.
 
     Returns
     -------
     np.ndarray
-        Array of shape `(len(stage_times), 7)` containing the extracted
-        frequency domain features.
+        Array of shape `(len(stage_times), 7)` containing the extracted frequency domain
+        features.
 
     Notes
     -----
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart
-       rate variability: standards of measurement, physiological
-       interpretation and clinical use. circulation, 93, 1043-1065.
-       https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
+       standards of measurement, physiological interpretation and clinical use. Circulation,
+       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
     """
-    # The recording should last for at least 10 times the wavelength of the
-    # lower frequency bound of the investigated component.
+    # The recording should last for at least 10 times the wavelength of the lower frequency
+    # bound of the investigated component.
     window_time = lookback + lookforward
     min_frequencies = {
         "VLF": 0.0033,
@@ -409,10 +398,9 @@ def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
     """
     Create a feature matrix from record metadata.
 
-    Recording start time, gender, age, and weight are used as (constant)
-    features. In case of missing information (i.e. the required attribute
-    of `SleepRecord` is `None`), the corresponding column is filled with
-    `np.nan`.
+    Recording start time, gender, age, and weight are used as (constant) features. In case
+    of missing information (i.e. the required attribute of `SleepRecord` is `None`), the
+    corresponding column is filled with `np.nan`.
 
     Parameters
     ----------
@@ -454,26 +442,25 @@ def _parse_feature_selection(
     """
     Parse a list containing feature group names and single feature IDs.
 
-    Each feature group is expanded to all its feature identifiers as listed
-    in `feature_extraction._FEATURE_GROUPS`, preserving input order. If an
-    invalid (group) ID is found, a `ValueError` is raised.
+    Each feature group is expanded to all its feature identifiers as listed in
+    `feature_extraction._FEATURE_GROUPS`, preserving input order. If an invalid (group) ID
+    is found, a `ValueError` is raised.
 
     Parameters
     ----------
     requested_ids : list[str]
-        A list which can contain both feature group names and single
-        feature IDs in arbitrary order.
+        A list which can contain both feature group names and single feature IDs in
+        arbitrary order.
 
     Returns
     -------
     required_groups : list[str]
-        The feature groups which have to be calculated to cover all
-        requested features.
+        The feature groups which have to be calculated to cover all requested features.
     feature_ids : list[str]
         The expanded list containing only single feature IDs.
     selected_cols : list[int]
-        The column indices of `feature_ids` in a list of all feature IDs in
-        all `required_groups`.
+        The column indices of `feature_ids` in a list of all feature IDs in all
+        `required_groups`.
     """
     required_groups = set()
     feature_ids = []
@@ -511,11 +498,11 @@ def preprocess_rri(
     rri : np.ndarray
         An array containing consecutive RR interval lengths in seconds.
     min_rri : float, optional
-        Minimum RRI in seconds to be considered valid. If `None` (default),
-        no lower bounds check is performed.
+        Minimum RRI in seconds to be considered valid. If `None` (default), no lower bounds
+        check is performed.
     max_rri : float, optional
-        Maximum RRI in seconds to be considered valid. If `None` (default),
-        no upper bounds check is performed.
+        Maximum RRI in seconds to be considered valid. If `None` (default), no upper bounds
+        check is performed.
 
     Returns
     -------
@@ -561,48 +548,42 @@ def _extract_features_single(
     record : SleepRecord
         The record for which to calculate features.
     sleep_stage_duration : int
-        Duration of a single sleep stage in the returned `stages` in
-        seconds.
+        Duration of a single sleep stage in the returned `stages` in seconds.
     min_rri: float, optional
-        Minimum RRI value in seconds to be considered valid. Will be passed
-        to :func:`preprocess_rri`.
+        Minimum RRI value in seconds to be considered valid. Will be passed to
+        :func:`preprocess_rri`.
     max_rri: float, optional
-        Maximum RRI value in seconds to be considered valid. Will be passed
-        to :func:`preprocess_rri`.
+        Maximum RRI value in seconds to be considered valid. Will be passed to
+        :func:`preprocess_rri`.
     required_groups : list[str]
-        The feature groups which have to be calculated to cover all
-        requested features.
+        The feature groups which have to be calculated to cover all requested features.
     lookback : int, optional
-        Backward extension of the analysis window from each sleep stage
-        time in seconds.
+        Backward extension of the analysis window from each sleep stage time in seconds.
     lookforward : int, optional
-        Forward extension of the analysis window from each sleep stage
-        time in seconds.
+        Forward extension of the analysis window from each sleep stage time in seconds.
     fs_rri_resample : float
-        Frequency in Hz at which the RRI time series should be resampled
-        before spectral analysis. Only relevant for frequency domain
-        features.
+        Frequency in Hz at which the RRI time series should be resampled before spectral
+        analysis. Only relevant for frequency domain features.
     max_nans : float
-        Maximum fraction of NaNs in an analysis window for which frequency
-        features are computed. Should be a value between `0.0` and `1.0`.
+        Maximum fraction of NaNs in an analysis window for which frequency features are
+        computed. Should be a value between `0.0` and `1.0`.
     feature_ids : list[str]
-        A list containing the identifiers of all features to be extracted.
-        This is only used to avoid issuing a warning about the analysis
-        window being too short for some frequency range which isn't
-        requested.
+        A list containing the identifiers of all features to be extracted. This is only used
+        to avoid issuing a warning about the analysis window being too short for some
+        frequency range which is not requested.
     col_indices : list[int]
-        The column indices of `feature_ids` in a list of all feature IDs in
-        all `required_groups`. Required to select the columns corresponding
-        to the requested `feature_ids` from the calculated feature matrix.
+        The column indices of `feature_ids` in a list of all feature IDs in all
+        `required_groups`. Required to select the columns corresponding to the requested
+        `feature_ids` from the calculated feature matrix.
 
     Returns
     -------
     features : np.ndarray
-        The feature matrix of shape `(len(sleep_stages), <num_features>)`
-        containing the extracted features.
+        The feature matrix of shape `(len(sleep_stages), <num_features>)` containing the
+        extracted features.
     stages : np.ndarray | None
-        The label vector, i.e. the annotated sleep stages. For a `record`
-        without annotated stages, this will be `None`.
+        The label vector, i.e. the annotated sleep stages. For a `record` without annotated
+        stages, this will be `None`.
     """
     rri_required = "hrv-time" in required_groups or "hrv-frequency" in required_groups
 
@@ -685,84 +666,77 @@ def extract_features(
     """
     Calculate features from sleep data (e.g. heart rate).
 
-    Time and frequency domain heart rate variability (HRV) features are
-    calculated based on [1]_, [2]_ and [3]_. :ref:`feature_extraction`
-    lists all available features and feature groups.
+    Time and frequency domain heart rate variability (HRV) features are calculated based on
+    [1]_, [2]_ and [3]_. :ref:`feature_extraction` lists all available features and feature
+    groups.
 
     Parameters
     ----------
     records : Iterable[SleepRecord]
-        An iterable of `SleepRecord` objects, as yielded by the various
-        reader functions in SleepECG.
+        An iterable of `SleepRecord` objects, as yielded by the various reader functions in
+        SleepECG.
     lookback : int, optional
-        Backward extension of the analysis window from each sleep stage
-        time in seconds, by default `0`.
+        Backward extension of the analysis window from each sleep stage time in seconds, by
+        default `0`.
     lookforward : int, optional
-        Forward extension of the analysis window from each sleep stage
-        time in seconds, by default `30`.
+        Forward extension of the analysis window from each sleep stage time in seconds, by
+        default `30`.
     sleep_stage_duration : int, optional
-        Duration of a single sleep stage in the returned `stages` in
-        seconds, by default `30`.
+        Duration of a single sleep stage in the returned `stages` in seconds, by default
+        `30`.
     feature_selection : list[str], optional
-        Which features to extract. Can be feature groups or single feature
-        identifiers, as listed :ref:`here<feature_extraction>`. If
-        `None` (default), all possible features are extracted.
+        Which features to extract. Can be feature groups or single feature identifiers, as
+        listed :ref:`here<feature_extraction>`. If `None` (default), all possible features
+        are extracted.
     fs_rri_resample : float, optional
-        Frequency in Hz at which the RRI time series should be resampled
-        before spectral analysis. Only relevant for frequency domain
-        features, by default `4`.
+        Frequency in Hz at which the RRI time series should be resampled before spectral
+        analysis. Only relevant for frequency domain features, by default `4`.
     min_rri: float, optional
-        Minimum RRI value in seconds to be considered valid. Will be passed
-        to :func:`preprocess_rri`, by default `None`.
+        Minimum RRI value in seconds to be considered valid. Will be passed to
+        :func:`preprocess_rri`, by default `None`.
     max_rri: float, optional
-        Maximum RRI value in seconds to be considered valid. Will be passed
-        to :func:`preprocess_rri`, by default `None`.
+        Maximum RRI value in seconds to be considered valid. Will be passed to
+        :func:`preprocess_rri`, by default `None`.
     max_nans : float, optional
-        Maximum fraction of NaNs in an analysis window, for which frequency
-        features are computed. Should be a value between `0.0` and `1.0`,
-        by default `0`.
+        Maximum fraction of NaNs in an analysis window, for which frequency features are
+        computed. Should be a value between `0.0` and `1.0`, by default `0`.
     n_jobs : int, optional
-        The number of jobs to run in parallel. If `1` (default), no
-        parallelism is used. `-1` means using all processors.
+        The number of jobs to run in parallel. If `1` (default), no parallelism is used.
+        `-1` means using all processors.
 
     Returns
     -------
     features : list[np.ndarray]
         A list containing feature matrices which are arrays of shape
-        `(len(sleep_stages), <num_features>)` and contain the extracted
-        features per record.
+        `(len(sleep_stages), <num_features>)` and contain the extracted features per record.
     stages : list[np.ndarray | None]
-        A list containing label vectors, i.e. the annotated sleep stages.
-        For any `SleepRecord` without annotated stages, the corresponding
-        list entry will be `None`.
+        A list containing label vectors, i.e. the annotated sleep stages. For any
+        `SleepRecord` without annotated stages, the corresponding list entry will be `None`.
     feature_ids : list[str]
-        A list containing the identifiers of the extracted features.
-        Feature groups passed in `feature_selection` are expanded to all
-        individual features they contain. The order matches the column
-        order of `X`.
+        A list containing the identifiers of the extracted features. Feature groups passed
+        in `feature_selection` are expanded to all individual features they contain. The
+        order matches the column order of `X`.
 
     Notes
     -----
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart
-       rate variability: standards of measurement, physiological
-       interpretation and clinical use. circulation, 93, 1043-1065.
-       https://doi.org/10.1161/01.CIR.93.5.1043
-    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate
-       variability metrics and norms. Frontiers in public health, 258.
+    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
+       standards of measurement, physiological interpretation and clinical use. Circulation,
+       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability
+       metrics and norms. Frontiers in Public Health, 258.
        https://doi.org/10.3389/fpubh.2017.00258
-    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new
-       method of assessing cardiac autonomic function and its comparison
-       with spectral analysis and coefficient of variation of R–R interval.
-       Journal of the autonomic nervous system, 62(1-2), 79-84.
-       https://doi.org/10.1016/S0165-1838(96)00112-9
+    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of
+       assessing cardiac autonomic function and its comparison with spectral analysis and
+       coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
+       62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
     """
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)
 
     required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
 
-    # _extract_features_single has two return values, so the list returned
-    # by _parallel needs to be unpacked
+    # _extract_features_single has two return values, so the list returned by _parallel
+    # needs to be unpacked
     Xy = _parallel(
         n_jobs,
         _extract_features_single,

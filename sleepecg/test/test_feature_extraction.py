@@ -22,10 +22,9 @@ def test_feature_ids():
     """
     Compare length of feature id lists with shape of feature matrices.
 
-    If this fails, make sure the identifiers in
-    `feature_extraction._FEATURE_GROUPS` match the calculated features in
-    the relevant function. Note that the test only compares lengths, so the
-    order might still be incorrect.
+    If this fails, make sure the identifiers in `feature_extraction._FEATURE_GROUPS` match
+    the calculated features in the relevant function. Note that the test only compares
+    lengths, so the order might still be incorrect.
     """
     heartbeat_times = np.cumsum(np.random.uniform(0.5, 1.5, 60 * 60))
     sleep_stages = np.random.randint(1, 6, int(max(heartbeat_times)) // 30)

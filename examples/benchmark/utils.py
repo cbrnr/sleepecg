@@ -34,9 +34,9 @@ def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
     Yields
     ------
     ECGRecord
-        Each element in the generator is of type `ECGRecord` and contains
-        the ECG signal (`.ecg`), sampling frequency (`.fs`), annotated beat
-        indices (`.annotations`), `.lead`, and `.id`.
+        Each element in the generator is of type `ECGRecord` and contains the ECG signal
+        (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
+        `.lead`, and `.id`.
     """
     readers = {
         "gudb": sleepecg.read_gudb,
@@ -108,9 +108,8 @@ def evaluate_single(
     """
     Evaluate a heartbeat detector on a given annotated ECG record.
 
-    Optionally, similarity measures between detected and annotated
-    RR intervals can be calculated. As this requires interpolation, it may
-    take some time for long signals.
+    Optionally, similarity measures between detected and annotated RR intervals can be
+    calculated. As this requires interpolation, it may take some time for long signals.
 
     Parameters
     ----------
@@ -121,12 +120,11 @@ def evaluate_single(
     signal_len : int
         Length to which the signal should be sliced.
     max_distance : float
-        Maximum temporal distance in seconds between detected and annotated
-        beats to count as a successful detection.
+        Maximum temporal distance in seconds between detected and annotated beats to count
+        as a successful detection.
     calc_rri_similarity : bool
-        If `True`, calculate similarity measures between detected and
-        annotated RR intervals (computationally expensive for long
-        signals).
+        If `True`, calculate similarity measures between detected and annotated RR intervals
+        (computationally expensive for long signals).
 
     Returns
     -------

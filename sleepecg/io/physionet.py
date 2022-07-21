@@ -32,8 +32,7 @@ def _list_physionet(
     Parameters
     ----------
     data_dir : pathlib.Path
-        Directory where all datasets are stored. Required to download the
-        RECORDS-file.
+        Directory where all datasets are stored. Required to download the RECORDS file.
     db_slug : str
         Short identifier of a database, e.g. `'mitdb'`.
     db_version : str, optional
@@ -69,8 +68,8 @@ def download_physionet(
     """
     Download requested files from PhysioNet.
 
-    All files with `extensions` for record IDs in `requested_records` are
-    downloaded from the PhysioNet database `db_slug`.
+    All files with `extensions` for record IDs in `requested_records` are downloaded from
+    the PhysioNet database `db_slug`.
 
     Parameters
     ----------
@@ -110,9 +109,8 @@ def _get_physionet_checksums(
     """
     Parse PhysioNet checksums into a dictionary.
 
-    Reads a PhysioNet checksum file and parses it into a dictionary mapping
-    filenames to checksums. Tries to download the checksum file if it's not
-    available on disk.
+    Reads a PhysioNet checksum file and parses it into a dictionary mapping filenames to
+    checksums. Tries to download the checksum file if it is not available on disk.
 
     Parameters
     ----------

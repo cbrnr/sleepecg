@@ -57,8 +57,8 @@ class SubjectData:
     Attributes
     ----------
     gender : int, optional
-        The subject's gender, stored as an integer as defined by `Gender`,
-        by default `None`.
+        The subject's gender, stored as an integer as defined by `Gender`, by default
+        `None`.
     age : int, optional
         The subject's age in years, by default `None`.
     weight : float, optional
@@ -78,8 +78,8 @@ class SleepRecord:
     Attributes
     ----------
     sleep_stages : np.ndarray, optional
-        Sleep stages according to AASM guidelines, stored as integers as
-        defined by :class:`SleepStage`, by default `None`.
+        Sleep stages according to AASM guidelines, stored as integers as defined by
+        :class:`SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
         Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
@@ -87,11 +87,9 @@ class SleepRecord:
     recording_start_time : datetime.time, optional
         Time at which the recording was started, by default `None`.
     heartbeat_times : np.ndarray, optional
-        Times of heartbeats relative to recording start in seconds, by
-        default `None`.
+        Times of heartbeats relative to recording start in seconds, by default `None`.
     subject_data : SubjectData, optional
-        Dataclass containing subject data, such as gender or age, by
-        default `None`.
+        Dataclass containing subject data, such as gender or age, by default `None`.
     """
 
     sleep_stages: Optional[np.ndarray] = None
@@ -120,8 +118,8 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     Returns
     -------
     sleep_stages : np.ndarray
-        Sleep stages according to AASM guidelines, stored as integers as
-        defined by :class:`SleepStage`.
+        Sleep stages according to AASM guidelines, stored as integers as defined by
+        :class:`SleepStage`.
     sleep_stage_duration : int
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
@@ -178,11 +176,10 @@ def read_mesa(
     """
     Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
 
-    Each MESA record consists of an `.edf` file containing raw
-    polysomnography data and an `.xml` file containing annotated events.
-    Since the entire MESA dataset requires about 385 GB of disk space,
-    `.edf` files can be deleted after heartbeat times have been extracted.
-    Heartbeat times are cached in an `.npy` file in
+    Each MESA record consists of an `.edf` file containing raw polysomnography data and an
+    `.xml` file containing annotated events. Since the entire MESA dataset requires about
+    385 GB of disk space, `.edf` files can be deleted after heartbeat times have been
+    extracted. Heartbeat times are cached in an `.npy` file in
     `<data_dir>/mesa/preprocessed/heartbeats`.
 
     Parameters
@@ -191,21 +188,18 @@ def read_mesa(
          Glob-like pattern to select record IDs, by default `'*'`.
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
-        `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not
-        available for all records). If `'ecg'`, use
-        `sleepecg.detect_heartbeats` on the ECG contained in
+        `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not available for all
+        records). If `'ecg'`, use `sleepecg.detect_heartbeats` on the ECG contained in
         `polysomnography/edfs/<record_id>.edf` and cache the result to
-        `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the
-        cached heartbeats.
+        `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the cached heartbeats.
     offline : bool, optional
-        If `True`, search for local files only instead of using the NSRR
-        API, by default `False`.
-    keep_edfs : bool, optional
-        If `False`, remove `.edf` after heartbeat detection, by default
+        If `True`, search for local files only instead of using the NSRR API, by default
         `False`.
+    keep_edfs : bool, optional
+        If `False`, remove `.edf` after heartbeat detection, by default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
@@ -226,7 +220,7 @@ def read_mesa(
     if heartbeats_source not in heartbeats_source_options:
         raise ValueError(
             f"Invalid value for parameter `heartbeats_source`: {heartbeats_source}, "
-            f"possible options: {heartbeats_source_options}",
+            f"possible options: {heartbeats_source_options}"
         )
 
     if data_dir is None:
@@ -387,11 +381,11 @@ def read_slpdb(
     records_pattern : str, optional
          Glob-like pattern to select record IDs, by default `'*'`.
     offline : bool, optional
-        If `True`, search for local files only instead of downloading from
-        PhysioNet, by default `False`.
+        If `True`, search for local files only instead of downloading from PhysioNet, by
+        default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
@@ -445,9 +439,8 @@ def read_slpdb(
 
         annot_st = wfdb.rdann(record_file, "st")
 
-        # Some 30 second windows don't have a sleep stage annotation, so
-        # the annotation array is initialized with `SleepStage.UNDEFINED`
-        # for every 30 second window.
+        # Some 30 second windows don't have a sleep stage annotation, so the annotation
+        # array is initialized with `SleepStage.UNDEFINED` for every 30 second window.
         for sample_time, annotation in zip(annot_st.sample[::-1], annot_st.aux_note[::-1]):
             if annotation[0] in STAGE_MAPPING:
                 number_of_sleep_stages = sample_time // (30 * fs) + 1
@@ -455,16 +448,16 @@ def read_slpdb(
 
         sleep_stages = np.full(number_of_sleep_stages, SleepStage.UNDEFINED)
 
-        # Most annotations are at sample indices which are multiples of
-        # 30*fs. However, annotations which would be at sample index 0, are
-        # at sample index 1. Integer divison is used when calculating the
-        # stage index to move these annotations to sample index 0.
+        # Most annotations are at sample indices which are multiples of 30*fs. However,
+        # annotations which would be at sample index 0, are at sample index 1. Integer
+        # divison is used when calculating the stage index to move these annotations to
+        # sample index 0.
         for sample_time, annotation in zip(annot_st.sample, annot_st.aux_note):
             if annotation[0] in STAGE_MAPPING:
                 sleep_stages[sample_time // (30 * fs)] = STAGE_MAPPING[annotation[0]]
 
-        # Age and weight are given in the last line of the header file,
-        # which is contained in record.comments[0] and looks like this:
+        # Age and weight are given in the last line of the header file, which is contained
+        # in record.comments[0] and looks like this:
         # '44 M 89 32-01-89' ('<age> <gender> <weight> <unspecified>')
         # For some records, age/weight is given as 'x'.
         age, _, weight, _ = record.comments[0].split()
@@ -494,11 +487,10 @@ def read_shhs(
     """
     Lazily read records from SHHS (https://sleepdata.org/datasets/shhs).
 
-    Each SHHS record consists of an `.edf` file containing raw
-    polysomnography data and an `.xml` file containing annotated events.
-    Since the entire SHHS dataset requires about 356 GB of disk space,
-    `.edf` files can be deleted after heartbeat times have been extracted.
-    Heartbeat times are cached in an `.npy` file in
+    Each SHHS record consists of an `.edf` file containing raw polysomnography data and an
+    `.xml` file containing annotated events. Since the entire SHHS dataset requires about
+    356 GB of disk space, `.edf` files can be deleted after heartbeat times have been
+    extracted. Heartbeat times are cached in an `.npy` file in
     `<data_dir>/shhs/preprocessed/heartbeats`.
 
     Parameters
@@ -508,20 +500,18 @@ def read_shhs(
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
         `polysomnography/annotations-rpoints/shhsX/<record_id>-rpoints.csv`
-        (not available for all records). If `'ecg'`, use
-        `sleepecg.detect_heartbeats` on the ECG contained in
-        `polysomnography/edfs/shhsX/<record_id>.edf` and cache the result
-        to `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`,
-        get the cached heartbeats.
+        (not available for all records). If `'ecg'`, use `sleepecg.detect_heartbeats` on the
+        ECG contained in `polysomnography/edfs/shhsX/<record_id>.edf` and cache the result
+        to `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`, get the cached
+        heartbeats.
     offline : bool, optional
-        If `True`, search for local files only instead of using the NSRR
-        API, by default `False`.
-    keep_edfs : bool, optional
-        If `False`, remove `.edf` after heartbeat detection, by default
+        If `True`, search for local files only instead of using the NSRR API, by default
         `False`.
+    keep_edfs : bool, optional
+        If `False`, remove `.edf` after heartbeat detection, by default `False`.
     data_dir : str | pathlib.Path, optional
-        Directory where all datasets are stored. If `None` (default), the
-        value will be taken from the configuration.
+        Directory where all datasets are stored. If `None` (default), the value will be
+        taken from the configuration.
 
     Yields
     ------
@@ -543,7 +533,7 @@ def read_shhs(
     if heartbeats_source not in heartbeats_source_options:
         raise ValueError(
             f"Invalid value for parameter `heartbeats_source`: {heartbeats_source}, "
-            f"possible options: {heartbeats_source_options}",
+            f"possible options: {heartbeats_source_options}"
         )
 
     if data_dir is None:

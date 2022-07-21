@@ -49,8 +49,8 @@ def _download_file(
     """
     Download a single file from `url` to `target_filepath`.
 
-    In case `checksum` and `checksum_type` are provided, the downloaded
-    file is verified. Raises a `RuntimeError` in case verification fails.
+    In case `checksum` and `checksum_type` are provided, the downloaded file is verified.
+    Raises a `RuntimeError` if verification fails.
 
     Parameters
     ----------
@@ -90,5 +90,5 @@ def _download_file(
             raise RuntimeError(
                 f"Checksum mismatch for {target_filepath}:\n"
                 f"    {checksum!r} (expected)\n"
-                f"    {calculated_checksum!r} (calculated)",
+                f"    {calculated_checksum!r} (calculated)"
             )
