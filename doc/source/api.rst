@@ -9,7 +9,6 @@ See :ref:`Datasets <datasets>` for information about available datasets and inst
 
 .. autosummary::
    :toctree: generated
-   :maxdepth: 1
 
    download_nsrr
    download_physionet
