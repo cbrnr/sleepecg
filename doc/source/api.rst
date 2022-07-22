@@ -8,7 +8,8 @@ Datasets
 See :ref:`Datasets <datasets>` for information about available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
-   :nosignatures:
+   :toctree: generated
+   :maxdepth: 1
 
    download_nsrr
    download_physionet
