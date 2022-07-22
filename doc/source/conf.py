@@ -66,7 +66,7 @@ html_title = "SleepECG"
 html_last_updated_fmt = "%Y-%m-%d"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
-templates_path = ["_templates"]
+html_show_sphinx = False
 html_theme_options = {
     "top_of_page_button": None,
 }
