@@ -53,6 +53,7 @@ autodoc_mock_imports = ["scipy", "tqdm"]
 autodoc_typehints = "none"
 autosummary_generate = True
 html_show_sourcelink = False
+add_function_parentheses = True
 
 numpydoc_class_members_toctree = False
 numpydoc_show_class_members = False
