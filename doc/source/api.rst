@@ -8,6 +8,7 @@ Datasets
 See :ref:`Datasets <datasets>` for information about available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
+   :nosignatures:
 
    download_nsrr
    download_physionet
@@ -29,9 +30,7 @@ Feature extraction
 Detailed information on implemented features is available :ref:`here <feature_extraction>`.
 
 .. autosummary::
-   :toctree: generated/
    :nosignatures:
-   :hidden:
 
    extract_features
    preprocess_rri
@@ -41,9 +40,7 @@ Heartbeat detection
 -------------------
 
 .. autosummary::
-   :toctree: generated/
    :nosignatures:
-   :hidden:
 
    compare_heartbeats
    detect_heartbeats
@@ -54,9 +51,7 @@ Sleep stage classification
 --------------------------
 
 .. autosummary::
-   :toctree: generated/
    :nosignatures:
-   :hidden:
 
    evaluate
    list_classifiers
@@ -74,9 +69,7 @@ Configuration
 Configuration settings are explained :ref:`here <configuration>`.
 
 .. autosummary::
-   :toctree: generated/
    :nosignatures:
-   :hidden:
 
    get_config
    set_config
