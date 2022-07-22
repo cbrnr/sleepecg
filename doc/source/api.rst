@@ -8,7 +8,7 @@ Datasets
 See :ref:`Datasets <datasets>` for information about available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
-   :toctree: generated
+   :nosignatures:
 
    download_nsrr
    download_physionet
@@ -40,6 +40,7 @@ Heartbeat detection
 -------------------
 
 .. autosummary::
+   :doctree: generated
    :nosignatures:
 
    compare_heartbeats
