@@ -40,7 +40,7 @@ Heartbeat detection
 -------------------
 
 .. autosummary::
-   :doctree: generated
+   :toctree: generated
    :nosignatures:
 
    compare_heartbeats
