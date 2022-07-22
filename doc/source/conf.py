@@ -67,11 +67,11 @@ html_last_updated_fmt = "%Y-%m-%d"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 html_show_sphinx = False
-html_last_updated = False
-html_prev = False
-html_next = False
 html_theme_options = {
     "top_of_page_button": None,
+    "prev": None,
+    "next": None,
+    "last_updated": None,
 }
 
 
