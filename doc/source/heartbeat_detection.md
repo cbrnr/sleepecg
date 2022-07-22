@@ -4,7 +4,7 @@ ECG-based sleep staging heavily relies on heartrate variability. Therefore, a re
 
 
 ## Usage
-The function {func}`detect_heartbeats` finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/heartbeat_detection.py).
+The function {py:func}`detect_heartbeats` finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/heartbeat_detection.py).
 ```python
 from sleepecg import detect_heartbeats
 
