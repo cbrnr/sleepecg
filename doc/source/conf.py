@@ -4,7 +4,7 @@
 # full list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# import inspect
+import inspect
 import os
 import sys
 
@@ -23,7 +23,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
-    # "sphinx.ext.linkcode",
+    "sphinx.ext.linkcode",
     "numpydoc",
     "myst_parser",
 ]
@@ -76,28 +76,28 @@ html_theme_options = {
 }
 
 
-# def linkcode_resolve(domain, info):
-#     """
-#     Determine the URL corresponding to a Python object.
+def linkcode_resolve(domain, info):
+    """
+    Determine the URL corresponding to a Python object.
 
-#     Adapted from https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py.
-#     """
+    Adapted from https://github.com/Lasagne/Lasagne/blob/master/docs/conf.py.
+    """
 
-#     def find_source():
-#         obj = sys.modules[info["module"]]
-#         for part in info["fullname"].split("."):
-#             obj = getattr(obj, part)
-#         fn = inspect.getsourcefile(obj)
-#         fn = os.path.relpath(fn, start=os.path.dirname(sleepecg.__file__))
-#         source, lineno = inspect.getsourcelines(obj)
-#         return fn, lineno, lineno + len(source) - 1
+    def find_source():
+        obj = sys.modules[info["module"]]
+        for part in info["fullname"].split("."):
+            obj = getattr(obj, part)
+        fn = inspect.getsourcefile(obj)
+        fn = os.path.relpath(fn, start=os.path.dirname(sleepecg.__file__))
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
 
-#     if domain != "py" or not info["module"]:
-#         return None
-#     try:
-#         fn, start, end = find_source()
-#         filename = f"sleepecg/{fn}#L{start}-L{end}"
-#     except Exception:
-#         filename = info["module"].replace(".", "/") + ".py"
-#     tag = "main" if "dev" in version else ("v" + version)
-#     return f"https://github.com/cbrnr/sleepecg/blob/{tag}/{filename}"
+    if domain != "py" or not info["module"]:
+        return None
+    try:
+        fn, start, end = find_source()
+        filename = f"sleepecg/{fn}#L{start}-L{end}"
+    except Exception:
+        filename = info["module"].replace(".", "/") + ".py"
+    tag = "main" if "dev" in version else ("v" + version)
+    return f"https://github.com/cbrnr/sleepecg/blob/{tag}/{filename}"
