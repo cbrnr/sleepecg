@@ -17,3 +17,8 @@ h3 {
 table {
     width: 100%;
 }
+
+th {
+    text-align: left;
+    vertical-align: top;
+}
