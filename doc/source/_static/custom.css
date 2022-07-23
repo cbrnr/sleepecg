@@ -22,3 +22,7 @@ th {
     text-align: left;
     vertical-align: top;
 }
+
+tr {
+    vertical-align: top;
+}
