@@ -10,9 +10,6 @@ import sys
 
 import sleepecg
 
-# -- Path setup ----------------------------------------------------------------------------
-sys.path.insert(0, os.path.abspath("../../sleepecg"))
-
 # -- Project information -------------------------------------------------------------------
 project = "SleepECG"
 copyright = "SleepECG Developers"
