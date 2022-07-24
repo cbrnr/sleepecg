@@ -10,12 +10,12 @@ import sys
 
 import sleepecg
 
-# -- Project information --------------------------------------------------
+# -- Project information -------------------------------------------------------------------
 project = "SleepECG"
 copyright = "SleepECG Developers"
 version = sleepecg.__version__
 
-# -- General configuration ------------------------------------------------
+# -- General configuration -----------------------------------------------------------------
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
@@ -39,6 +39,8 @@ myst_substitutions = {
     "version": version,
 }
 
+myst_heading_anchors = 3
+
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "numpy": ("https://numpy.org/devdocs", None),
@@ -53,8 +55,7 @@ autodoc_mock_imports = ["scipy", "tqdm"]
 autodoc_typehints = "none"
 autosummary_generate = True
 html_show_sourcelink = False
-
-add_function_parentheses = False
+add_function_parentheses = True
 
 numpydoc_class_members_toctree = False
 numpydoc_show_class_members = False

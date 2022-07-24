@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 SleepECG API
 ============
 
@@ -8,7 +10,7 @@ Datasets
 See :ref:`Datasets <datasets>` for information about available datasets and instructions for retrieving NSRR data.
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: generated
    :nosignatures:
 
    download_nsrr
@@ -31,7 +33,7 @@ Feature extraction
 Detailed information on implemented features is available :ref:`here <feature_extraction>`.
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: generated
    :nosignatures:
 
    extract_features
@@ -42,7 +44,7 @@ Heartbeat detection
 -------------------
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: generated
    :nosignatures:
 
    compare_heartbeats
@@ -54,7 +56,7 @@ Sleep stage classification
 --------------------------
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: generated
    :nosignatures:
 
    evaluate
@@ -73,7 +75,7 @@ Configuration
 Configuration settings are explained :ref:`here <configuration>`.
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: generated
    :nosignatures:
 
    get_config

@@ -13,3 +13,16 @@ h2 {
 h3 {
     font-size: 1.25em
 }
+
+table {
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    vertical-align: top;
+}
+
+tr {
+    vertical-align: top;
+}
