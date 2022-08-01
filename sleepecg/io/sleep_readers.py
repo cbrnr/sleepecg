@@ -174,7 +174,7 @@ def read_mesa(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
-    Lazily read records from MESA (https://sleepdata.org/datasets/mesa).
+    Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
 
     Each MESA record consists of an `.edf` file containing raw polysomnography data and an
     `.xml` file containing annotated events. Since the entire MESA dataset requires about
@@ -372,7 +372,7 @@ def read_slpdb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
-    Lazily read records from SLPDB (https://physionet.org/content/slpdb).
+    Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
 
     Required files are downloaded from PhysioNet to `<data_dir>/slpdb`.
 
@@ -485,7 +485,7 @@ def read_shhs(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[SleepRecord]:
     """
-    Lazily read records from SHHS (https://sleepdata.org/datasets/shhs).
+    Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).
 
     Each SHHS record consists of an `.edf` file containing raw polysomnography data and an
     `.xml` file containing annotated events. Since the entire SHHS dataset requires about

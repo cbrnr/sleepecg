@@ -2,7 +2,7 @@
 #
 # License: BSD (3-clause)
 
-"""Interface for listing and downloading NSRR (sleepdata.org) data."""
+"""Interface for listing and downloading [NSRR](https://sleepdata.org/) data."""
 
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
@@ -157,7 +157,7 @@ def download_nsrr(
     data_dir: Union[str, Path] = ".",
 ) -> None:
     """
-    Recursively download files from NSRR (sleepdata.org).
+    Recursively download files from [NSRR](https://sleepdata.org/).
 
     Specify a subfolder and/or a filename-pattern to filter results.
 
