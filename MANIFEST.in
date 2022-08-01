@@ -3,6 +3,7 @@ graft doc
 graft examples
 graft sleepecg
 global-exclude *.so
+global-exclude .DS_Store
 prune **/__pycache__
 include .gitignore
 include .pre-commit-config.yaml
