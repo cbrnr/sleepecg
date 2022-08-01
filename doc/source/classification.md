@@ -7,9 +7,9 @@ Note that the performance metrics are averages, so a classifier might perform mu
 
 |Identifier|Stages|Model|Training set (nights)|Test set (nights)|Acc|κ|Source|
 |-|-|-|-|-|-|-|-|
-|`ws-gru-mesa`|WAKE-SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_gru_mesa.py)|
-|`wrn-gru-mesa`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.75|0.54|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa.py)|
-|`wrn-gru-mesa-weighted`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1970)|SHHS (1000)|0.70|0.53|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)|
+|`ws-gru-mesa`|WAKE-SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_gru_mesa.py)|
+|`wrn-gru-mesa`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.75|0.54|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa.py)|
+|`wrn-gru-mesa-weighted`|WAKE-REM-NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.70|0.53|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)|
 
 As REM is much less common than NREM and WAKE, the current models show limited performance in WAKE-REM-NREM classification.
 Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM as shown in the confusion matrix below (left).
