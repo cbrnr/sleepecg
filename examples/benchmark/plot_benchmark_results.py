@@ -45,7 +45,7 @@ if benchmark == "runtime":
         results,
         x="signal_len",
         y="mean_runtime",
-        error_y="error",
+        markers=True,
         color="detector",
         log_y=True,
         labels={
@@ -59,7 +59,6 @@ if benchmark == "runtime":
         template="plotly_white",
     )
     fig.update_yaxes(rangemode="tozero")
-    fig.update_traces(error_y=dict(thickness=1))
     fig.update_layout(legend_title="")
     fig.write_image(plot_filepath)
 
