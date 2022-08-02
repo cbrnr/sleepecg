@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Fixed
+- Include classifiers and tests ([#104](https://github.com/cbrnr/sleepecg/pull/104) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.1] - 2022-07-21
 ### Added
