@@ -65,7 +65,7 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Blac
 
 ## Documentation
 For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html), with the following exceptions/specifications:
-- The maximum line length is `75`.
+- The maximum line length is `92`.
 - For parameters that may take multiple types, pipe characters are used instead of the word `or`, for example `param_name : int | float`.
 - For single return values, only the type is stated (no name).
 - For multiple return values, both a name and a type are stated.
