@@ -33,8 +33,7 @@ if benchmark == "runtime":
     # order by runtime for longest signal, slowest algorithm first
     maxlen = results["signal_len"].max()
     order = (
-        results
-        .query(f"signal_len == {maxlen}")
+        results.query(f"signal_len == {maxlen}")
         .groupby("detector")
         ["mean_runtime"]
         .mean()
