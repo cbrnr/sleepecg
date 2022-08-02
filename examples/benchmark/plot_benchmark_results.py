@@ -34,8 +34,7 @@ if benchmark == "runtime":
     maxlen = results["signal_len"].max()
     order = (
         results.query(f"signal_len == {maxlen}")
-        .groupby("detector")
-        ["mean_runtime"]
+        .groupby("detector")["mean_runtime"]
         .mean()
         .apply(lambda x: 1 / x)  # reverse order
         .to_dict()
