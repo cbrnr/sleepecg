@@ -30,6 +30,19 @@ if benchmark == "runtime":
     )
     results["error"] = results["std_runtime"] / np.sqrt(results["n"])
 
+    # order by runtime for longest signal, slowest algorithm first
+    maxlen = results["signal_len"].max()
+    order = (
+        results
+        .query(f"signal_len == {maxlen}")
+        .groupby("detector")
+        ["mean_runtime"]
+        .mean()
+        .apply(lambda x: 1 / x)  # reverse order
+        .to_dict()
+    )
+    results = results.sort_values(by=["detector", "signal_len"], key=lambda x: x.map(order))
+
     fig = px.line(
         results,
         x="signal_len",
@@ -38,15 +51,18 @@ if benchmark == "runtime":
         color="detector",
         log_y=True,
         labels={
-            "signal_len": "signal length in hours",
-            "mean_runtime": "mean runtime in s",
+            "signal_len": "Signal length (hours)",
+            "mean_runtime": "Mean runtime (s)",
         },
         title=f"Mean detector runtime for {db_slug.upper()} (fs={fs}Hz)",
         width=800,
         height=600,
         render_mode="svg",
+        template="plotly_white",
     )
     fig.update_yaxes(rangemode="tozero")
+    fig.update_traces(error_y=dict(thickness=1))
+    fig.update_layout(legend_title="")
     fig.write_image(plot_filepath)
 
 elif benchmark == "metrics":
@@ -63,6 +79,7 @@ elif benchmark == "metrics":
             width=1000,
             height=600,
             title=f"Metrics for {db_slug.upper()}",
+            template="plotly_white",
         )
         .update_xaxes(range=[-0.4, 0.4])
         .update_yaxes(range=[0, 1.01])
@@ -76,6 +93,7 @@ elif benchmark == "rri_similarity":
         y="pearsonr",
         color="detector",
         title=f"Pearson correlation coefficient for RRI timeseries from {db_slug.upper()}",
+        template="plotly_white",
     ).update_yaxes(range=[-1.01, 1.01])
     fig.write_image(plot_filepath, scale=1.5)
 
