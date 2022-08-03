@@ -247,8 +247,8 @@ def read_gudb(
                     target_filepath = db_dir / experiment_subdir / tsv_filename
                     try:
                         _download_file(ecg_file_url, target_filepath)
-                    except requests.exceptions.HTTPError as error:
-                        print(error)
+                    except requests.exceptions.HTTPError:
+                        pass  # no annotations available
             ecg_data = pd.read_csv(
                 db_dir / experiment_subdir / "ECG.tsv",
                 sep=" ",  # contrary to what .tsv suggests, the data is space-separated
