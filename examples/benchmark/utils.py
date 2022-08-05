@@ -7,17 +7,13 @@
 import time
 from typing import Any, Dict, Iterator
 
-import biosppy
-import ecgdetectors
-import heartpy
-import heartpy.exceptions
-import mne
-import neurokit2
 import numpy as np
-import wfdb.processing
-
 import sleepecg
 from sleepecg.io.ecg_readers import ECGRecord
+
+
+class HeartpyWarning(Warning):
+    pass
 
 
 def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
@@ -67,22 +63,41 @@ def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
         Indices of detected heartbeats.
     """
     if detector == "mne":
+        import mne
+
         detection = mne.preprocessing.ecg.qrs_detector(fs, ecg, verbose=False)
     elif detector == "wfdb-xqrs":
+        import wfdb.processing
+
         detection = wfdb.processing.xqrs_detect(ecg, fs, verbose=False)
     elif detector == "pyecg-pantompkins":
+        import ecgdetectors
+
         detection = ecgdetectors.Detectors(fs).pan_tompkins_detector(ecg)
     elif detector == "biosppy-hamilton":
+        import biosppy
+
         detection = biosppy.signals.ecg.hamilton_segmenter(ecg, fs)[0]
     elif detector == "heartpy":
-        wd, m = heartpy.process(ecg, fs)
-        detection = np.array(wd["peaklist"])[wd["binary_peaklist"].astype(bool)]
+        import heartpy
+        from heartpy.exceptions import BadSignalWarning
+
+        try:
+            wd, _ = heartpy.process(ecg, fs)
+        except BadSignalWarning:
+            raise HeartpyWarning
+        else:
+            detection = np.array(wd["peaklist"])[wd["binary_peaklist"].astype(bool)]
     elif detector == "neurokit2-nk":
+        import neurokit2
+
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method="neurokit")
         detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method="neurokit")[
             "ECG_R_Peaks"
         ]
     elif detector == "neurokit2-kalidas2017":
+        import neurokit2
+
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method="kalidas2017")
         detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method="kalidas2017")[
             "ECG_R_Peaks"
@@ -149,7 +164,7 @@ def evaluate_single(
         if calc_rri_similarity:
             pearsonr, spearmanr, rmse = sleepecg.rri_similarity(detection, annotation)
 
-    except heartpy.exceptions.BadSignalWarning:
+    except HeartpyWarning:
         runtime = np.nan
         TP = []
         FP = []

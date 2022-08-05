@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- The detector benchmark example now requires only those packages that are actually used in the benchmark ([#114](https://github.com/cbrnr/sleepecg/pull/114) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.2] - 2022-08-02
 ### Fixed

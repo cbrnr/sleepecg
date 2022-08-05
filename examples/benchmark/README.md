@@ -35,6 +35,6 @@ A benchmark configuration is specified below a unique top-level key in `config.y
 |`calc_rri_similarity`|`bool`|`False`|Whether to calculate similarity measures between detected and annotated RR intervals (computationally expensive for long signals).|
 
 ## Known issues
-- `heartpy` detection will fail for mitdb:105:V1. It _raises_ a `BadSignalWarning`, which is caught in `utils.evaluate_single`.
+- `heartpy` detection will fail for mitdb:105:V1, mitdb:115:V1, mitdb:200:V1, and mitdb:201:V1. It raises a `BadSignalWarning`, which is caught in `utils.evaluate_single`.
 - For signal lengths starting somewhere between 600 and 900 minutes, the `heartpy` detector takes at least several hours for ltdb:15814:ECG2.
 - For signal lengths starting somewhere between 300 and 600 minutes, `wfdb-xqrs` takes at least 20 times longer for ltdb:14134:ECG2 and ltdb:14184:ECG2 than for the other ltdb records.
