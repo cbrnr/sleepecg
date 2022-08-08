@@ -41,25 +41,27 @@ if benchmark == "runtime":
     )
     results = results.sort_values(by=["detector", "signal_len"], key=lambda x: x.map(order))
 
-    fig = px.line(
-        results,
-        x="signal_len",
-        y="mean_runtime",
-        markers=True,
-        color="detector",
-        log_y=True,
-        labels={
-            "signal_len": "Signal length (hours)",
-            "mean_runtime": "Mean runtime (s)",
-        },
-        title=f"Mean detector runtime for {db_slug.upper()} (fs={fs}Hz)",
-        width=800,
-        height=600,
-        render_mode="svg",
-        template="plotly_white",
+    fig = (
+        px.line(
+            results,
+            x="signal_len",
+            y="mean_runtime",
+            markers=True,
+            color="detector",
+            log_y=True,
+            labels={
+                "signal_len": "Signal length (hours)",
+                "mean_runtime": "Mean runtime (s)",
+            },
+            title=f"Mean detector runtime for {db_slug.upper()} (fs={fs}Hz)",
+            width=800,
+            height=600,
+            render_mode="svg",
+            template="plotly_white",
+        )
+        .update_yaxes(rangemode="tozero")
+        .update_layout(legend_title="")
     )
-    fig.update_yaxes(rangemode="tozero")
-    fig.update_layout(legend_title="")
     fig.write_image(plot_filepath)
 
 elif benchmark == "metrics":
@@ -79,19 +81,24 @@ elif benchmark == "metrics":
             template="plotly_white",
         )
         .update_xaxes(range=[-0.4, 0.4])
-        .update_yaxes(range=[0, 1.01])
+        .update_yaxes(range=[-0.01, 1.01], tick0=0, dtick=0.1)
+        .for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
+        .update_layout(legend_title="")
     )
-    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
     fig.write_image(plot_filepath, scale=1.5)
 
 elif benchmark == "rri_similarity":
-    fig = px.box(
-        results,
-        y="pearsonr",
-        color="detector",
-        title=f"Pearson correlation coefficient for RRI timeseries from {db_slug.upper()}",
-        template="plotly_white",
-    ).update_yaxes(range=[-1.01, 1.01])
+    fig = (
+        px.box(
+            results,
+            y="pearsonr",
+            color="detector",
+            title=f"Correlation coefficient for RRI timeseries from {db_slug.upper()}",
+            template="plotly_white",
+        )
+        .update_yaxes(range=[-1.01, 1.01], tick0=-1, dtick=0.25)
+        .update_layout(legend_title="")
+    )
     fig.write_image(plot_filepath, scale=1.5)
 
 else:
