@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Iterator, Optional, Union
 
 import numpy as np
-import requests
 from tqdm import tqdm
 
 from ..config import get_config
+from .gudb import GUDB_MD5
 from .physionet import _list_physionet, download_physionet
 from .utils import _download_file
 
@@ -246,9 +246,11 @@ def read_gudb(
                     ecg_file_url = f"{DB_URL}/{experiment_subdir}/{tsv_filename}"
                     target_filepath = db_dir / experiment_subdir / tsv_filename
                     try:
-                        _download_file(ecg_file_url, target_filepath)
-                    except requests.exceptions.HTTPError:
-                        pass  # no annotations available
+                        checksum = GUDB_MD5[str(Path(experiment_subdir) / tsv_filename)]
+                    except KeyError:
+                        pass  # file not available
+                    else:
+                        _download_file(ecg_file_url, target_filepath, checksum, "md5")
             ecg_data = pd.read_csv(
                 db_dir / experiment_subdir / "ECG.tsv",
                 sep=" ",  # contrary to what .tsv suggests, the data is space-separated
