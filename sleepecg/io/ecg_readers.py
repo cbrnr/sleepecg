@@ -14,6 +14,7 @@ from tqdm import tqdm
 from ..config import get_config
 from .gudb import GUDB_MD5
 from .physionet import _list_physionet, download_physionet
+from ..plot import plot_ecg
 from .utils import _download_file
 
 
@@ -41,6 +42,17 @@ class ECGRecord:
     annotation: np.ndarray
     lead: Optional[str] = None
     id: Optional[str] = None
+
+    def plot(self, *args: Optional[np.ndarray]) -> None:
+        """
+        Plot ECG record.
+
+        Parameters
+        ----------
+        *args : np.ndarray, optional
+            Additional annotations to be plotted with different markers.
+        """
+        return plot_ecg(self.ecg, self.fs, self.annotation, *args, title=self.id)
 
 
 def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
