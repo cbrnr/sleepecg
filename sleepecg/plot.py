@@ -7,8 +7,6 @@
 from itertools import cycle
 from typing import Optional
 
-import matplotlib.pyplot as plt
-from matplotlib.cm import get_cmap
 import numpy as np
 
 
@@ -18,7 +16,7 @@ def plot_ecg(
     annotations: Optional[np.ndarray] = None,
     *args: Optional[np.ndarray],
     title: str = None,
-) -> plt.Figure:
+) -> None:
     """
     Plot ECG time series with optional markers.
 
@@ -35,6 +33,9 @@ def plot_ecg(
     title : str, optional
         Title of the plot.
     """
+    import matplotlib.pyplot as plt
+    from matplotlib.cm import get_cmap
+
     t = np.arange(0, len(ecg) / fs, 1 / fs)
     fig, ax = plt.subplots()
     ax.plot(t, ecg, color="dimgray")
@@ -63,4 +64,3 @@ def plot_ecg(
         )
     if title is not None:
         ax.set_title(title)
-    return fig
