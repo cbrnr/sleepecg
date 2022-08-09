@@ -46,7 +46,7 @@ def plot_ecg(
             marker="*",
             markeredgecolor="green",
             markerfacecolor="None",
-            linestyle=""
+            linestyle="",
         )
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -59,7 +59,7 @@ def plot_ecg(
             marker=marker,
             markeredgecolor=color,
             markerfacecolor="None",
-            linestyle=""
+            linestyle="",
         )
     if title is not None:
         ax.set_title(title)
