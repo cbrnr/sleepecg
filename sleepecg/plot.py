@@ -9,8 +9,8 @@ from typing import Optional, List
 
 import numpy as np
 
-from . import SleepRecord, SleepStage
 from .classification import _merge_sleep_stages, _SLEEP_STAGE_MAPPING, _STAGE_NAMES
+from .io.sleep_readers import SleepRecord, SleepStage
 from .utils import _time_to_sec
 
 _STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items()}
