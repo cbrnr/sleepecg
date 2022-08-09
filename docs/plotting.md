@@ -17,14 +17,14 @@ sleepecg.plot_ecg(ecg, fs, beats, beats + 7)
 
 ![ECG time course with beat annotations](./img/plot_ecg.svg)
 
-In this example, we plot two different annotations, `beats` (the detected heartbeats) and `beats + 7` (detected heartbeats shifted by seven samples). The different annotations are automatically drawn with different colors and marker styles (green asterisks correspond to `beats` and red circles correspond to `beats + 7`).
+In this example, we plotted two different annotations, `beats` (the detected heartbeats) and `beats + 7` (detected heartbeats shifted by seven samples). Multiple annotations are automatically drawn with different colors and marker styles (green asterisks correspond to `beats` and red circles correspond to `beats + 7`).
 
-If an ECG record is available as a {class}`sleepecg.io.ECGRecord`, it can be visualized with the {meth}`sleepecg.io.ECGRecord.plot` method:
+Similarly, a {class}`sleepecg.ECGRecord` can be visualized with its {meth}`sleepecg.ECGRecord.plot` method:
 
 ```python
 from scipy.misc import electrocardiogram
 import sleepecg
-from sleepecg.io import ECGRecord
+from sleepecg import ECGRecord
 
 ecg, fs = electrocardiogram(), 360
 beats = sleepecg.detect_heartbeats(ecg, fs)
