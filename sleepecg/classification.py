@@ -17,7 +17,6 @@ import yaml
 from .config import get_config
 from .feature_extraction import extract_features
 from .io.sleep_readers import SleepRecord, SleepStage
-from .plot import _plot_confusion_matrix
 
 # Classifiers don't always discriminate between all sleep stages defined by the AASM
 # guidelines. This dictionary is used to create a consistent mapping from groups of AASM
@@ -470,8 +469,7 @@ def evaluate(
     Evaluate the performance of a sleep stage classifier.
 
     Prints overall accuracy, Cohen's kappa, confusion matrix and per-class precision, recall
-    and F1 score. In an interactive environment, the confusion matrix is additionally shown
-    as a labeled plot.
+    and F1 score.
 
     Parameters
     ----------
@@ -506,10 +504,8 @@ def evaluate(
 
     print(f"Confusion matrix ({stages_mode.upper()}):")
     if show_undefined:
-        _plot_confusion_matrix(confmat_full, ["UNDEFINED"] + stage_names)
         print(confmat_full)
     else:
-        _plot_confusion_matrix(confmat, stage_names)
         print(confmat)
 
     kappa = _cohen_kappa(confmat)
