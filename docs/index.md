@@ -5,15 +5,6 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes preprocessing, feature extraction, and classification).
 
-## Overview
-- [Datasets](./datasets) shows all available datasets and instructions for retrieving NSRR data.
-- [Heartbeat Detection](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
-- [Feature Extraction](./feature_extraction) lists all implemented HRV features.
-- [Classification](./classification) describes the included sleep stage classifiers and how to use the classification API.
-- [Plotting](./plotting) showcases various plots that can be generated with SleepECG.
-- [Configuration](./configuration) explains configuration settings in SleepECG.
-- [API](./api) has detailed information about all public functions and classes in SleepECG.
-
 ## Changelog
 Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) to learn what we added, changed, or fixed.
 
