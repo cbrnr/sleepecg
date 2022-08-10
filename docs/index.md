@@ -20,7 +20,7 @@ SleepECG requires Python ≥ 3.8 and the following packages:
 Optional dependencies provide additional features:
 
 - [joblib](https://joblib.readthedocs.io/en/latest/) ≥ 1.0.0 (parallelized feature extraction)
-- [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot hypnograms and confusion matrices)
+- [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot ECG time courses, hypnograms, and confusion matrices)
 - [mne](https://mne.tools/stable/index.html) ≥ 1.0.0 (read data from [MESA](https://sleepdata.org/datasets/mesa) and [SHHS](https://sleepdata.org/datasets/shhs))
 - [numba](https://numba.pydata.org/) ≥ 0.55.0 (JIT-compiled heartbeat detector)
 - [pandas](https://pandas.pydata.org/) ≥ 1.4.0 (read data from [GUDB](https://berndporr.github.io/ECG-GUDB))
