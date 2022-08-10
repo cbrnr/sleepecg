@@ -9,11 +9,8 @@ from typing import Optional, List
 
 import numpy as np
 
-from .classification import _merge_sleep_stages, _SLEEP_STAGE_MAPPING, _STAGE_NAMES
 from .io.sleep_readers import SleepRecord, SleepStage
 from .utils import _time_to_sec
-
-_STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items()}
 
 
 def plot_ecg(
@@ -107,6 +104,8 @@ def plot_hypnogram(
     """
     import matplotlib.dates as mdates
     import matplotlib.pyplot as plt
+
+    from .classification import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES
 
     stages_pred_probs = None
     num_subplots = 1

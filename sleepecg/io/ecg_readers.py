@@ -43,6 +43,17 @@ class ECGRecord:
     lead: Optional[str] = None
     id: Optional[str] = None
 
+    def export(self, filename: Union[str, Path]) -> None:
+        """
+        Export to CSV.
+
+        Parameters
+        ----------
+        filename : str | pathlib.Path
+            File name to write to.
+        """
+        export_ecg_record(self, filename)
+
     def plot(self, *args: Optional[np.ndarray]) -> None:
         """
         Plot ECG record.
@@ -57,7 +68,7 @@ class ECGRecord:
 
 def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
     """
-    Export record to a CSV file.
+    Export record to CSV.
 
     Parameters
     ----------

@@ -58,6 +58,7 @@ _SLEEP_STAGE_MAPPING = {
 }
 
 _STAGE_NAMES = {m: m.upper().split("-")[::-1] for m in _SLEEP_STAGE_MAPPING}
+_STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items()}
 
 
 def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.ndarray]:
