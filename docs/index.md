@@ -63,3 +63,6 @@ pip install git+https://github.com/cbrnr/sleepecg
 
 ## Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
+
+## Acknowledgments
+This website is made with [Sphinx](https://www.sphinx-doc.org/) and the [Furo](https://github.com/pradyunsg/furo) theme.
