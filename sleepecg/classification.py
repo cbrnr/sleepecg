@@ -17,7 +17,6 @@ import yaml
 from .config import get_config
 from .feature_extraction import extract_features
 from .io.sleep_readers import SleepRecord, SleepStage
-from .plot import _plot_confusion_matrix
 
 # Classifiers don't always discriminate between all sleep stages defined by the AASM
 # guidelines. This dictionary is used to create a consistent mapping from groups of AASM
@@ -471,8 +470,7 @@ def evaluate(
     Evaluate the performance of a sleep stage classifier.
 
     Prints overall accuracy, Cohen's kappa, confusion matrix and per-class precision, recall
-    and F1 score. In an interactive environment, the confusion matrix is additionally shown
-    as a labeled plot.
+    and F1 score.
 
     Parameters
     ----------
@@ -488,8 +486,15 @@ def evaluate(
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
     show_undefined : bool, optional
-        If `True`, include `SleepStage.UNDEFINED` (i.e `0`) in the confusion matrix output
-        and plot. This can be helpful during debugging. By default `False`.
+        If `True`, include `SleepStage.UNDEFINED` (i.e `0`) in the confusion matrix output.
+        This can be helpful during debugging. By default `False`.
+
+    Returns
+    -------
+    conf_mat : np.ndarray
+        Confusion matrix.
+    stage_names : list[str]
+        Sleep stage names.
     """
     stage_names = _STAGE_NAMES[stages_mode]
 
@@ -507,10 +512,8 @@ def evaluate(
 
     print(f"Confusion matrix ({stages_mode.upper()}):")
     if show_undefined:
-        _plot_confusion_matrix(confmat_full, ["UNDEFINED"] + stage_names)
         print(confmat_full)
     else:
-        _plot_confusion_matrix(confmat, stage_names)
         print(confmat)
 
     kappa = _cohen_kappa(confmat)
@@ -533,6 +536,8 @@ def evaluate(
             f"{support[i]:11}"
         )
     print(f"{support.sum():47}")
+
+    return confmat_full, stage_names
 
 
 def stage(
