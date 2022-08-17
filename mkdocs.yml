@@ -47,4 +47,5 @@ plugins:
             line_length: 92
             show_root_heading: true
 extra_css:
+  - css/extra.css
   - css/mkdocstrings.css
