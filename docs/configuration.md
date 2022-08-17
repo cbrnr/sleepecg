@@ -1,6 +1,6 @@
 # Configuration
 SleepECG provides an interface to set and persist global configuration values. See
-{func}`sleepecg.get_config` and {func}`sleepecg.set_config` for usage instructions.
+[`sleepecg.get_config()`][sleepecg.get_config] and [`sleepecg.set_config()`][sleepecg.set_config] for usage instructions.
 
 This table lists the possible configuration settings and where they are used:
 

@@ -3,7 +3,8 @@ ECG-based sleep staging heavily relies on heartrate variability. Therefore, a re
 
 
 ## Usage
-The function {func}`sleepecg.detect_heartbeats` finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/heartbeat_detection.py).
+The function [`sleepecg.detect_heartbeats()`][sleepecg.detect_heartbeats] finds heartbeats in an unfiltered ECG signal `ecg` with sampling frequency `fs` (in Hz). It returns the indices of all detected heartbeats. A complete example including visualization and performance evaluation is available in [`examples/heartbeat_detection.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/heartbeat_detection.py).
+
 ```python
 from sleepecg import detect_heartbeats
 
@@ -53,7 +54,7 @@ print(f"{len(tp)} TP, {len(fp)} FP, {len(fn)} FN")
 ## Benchmarks
 All code used for performance evaluation is available in [`examples/benchmark/`](https://github.com/cbrnr/sleepecg/tree/main/examples/benchmark). The used package versions are listed in [`requirements-benchmark.txt`](https://github.com/cbrnr/sleepecg/blob/main/examples/benchmark/requirements-benchmark.txt).
 
-We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. Error bars in the plot below correspond to the standard error of the mean. The C backend of our detector is by far the fastest implementation among all tested packages (note that the *y*-axis is logarithmically scaled). Runtime evaluation was performed on an [Intel® Xeon® Prozessor E5-2440 v2](https://ark.intel.com/content/www/us/en/ark/products/75263/intel-xeon-processor-e5-2440-v2-20m-cache-1-90-ghz.html) with 32 GiB RAM. No parallelization was used.
+We evaluated detector runtime using slices of different lengths from [LTDB](https://physionet.org/content/ltdb/1.0.0/) records with at least 20 hours duration. The C backend of our detector is by far the fastest implementation among all tested packages (note that the *y*-axis is logarithmically scaled). Runtime evaluation was performed on an [Intel® Xeon® Prozessor E5-2440 v2](https://ark.intel.com/content/www/us/en/ark/products/75263/intel-xeon-processor-e5-2440-v2-20m-cache-1-90-ghz.html) with 32 GiB RAM. No parallelization was used.
 
 ![LTDB runtimes](./img/ltdb_runtime_logscale.svg)
 

@@ -31,12 +31,12 @@ To do so, please submit a [pull request](https://github.com/cbrnr/sleepecg/pulls
 Make sure it contains the following elements:
 
 - The script required to replicate and validate the classifer (placed in `examples/classifiers`).
-- The classifier itself (saved as a `.zip` file with `save_classifier`) placed in `sleepecg/classifiers`.
+- The classifier itself (saved as a `.zip` file with [`sleepecg.save_classifier()`][sleepecg.save_classifier]) placed in `sleepecg/classifiers`.
 - An entry in the table at the top of this page.
 
 
 ## Sleep stage labels
-Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`SleepStage`](./generated/sleepecg.SleepStage).
+Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`sleepecg.SleepStage`][sleepecg.SleepStage].
 To facilitate working on classifiers which do not discrimate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
 
 - LIGHT: N1 + N2
