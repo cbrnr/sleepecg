@@ -9,9 +9,8 @@ from typing import Optional, List
 
 import numpy as np
 
-from .classification import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES
 from .io.sleep_readers import SleepRecord, SleepStage
-from .utils import _time_to_sec
+from .utils import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES, _time_to_sec
 
 
 def plot_ecg(
