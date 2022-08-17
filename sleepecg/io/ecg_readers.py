@@ -203,7 +203,7 @@ def read_gudb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
-    Lazily reads records from [GUDB (https://berndporr.github.io/ECG-GUDB/).
+    Lazily reads records from [GUDB](https://berndporr.github.io/ECG-GUDB/).
 
     Required files are downloaded if not present in `'<data_dir>/gudb'`.
 

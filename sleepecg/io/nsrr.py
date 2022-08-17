@@ -19,7 +19,7 @@ _nsrr_token = None
 
 def set_nsrr_token(token: str) -> None:
     """
-    Set and verify the NSRR (sleepdata.org) download token.
+    Set and verify the [NSRR](https://sleepdata.org) download token.
 
     Implemented according to the NSRR API documentation:
     https://github.com/nsrr/sleepdata.org/wiki/api-v1-account
@@ -27,7 +27,7 @@ def set_nsrr_token(token: str) -> None:
     Parameters
     ----------
     token : str
-        NSRR (sleepdata.org) download token (get it from https://sleepdata.org/token).
+        NSRR [download token](https://sleepdata.org/token).
     """
     response = requests.get(
         "https://sleepdata.org/api/v1/account/profile.json",
@@ -157,9 +157,9 @@ def download_nsrr(
     data_dir: Union[str, Path] = ".",
 ) -> None:
     """
-    Recursively download files from NSRR (sleepdata.org).
+    Recursively download files from [NSRR](https://sleepdata.org).
 
-    Specify a subfolder and/or a filename-pattern to filter results.
+    Specify a subfolder and/or a filename pattern to filter results.
 
     Implemented according to the NSRR API documentation:
     https://github.com/nsrr/sleepdata.org/wiki/api-v1-datasets#download-a-file
