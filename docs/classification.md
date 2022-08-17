@@ -1,4 +1,3 @@
-(classification)=
 # Classification
 
 ## Included classifiers
@@ -30,6 +29,7 @@ A weaker weighting approach is likely required to find the optimal middle ground
 You are very welcome to add new classifiers to SleepECG!
 To do so, please submit a [pull request](https://github.com/cbrnr/sleepecg/pulls).
 Make sure it contains the following elements:
+
 - The script required to replicate and validate the classifer (placed in `examples/classifiers`).
 - The classifier itself (saved as a `.zip` file with `save_classifier`) placed in `sleepecg/classifiers`.
 - An entry in the table at the top of this page.

@@ -1,4 +1,3 @@
-(configuration)=
 # Configuration
 SleepECG provides an interface to set and persist global configuration values. See
 {func}`sleepecg.get_config` and {func}`sleepecg.set_config` for usage instructions.

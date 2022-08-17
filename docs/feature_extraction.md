@@ -1,4 +1,3 @@
-(feature_extraction)=
 # Feature extraction
 
 ## Heart rate variability features

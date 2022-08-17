@@ -1,18 +1,6 @@
-```{toctree}
-   :hidden:
-
-   Home <self>
-   Datasets <datasets>
-   Heartbeat Detection <heartbeat_detection>
-   Feature Extraction <feature_extraction>
-   Classification <classification>
-   Configuration <configuration>
-   API <api>
-   About <about>
-```
-
 # SleepECG
 SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
+
 - downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes preprocessing, feature extraction, and classification).
@@ -30,6 +18,7 @@ Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.
 
 ## Dependencies
 SleepECG requires Python ≥ 3.8 and the following packages:
+
 - [numpy](http://www.numpy.org/) ≥ 1.20.0
 - [requests](https://requests.readthedocs.io/en/latest/) >= 2.25.0
 - [scipy](https://scipy.org/) ≥ 1.7.0
@@ -37,6 +26,7 @@ SleepECG requires Python ≥ 3.8 and the following packages:
 - [PyYAML](https://pyyaml.org/) >= 5.4.0
 
 Optional dependencies provide additional features:
+
 - [joblib](https://joblib.readthedocs.io/en/latest/) ≥ 1.0.0 (parallelized feature extraction)
 - [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot hypnograms and confusion matrices)
 - [mne](https://mne.tools/stable/index.html) ≥ 1.0.0 (read data from [MESA](https://sleepdata.org/datasets/mesa) and [SHHS](https://sleepdata.org/datasets/shhs))

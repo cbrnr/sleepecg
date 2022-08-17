@@ -1,4 +1,3 @@
-(datasets)=
 # Datasets
 SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified in `data_dir` (by default `~/.sleepecg/datasets`). While all supported [PhysioNet](https://physionet.org/about/database/) datasets are accessible by everyone, the [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access). More reader functions [will be added in the future](https://github.com/cbrnr/sleepecg/issues/35).
 
@@ -20,6 +19,7 @@ SleepECG provides reader functions for various datasets. All required files will
 
 ## NSRR data access
 To gain access to a dataset provided by the [NSRR](https://sleepdata.org), complete the following steps:
+
 - Create an account [here](https://sleepdata.org/join).
 - To create a data access request, either
     - go to the [datasets overview](https://sleepdata.org/datasets/) and click on "Request Data Access" for the desired dataset on the right side, or

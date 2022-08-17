@@ -75,7 +75,7 @@ def read_ltdb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
-    Lazily read records from LTDB (https://physionet.org/content/ltdb/).
+    Lazily read records from [LTDB](https://physionet.org/content/ltdb/).
 
     Parameters
     ----------
@@ -106,7 +106,7 @@ def read_mitdb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
-    Lazily read records from MITDB (https://physionet.org/content/mitdb/).
+    Lazily read records from [MITDB](https://physionet.org/content/mitdb/).
 
     Parameters
     ----------
@@ -203,7 +203,7 @@ def read_gudb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
-    Lazily reads records from GUDB (https://berndporr.github.io/ECG-GUDB/).
+    Lazily reads records from [GUDB (https://berndporr.github.io/ECG-GUDB/).
 
     Required files are downloaded if not present in `'<data_dir>/gudb'`.
 
