@@ -30,54 +30,79 @@ if benchmark == "runtime":
     )
     results["error"] = results["std_runtime"] / np.sqrt(results["n"])
 
-    fig = px.line(
-        results,
-        x="signal_len",
-        y="mean_runtime",
-        error_y="error",
-        color="detector",
-        log_y=True,
-        labels={
-            "signal_len": "signal length in hours",
-            "mean_runtime": "mean runtime in s",
-        },
-        title=f"Mean detector runtime for {db_slug.upper()} (fs={fs}Hz)",
-        width=800,
-        height=600,
-        render_mode="svg",
+    # order by runtime for longest signal, slowest algorithm first
+    maxlen = results["signal_len"].max()
+    order = (
+        results.query(f"signal_len == {maxlen}")
+        .groupby("detector")["mean_runtime"]
+        .mean()
+        .apply(lambda x: 1 / x)  # reverse order
+        .to_dict()
     )
-    fig.update_yaxes(rangemode="tozero")
+    results = results.sort_values(by=["detector", "signal_len"], key=lambda x: x.map(order))
+
+    # each detector should have the same color in each benchmark
+    colors = [px.colors.qualitative.Plotly[i] for i in [0, 1, 7, 5, 8, 4, 2, 3, 9, 6]]
+
+    fig = (
+        px.line(
+            results,
+            x="signal_len",
+            y="mean_runtime",
+            markers=True,
+            color="detector",
+            color_discrete_sequence=colors,
+            log_y=True,
+            labels={
+                "signal_len": "Signal length (hours)",
+                "mean_runtime": "Mean runtime (s)",
+            },
+            title=f"Mean detector runtime for {db_slug.upper()}",
+            width=1000,
+            template="plotly_white",
+        )
+        .update_yaxes(rangemode="tozero")
+        .update_layout(legend_title="")
+    )
     fig.write_image(plot_filepath)
 
 elif benchmark == "metrics":
-    results["recall"] = results["TP"] / (results["TP"] + results["FN"])
     results["precision"] = results["TP"] / (results["TP"] + results["FP"])
+    results["recall"] = results["TP"] / (results["TP"] + results["FN"])
     results["f1"] = 2 / (results["recall"] ** -1 + results["precision"] ** -1)
     fig = (
         px.box(
-            results.melt(id_vars=["detector"], value_vars=["recall", "precision", "f1"]),
+            results.melt(id_vars=["detector"], value_vars=["precision", "recall", "f1"]),
             color="detector",
             y="value",
             labels={"value": ""},
             facet_col="variable",
-            width=1000,
-            height=600,
             title=f"Metrics for {db_slug.upper()}",
+            width=1000,
+            template="plotly_white",
         )
         .update_xaxes(range=[-0.4, 0.4])
-        .update_yaxes(range=[0, 1.01])
+        .update_yaxes(range=[-0.01, 1.01], tick0=0, dtick=0.1)
+        .for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
+        .update_layout(legend_title="")
     )
-    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
-    fig.write_image(plot_filepath, scale=1.5)
+    fig.write_image(plot_filepath)
 
 elif benchmark == "rri_similarity":
-    fig = px.box(
-        results,
-        y="pearsonr",
-        color="detector",
-        title=f"Pearson correlation coefficient for RRI timeseries from {db_slug.upper()}",
-    ).update_yaxes(range=[-1.01, 1.01])
-    fig.write_image(plot_filepath, scale=1.5)
+    fig = (
+        px.box(
+            results,
+            y="pearsonr",
+            color="detector",
+            labels={"pearsonr": "Correlation coefficient"},
+            title=f"Correlation coefficient for RRI timeseries for {db_slug.upper()}",
+            width=1000,
+            template="plotly_white",
+        )
+        .update_yaxes(range=[-1.01, 1.01], tick0=-1, dtick=0.25)
+        .update_layout(legend_title="")
+    )
+    fig.write_image(plot_filepath)
 
 else:
     raise ValueError(f"No plotting strategy defined for {results_filepath}.")
