@@ -4,6 +4,7 @@
 
 ### Changed
 - The detector benchmark example now requires only those packages that are actually used in the benchmark ([#114](https://github.com/cbrnr/sleepecg/pull/114) by [Clemens Brunner](https://github.com/cbrnr))
+- The Pan-Tompkins detector detects flat data at the beginning of a recording to avoid messing up its thresholds ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
 
 ## [0.5.2] - 2022-08-02
 ### Fixed

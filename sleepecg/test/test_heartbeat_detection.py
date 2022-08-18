@@ -16,7 +16,7 @@ from sleepecg import compare_heartbeats, detect_heartbeats
 pytestmark = pytest.mark.c_extension
 ecg = electrocardiogram()
 fs = 360
-y_true = detect_heartbeats(ecg, fs)
+y_true = detect_heartbeats(ecg, fs)  # 478 true peaks
 
 
 def f1_score(y_pred, y_true, max_distance=5):
@@ -50,6 +50,32 @@ def test_rescaling():
         beats = detect_heartbeats(ecg * scale, fs)
         f1 = f1_score(beats, y_true)
         assert f1 == 1, "F1-score after rescaling by {scale} is not 1."
+
+
+def test_flat_data():
+    """Test the impact of flat data on heartbeat detection."""
+    # Flat data at the beginning
+    ecg_pad_beginning = np.pad(ecg, pad_width=(ecg.size, 0), mode="edge")
+    pks_beginning = detect_heartbeats(ecg_pad_beginning, fs)
+    assert f1_score(pks_beginning - ecg.size, y_true) == 1
+
+    # Flat data at the end
+    ecg_pad_end = np.pad(ecg, pad_width=(0, ecg.size), mode="edge")
+    pks_end = detect_heartbeats(ecg_pad_end, fs)
+    assert f1_score(pks_end, y_true) == 1
+
+    # Flat data in the middle
+    ecg_pad_middle = np.hstack((ecg_pad_end, ecg))
+    pks_middle = detect_heartbeats(ecg_pad_middle, fs)
+    assert abs(2 * len(y_true) - len(pks_middle)) < 50
+
+    # Entire recording is flat
+    with pytest.raises(ValueError):
+        detect_heartbeats(np.ones(10000), fs)
+
+    # ecg is empty
+    with pytest.raises(ValueError):
+        detect_heartbeats([], fs)
 
 
 def test_squared_moving_integration_args():
