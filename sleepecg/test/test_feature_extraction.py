@@ -66,12 +66,7 @@ def test_feature_ids():
             [np.nan] * 4,
         ),
         (
-            {
-                "start_time": datetime.time(23, 15, 20),
-                "age": 55,
-                "gender": 1,
-                "weight": 99,
-            },
+            {"start_time": datetime.time(23, 15, 20), "age": 55, "gender": 1, "weight": 99},
             [83720, 55, 1, 99],
         ),
     ],
