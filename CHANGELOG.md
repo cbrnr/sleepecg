@@ -1,7 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ### Added
 - Do not redownload GUDB data sets if they are already stored locally ([#112](https://github.com/cbrnr/sleepecg/pull/112) by [Clemens Brunner](https://github.com/cbrnr))
-- Add `sleepecg.plot_ecg()` and `sleepecg.io.ECGRecord.plot()` for plotting ECG with beat annotations ([#116](https://github.com/cbrnr/sleepecg/pull/116) by [Clemens Brunner](https://github.com/cbrnr))
+- Add `sleepecg.plot_ecg()` and `sleepecg.ECGRecord.plot()` for plotting ECG with beat annotations ([#116](https://github.com/cbrnr/sleepecg/pull/116) by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Changed
 - The detector benchmark example now requires only those packages that are actually used in the benchmark ([#114](https://github.com/cbrnr/sleepecg/pull/114) by [Clemens Brunner](https://github.com/cbrnr))
