@@ -1,6 +1,6 @@
 # Datasets
 
-See [Datasets](datasets.md) for information about available datasets and instructions for retrieving NSRR data.
+See [Datasets](../datasets.md) for information about available datasets and instructions for retrieving NSRR data.
 
 ::: sleepecg.download_nsrr
 ::: sleepecg.download_physionet
