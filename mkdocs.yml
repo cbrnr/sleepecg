@@ -1,0 +1,57 @@
+site_name: SleepECG
+site_url: https://sleepecg.readthedocs.io/
+repo_name: cbrnr/sleepecg
+repo_url: https://github.com/cbrnr/sleepecg
+copyright: © SleepECG Developers
+nav:
+  - Home: index.md
+  - Datasets: datasets.md
+  - Heartbeat detection: heartbeat_detection.md
+  - Feature extraction: feature_extraction.md
+  - Classification: classification.md
+  - Configuration: configuration.md
+  - API:
+    - Datasets: api/datasets.md
+    - Heartbeat detection: api/heartbeat_detection.md
+    - Feature extraction: api/feature_extraction.md
+    - Classification: api/classification.md
+    - Configuration: api/configuration.md
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Use system theme
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light theme
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark theme
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_section_style: list
+            line_length: 92
+            show_root_heading: true
+extra_css:
+  - css/extra.css
+  - css/mkdocstrings.css
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

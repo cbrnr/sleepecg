@@ -1,13 +1,13 @@
 **/__pycache__/
 !/.gitignore
 **/.ipynb_checkpoints/
-**/.vscode
-**/.idea
+.idea
+.vscode
 examples/datasets/
 examples/benchmark/results/
 build
 dist
+site
 *.egg-info
 *.pyd
 *.so
-doc/source/generated/
