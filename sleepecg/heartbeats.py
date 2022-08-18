@@ -102,22 +102,18 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
         warnings.warn(f"Backend {backend!r} not available, using {fallback!r} instead.")
         backend = fallback
 
-    # Check for flat data at the beginning of the recording, which can
-    # mess up the detection thresholds.
-    # https://github.com/cbrnr/sleepecg/issues/87
+    # check for flat data at the beginning to avoid messing up detection thresholds
     if len(ecg) < 2:
-        raise ValueError('ECG signal must have more than one sample.')
+        raise ValueError("ECG signal must have more than one sample.")
     if ecg[1] == ecg[0]:
         idx_nonflat = np.nonzero(ecg != ecg[0])[0]
         if not len(idx_nonflat):
-            raise ValueError('ECG signal is flat. Please check your data.')
-        first_nonflat = idx_nonflat[0]  # First non-flat index
+            raise ValueError("ECG signal is flat. Please check your data.")
+        first_nonflat = idx_nonflat[0]  # first non-flat index
     else:
         first_nonflat = 0
 
-    # For short signals, creating the bandpass filter makes up a large part
-    # of the total runtime. Therefore the filter is cached in a global
-    # variable.
+    # cache filter in global variable to speed up runtime (especially for short signals)
     try:
         sos = _sos_filters[fs]
     except KeyError:

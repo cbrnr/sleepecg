@@ -12,7 +12,7 @@
 ## [0.5.1] - 2022-07-21
 ### Added
 - Add more tests and documentation for the Pan-Tompkins detector ([#89](https://github.com/cbrnr/sleepecg/pull/89) by [Raphael Vallat](https://github.com/raphaelvallat))
-- Better handling of flat data for the Pan-Tompkins detector ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
+- The Pan-Tompkins detector detects flat data at the beginning of a recording to avoid messing up its thresholds ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
 
 ### Changed
 - The `preprocess_rri` function no longer operates in-place and instead returns a copy of the input array ([#91](https://github.com/cbrnr/sleepecg/pull/91) by [Raphael Vallat](https://github.com/raphaelvallat))

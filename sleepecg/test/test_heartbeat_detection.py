@@ -55,17 +55,17 @@ def test_rescaling():
 def test_flat_data():
     """Test the impact of flat data on heartbeat detection."""
     # Flat data at the beginning
-    ecg_pad_before = np.pad(ecg, pad_width=(ecg.size, 0), mode='edge')
-    pks_before = detect_heartbeats(ecg_pad_before, fs)
-    assert f1_score(pks_before - ecg.size, y_true) == 1
+    ecg_pad_beginning = np.pad(ecg, pad_width=(ecg.size, 0), mode="edge")
+    pks_beginning = detect_heartbeats(ecg_pad_beginning, fs)
+    assert f1_score(pks_beginning - ecg.size, y_true) == 1
 
     # Flat data at the end
-    ecg_pad_after = np.pad(ecg, pad_width=(0, ecg.size), mode='edge')
-    pks_after = detect_heartbeats(ecg_pad_after, fs)
-    assert f1_score(pks_after, y_true) == 1
+    ecg_pad_end = np.pad(ecg, pad_width=(0, ecg.size), mode="edge")
+    pks_end = detect_heartbeats(ecg_pad_end, fs)
+    assert f1_score(pks_end, y_true) == 1
 
     # Flat data in the middle
-    ecg_pad_middle = np.hstack((ecg_pad_after, ecg))
+    ecg_pad_middle = np.hstack((ecg_pad_end, ecg))
     pks_middle = detect_heartbeats(ecg_pad_middle, fs)
     assert abs(2 * len(y_true) - len(pks_middle)) < 50
 
