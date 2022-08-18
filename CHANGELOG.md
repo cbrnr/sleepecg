@@ -4,6 +4,7 @@
 
 ### Changed
 - The detector benchmark example now requires only those packages that are actually used in the benchmark ([#114](https://github.com/cbrnr/sleepecg/pull/114) by [Clemens Brunner](https://github.com/cbrnr))
+- The Pan-Tompkins detector detects flat data at the beginning of a recording to avoid messing up its thresholds ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
 
 ## [0.5.2] - 2022-08-02
 ### Fixed
@@ -12,7 +13,6 @@
 ## [0.5.1] - 2022-07-21
 ### Added
 - Add more tests and documentation for the Pan-Tompkins detector ([#89](https://github.com/cbrnr/sleepecg/pull/89) by [Raphael Vallat](https://github.com/raphaelvallat))
-- The Pan-Tompkins detector detects flat data at the beginning of a recording to avoid messing up its thresholds ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
 
 ### Changed
 - The `preprocess_rri` function no longer operates in-place and instead returns a copy of the input array ([#91](https://github.com/cbrnr/sleepecg/pull/91) by [Raphael Vallat](https://github.com/raphaelvallat))
