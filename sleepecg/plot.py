@@ -5,7 +5,7 @@
 """Plotting functions."""
 
 from itertools import cycle
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -16,7 +16,7 @@ from .utils import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES, _time_to_sec
 def plot_ecg(
     ecg: np.ndarray,
     fs: float,
-    title: str = None,
+    title: Optional[str] = None,
     **kwargs: np.ndarray,
 ) -> None:
     """
