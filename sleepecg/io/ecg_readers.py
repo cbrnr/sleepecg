@@ -54,16 +54,16 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, *args: Optional[np.ndarray]) -> None:
+    def plot(self, **kwargs: np.ndarray) -> None:
         """
         Plot ECG record.
 
         Parameters
         ----------
-        *args : np.ndarray, optional
+        **kwargs : np.ndarray
             Additional annotations to be plotted with different markers.
         """
-        return plot_ecg(self.ecg, self.fs, self.annotation, *args, title=self.id)
+        return plot_ecg(self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs)
 
 
 def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:

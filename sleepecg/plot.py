@@ -5,7 +5,7 @@
 """Plotting functions."""
 
 from itertools import cycle
-from typing import Optional, List
+from typing import List
 
 import numpy as np
 
@@ -16,9 +16,8 @@ from .utils import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES, _time_to_sec
 def plot_ecg(
     ecg: np.ndarray,
     fs: float,
-    annotations: Optional[np.ndarray] = None,
-    *args: Optional[np.ndarray],
     title: str = None,
+    **kwargs: np.ndarray,
 ) -> None:
     """
     Plot ECG time series with optional markers.
@@ -29,42 +28,54 @@ def plot_ecg(
         ECG signal.
     fs : float
         Sampling frequency of the ECG signal in Hz.
-    annotations : np.ndarray, optional
-        Positions of annotations (i.e. heartbeats) in samples.
-    *args : np.ndarray, optional
-        Additional annotations to be plotted with different markers.
     title : str, optional
         Title of the plot.
+    **kwargs : np.ndarray
+        Positions of annotations (i.e. heartbeats) in samples. If more than one marker
+        sequence is given, the keywords will be used as labels in the plot legend.
+
+    Examples
+    --------
+    Plot ECG without any annotations:
+
+    >>> plot(ecg, fs)
+
+    Plot ECG with one set of annotations and a title:
+
+    >>> plot(ecg, fs, title="ECG", markers=annotations)
+
+    Plot ECG with two sets of annotations:
+
+    >>> plot(ecg, fs, marker1=annotations, marker2=heartbeats)
+
+    The last example will create two annotation series, the first one labeled `marker1` with
+    positions given by `annotations`, and the second one labeled `marker2` with positions
+    given by `heartbeats`.
     """
     import matplotlib.pyplot as plt
     from matplotlib.cm import get_cmap
 
     t = np.arange(0, len(ecg) / fs, 1 / fs)
     _, ax = plt.subplots()
-    ax.plot(t, ecg, color="dimgray")
+    ax.plot(t, ecg, color="dimgray", label=None)
     ax.set_xlabel("Time (s)")
-    if annotations is not None:
-        ax.plot(
-            t[annotations],
-            ecg[annotations],
-            marker="*",
-            markeredgecolor="green",
-            markerfacecolor="None",
-            linestyle="",
-        )
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    colors = cycle(get_cmap("Set1").colors)
-    markers = cycle(("o", "s", "D", "v", "<", ">", "^", "p", "X"))
-    for arg, color, marker in zip(args, colors, markers):
+    colors = cycle(get_cmap("tab10").colors)
+    markers = cycle(("*", "o", "s", "D", "v", "<", ">", "^", "X", "p"))
+    for label, pos, color, marker in zip(kwargs.keys(), kwargs.values(), colors, markers):
         ax.plot(
-            t[arg],
-            ecg[arg],
+            t[pos],
+            ecg[pos],
             marker=marker,
             markeredgecolor=color,
             markerfacecolor="None",
             linestyle="",
+            label=label,
         )
+    if len(kwargs) >= 2:  # add legend if there are at least two sequences of annotations
+        plt.legend()
     if title is not None:
         ax.set_title(title)
 
