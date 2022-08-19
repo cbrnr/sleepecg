@@ -246,7 +246,7 @@ def read_gudb(
                     ecg_file_url = f"{DB_URL}/{experiment_subdir}/{tsv_filename}"
                     target_filepath = db_dir / experiment_subdir / tsv_filename
                     try:
-                        checksum = GUDB_MD5[str(Path(experiment_subdir) / tsv_filename)]
+                        checksum = GUDB_MD5[f"{experiment_subdir}/{tsv_filename}"]
                     except KeyError:
                         pass  # file not available
                     else:
