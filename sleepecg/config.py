@@ -49,11 +49,10 @@ def get_config(key: Optional[str] = None) -> Any:
     """
     config = _read_yaml(_DEFAULT_CONFIG_PATH)
     user_config = _read_yaml(_USER_CONFIG_PATH)
-    for key in user_config:
-        if key not in config:
-            raise ValueError(
-                f"Invalid key found in user config at {_USER_CONFIG_PATH}: {key}"
-            )
+    if invalid_keys := set(user_config) - set(config):
+        raise ValueError(
+            f"Invalid key(s) found in user config at {_USER_CONFIG_PATH}: {invalid_keys}"
+        )
     config.update(user_config)
 
     if key is None:

@@ -7,6 +7,9 @@
 - The Pan-Tompkins detector detects flat data at the beginning of a recording to avoid messing up its thresholds ([#87](https://github.com/cbrnr/sleepecg/pull/87) by [Raphael Vallat](https://github.com/raphaelvallat))
 - Switch documentation from Sphinx to MkDocs ([#119](https://github.com/cbrnr/sleepecg/pull/119) by [Clemens Brunner](https://github.com/cbrnr))
 
+### Fixed
+- Fix bug where setting user config values lets `get_config`retrieve the wrong key ([#123](https://github.com/cbrnr/sleepecg/pull/123) by [Florian Hofer](https://github.com/hofaflo))
+
 ## [0.5.2] - 2022-08-02
 ### Fixed
 - Include classifiers and tests ([#104](https://github.com/cbrnr/sleepecg/pull/104) by [Clemens Brunner](https://github.com/cbrnr))

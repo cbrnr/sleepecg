@@ -27,10 +27,13 @@ def temp_test_config(tmp_path):
 def test_get_set_del_config():
     """Test setting, getting and deleting a setting."""
     assert get_config("data_dir") == "~/.sleepecg/datasets"
+    assert get_config("classifiers_dir") == "~/.sleepecg/classifiers"
     set_config(data_dir="some_dir")
     assert get_config("data_dir") == "some_dir"
+    assert get_config("classifiers_dir") == "~/.sleepecg/classifiers"
     set_config(data_dir=None)
     assert get_config("data_dir") == "~/.sleepecg/datasets"
+    assert get_config("classifiers_dir") == "~/.sleepecg/classifiers"
 
 
 def test_set_invalid_config():
