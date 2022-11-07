@@ -8,7 +8,7 @@
 - Switch documentation from Sphinx to MkDocs ([#119](https://github.com/cbrnr/sleepecg/pull/119) by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Fixed
-- Fix bug where setting user config values lets `get_config`retrieve the wrong key ([#123](https://github.com/cbrnr/sleepecg/pull/123) by [Florian Hofer](https://github.com/hofaflo))
+- Fix bug where setting user config values lets `get_config` retrieve the wrong key ([#123](https://github.com/cbrnr/sleepecg/pull/123) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.5.2] - 2022-08-02
 ### Fixed
