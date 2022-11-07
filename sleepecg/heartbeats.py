@@ -130,11 +130,6 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     # filtering the signal at the first non-flat index.
     filtered_ecg = scipy.signal.sosfiltfilt(sos, ecg[first_nonflat:])
 
-    # Set everything until the first zero-crossing to zero. For efficiency, only the first 2
-    # seconds are checked.
-    signal_start = np.where(np.diff(np.signbit(filtered_ecg[: int(2 * fs)])))[0][0] + 1
-    filtered_ecg[:signal_start] = 0
-
     # scipy.signal.sosfiltfilt returns an array with negative strides. Both `np.correlate`
     # and `_thresholding` require contiguity, so ensuring this here once reduces total
     # runtime.
