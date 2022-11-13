@@ -18,7 +18,7 @@ def plot_ecg(
     fs: float,
     title: Optional[str] = None,
     **kwargs: np.ndarray,
-) -> None:
+):
     """
     Plot ECG time series with optional markers.
 
@@ -33,6 +33,13 @@ def plot_ecg(
     **kwargs : np.ndarray
         Positions of annotations (i.e. heartbeats) in samples. If more than one marker
         sequence is given, the keywords will be used as labels in the plot legend.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure.
+    ax : matplotlib.axes.Axes
+        The axes in the figure.
 
     Examples
     --------
@@ -56,7 +63,7 @@ def plot_ecg(
     from matplotlib.cm import get_cmap
 
     t = np.arange(0, len(ecg) / fs, 1 / fs)
-    _, ax = plt.subplots()
+    fig, ax = plt.subplots()
     ax.plot(t, ecg, color="dimgray", label=None)
     ax.set_xlabel("Time (s)")
 
@@ -79,6 +86,8 @@ def plot_ecg(
     if title is not None:
         ax.set_title(title)
 
+    return fig, ax
+
 
 def plot_hypnogram(
     record: SleepRecord,
@@ -87,7 +96,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-) -> None:
+):
     """
     Plot a hypnogram for a single record.
 
@@ -112,6 +121,13 @@ def plot_hypnogram(
     show_bpm : bool, optional
         If `True`, include a subplot of the heart rate in bpm. This can be helpful to find
         bad signal quality intervals, by default `False`.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure.
+    ax : array of matplotlib.axes.Axes
+        The axes in the figure.
     """
     import matplotlib.dates as mdates
     import matplotlib.pyplot as plt
@@ -129,7 +145,7 @@ def plot_hypnogram(
 
     start_time = _time_to_sec(record.recording_start_time)
 
-    _, ax = plt.subplots(num_subplots, sharex=True, figsize=(7, 4))
+    fig, ax = plt.subplots(num_subplots, sharex=True, figsize=(7, 4))
 
     # predicted stages
     t_stages_pred = np.arange(len(stages_pred)) * stages_pred_duration + start_time
@@ -196,8 +212,10 @@ def plot_hypnogram(
         ax[-1].set_xlabel("time of day in hours")
     ax[-1].set_xlim(t_stages_pred[0], t_stages_pred[-1])
 
+    return fig, ax
 
-def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]) -> None:
+
+def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]):
     """
     Create a labeled plot of a confusion matrix.
 
@@ -207,12 +225,19 @@ def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]) -> None:
         A confusion matrix, as returned by :func:`confusion_matrix`.
     stage_names : list[str]
         Class labels which are used as tick labels.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure.
+    ax : matplotlib.axes.Axes
+        The axes in the figure.
     """
     import matplotlib.pyplot as plt
 
     classes = np.arange(len(confmat))
 
-    _, ax = plt.subplots()
+    fig, ax = plt.subplots()
     ax.imshow(confmat, cmap="Blues", vmin=0, vmax=confmat[1:, 1:].max())
     for i in range(len(stage_names)):
         for j in range(len(stage_names)):
@@ -226,3 +251,5 @@ def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]) -> None:
     ax.set_yticklabels(stage_names)
     ax.xaxis.set_label_position("top")
     ax.xaxis.tick_top()
+
+    return fig, ax

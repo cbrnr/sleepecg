@@ -9,14 +9,14 @@ nav:
   - Heartbeat detection: heartbeat_detection.md
   - Feature extraction: feature_extraction.md
   - Classification: classification.md
-  - Plotting: plotting.md
+  - Plotting: plot.md
   - Configuration: configuration.md
   - API:
     - Datasets: api/datasets.md
     - Heartbeat detection: api/heartbeat_detection.md
     - Feature extraction: api/feature_extraction.md
     - Classification: api/classification.md
-    - Plotting: api/plotting.md
+    - Plotting: api/plot.md
     - Configuration: api/configuration.md
 theme:
   name: material
