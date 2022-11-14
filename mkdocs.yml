@@ -43,6 +43,7 @@ theme:
     - toc.integrate
 plugins:
   - mkdocstrings:
+      custom_templates: templates
       handlers:
         python:
           options:
