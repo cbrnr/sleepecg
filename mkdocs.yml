@@ -43,14 +43,14 @@ theme:
     - toc.integrate
 plugins:
   - mkdocstrings:
-      - custom_templates: templates
-      - handlers:
-          python:
-            options:
-              docstring_style: numpy
-              docstring_section_style: list
-              line_length: 92
-              show_root_heading: true
+      custom_templates: docs/templates
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_section_style: list
+            line_length: 92
+            show_root_heading: true
 extra_css:
   - css/extra.css
   - css/mkdocstrings.css
