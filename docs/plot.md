@@ -37,3 +37,23 @@ record.plot()
 This results in a similar plot, this time with only one type of annotation (which is contained in the record). By passing additional annotations as arguments, more annotations can be plotted as well.
 
 ![ECG record visualization](./img/ecgrecord_plot.svg)
+
+## Hypnogram
+A hypnogram shows annotated and/or predicted sleep stages over time. The following example demonstrates how to create this visualization:
+
+```python
+import sleepecg
+
+record = next(sleepecg.read_slpdb("*41*"))
+sleepecg.plot_hypnogram(
+    record,
+    record.sleep_stages,  # our predictions
+    "wake-rem-n1-n2-n3",
+    merge_annotations=True,
+    show_bpm=True
+)
+```
+
+![Hypnogram](./img/hypnogram.svg)
+
+Note that we cheated in this example, because we used the annotated sleep stages as our predictions, which results in two identical hypnograms (upper and middle panels). The heart rate in the lower panel is useful to detect segments with bad signal quality.
