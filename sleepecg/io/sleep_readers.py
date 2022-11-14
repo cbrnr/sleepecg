@@ -24,7 +24,14 @@ class SleepStage(IntEnum):
     """
     Mapping of AASM sleep stages to integers.
 
-    To facilitate hypnogram plotting, values increase with wakefulness.
+    To facilitate hypnogram plotting, values increase with wakefulness as follows:
+
+    0. UNDEFINED
+    1. N3
+    2. N2
+    3. N1
+    4. REM
+    5. WAKE
     """
 
     WAKE = 5
