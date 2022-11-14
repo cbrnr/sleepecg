@@ -26,20 +26,13 @@ class SleepStage(IntEnum):
 
     To facilitate hypnogram plotting, values increase with wakefulness.
     """
-
-    # The docstrings here make the values show up in the docs
+    
     WAKE = 5
-    """5"""
     REM = 4
-    """4"""
     N1 = 3
-    """3"""
     N2 = 2
-    """2"""
     N3 = 1
-    """1"""
     UNDEFINED = 0
-    """0"""
 
 
 class Gender(IntEnum):
