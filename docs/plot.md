@@ -29,7 +29,12 @@ fs = 360
 ecg = electrocardiogram()[:10 * fs]
 beats = sleepecg.detect_heartbeats(ecg, fs)
 
-record = sleepecg.ECGRecord(ecg, fs, beats, id="scipy.misc.electrocardiogram()")
+record = sleepecg.ECGRecord(
+    ecg,
+    fs,
+    beats,
+    id="scipy.misc.electrocardiogram()",
+)
 
 record.plot()
 ```
@@ -47,10 +52,10 @@ import sleepecg
 record = next(sleepecg.read_slpdb("*41*"))
 sleepecg.plot_hypnogram(
     record,
-    record.sleep_stages,  # our predictions
+    record.sleep_stages,
     "wake-rem-n1-n2-n3",
     merge_annotations=True,
-    show_bpm=True
+    show_bpm=True,
 )
 ```
 
