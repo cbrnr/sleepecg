@@ -717,8 +717,8 @@ def extract_features(
         in `feature_selection` are expanded to all individual features they contain. The
         order matches the column order of `X`.
 
-    Notes
-    -----
+    References
+    ----------
     .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
        standards of measurement, physiological interpretation and clinical use. Circulation,
        93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
