@@ -26,7 +26,7 @@ class SleepStage(IntEnum):
 
     To facilitate hypnogram plotting, values increase with wakefulness.
     """
-    
+
     WAKE = 5
     REM = 4
     N1 = 3
