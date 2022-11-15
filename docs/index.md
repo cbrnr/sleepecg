@@ -5,13 +5,8 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes preprocessing, feature extraction, and classification).
 
-## Overview
-- [Datasets](./datasets) shows all available datasets and instructions for retrieving NSRR data.
-- [Heartbeat Detection](./heartbeat_detection) demonstrates how to use the included heartbeat detector and shows benchmark results.
-- [Feature Extraction](./feature_extraction) lists all implemented HRV features.
-- [Classification](./classification) describes the included sleep stage classifiers and how to use the classification API.
-- [Configuration](./configuration) explains configuration settings in SleepECG.
-- [API](./api) has detailed information about all public functions and classes in SleepECG.
+## Documentation
+Documentation for SleepECG is available on [Read the Docs](https://sleepecg.readthedocs.io/en/stable/index.html).
 
 ## Changelog
 Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) to learn what we added, changed, or fixed.
@@ -20,15 +15,15 @@ Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.
 SleepECG requires Python ≥ 3.8 and the following packages:
 
 - [numpy](http://www.numpy.org/) ≥ 1.20.0
-- [requests](https://requests.readthedocs.io/en/latest/) >= 2.25.0
+- [requests](https://requests.readthedocs.io/en/latest/) ≥ 2.25.0
 - [scipy](https://scipy.org/) ≥ 1.7.0
-- [tqdm](https://tqdm.github.io/) >= 4.60.0
-- [PyYAML](https://pyyaml.org/) >= 5.4.0
+- [tqdm](https://tqdm.github.io/) ≥ 4.60.0
+- [PyYAML](https://pyyaml.org/) ≥ 5.4.0
 
 Optional dependencies provide additional features:
 
 - [joblib](https://joblib.readthedocs.io/en/latest/) ≥ 1.0.0 (parallelized feature extraction)
-- [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot hypnograms and confusion matrices)
+- [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot ECG time courses, hypnograms, and confusion matrices)
 - [mne](https://mne.tools/stable/index.html) ≥ 1.0.0 (read data from [MESA](https://sleepdata.org/datasets/mesa) and [SHHS](https://sleepdata.org/datasets/shhs))
 - [numba](https://numba.pydata.org/) ≥ 0.55.0 (JIT-compiled heartbeat detector)
 - [pandas](https://pandas.pydata.org/) ≥ 1.4.0 (read data from [GUDB](https://berndporr.github.io/ECG-GUDB))

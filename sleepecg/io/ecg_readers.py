@@ -14,6 +14,7 @@ from tqdm import tqdm
 from ..config import get_config
 from .gudb import GUDB_MD5
 from .physionet import _list_physionet, download_physionet
+from ..plot import plot_ecg
 from .utils import _download_file
 
 
@@ -42,10 +43,40 @@ class ECGRecord:
     lead: Optional[str] = None
     id: Optional[str] = None
 
+    def export(self, filename: Union[str, Path]) -> None:
+        """
+        Export to CSV.
+
+        Parameters
+        ----------
+        filename : str | pathlib.Path
+            File name to write to.
+        """
+        export_ecg_record(self, filename)
+
+    def plot(self, **kwargs: np.ndarray):
+        """
+        Plot ECG time series with optional markers.
+
+        Parameters
+        ----------
+        **kwargs : np.ndarray
+            Positions of annotations (i.e. heartbeats) in samples. If more than one marker
+            sequence is given, the keywords will be used as labels in the plot legend.
+
+        Returns
+        -------
+        fig : matplotlib.figure.Figure
+            The figure.
+        ax : matplotlib.axes.Axes
+            The axes in the figure.
+        """
+        return plot_ecg(self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs)
+
 
 def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
     """
-    Export record to a CSV file.
+    Export record to CSV.
 
     Parameters
     ----------
