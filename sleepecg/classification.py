@@ -246,8 +246,8 @@ def load_classifier(
     """
     Load a `SleepClassifier` from disk.
 
-    This functions reads `.zip` files saved by `sleepecg.save_classifier`. Pass `'SleepECG'`
-    as the second argument to load a classifier bundled with SleepECG.
+    This functions reads `.zip` files saved by `save_classifier`. Pass `'SleepECG'` as the
+    second argument to load a classifier bundled with SleepECG.
 
     Parameters
     ----------
@@ -262,7 +262,7 @@ def load_classifier(
     -------
     SleepClassifier
         Contains the model and metadata required for feature extraction and preprocessing.
-        Can be passed to `sleepecg.stage`.
+        Can be passed to `stage`.
 
     See Also
     --------
@@ -402,12 +402,12 @@ def evaluate(
     Parameters
     ----------
     stages_true : np.ndarray
-        The annotated ('ground truth') sleep stages as a 2d-array of shape
-        `(n_records, n_samples)` containing integer class labels or a 3d-array of shape
+        The annotated (ground truth) sleep stages as a 2D array of shape
+        `(n_records, n_samples)` containing integer class labels, or a 3D array of shape
         `(n_records, n_samples, n_classes)` containing one-hot encoded class labels.
     stages_pred : np.ndarray
-        The predicted sleep stages as a 2d-array of shape `(n_records, n_samples)`
-        containing integer class labels or a 3d-array of shape
+        The predicted sleep stages as a 2D array of shape `(n_records, n_samples)`
+        containing integer class labels, or a 3D array of shape
         `(n_records, n_samples, n_classes)` containing class probabilities.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
