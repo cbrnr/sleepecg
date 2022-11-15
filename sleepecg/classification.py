@@ -246,8 +246,8 @@ def load_classifier(
     """
     Load a `SleepClassifier` from disk.
 
-    This functions reads `.zip` files saved by :func:`save_classifier`. Pass `'SleepECG'` as
-    a second argument to load a classifier bundled with SleepECG.
+    This functions reads `.zip` files saved by `sleepecg.save_classifier`. Pass `'SleepECG'`
+    as the second argument to load a classifier bundled with SleepECG.
 
     Parameters
     ----------
@@ -262,7 +262,7 @@ def load_classifier(
     -------
     SleepClassifier
         Contains the model and metadata required for feature extraction and preprocessing.
-        Can be passed to :func:`stage`.
+        Can be passed to `sleepecg.stage`.
 
     See Also
     --------
@@ -301,8 +301,6 @@ def load_classifier(
 def list_classifiers(classifiers_dir: Optional[Union[str, Path]] = None) -> None:
     """
     Show information about available classifiers.
-
-    Pass `'SleepECG'` as a second argument to list the classifiers bundled with SleepECG.
 
     Parameters
     ----------
