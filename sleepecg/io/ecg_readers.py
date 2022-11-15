@@ -54,14 +54,22 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, **kwargs: np.ndarray) -> None:
+    def plot(self, **kwargs: np.ndarray):
         """
-        Plot ECG record.
+        Plot ECG time series with optional markers.
 
         Parameters
         ----------
         **kwargs : np.ndarray
-            Additional annotations to be plotted with different markers.
+            Positions of annotations (i.e. heartbeats) in samples. If more than one marker
+            sequence is given, the keywords will be used as labels in the plot legend.
+
+        Returns
+        -------
+        fig : matplotlib.figure.Figure
+            The figure.
+        ax : matplotlib.axes.Axes
+            The axes in the figure.
         """
         return plot_ecg(self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs)
 
