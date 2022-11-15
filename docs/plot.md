@@ -54,7 +54,6 @@ sleepecg.plot_hypnogram(
     record,
     record.sleep_stages,
     "wake-rem-n1-n2-n3",
-    merge_annotations=True,
     show_bpm=True,
 )
 ```
