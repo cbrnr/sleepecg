@@ -20,7 +20,9 @@ A weaker weighting approach is likely required to find the optimal middle ground
 
 
 ## Usage examples
-The example [`try_ws_gru_mesa.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/try_ws_gru_mesa.py) demonstrates how to use the WAKE-SLEEP classifier `ws-gru-mesa`, a GRU-based classifier bundled with SleepECG which was trained on 1971 nights of the [MESA](https://sleepdata.org/datasets/mesa/) dataset.
+|File|Description|
+|-|-|
+|[`try_ws_gru_mesa.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/try_ws_gru_mesa.py)|This example demonstrates how to use the WAKE-SLEEP classifier `ws-gru-mesa`, a GRU-based classifier bundled with SleepECG which was trained on 1971 nights of the [MESA](https://sleepdata.org/datasets/mesa/) dataset.|
 
 
 ## Contributing
