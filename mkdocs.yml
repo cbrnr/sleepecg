@@ -46,6 +46,8 @@ plugins:
       custom_templates: docs/templates
       handlers:
         python:
+          import:
+          - https://numpy.org/doc/stable/objects.inv
           options:
             docstring_style: numpy
             docstring_section_style: list
