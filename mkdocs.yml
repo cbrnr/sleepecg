@@ -39,6 +39,8 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to dark theme
+  features:
+    - toc.integrate
 plugins:
   - mkdocstrings:
       handlers:
