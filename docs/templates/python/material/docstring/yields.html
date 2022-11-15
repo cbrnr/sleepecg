@@ -1,0 +1,19 @@
+{% extends "_base/docstring/yields.html" %}
+{% block list_style %}
+<p><b>{{ section.title or "Yields:" }}</b></p>
+<ul>
+{% for yields in section.value %}
+    <li class="field-body">
+    {% if yields.name %}<code>{{ yields.name }}</code>{% endif %}
+    {% if yields.annotation %}
+        {% with expression = yields.annotation %}
+        {% if yields.name %}({% endif %}
+        <code>{% include "expression.html" with context %}</code>
+        {% if yields.name %}){% endif %}
+        {% endwith %}
+    {% endif %}
+    – {{ yields.description|convert_markdown(heading_level, html_id) }}
+    </li>
+{% endfor %}
+</ul>
+{% endblock list_style %}
