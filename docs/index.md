@@ -20,10 +20,10 @@ Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.
 SleepECG requires Python ≥ 3.8 and the following packages:
 
 - [numpy](http://www.numpy.org/) ≥ 1.20.0
-- [requests](https://requests.readthedocs.io/en/latest/) ≥ 2.25.0
+- [requests](https://requests.readthedocs.io/en/latest/) >= 2.25.0
 - [scipy](https://scipy.org/) ≥ 1.7.0
-- [tqdm](https://tqdm.github.io/) ≥ 4.60.0
-- [PyYAML](https://pyyaml.org/) ≥ 5.4.0
+- [tqdm](https://tqdm.github.io/) >= 4.60.0
+- [PyYAML](https://pyyaml.org/) >= 5.4.0
 
 Optional dependencies provide additional features:
 
