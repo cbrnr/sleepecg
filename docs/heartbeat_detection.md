@@ -1,5 +1,5 @@
 # Heartbeat detection
-ECG-based sleep staging heavily relies on heartrate variability. Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast whereas the pure Python implementation is much slower).
+ECG-based sleep staging heavily relies on [heartrate variability](https://en.wikipedia.org/wiki/Heart_rate_variability). Therefore, a reliable and efficient heartbeat detector is essential. SleepECG provides a detector based on the approach described by [Pan & Tompkins (1985)](https://doi.org/10.1109/TBME.1985.325532). We outsourced performance-critical code to a C extension, which makes the detector substantially faster than other existing Python implementations. However, we also provide Numba and pure Python backends (the Numba backend is almost as fast, whereas the pure Python implementation is much slower).
 
 
 ## Usage
@@ -8,14 +8,14 @@ The function [`detect_heartbeats()`][sleepecg.detect_heartbeats] finds heartbeat
 ```python
 from sleepecg import detect_heartbeats
 
-detection = detect_heartbeats(ecg, fs)
+beats = detect_heartbeats(ecg, fs)
 ```
 
-For best results, we recommend a sampling frequency of at least 100 Hz. The algorithm will return similar results regardless of the scaling of the data.
+For best results, we recommend a sampling frequency of at least 100 Hz. Furthermore, the algorithm will return similar results regardless of the scaling of the data.
 
 ## Examples
 
-Let's detect heartbeats in a 5 minute long electrocardiogram:
+Let's detect heartbeats in a short electrocardiogram:
 
 ```python
 from scipy.misc import electrocardiogram
@@ -28,7 +28,7 @@ print(f"{len(beats)} heartbeats detected ({', '.join(beats[0:5])}, ...)")
 # 478 heartbeats detected (125, 342, 551, 748, 944, ...)
 ```
 
-Next, we can calculate the RR intervals in milliseconds:
+Next, we calculate RR intervals (in milliseconds):
 
 ```python
 rri = 1000 * np.diff(beats) / fs
