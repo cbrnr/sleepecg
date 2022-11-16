@@ -58,6 +58,8 @@ extra_css:
   - css/extra.css
   - css/mkdocstrings.css
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
