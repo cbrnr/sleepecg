@@ -145,8 +145,8 @@ def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.n
     Parameters
     ----------
     stages : list[np.ndarray]
-        A list of 1d-arrays containing AASM sleep stages as defined by `SleepStage`, e.g. as
-        returned by :func:`extract_features`.
+        A list of 1D arrays containing AASM sleep stages as defined by `SleepStage`, e.g. as
+        returned by `extract_features()`.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
@@ -154,7 +154,7 @@ def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.n
     Returns
     -------
     list[np.ndarray]
-        A list of 1d-arrays containing merged sleep stages.
+        A list of 1D arrays containing merged sleep stages.
     """
     if stages_mode not in _SLEEP_STAGE_MAPPING:
         options = list(_SLEEP_STAGE_MAPPING.keys())

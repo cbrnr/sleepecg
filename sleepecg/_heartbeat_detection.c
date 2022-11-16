@@ -25,7 +25,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
                                      &window_length))
         return NULL;
 
-    // ensure contiguous numpy-array
+    // ensure contiguous numpy array
     input_array = PyArray_FROM_OTF(input_array,
                                    NPY_DOUBLE,
                                    NPY_ARRAY_C_CONTIGUOUS);
@@ -40,7 +40,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
     if (PyArray_NDIM((PyArrayObject *)input_array) != 1)
     {
         PyErr_SetString(PyExc_ValueError,
-                        "_squared_moving_integration only handles 1d-arrays!");
+                        "_squared_moving_integration only handles 1D arrays!");
         Py_DecRef(input_array);
         return NULL;
     }
@@ -55,7 +55,7 @@ static PyObject *_squared_moving_integration(PyObject *self,
         return NULL;
     }
 
-    // get C-array containing data
+    // get C array containing data
     double *input = (double *)PyArray_DATA((PyArrayObject *)input_array);
 
     // create an output array of same length, type and memory-order
@@ -157,7 +157,7 @@ static PyObject *_thresholding(PyObject *self,
         PyArray_NDIM((PyArrayObject *)integrated_ecg_array) != 1)
     {
         PyErr_SetString(PyExc_ValueError,
-                        "_thresholding only handles 1d-arrays!");
+                        "_thresholding only handles 1D arrays!");
         Py_DecRef(filtered_ecg_array);
         Py_DecRef(integrated_ecg_array);
         return NULL;

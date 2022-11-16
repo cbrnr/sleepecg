@@ -181,11 +181,11 @@ def _hrv_timedomain_features(
     Parameters
     ----------
     rri : np.ndarray
-        1d-array containing RR-intervals in seconds.
+        1D array containing RR-intervals in seconds.
     rri_times : np.ndarray
-        1d-array containing sample times of `rri` in seconds.
+        1D array containing sample times of `rri` in seconds.
     stage_times : np.ndarray
-        1d-array containing sleep stage onset times in seconds.
+        1D array containing sleep stage onset times in seconds.
     lookback : int
         Backward extension of the analysis window from each sleep stage time.
     lookforward : int
@@ -303,11 +303,11 @@ def _hrv_frequencydomain_features(
     Parameters
     ----------
     rri : np.ndarray
-        1d-array containing RR-intervals in seconds.
+        1D array containing RR-intervals in seconds.
     rri_times : np.ndarray
-        1d-array containing sample times of `rri` in seconds.
+        1D array containing sample times of `rri` in seconds.
     stage_times : np.ndarray
-        1d-array containing sleep stage onset times in seconds. Distances between onsets
+        1D array containing sleep stage onset times in seconds. Distances between onsets
         must be regular.
     lookback : int
         Backward extension of the analysis window from each sleep stage time.
@@ -551,10 +551,10 @@ def _extract_features_single(
         Duration of a single sleep stage in the returned `stages` in seconds.
     min_rri: float, optional
         Minimum RRI value in seconds to be considered valid. Will be passed to
-        :func:`preprocess_rri`.
+        `preprocess_rri()`.
     max_rri: float, optional
         Maximum RRI value in seconds to be considered valid. Will be passed to
-        :func:`preprocess_rri`.
+        `preprocess_rri()`.
     required_groups : list[str]
         The feature groups which have to be calculated to cover all requested features.
     lookback : int, optional
@@ -667,13 +667,23 @@ def extract_features(
     Calculate features from sleep data (e.g. heart rate).
 
     Time and frequency domain heart rate variability (HRV) features are calculated based on
-    [1]_, [2]_ and [3]_. :ref:`feature_extraction` lists all available features and feature
-    groups.
+    the following publications (see [feature extraction](../feature_extraction.md) for
+    available features and feature groups.):
+
+    - Task Force of the European Society of Cardiology. (1996). Heart rate variability:
+      standards of measurement, physiological interpretation and clinical use. Circulation,
+      93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    - Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability metrics
+      and norms. Frontiers in Public Health, 258. https://doi.org/10.3389/fpubh.2017.00258
+    - Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of assessing
+      cardiac autonomic function and its comparison with spectral analysis and coefficient
+      of variation of R–R interval. Journal of the Autonomic Nervous System, 62(1-2), 79-84.
+      https://doi.org/10.1016/S0165-1838(96)00112-9
 
     Parameters
     ----------
     records : Iterable[SleepRecord]
-        An iterable of `SleepRecord` objects, as yielded by the various reader functions in
+        An iterable of `SleepRecord` objects as yielded by the various reader functions in
         SleepECG.
     lookback : int, optional
         Backward extension of the analysis window from each sleep stage time in seconds, by
@@ -686,28 +696,28 @@ def extract_features(
         `30`.
     feature_selection : list[str], optional
         Which features to extract. Can be feature groups or single feature identifiers, as
-        listed :ref:`here<feature_extraction>`. If `None` (default), all possible features
-        are extracted.
+        listed in [feature extraction](../feature_extraction.md). If `None` (default), all
+        possible features are extracted.
     fs_rri_resample : float, optional
         Frequency in Hz at which the RRI time series should be resampled before spectral
         analysis. Only relevant for frequency domain features, by default `4`.
     min_rri: float, optional
         Minimum RRI value in seconds to be considered valid. Will be passed to
-        :func:`preprocess_rri`, by default `None`.
+        `preprocess_rri()`, by default `None`.
     max_rri: float, optional
         Maximum RRI value in seconds to be considered valid. Will be passed to
-        :func:`preprocess_rri`, by default `None`.
+        `preprocess_rri()`, by default `None`.
     max_nans : float, optional
-        Maximum fraction of NaNs in an analysis window, for which frequency features are
-        computed. Should be a value between `0.0` and `1.0`, by default `0`.
+        Maximum fraction of NaNs in an analysis window for which frequency features are
+        computed. Should be a value between `0` and `1`, by default `0`.
     n_jobs : int, optional
-        The number of jobs to run in parallel. If `1` (default), no parallelism is used.
+        The number of jobs to run in parallel. If `1` (default), no parallelism is used;
         `-1` means using all processors.
 
     Returns
     -------
     features : list[np.ndarray]
-        A list containing feature matrices which are arrays of shape
+        A list containing feature matrices, which are arrays of shape
         `(len(sleep_stages), <num_features>)` and contain the extracted features per record.
     stages : list[np.ndarray | None]
         A list containing label vectors, i.e. the annotated sleep stages. For any
@@ -715,20 +725,7 @@ def extract_features(
     feature_ids : list[str]
         A list containing the identifiers of the extracted features. Feature groups passed
         in `feature_selection` are expanded to all individual features they contain. The
-        order matches the column order of `X`.
-
-    References
-    ----------
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
-       standards of measurement, physiological interpretation and clinical use. Circulation,
-       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
-    .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability
-       metrics and norms. Frontiers in Public Health, 258.
-       https://doi.org/10.3389/fpubh.2017.00258
-    .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of
-       assessing cardiac autonomic function and its comparison with spectral analysis and
-       coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
-       62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
+        order matches the column order of the feature matrix.
     """
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)

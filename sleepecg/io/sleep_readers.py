@@ -72,17 +72,17 @@ class SleepRecord:
     ----------
     sleep_stages : np.ndarray, optional
         Sleep stages according to AASM guidelines, stored as integers as defined by
-        :class:`SleepStage`, by default `None`.
+        `SleepStage`, by default `None`.
     sleep_stage_duration : int, optional
         Duration of each sleep stage in seconds, by default `None`.
     id : str, optional
-        The record's ID, by default `None`.
+        The record ID, by default `None`.
     recording_start_time : datetime.time, optional
         Time at which the recording was started, by default `None`.
     heartbeat_times : np.ndarray, optional
         Times of heartbeats relative to recording start in seconds, by default `None`.
     subject_data : SubjectData, optional
-        Dataclass containing subject data, such as gender or age, by default `None`.
+        Dataclass containing subject data (such as gender or age), by default `None`.
     """
 
     sleep_stages: Optional[np.ndarray] = None
@@ -112,7 +112,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     -------
     sleep_stages : np.ndarray
         Sleep stages according to AASM guidelines, stored as integers as defined by
-        :class:`SleepStage`.
+        `SleepStage`.
     sleep_stage_duration : int
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
@@ -182,8 +182,8 @@ def read_mesa(
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
         `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not available for all
-        records). If `'ecg'`, use `sleepecg.detect_heartbeats` on the ECG contained in
-        `polysomnography/edfs/<record_id>.edf` and cache the result to
+        records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on the ECG contained in
+        `polysomnography/edfs/<record_id>.edf` and cache the result in
         `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR API, by default
@@ -197,7 +197,7 @@ def read_mesa(
     Yields
     ------
     SleepRecord
-        Each element in the generator is a :class:`SleepRecord`.
+        Each element in the generator is of type `SleepRecord`.
     """
     from mne.io import read_raw_edf
 
@@ -383,7 +383,7 @@ def read_slpdb(
     Yields
     ------
     SleepRecord
-        Each element in the generator is a :class:`SleepRecord`.
+        Each element in the generator is of type `SleepRecord`.
     """
     # https://physionet.org/content/slpdb/1.0.0/
     import wfdb
@@ -493,10 +493,10 @@ def read_shhs(
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
         `polysomnography/annotations-rpoints/shhsX/<record_id>-rpoints.csv`
-        (not available for all records). If `'ecg'`, use `sleepecg.detect_heartbeats` on the
-        ECG contained in `polysomnography/edfs/shhsX/<record_id>.edf` and cache the result
-        to `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`, get the cached
-        heartbeats.
+        (not available for all records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on
+        the ECG contained in `polysomnography/edfs/shhsX/<record_id>.edf` and cache the
+        result in `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`, get the
+        cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR API, by default
         `False`.
@@ -509,7 +509,7 @@ def read_shhs(
     Yields
     ------
     SleepRecord
-        Each element in the generator is a :class:`SleepRecord`.
+        Each element in the generator is of type `SleepRecord`.
     """
     from mne.io import read_raw_edf
 
