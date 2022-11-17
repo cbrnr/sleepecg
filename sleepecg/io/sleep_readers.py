@@ -413,10 +413,10 @@ def read_slpdb(
 
     if not offline:
         download_physionet(
-            data_dir=data_dir,
             db_slug=DB_SLUG,
             requested_records=requested_records,
             extensions=[".hea", ".dat", ".st"],
+            data_dir=data_dir,
         )
 
     for record_id in requested_records:
