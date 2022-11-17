@@ -108,11 +108,11 @@ def plot_hypnogram(
     record : SleepRecord
         A single record (i.e. night).
     stages_pred : np.ndarray
-        The predicted stages, either as a 1d-array of integers or a 2d-array of
+        The predicted stages, either as a 1D array of integers or a 2D array of
         probabilties.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
-        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+        `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
     stages_pred_duration : int, optional
         Duration of the predicted sleep stages in seconds, by default `30`.
     merge_annotations : bool, optional
@@ -222,7 +222,7 @@ def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]):
     Parameters
     ----------
     confmat : np.ndarray
-        A confusion matrix, as returned by :func:`confusion_matrix`.
+        A confusion matrix, as returned by `confusion_matrix()`.
     stage_names : list[str]
         Class labels which are used as tick labels.
 

@@ -1,0 +1,19 @@
+{% extends "_base/docstring/returns.html" %}
+{% block list_style %}
+<p><b>{{ section.title or "Returns:" }}</b></p>
+<ul>
+{% for returns in section.value %}
+    <li class="field-body">
+      {% if returns.name %}<code>{{ returns.name }}</code>{% endif %}
+      {% if returns.annotation %}
+        {% with expression = returns.annotation %}
+          {% if returns.name %}({% endif %}
+          <code>{% include "expression.html" with context %}</code>
+          {% if returns.name %}){% endif %}
+        {% endwith %}
+      {% endif %}
+      – {{ returns.description|convert_markdown(heading_level, html_id) }}
+    </li>
+{% endfor %}
+</ul>
+{% endblock list_style %}

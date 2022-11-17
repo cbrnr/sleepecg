@@ -21,7 +21,7 @@ from .utils import _download_file
 @dataclass
 class ECGRecord:
     """
-    Dataclass to store a single ECG record.
+    Store a single ECG record.
 
     Attributes
     ----------
@@ -34,7 +34,7 @@ class ECGRecord:
     lead : str, optional
         Which ECG lead the signal was recorded from, by default `None`.
     id : str, optional
-        The record's ID, by default `None`.
+        The record ID, by default `None`.
     """
 
     ecg: np.ndarray
@@ -45,7 +45,7 @@ class ECGRecord:
 
     def export(self, filename: Union[str, Path]) -> None:
         """
-        Export to CSV.
+        Export ECG record to CSV.
 
         Parameters
         ----------
@@ -76,7 +76,7 @@ class ECGRecord:
 
 def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
     """
-    Export record to CSV.
+    Export ECG record to CSV.
 
     Parameters
     ----------
@@ -234,7 +234,7 @@ def read_gudb(
     data_dir: Optional[Union[str, Path]] = None,
 ) -> Iterator[ECGRecord]:
     """
-    Lazily reads records from [GUDB](https://berndporr.github.io/ECG-GUDB/).
+    Lazily read records from [GUDB](https://berndporr.github.io/ECG-GUDB/).
 
     Required files are downloaded if not present in `'<data_dir>/gudb'`.
 

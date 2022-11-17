@@ -1,0 +1,17 @@
+{% extends "_base/docstring/parameters.html" %}
+{% block list_style %}
+<p><b>{{ section.title or "Parameters:" }}</b></p>
+<ul>
+{% for parameter in section.value %}
+    <li class="field-body">
+      <code>{{ parameter.name }}</code>
+      {% if parameter.annotation %}
+        {% with expression = parameter.annotation %}
+          (<code>{% include "expression.html" with context %}</code>)
+        {% endwith %}
+      {% endif %}
+      – {{ parameter.description|convert_markdown(heading_level, html_id) }}
+    </li>
+{% endfor %}
+</ul>
+{% endblock list_style %}

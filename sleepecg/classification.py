@@ -27,7 +27,7 @@ def prepare_data_keras(
     mask_value: int = -1,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Mask and pad data and calculate sample weights for a keras model.
+    Mask and pad data and calculate sample weights for a Keras model.
 
     The following steps are performed:
 
@@ -43,11 +43,11 @@ def prepare_data_keras(
     Parameters
     ----------
     features : list[np.ndarray]
-        Each 2d-array in this list is a feature matrix of shape `(n_samples, n_features)`
-        corresponding to a single record, as returned by :func:`extract_features`.
+        Each 2D array in this list is a feature matrix of shape `(n_samples, n_features)`
+        corresponding to a single record as returned by `extract_features()`.
     stages : list[np.ndarray]
-        Each 1d-array in this list contains the sleep stages of a single record, as returned
-        by :func:`extract_features`.
+        Each 1D array in this list contains the sleep stages of a single record as returned
+        by `extract_features()`.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
@@ -58,15 +58,15 @@ def prepare_data_keras(
     Returns
     -------
     features_padded : np.ndarray
-        A 3d-array of shape `(n_records, max_n_samples, n_features)`, where `n_records` is
+        A 3D array of shape `(n_records, max_n_samples, n_features)`, where `n_records` is
         the length of `features`/`stages` and `max_n_samples` is the maximum number of rows
         of all feature matrices in `features`.
     stages_padded_onehot : np.ndarray
-        A 3d-array of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
+        A 3D array of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
         the number of classes remaining after merging sleep stages (excluding
         `SleepStage.UNDEFINED`).
     sample_weight : np.ndarray
-        A 2d-array of shape `(n_records, max_n_samples)`.
+        A 2D array of shape `(n_records, max_n_samples)`.
     """
     from tensorflow.keras.preprocessing.sequence import pad_sequences
     from tensorflow.keras.utils import to_categorical
@@ -95,8 +95,8 @@ def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -
     Parameters
     ----------
     stages : np.ndarray
-        A 2d-array of shape `(n_records, n_samples)` containing integer class labels or a
-        3d-array of shape `(n_records, n_samples, n_classes)` containing one-hot encoded
+        A 2D array of shape `(n_records, n_samples)` containing integer class labels or a
+        3D array of shape `(n_records, n_samples, n_classes)` containing one-hot encoded
         class labels.
     stages_mode : str, optional
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
@@ -135,24 +135,24 @@ def save_classifier(
     """
     Save a trained classifier to disk.
 
-    The `model` itself and a `.yml` file containing the classifier metadata are stored as
+    The `model` itself and a `.yml` file containing classifier metadata are stored as
     `<name>.zip` in `classifiers_dir`. Model serialization is performed as suggested by the
-    respective package documentation. Currently only keras models are supported.
+    respective package documentation. Currently only Keras models are supported.
 
     Parameters
     ----------
     name : str | pathlib.Path
         An identifier which is used as the filename.
     model : Any
-        The classification model, should have `fit` and `predict` methods.
+        The classification model, should have `fit()` and `predict()` methods.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
-        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+        `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
     feature_extraction_params : dict[str, typing.Any]
-        The parameters passed to :func:`extract_features`, as a dictionary mapping string
+        The parameters passed to `extract_features()`, as a dictionary mapping string
         parameter names to values. Should not include `records` and `n_jobs`.
     mask_value : int, optional
-        Only required for keras models, as passed to `prepare_data_keras` and
+        Only required for Keras models, as passed to `prepare_data_keras()` and
         `keras.layers.Masking`, by default `None`.
     classifiers_dir : str | pathlib.Path, optional
         Directory in which the `.zip` file is stored. If `None` (default), the value is
@@ -196,22 +196,22 @@ class SleepClassifier:
     Attributes
     ----------
     model : typing.Any
-        The classification model, should have `fit` and `predict` methods.
+        The classification model, should have `fit()` and `predict()` methods.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
-        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+        `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
     feature_extraction_params : dict[str, typing.Any]
-        The parameters passed to :func:`extract_features`, as a dictionary mapping string
+        The parameters passed to `extract_features()`, as a dictionary mapping string
         parameter names to values. Does not include `records` and `n_jobs`.
     model_type : str
         A string identifying the model type, e.g. `'keras'` or `'sklearn'`. This is used by
-        :func:`stage` to determine how to perform sleep stage predictions.
+        `stage()` to determine how to perform sleep stage predictions.
     mask_value : int, optional
-        Only required for models of type `'keras'`, as passed to `prepare_data_keras` and
+        Only required for models of type `'keras'`, as passed to `prepare_data_keras()` and
         `keras.layers.Masking`, by default `None`.
     source_file : pathlib.Path, optional
-        The file from which the classifier was loaded using :func:`load_classifier`, by
-        default `None`.
+        The file from which the classifier was loaded using `load_classifier()`, by default
+        `None`.
     """
 
     model: Any
@@ -246,8 +246,8 @@ def load_classifier(
     """
     Load a `SleepClassifier` from disk.
 
-    This functions reads `.zip` files saved by :func:`save_classifier`. Pass `'SleepECG'` as
-    a second argument to load a classifier bundled with SleepECG.
+    This functions reads `.zip` files saved by `save_classifier()`. Pass `'SleepECG'` as the
+    second argument to load a classifier bundled with SleepECG.
 
     Parameters
     ----------
@@ -262,7 +262,7 @@ def load_classifier(
     -------
     SleepClassifier
         Contains the model and metadata required for feature extraction and preprocessing.
-        Can be passed to :func:`stage`.
+        Can be passed to `stage()`.
 
     See Also
     --------
@@ -300,9 +300,7 @@ def load_classifier(
 
 def list_classifiers(classifiers_dir: Optional[Union[str, Path]] = None) -> None:
     """
-    Show information about available classifiers.
-
-    Pass `'SleepECG'` as a second argument to list the classifiers bundled with SleepECG.
+    List available classifiers.
 
     Parameters
     ----------
@@ -372,7 +370,7 @@ def _cohen_kappa(confmat: np.ndarray) -> float:
     Parameters
     ----------
     confmat : np.ndarray
-        A confusion matrix, as returned by :func:`confusion_matrix`.
+        A confusion matrix, as returned by `confusion_matrix()`.
 
     Returns
     -------
@@ -398,19 +396,19 @@ def evaluate(
     """
     Evaluate the performance of a sleep stage classifier.
 
-    Prints overall accuracy, Cohen's kappa, confusion matrix and per-class precision, recall
+    Prints overall accuracy, Cohen's kappa, confusion matrix, per-class precision, recall,
     and F1 score.
 
     Parameters
     ----------
     stages_true : np.ndarray
-        The annotated ('ground truth') sleep stages as a 2d-array of shape
-        `(n_records, n_samples)` containing integer class labels or a 3d-array of shape
+        The annotated (ground truth) sleep stages as a 2D array of shape
+        `(n_records, n_samples)` containing integer class labels, or a 3D array of shape
         `(n_records, n_samples, n_classes)` containing one-hot encoded class labels.
     stages_pred : np.ndarray
-        The predicted sleep stages as a 2d-array of shape `(n_records, n_samples)`
-        containing integer class labels or a 3d-array of shape
-        `(n_records, n_samples, n_classes)` containing class probabilities.
+        The predicted sleep stages as a 2D array of shape `(n_records, n_samples)`
+        containing integer class labels, or a 3D array of shape
+        `(n_records, n_samples, n_classes)` containing one-hot encoded class labels.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
@@ -483,24 +481,24 @@ def stage(
     Parameters
     ----------
     clf : SleepClassifier
-        A classifier object as loaded with :func:`load_classifier`.
+        A classifier object as loaded with `load_classifier()`.
     record : SleepRecord
         A single record (i.e. night).
     return_mode : str, optional
-        If `'int'`, return the predicted sleep stages as a 1d-array of integers. If
-        `'prob'`, return a 2d-array of probabilities. If `'str'`, return a 1d-array of
+        If `'int'`, return the predicted sleep stages as a 1D array of integers. If
+        `'prob'`, return a 2D array of probabilities. If `'str'`, return a 1D array of
         strings.
 
     Returns
     -------
     np.ndarray
-        A array of sleep stages. Depending on `return_mode`, this takes different forms.
+        Array of sleep stages. Depending on `return_mode`, this takes different forms.
 
     Warnings
     --------
     Note that the returned labels depend on `clf.stages_mode`, so they do not necessarily
-    follow the stage-to-integer mapping defined in :class:`SleepStage`. See
-    :ref:`classification` for details.
+    follow the stage-to-integer mapping defined in `SleepStage`. See
+    [classification](../classification.md) for details.
     """
     return_modes = {"int", "prob", "str"}
     if return_mode not in return_modes:

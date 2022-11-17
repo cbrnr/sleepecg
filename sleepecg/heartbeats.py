@@ -37,25 +37,22 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     This is a modified version of the beat detection algorithm using adaptive thresholds
     described by Pan & Tompkins in 1985.
 
-    Modifications/additions to the original algorithm described in
-    https://doi.org/10.1109/TBME.1985.325532 are listed here:
+    Modifications/additions to the
+    [original algorithm](https://doi.org/10.1109/TBME.1985.325532) are:
 
     - Instead of a hardware filter adjusted to the sampling frequency of the MIT-BIH
-      Arrhythmia Database, a 2nd-order bandpass with cutoff frequencies 5 and 30 Hz created
-      via `scipy.signal.butter` is used.
+      Arrhythmia Database, a second order bandpass with cutoff frequencies 5 and 30 Hz
+      created via `scipy.signal.butter()` is used.
     - A bidirectional filter is used to remove filter delay.
-    - The signal might start during a peak, in which case it might have a relatively high
-      initial amplitude, which will mess up threshold initialization. Therefore, everything
-      until the first zero-crossing is set to zero.
     - The integration window is centered on the filtered signal, i.e. a peak in the filtered
-      signal corresponds to a plateau in the integrated one, not a saddle in the rising
+      signal corresponds to a plateau in the integrated signal, not a saddle in the rising
       edge. This lets the adaptive threshold for the integrated signal remain at a higher
       level, which is less susceptible to noise.
     - Learning phase 1 is not described in detail in the original paper. This implementation
-      uses maximum and mean values inside the first 2 seconds to initialize
+      uses maximum and mean values inside the first two seconds to initialize
       SPKI/SPKF/NPKI/NPKF. Details are provided in the `_thresholding` code.
     - In addition to the original searchback criterion, a searchback is also performed if no
-      peak is found during the first second of the signal or no second peak is found 1.5s
+      peak is found during the first second of the signal or no second peak is found 1.5 s
       after the first one. This ensures correct behaviour at signal start in case an
       unusually large peak during learning phase 1 messes up threshold initialization.
     - After an unsuccessful searchback, the procedure is repeated in the same interval with
@@ -64,8 +61,8 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     Parameters
     ----------
     ecg : np.ndarray
-        ECG signal. Note that the unit of the data does not matter. The algorithm will
-        return similar results regardless of the scaling of the data.
+        ECG signal. Note that the unit of the data does not matter (the algorithm will
+        return similar results regardless of the scaling of the data).
     fs : float
         Sampling frequency in Hz. For best results, a sampling frequency of at least 100 Hz
         is recommended.
@@ -82,7 +79,7 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
 
     Examples
     --------
-    Detect heartbeats in a 5 minute long electrocardiogram:
+    Detect heartbeats in a short electrocardiogram:
 
     >>> from scipy.misc import electrocardiogram
     >>> from sleepecg import detect_heartbeats
