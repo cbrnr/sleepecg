@@ -202,10 +202,10 @@ def _read_mitbih(
 
     if not offline:
         download_physionet(
-            data_dir,
             db_slug,
             requested_records,
             extensions=[".hea", ".dat", ".atr"],
+            data_dir=data_dir,
         )
 
     for record_id in requested_records:

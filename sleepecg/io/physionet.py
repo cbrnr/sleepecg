@@ -6,7 +6,7 @@
 
 import fnmatch
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Union
 
 from tqdm import tqdm
 
@@ -59,11 +59,11 @@ def _list_physionet(
 
 
 def download_physionet(
-    data_dir: Path,
     db_slug: str,
     requested_records: List[str],
     extensions: Iterable[str],
     db_version: Optional[str] = "1.0.0",
+    data_dir: Union[str, Path] = ".",
 ) -> None:
     """
     Download requested files from PhysioNet.
@@ -73,8 +73,6 @@ def download_physionet(
 
     Parameters
     ----------
-    data_dir : pathlib.Path
-        Directory where all datasets are stored.
     db_slug : str
         Short identifier of a database, e.g. `'mitdb'`.
     requested_records : list[str]
@@ -83,6 +81,8 @@ def download_physionet(
         Files with those extensions are downloaded.
     db_version : str, optional
         Version of the database, by default `'1.0.0'`.
+    data_dir : str | pathlib.Path, optional
+        Directory where all datasets are stored, by default `'.'`.
     """
     data_dir = Path(data_dir)
     checksums = _get_physionet_checksums(data_dir, db_slug, db_version)
