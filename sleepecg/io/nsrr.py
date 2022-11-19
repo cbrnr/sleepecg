@@ -119,7 +119,7 @@ def _download_nsrr_file(
     url: str,
     target_filepath: Path,
     checksum: str,
-):
+) -> None:
     """
     Download a file from `url` to `target_filepath` and verify `checksum`.
 

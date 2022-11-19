@@ -210,14 +210,15 @@ def _hrv_timedomain_features(
        coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
        62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
     """
-    NN = _split_into_windows(
-        rri,
-        rri_times,
-        stage_times,
-        lookback,
-        lookforward,
+    NN = _create_ragged_array(
+        _split_into_windows(
+            rri,
+            rri_times,
+            stage_times,
+            lookback,
+            lookforward,
+        )
     )
-    NN = _create_ragged_array(NN)
 
     meanNN = np.nanmean(NN, axis=1)
     maxNN = np.nanmax(NN, axis=1)
@@ -463,7 +464,7 @@ def _parse_feature_selection(
         `required_groups`.
     """
     required_groups = set()
-    feature_ids = []
+    feature_ids: List[str] = []
 
     for id_ in requested_ids:
         if id_ in _FEATURE_GROUPS:
@@ -489,7 +490,7 @@ def preprocess_rri(
     rri: np.ndarray,
     min_rri: Optional[float] = None,
     max_rri: Optional[float] = None,
-):
+) -> np.ndarray:
     """
     Replace invalid RRI samples with `np.nan`.
 
@@ -640,6 +641,8 @@ def _extract_features_single(
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:
         stages = record.sleep_stages
     else:
+        if record.sleep_stage_duration is None:
+            raise ValueError(f"sleep_stage_duration not available for record {record.id}")
         stages = interp1d(
             np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
             record.sleep_stages,

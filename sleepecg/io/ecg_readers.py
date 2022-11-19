@@ -6,15 +6,18 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, Optional, Union
+from typing import TYPE_CHECKING, Iterator, Optional, Tuple, Union
 
 import numpy as np
 from tqdm import tqdm
 
+if TYPE_CHECKING:
+    import matplotlib.pyplot as plt
+
 from ..config import get_config
+from ..plot import plot_ecg
 from .gudb import GUDB_MD5
 from .physionet import _list_physionet, download_physionet
-from ..plot import plot_ecg
 from .utils import _download_file
 
 
@@ -54,7 +57,7 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, **kwargs: np.ndarray):
+    def plot(self, **kwargs: np.ndarray) -> Tuple["plt.Figure", "plt.Axes"]:
         """
         Plot ECG time series with optional markers.
 

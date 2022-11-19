@@ -5,7 +5,7 @@
 """Utilities for downloading GUDB data."""
 
 from pathlib import Path
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from ..config import get_config
 from .utils import _calculate_checksum
@@ -368,7 +368,7 @@ GUDB_MD5 = {
 }
 
 
-def _generate_gudb_md5(data_dir: Optional[Union[str, Path]] = None):
+def _generate_gudb_md5(data_dir: Optional[Union[str, Path]] = None) -> Dict[str, str]:
     """
     Compute checksums for files in GUDB.
 

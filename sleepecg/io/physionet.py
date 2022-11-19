@@ -21,8 +21,8 @@ _CHECKSUM_TYPE = "sha256"
 def _list_physionet(
     data_dir: Path,
     db_slug: str,
-    db_version: Optional[str] = "1.0.0",
-    pattern="*",
+    db_version: str = "1.0.0",
+    pattern: str = "*",
 ) -> List[str]:
     """
     List record IDs for a PhysioNet database.

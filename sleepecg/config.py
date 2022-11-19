@@ -65,7 +65,7 @@ def get_config(key: Optional[str] = None) -> Any:
     return config[key]
 
 
-def set_config(**kwargs):
+def set_config(**kwargs: Any) -> None:
     """
     Set SleepECG preferences and store them to the user configuration file.
 

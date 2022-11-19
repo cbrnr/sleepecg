@@ -7,7 +7,7 @@
 
 import datetime
 import warnings
-from typing import Callable, Iterable, List, TypeVar
+from typing import Any, Callable, Iterable, List, TypeVar
 
 import numpy as np
 
@@ -21,8 +21,8 @@ def _parallel(
     n_jobs: int,
     function: Callable[..., _Returnable],
     iterable: Iterable,
-    *args,
-    **kwargs,
+    *args: Any,
+    **kwargs: Any,
 ) -> List[_Returnable]:
     """
     Apply a function to each element in an iterable in parallel.

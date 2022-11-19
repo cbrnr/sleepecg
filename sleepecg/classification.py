@@ -8,7 +8,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, Tuple, Union
 from zipfile import ZipFile
 
 import numpy as np
@@ -107,9 +107,9 @@ def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -
         stages = stages.argmax(2)
 
     if stages_mode is not None:
-        stage_names = stage_names = ["UNDEFINED"] + _STAGE_NAMES[stages_mode]
+        stage_names = ["UNDEFINED"] + _STAGE_NAMES[stages_mode]
     else:
-        stage_names = np.arange(6)
+        stage_names = [str(n) for n in range(6)]
 
     print("Class balance:")
 
@@ -131,7 +131,7 @@ def save_classifier(
     feature_extraction_params: Dict[str, Any],
     mask_value: Optional[int] = None,
     classifiers_dir: Optional[Union[str, Path]] = None,
-):
+) -> None:
     """
     Save a trained classifier to disk.
 
@@ -185,7 +185,15 @@ def save_classifier(
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 
-        shutil.make_archive(target_file, "zip", tmpdir)
+        shutil.make_archive(str(target_file), "zip", tmpdir)
+
+
+class _Model(Protocol):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        ...
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        ...
 
 
 @dataclass
@@ -195,8 +203,8 @@ class SleepClassifier:
 
     Attributes
     ----------
-    model : typing.Any
-        The classification model, should have `fit()` and `predict()` methods.
+    model : _Model
+        The classification model, should have `fit` and `predict` methods.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
@@ -214,7 +222,7 @@ class SleepClassifier:
         `None`.
     """
 
-    model: Any
+    model: _Model
     stages_mode: str
     feature_extraction_params: Dict[str, Any]
     model_type: str
@@ -383,7 +391,7 @@ def _cohen_kappa(confmat: np.ndarray) -> float:
     sum1 = np.sum(confmat, axis=1)
     expected = np.outer(sum0, sum1) / np.sum(sum0)
     w_mat = 1 - np.eye(n_classes, dtype=int)
-    k = np.sum(w_mat * confmat) / np.sum(w_mat * expected)
+    k: float = np.sum(w_mat * confmat) / np.sum(w_mat * expected)
     return 1 - k
 
 
@@ -392,7 +400,7 @@ def evaluate(
     stages_pred: np.ndarray,
     stages_mode: str,
     show_undefined: bool = False,
-) -> None:
+) -> Tuple[np.ndarray, List[str]]:
     """
     Evaluate the performance of a sleep stage classifier.
 
@@ -511,8 +519,8 @@ def stage(
     features = extract_features(records=[record], **clf.feature_extraction_params)[0][0]
     if clf.model_type == "keras":
         features[~np.isfinite(features)] = clf.mask_value
-        stages_pred_proba = clf.model.predict(features[np.newaxis, ...])[0]
-        stages_pred = stages_pred_proba.argmax(-1)
+        stages_pred_proba: np.ndarray = clf.model.predict(features[np.newaxis, ...])[0]
+        stages_pred: np.ndarray = stages_pred_proba.argmax(-1)
     else:
         raise ValueError(f"Staging with model of type {type(clf)} is not supported")
 
