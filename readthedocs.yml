@@ -9,7 +9,7 @@ build:
     python: "3.9"
 
 mkdocs:
-  configuration: mkdocs.yml
+  configuration: ./mkdocs.yml
 
 python:
   system_packages: true
