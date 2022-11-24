@@ -4,8 +4,10 @@
 
 """Heartbeat detection and detector evaluation."""
 
+from __future__ import annotations
+
 import warnings
-from typing import Dict, NamedTuple
+from typing import NamedTuple
 
 import numpy as np
 import scipy.interpolate
@@ -27,7 +29,7 @@ except ImportError:
 
 
 # cache sos-filter created with scipy.signal.butter to reduce runtime
-_sos_filters: Dict[float, np.ndarray] = {}
+_sos_filters: dict[float, np.ndarray] = {}
 
 
 def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndarray:

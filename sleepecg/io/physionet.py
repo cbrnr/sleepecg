@@ -4,9 +4,11 @@
 
 """Simple interface for downloading PhysioNet data."""
 
+from __future__ import annotations
+
 import fnmatch
 from pathlib import Path
-from typing import Dict, Iterable, List, Union
+from typing import Iterable
 
 from tqdm import tqdm
 
@@ -23,7 +25,7 @@ def _list_physionet(
     db_slug: str,
     db_version: str = "1.0.0",
     pattern: str = "*",
-) -> List[str]:
+) -> list[str]:
     """
     List record IDs for a PhysioNet database.
 
@@ -60,10 +62,10 @@ def _list_physionet(
 
 def download_physionet(
     db_slug: str,
-    requested_records: List[str],
+    requested_records: list[str],
     extensions: Iterable[str],
     db_version: str = "1.0.0",
-    data_dir: Union[str, Path] = ".",
+    data_dir: str | Path = ".",
 ) -> None:
     """
     Download requested files from PhysioNet.
@@ -105,7 +107,7 @@ def _get_physionet_checksums(
     data_dir: Path,
     db_slug: str,
     db_version: str = "1.0.0",
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Parse PhysioNet checksums into a dictionary.
 

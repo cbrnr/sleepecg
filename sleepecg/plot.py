@@ -4,8 +4,10 @@
 
 """Plotting functions."""
 
+from __future__ import annotations
+
 from itertools import cycle
-from typing import TYPE_CHECKING, List, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
@@ -21,7 +23,7 @@ def plot_ecg(
     fs: float,
     title: Optional[str] = None,
     **kwargs: np.ndarray,
-) -> Tuple["plt.Figure", "plt.Axes"]:
+) -> tuple["plt.Figure", "plt.Axes"]:
     """
     Plot ECG time series with optional markers.
 
@@ -99,7 +101,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-) -> Tuple["plt.Figure", List["plt.Axes"]]:
+) -> tuple["plt.Figure", list["plt.Axes"]]:
     """
     Plot a hypnogram for a single record.
 
@@ -228,8 +230,8 @@ def plot_hypnogram(
 
 def _plot_confusion_matrix(
     confmat: np.ndarray,
-    stage_names: List[str],
-) -> Tuple["plt.Figure", "plt.Axes"]:
+    stage_names: list[str],
+) -> tuple["plt.Figure", "plt.Axes"]:
     """
     Create a labeled plot of a confusion matrix.
 

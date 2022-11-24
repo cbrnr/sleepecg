@@ -4,12 +4,14 @@
 
 """Read datasets containing ECG data and sleep stage annotations."""
 
+from __future__ import annotations
+
 import csv
 import datetime
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-from typing import Iterator, NamedTuple, Optional, Union
+from typing import Iterator, NamedTuple, Optional
 from xml.etree import ElementTree
 
 import numpy as np
@@ -165,7 +167,7 @@ def read_mesa(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
@@ -362,7 +364,7 @@ def read_mesa(
 def read_slpdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
@@ -475,7 +477,7 @@ def read_shhs(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).

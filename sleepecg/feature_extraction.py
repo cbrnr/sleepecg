@@ -4,8 +4,10 @@
 
 """Functions and utilities related to feature extraction."""
 
+from __future__ import annotations
+
 import warnings
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import Iterable, Optional
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -58,7 +60,7 @@ _FEATURE_GROUPS = {
 _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
 
 
-def _create_ragged_array(data: List[np.ndarray]) -> np.ndarray:
+def _create_ragged_array(data: list[np.ndarray]) -> np.ndarray:
     """
     Convert a list of arrays with different lengths to a numpy array.
 
@@ -88,7 +90,7 @@ def _split_into_windows(
     window_times: np.ndarray,
     lookback: int,
     lookforward: int,
-) -> List[np.ndarray]:
+) -> list[np.ndarray]:
     """
     Split (irregularly sampled) data into windows of equal temporal length.
 
@@ -123,7 +125,7 @@ def _split_into_windows(
     return windows
 
 
-def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> Tuple[np.ndarray, np.ndarray]:
+def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> tuple[np.ndarray, np.ndarray]:
     """
     Compute power spectral density (PSD) along axis 1, ignoring NaNs.
 
@@ -294,7 +296,7 @@ def _hrv_frequencydomain_features(
     lookforward: int,
     fs_rri_resample: float,
     max_nans: float,
-    feature_ids: List[str],
+    feature_ids: list[str],
 ) -> np.ndarray:
     """
     Calculate seven frequency domain heart rate variability (HRV) features.
@@ -438,8 +440,8 @@ def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
 
 
 def _parse_feature_selection(
-    requested_ids: List[str],
-) -> Tuple[List[str], List[str], List[int]]:
+    requested_ids: list[str],
+) -> tuple[list[str], list[str], list[int]]:
     """
     Parse a list containing feature group names and single feature IDs.
 
@@ -464,7 +466,7 @@ def _parse_feature_selection(
         `required_groups`.
     """
     required_groups = set()
-    feature_ids: List[str] = []
+    feature_ids: list[str] = []
 
     for id_ in requested_ids:
         if id_ in _FEATURE_GROUPS:
@@ -531,14 +533,14 @@ def _extract_features_single(
     sleep_stage_duration: int,
     min_rri: float,
     max_rri: float,
-    required_groups: List[str],
+    required_groups: list[str],
     lookback: int,
     lookforward: int,
     fs_rri_resample: float,
     max_nans: float,
-    feature_ids: List[str],
-    col_indices: List[int],
-) -> Tuple[np.ndarray, Union[np.ndarray, None]]:
+    feature_ids: list[str],
+    col_indices: list[int],
+) -> tuple[np.ndarray, np.ndarray | None]:
     """
     Calculate features for a single record.
 
@@ -659,13 +661,13 @@ def extract_features(
     lookback: int = 0,
     lookforward: int = 30,
     sleep_stage_duration: int = 30,
-    feature_selection: Optional[List[str]] = None,
+    feature_selection: Optional[list[str]] = None,
     fs_rri_resample: float = 4,
     min_rri: Optional[float] = None,
     max_rri: Optional[float] = None,
     max_nans: float = 0,
     n_jobs: int = 1,
-) -> Tuple[List[np.ndarray], List[Union[np.ndarray, None]], List[str]]:
+) -> tuple[list[np.ndarray], list[np.ndarray | None], list[str]]:
     """
     Calculate features from sleep data (e.g. heart rate).
 

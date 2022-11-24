@@ -4,11 +4,13 @@
 
 """Functions related to classifier training and evaluation."""
 
+from __future__ import annotations
+
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Dict, List, Optional, Protocol, Tuple, Union
+from typing import Any, Optional, Protocol
 from zipfile import ZipFile
 
 import numpy as np
@@ -17,15 +19,15 @@ import yaml
 from .config import get_config
 from .feature_extraction import extract_features
 from .io.sleep_readers import SleepRecord, SleepStage
-from .utils import _merge_sleep_stages, _STAGE_NAMES
+from .utils import _STAGE_NAMES, _merge_sleep_stages
 
 
 def prepare_data_keras(
-    features: List[np.ndarray],
-    stages: List[np.ndarray],
+    features: list[np.ndarray],
+    stages: list[np.ndarray],
     stages_mode: str,
     mask_value: int = -1,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Mask and pad data and calculate sample weights for a Keras model.
 
@@ -125,12 +127,12 @@ def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -
 
 
 def save_classifier(
-    name: Union[str, Path],
+    name: str | Path,
     model: Any,
     stages_mode: str,
-    feature_extraction_params: Dict[str, Any],
+    feature_extraction_params: dict[str, Any],
     mask_value: Optional[int] = None,
-    classifiers_dir: Optional[Union[str, Path]] = None,
+    classifiers_dir: Optional[str | Path] = None,
 ) -> None:
     """
     Save a trained classifier to disk.
@@ -224,7 +226,7 @@ class SleepClassifier:
 
     model: _Model
     stages_mode: str
-    feature_extraction_params: Dict[str, Any]
+    feature_extraction_params: dict[str, Any]
     model_type: str
     mask_value: Optional[int] = None
     source_file: Optional[Path] = None
@@ -249,7 +251,7 @@ class SleepClassifier:
 
 def load_classifier(
     name: str,
-    classifiers_dir: Optional[Union[str, Path]] = None,
+    classifiers_dir: Optional[str | Path] = None,
 ) -> SleepClassifier:
     """
     Load a `SleepClassifier` from disk.
@@ -306,7 +308,7 @@ def load_classifier(
     )
 
 
-def list_classifiers(classifiers_dir: Optional[Union[str, Path]] = None) -> None:
+def list_classifiers(classifiers_dir: Optional[str | Path] = None) -> None:
     """
     List available classifiers.
 
@@ -400,7 +402,7 @@ def evaluate(
     stages_pred: np.ndarray,
     stages_mode: str,
     show_undefined: bool = False,
-) -> Tuple[np.ndarray, List[str]]:
+) -> tuple[np.ndarray, list[str]]:
     """
     Evaluate the performance of a sleep stage classifier.
 

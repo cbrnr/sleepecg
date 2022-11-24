@@ -4,10 +4,11 @@
 
 """Interface for listing and downloading NSRR (sleepdata.org) data."""
 
+from __future__ import annotations
+
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import List, Tuple, Union
 
 import requests
 from tqdm import tqdm
@@ -70,7 +71,7 @@ def _list_nsrr(
     subfolder: str = "",
     pattern: str = "*",
     shallow: bool = False,
-) -> List[Tuple[str, str]]:
+) -> list[tuple[str, str]]:
     """
     Recursively list filenames and checksums for a dataset.
 
@@ -154,7 +155,7 @@ def download_nsrr(
     subfolder: str = "",
     pattern: str = "*",
     shallow: bool = False,
-    data_dir: Union[str, Path] = ".",
+    data_dir: str | Path = ".",
 ) -> None:
     """
     Recursively download files from [NSRR](https://sleepdata.org).

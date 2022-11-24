@@ -4,9 +4,11 @@
 
 """Functions for reading datasets containing ECG and beat annotations."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterator, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Iterator, Optional
 
 import numpy as np
 from tqdm import tqdm
@@ -46,7 +48,7 @@ class ECGRecord:
     lead: Optional[str] = None
     id: Optional[str] = None
 
-    def export(self, filename: Union[str, Path]) -> None:
+    def export(self, filename: str | Path) -> None:
         """
         Export ECG record to CSV.
 
@@ -57,7 +59,7 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, **kwargs: np.ndarray) -> Tuple["plt.Figure", "plt.Axes"]:
+    def plot(self, **kwargs: np.ndarray) -> tuple["plt.Figure", "plt.Axes"]:
         """
         Plot ECG time series with optional markers.
 
@@ -77,7 +79,7 @@ class ECGRecord:
         return plot_ecg(self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs)
 
 
-def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
+def export_ecg_record(record: ECGRecord, filename: str | Path) -> None:
     """
     Export ECG record to CSV.
 
@@ -105,7 +107,7 @@ def export_ecg_record(record: ECGRecord, filename: Union[str, Path]) -> None:
 def read_ltdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [LTDB](https://physionet.org/content/ltdb/).
@@ -136,7 +138,7 @@ def read_ltdb(
 def read_mitdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [MITDB](https://physionet.org/content/mitdb/).
@@ -168,7 +170,7 @@ def _read_mitbih(
     db_slug: str,
     records_pattern: str,
     offline: bool,
-    data_dir: Union[str, Path],
+    data_dir: str | Path,
 ) -> Iterator[ECGRecord]:
     """
     Lazily reads records from MIT-BIH datasets (e.g. MITDB, LTDB).
@@ -233,7 +235,7 @@ def _read_mitbih(
 
 def read_gudb(
     offline: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [GUDB](https://berndporr.github.io/ECG-GUDB/).

@@ -4,8 +4,10 @@
 
 """Utilities for runtime and detection quality benchmarks."""
 
+from __future__ import annotations
+
 import time
-from typing import Any, Dict, Iterator
+from typing import Any, Iterator
 
 import numpy as np
 import sleepecg
@@ -119,7 +121,7 @@ def evaluate_single(
     signal_len: int,
     max_distance: float,
     calc_rri_similarity: bool,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Evaluate a heartbeat detector on a given annotated ECG record.
 
