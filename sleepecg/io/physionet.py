@@ -6,7 +6,7 @@
 
 import fnmatch
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Union
 
 from tqdm import tqdm
 
@@ -62,7 +62,7 @@ def download_physionet(
     db_slug: str,
     requested_records: List[str],
     extensions: Iterable[str],
-    db_version: Optional[str] = "1.0.0",
+    db_version: str = "1.0.0",
     data_dir: Union[str, Path] = ".",
 ) -> None:
     """
@@ -104,7 +104,7 @@ def download_physionet(
 def _get_physionet_checksums(
     data_dir: Path,
     db_slug: str,
-    db_version: Optional[str] = "1.0.0",
+    db_version: str = "1.0.0",
 ) -> Dict[str, str]:
     """
     Parse PhysioNet checksums into a dictionary.
