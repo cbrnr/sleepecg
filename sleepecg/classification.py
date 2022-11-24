@@ -127,7 +127,7 @@ def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -
 
 
 def save_classifier(
-    name: str | Path,
+    name: str,
     model: Any,
     stages_mode: str,
     feature_extraction_params: dict[str, Any],
@@ -143,7 +143,7 @@ def save_classifier(
 
     Parameters
     ----------
-    name : str | pathlib.Path
+    name : str
         An identifier which is used as the filename.
     model : Any
         The classification model, should have `fit()` and `predict()` methods.
