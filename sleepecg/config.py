@@ -4,8 +4,10 @@
 
 """Functions for getting and setting configuration values."""
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import yaml
 
@@ -13,7 +15,7 @@ _DEFAULT_CONFIG_PATH = Path(__file__).parent / "config.yml"
 _USER_CONFIG_PATH = Path("~/.sleepecg/config.yml").expanduser()
 
 
-def _read_yaml(path: Path) -> Dict[str, Any]:
+def _read_yaml(path: Path) -> dict[str, Any]:
     try:
         with open(path) as file:
             cfg = yaml.safe_load(file)
@@ -65,7 +67,7 @@ def get_config(key: Optional[str] = None) -> Any:
     return config[key]
 
 
-def set_config(**kwargs):
+def set_config(**kwargs: Any) -> None:
     """
     Set SleepECG preferences and store them to the user configuration file.
 

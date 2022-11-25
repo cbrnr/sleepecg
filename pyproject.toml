@@ -24,3 +24,13 @@ archs = 'x86_64 arm64'
 
 [tool.black]
 line-length = 92
+
+
+[tool.mypy]
+packages = ['sleepecg']
+exclude = '^sleepecg/test/'
+ignore_missing_imports = true
+disallow_untyped_defs = true
+warn_unreachable = true
+strict_equality = true
+pretty = true

@@ -4,9 +4,10 @@
 
 """Tests for sleep data reader functions."""
 
+from __future__ import annotations
+
 import datetime
 from pathlib import Path
-from typing import List
 
 import numpy as np
 import scipy.misc
@@ -73,7 +74,7 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
         )
 
 
-def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int = 42):
+def _create_dummy_mesa(data_dir: str, durations: list[float], random_state: int = 42):
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
@@ -98,7 +99,7 @@ def _create_dummy_mesa(data_dir: str, durations: List[float], random_state: int 
             csv.write(f"{i},5,0,0,0,77\n")
 
 
-def _create_dummy_shhs(data_dir: str, durations: List[float], random_state: int = 42):
+def _create_dummy_shhs(data_dir: str, durations: list[float], random_state: int = 42):
     DB_SLUG = "shhs"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"

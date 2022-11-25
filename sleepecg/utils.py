@@ -4,10 +4,11 @@
 
 """Utility functions."""
 
+from __future__ import annotations
 
 import datetime
 import warnings
-from typing import Callable, Iterable, List, TypeVar
+from typing import Any, Callable, Iterable, TypeVar
 
 import numpy as np
 
@@ -21,9 +22,9 @@ def _parallel(
     n_jobs: int,
     function: Callable[..., _Returnable],
     iterable: Iterable,
-    *args,
-    **kwargs,
-) -> List[_Returnable]:
+    *args: Any,
+    **kwargs: Any,
+) -> list[_Returnable]:
     """
     Apply a function to each element in an iterable in parallel.
 
@@ -138,7 +139,7 @@ _STAGE_NAMES = {m: m.upper().split("-")[::-1] for m in _SLEEP_STAGE_MAPPING}
 _STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items()}
 
 
-def _merge_sleep_stages(stages: List[np.ndarray], stages_mode: str) -> List[np.ndarray]:
+def _merge_sleep_stages(stages: list[np.ndarray], stages_mode: str) -> list[np.ndarray]:
     """
     Merge sleep stage labels into groups.
 

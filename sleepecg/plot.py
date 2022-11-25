@@ -4,13 +4,18 @@
 
 """Plotting functions."""
 
+from __future__ import annotations
+
 from itertools import cycle
-from typing import List, Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
+if TYPE_CHECKING:
+    import matplotlib.pyplot as plt
+
 from .io.sleep_readers import SleepRecord, SleepStage
-from .utils import _merge_sleep_stages, _STAGE_INTS, _STAGE_NAMES, _time_to_sec
+from .utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time_to_sec
 
 
 def plot_ecg(
@@ -18,7 +23,7 @@ def plot_ecg(
     fs: float,
     title: Optional[str] = None,
     **kwargs: np.ndarray,
-):
+) -> tuple["plt.Figure", "plt.Axes"]:
     """
     Plot ECG time series with optional markers.
 
@@ -96,7 +101,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-):
+) -> tuple["plt.Figure", list["plt.Axes"]]:
     """
     Plot a hypnogram for a single record.
 
@@ -132,6 +137,9 @@ def plot_hypnogram(
     import matplotlib.dates as mdates
     import matplotlib.pyplot as plt
 
+    if record.sleep_stage_duration is None:
+        raise ValueError(f"sleep_stage_duration not available for record {record.id}")
+
     stages_pred_probs = None
     num_subplots = 1
     if stages_pred.ndim == 2:
@@ -143,7 +151,10 @@ def plot_hypnogram(
     if show_bpm:
         num_subplots += 1
 
-    start_time = _time_to_sec(record.recording_start_time)
+    if record.recording_start_time is None:
+        start_time = 0
+    else:
+        start_time = _time_to_sec(record.recording_start_time)
 
     fig, ax = plt.subplots(num_subplots, sharex=True, figsize=(7, 4))
 
@@ -199,6 +210,8 @@ def plot_hypnogram(
 
     # heartrate
     if show_bpm:
+        if record.heartbeat_times is None:
+            raise ValueError(f"heartbeat_times not available for record {record.id}")
         t_ecg = (record.heartbeat_times[1:] + start_time).astype("datetime64[s]")
         ax[row].plot(t_ecg, 60 / np.diff(record.heartbeat_times))
         ax[row].set_ylabel("beats per minute")
@@ -215,7 +228,10 @@ def plot_hypnogram(
     return fig, ax
 
 
-def _plot_confusion_matrix(confmat: np.ndarray, stage_names: List[str]):
+def _plot_confusion_matrix(
+    confmat: np.ndarray,
+    stage_names: list[str],
+) -> tuple["plt.Figure", "plt.Axes"]:
     """
     Create a labeled plot of a confusion matrix.
 

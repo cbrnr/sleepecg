@@ -45,7 +45,7 @@ def _download_file(
     checksum: Optional[str] = None,
     checksum_type: Optional[str] = None,
     verbose: bool = False,
-):
+) -> None:
     """
     Download a single file from `url` to `target_filepath`.
 

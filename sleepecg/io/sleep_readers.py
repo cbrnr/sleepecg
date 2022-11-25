@@ -4,12 +4,14 @@
 
 """Read datasets containing ECG data and sleep stage annotations."""
 
+from __future__ import annotations
+
 import csv
 import datetime
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-from typing import Iterator, NamedTuple, Optional, Union
+from typing import Iterator, NamedTuple, Optional
 from xml.etree import ElementTree
 
 import numpy as np
@@ -139,14 +141,15 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
     start_time = None
     annot_stages = []
 
-    for event in root.find("ScoredEvents"):
-        if event.find("EventConcept").text == "Recording Start Time":
-            start_time = event.find("ClockTime").text.split()[1]
-            start_time = datetime.datetime.strptime(start_time, "%H.%M.%S").time()
+    for event in root.findall("ScoredEvents")[0]:
+        if event.findtext("EventConcept") == "Recording Start Time":
+            start_time = datetime.datetime.strptime(
+                event.findtext("ClockTime", "").split()[1], "%H.%M.%S"
+            ).time()
 
-        if event.find("EventType").text == "Stages|Stages":
-            epoch_duration = int(float(event.findtext("Duration")))
-            stage = STAGE_MAPPING[event.findtext("EventConcept")]
+        if event.findtext("EventType") == "Stages|Stages":
+            epoch_duration = int(float(event.findtext("Duration", "")))
+            stage = STAGE_MAPPING[event.findtext("EventConcept", "")]
             annot_stages.extend([stage] * int(epoch_duration / epoch_length))
 
     if start_time is None:
@@ -164,7 +167,7 @@ def read_mesa(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
@@ -243,14 +246,13 @@ def read_mesa(
             checksum=subject_data_checksum,
         )
 
-        checksums = {}
         xml_files = _list_nsrr(
             DB_SLUG,
             ANNOTATION_DIRNAME,
             f"mesa-sleep-{records_pattern}-nsrr.xml",
             shallow=True,
         )
-        checksums.update(xml_files)
+        checksums = dict(xml_files)
         requested_records = [Path(file).stem[:-5] for file, _ in xml_files]
 
         edf_files = _list_nsrr(
@@ -270,8 +272,8 @@ def read_mesa(
         checksums.update(rpoints_files)
     else:
         subject_data_filepath = next((db_dir / "datasets").glob("mesa-sleep-dataset-*.csv"))
-        xml_files = sorted(annotations_dir.glob(f"mesa-sleep-{records_pattern}-nsrr.xml"))
-        requested_records = [file.stem[:-5] for file in xml_files]
+        xml_paths = annotations_dir.glob(f"mesa-sleep-{records_pattern}-nsrr.xml")
+        requested_records = sorted([file.stem[:-5] for file in xml_paths])
 
     subject_data_array = np.loadtxt(
         subject_data_filepath,
@@ -362,7 +364,7 @@ def read_mesa(
 def read_slpdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
@@ -475,7 +477,7 @@ def read_shhs(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[Union[str, Path]] = None,
+    data_dir: Optional[str | Path] = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).
@@ -552,14 +554,13 @@ def read_shhs(
             data_dir=data_dir,
         )
 
-        checksums = {}
         xml_files = _list_nsrr(
             DB_SLUG,
             ANNOTATION_DIRNAME,
             f"{records_pattern}-nsrr.xml",
             shallow=False,
         )
-        checksums.update(xml_files)
+        checksums = dict(xml_files)
         requested_records = [file[-27:-9] for file, _ in xml_files]
 
         edf_files = _list_nsrr(
@@ -578,8 +579,8 @@ def read_shhs(
         )
         checksums.update(rpoints_files)
     else:
-        xml_files = sorted(annotations_dir.rglob(f"{records_pattern}-nsrr.xml"))
-        requested_records = [str(file)[-27:-9] for file in xml_files]
+        xml_paths = sorted(annotations_dir.rglob(f"{records_pattern}-nsrr.xml"))
+        requested_records = [str(file)[-27:-9] for file in xml_paths]
 
     subject_data = {}
 

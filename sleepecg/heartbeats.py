@@ -4,6 +4,8 @@
 
 """Heartbeat detection and detector evaluation."""
 
+from __future__ import annotations
+
 import warnings
 from typing import NamedTuple
 
@@ -27,7 +29,7 @@ except ImportError:
 
 
 # cache sos-filter created with scipy.signal.butter to reduce runtime
-_sos_filters = {}
+_sos_filters: dict[float, np.ndarray] = {}
 
 
 def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndarray:
@@ -387,7 +389,7 @@ def _thresholding_py(
     # correctly during the first 8 beats (also needed for access to RR_intervals)
     num_peaks_found = 0
 
-    RR_missed_limit = None
+    RR_missed_limit = 0.0
 
     # in case a searchback was unsuccessful, no new searchback will be performed until
     # another signal peak has been found regularly
@@ -399,9 +401,8 @@ def _thresholding_py(
 
     index = 1
     while index < signal_len - 1:
-
-        PEAKF = None
-        PEAKI = None
+        PEAKF = 0
+        PEAKI = 0
 
         signal_peak_found = False
         noise_peak_found = False
