@@ -12,7 +12,7 @@ from typing import Optional
 from ..config import get_config
 from .utils import _calculate_checksum
 
-GUDB_MD5 = {
+_GUDB_MD5 = {
     "subject_00/sitting/ECG.tsv": "06cdda76a17ff6efe4d4b18ccbc66e0f",
     "subject_00/sitting/annotation_cs.tsv": "fd0e6f5796a103637e29c4f9c14d155c",
     "subject_00/sitting/annotation_cables.tsv": "f5dfb5b4073974cc6aaf8ca3cc262002",
