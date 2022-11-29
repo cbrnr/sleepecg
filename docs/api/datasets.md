@@ -13,5 +13,7 @@ See [Datasets](../datasets.md) for information about available datasets and inst
 ::: sleepecg.read_slpdb
 ::: sleepecg.set_nsrr_token
 ::: sleepecg.ECGRecord
+::: sleepecg.Gender
 ::: sleepecg.SleepRecord
 ::: sleepecg.SleepStage
+::: sleepecg.SubjectData
