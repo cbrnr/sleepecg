@@ -12,7 +12,7 @@ from typing import Optional
 from ..config import get_config
 from .utils import _calculate_checksum
 
-GUDB_MD5 = {
+_GUDB_MD5 = {
     "subject_00/sitting/ECG.tsv": "06cdda76a17ff6efe4d4b18ccbc66e0f",
     "subject_00/sitting/annotation_cs.tsv": "fd0e6f5796a103637e29c4f9c14d155c",
     "subject_00/sitting/annotation_cables.tsv": "f5dfb5b4073974cc6aaf8ca3cc262002",
@@ -375,7 +375,7 @@ def _generate_gudb_md5(data_dir: Optional[str | Path] = None) -> dict[str, str]:
     Compute checksums for files in GUDB.
 
     This function can be used to compute the checksums from scratch if the data is already
-    available locally. The global `GUDB_MD5` dictionary should be equal to the return value
+    available locally. The global `_GUDB_MD5` dictionary should be equal to the return value
     of this function, so usually it is not necessary to run this function.
 
     Parameters

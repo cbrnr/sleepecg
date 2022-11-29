@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 from ..config import get_config
 from ..plot import plot_ecg
-from .gudb import GUDB_MD5
+from .gudb import _GUDB_MD5
 from .physionet import _list_physionet, download_physionet
 from .utils import _download_file
 
@@ -281,7 +281,7 @@ def read_gudb(
                     ecg_file_url = f"{DB_URL}/{experiment_subdir}/{tsv_filename}"
                     target_filepath = db_dir / experiment_subdir / tsv_filename
                     try:
-                        checksum = GUDB_MD5[f"{experiment_subdir}/{tsv_filename}"]
+                        checksum = _GUDB_MD5[f"{experiment_subdir}/{tsv_filename}"]
                     except KeyError:
                         pass  # file not available
                     else:
