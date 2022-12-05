@@ -1,3 +1,5 @@
+## [UNRELEASED] - YYYY-MM-DD
+
 ## [0.5.3] - 2022-12-05
 ### Added
 - Do not redownload GUDB data sets if they are already stored locally ([#112](https://github.com/cbrnr/sleepecg/pull/112) by [Clemens Brunner](https://github.com/cbrnr))

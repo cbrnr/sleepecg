@@ -16,4 +16,4 @@ from .heartbeats import compare_heartbeats, detect_heartbeats, rri_similarity
 from .io import *  # noqa: F403
 from .plot import plot_ecg, plot_hypnogram
 
-__version__ = "0.5.3"
+__version__ = "0.6.0-dev"
