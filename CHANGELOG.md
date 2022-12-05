@@ -1,4 +1,4 @@
-## [UNRELEASED] - YYYY-MM-DD
+## [0.5.3] - 2022-12-05
 ### Added
 - Do not redownload GUDB data sets if they are already stored locally ([#112](https://github.com/cbrnr/sleepecg/pull/112) by [Clemens Brunner](https://github.com/cbrnr))
 - Add `sleepecg.plot_ecg` and `sleepecg.ECGRecord.plot` functions for plotting ECG with beat annotations ([#116](https://github.com/cbrnr/sleepecg/pull/116) by [Clemens Brunner](https://github.com/cbrnr))
