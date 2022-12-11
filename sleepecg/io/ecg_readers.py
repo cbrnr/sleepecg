@@ -258,8 +258,6 @@ def read_gudb(
         (`.ecg`), sampling frequency (`.fs`), annotated beat indices (`.annotations`),
         `.lead`, and `.id`.
     """
-    import pandas as pd
-
     DB_URL = "https://berndporr.github.io/ECG-GUDB/experiment_data"
     EXPERIMENTS = ["sitting", "maths", "walking", "hand_bike", "jogging"]
     FS = 250
@@ -286,11 +284,18 @@ def read_gudb(
                         pass  # file not available
                     else:
                         _download_file(ecg_file_url, target_filepath, checksum, "md5")
-            ecg_data = pd.read_csv(
-                db_dir / experiment_subdir / "ECG.tsv",
-                sep=" ",  # contrary to what .tsv suggests, the data is space-separated
-                names=["chest", "II", "III", "X", "Y", "Z"],
-            )
+            ecg_data = {
+                lead: signal
+                for lead, signal in zip(
+                    ("chest", "II", "III"),
+                    np.loadtxt(
+                        db_dir / experiment_subdir / "ECG.tsv",
+                        delimiter=" ",  # space-separated (contrary to what .tsv suggests)
+                        usecols=(0, 1, 2),
+                        unpack=True,
+                    ),
+                )
+            }
             annotations_chest_file = db_dir / experiment_subdir / "annotation_cs.tsv"
             if annotations_chest_file.is_file():
                 yield ECGRecord(
