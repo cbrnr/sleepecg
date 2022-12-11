@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- Remove dependency on pandas for `read_gudb` ([#134](https://github.com/cbrnr/sleepecg/pull/134) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.5.3] - 2022-12-05
 ### Added
