@@ -15,6 +15,7 @@ from typing import Iterator, NamedTuple, Optional
 from xml.etree import ElementTree
 
 import numpy as np
+import logging
 
 from ..config import get_config
 from ..heartbeats import detect_heartbeats
@@ -586,26 +587,32 @@ def read_shhs(
 
     if any(r.startswith("shhs1") for r in requested_records):
         subject_data_file_shhs1 = next((db_dir / "datasets").glob("shhs1-dataset-*.csv"))
-        with open(subject_data_file_shhs1, newline="") as csvfile:
+        with open(subject_data_file_shhs1, newline="", encoding='windows-1252') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs1-{row['nsrrid']}"
-                subject_data[record_id] = SubjectData(
-                    gender=GENDER_MAPPING[row["gender"]],
-                    age=int(row["age_s1"]),
-                    weight=float(row["weight"]) if row["weight"] else None,
-                )
+                try:
+                    subject_data[record_id] = SubjectData(
+                        gender=GENDER_MAPPING.get(row["gender"]),
+                        age=int(row["age_s1"]) if row["age_s1"] != '' else None,
+                        weight=float(row["weight"]) if row["weight"] else None,
+                    )
+                except ValueError as ve:
+                    logging.warning(f"ValueError for record {record_id}: {ve}, skipping")
     if any(r.startswith("shhs2") for r in requested_records):
         subject_data_file_shhs2 = next((db_dir / "datasets").glob("shhs2-dataset-*.csv"))
-        with open(subject_data_file_shhs2, newline="") as csvfile:
+        with open(subject_data_file_shhs2, newline="", encoding='windows-1252') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs2-{row['nsrrid']}"
-                subject_data[record_id] = SubjectData(
-                    gender=GENDER_MAPPING[row["gender"]],
-                    age=int(row["age_s2"]),
-                    weight=None,  # subject weight was not recorded in shhs2
-                )
+                try:
+                    subject_data[record_id] = SubjectData(
+                        gender=GENDER_MAPPING.get(row["gender"]),
+                        age=int(row["age_s2"]) if row["age_s2"] != '' else None,
+                        weight=None,  # subject weight was not recorded in shhs2
+                    )
+                except ValueError as ve:
+                    logging.warning(f"ValueError for record {record_id}: {ve}, skipping")
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f"{record_id}.npy"
