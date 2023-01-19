@@ -586,24 +586,24 @@ def read_shhs(
 
     if any(r.startswith("shhs1") for r in requested_records):
         subject_data_file_shhs1 = next((db_dir / "datasets").glob("shhs1-dataset-*.csv"))
-        with open(subject_data_file_shhs1, newline="") as csvfile:
+        with open(subject_data_file_shhs1, newline="", encoding="windows-1252") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs1-{row['nsrrid']}"
                 subject_data[record_id] = SubjectData(
-                    gender=GENDER_MAPPING[row["gender"]],
-                    age=int(row["age_s1"]),
+                    gender=GENDER_MAPPING.get(row["gender"]),
+                    age=int(row["age_s1"]) if row["age_s1"] != "" else None,
                     weight=float(row["weight"]) if row["weight"] else None,
                 )
     if any(r.startswith("shhs2") for r in requested_records):
         subject_data_file_shhs2 = next((db_dir / "datasets").glob("shhs2-dataset-*.csv"))
-        with open(subject_data_file_shhs2, newline="") as csvfile:
+        with open(subject_data_file_shhs2, newline="", encoding="windows-1252") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs2-{row['nsrrid']}"
                 subject_data[record_id] = SubjectData(
-                    gender=GENDER_MAPPING[row["gender"]],
-                    age=int(row["age_s2"]),
+                    gender=GENDER_MAPPING.get(row["gender"]),
+                    age=int(row["age_s2"]) if row["age_s2"] != "" else None,
                     weight=None,  # subject weight was not recorded in shhs2
                 )
 
