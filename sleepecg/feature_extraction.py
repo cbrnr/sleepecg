@@ -305,7 +305,6 @@ def _hrv_frequencydomain_features(
     lookforward: int,
     fs_rri_resample: float,
     max_nans: float,
-    feature_ids: list[str],
 ) -> np.ndarray:
     """
     Calculate seven frequency domain heart rate variability (HRV) features.
@@ -331,10 +330,6 @@ def _hrv_frequencydomain_features(
     max_nans : float
         Maximum fraction of NaNs in an analysis window, for which frequency features are
         computed. Should be a value between `0.0` and `1.0`.
-    feature_ids : list[str]
-        A list containing the identifiers of all features to be extracted. This does not
-        change the returned array. It is only used to avoid issuing a warning about the
-        analysis window being too short for some frequency range which is not requested.
 
     Returns
     -------
@@ -348,29 +343,6 @@ def _hrv_frequencydomain_features(
        standards of measurement, physiological interpretation and clinical use. Circulation,
        93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
     """
-    # The recording should last for at least 10 times the wavelength of the lower frequency
-    # bound of the investigated component.
-    window_time = lookback + lookforward
-    min_frequencies = {
-        "VLF": 0.0033,
-        "LF": 0.04,
-        "LF_norm": 0.04,
-        "HF": 0.15,
-        "HF_norm": 0.04,
-        "LF_HF_ratio": 0.04,
-    }
-
-    for name, min_frequency in min_frequencies.items():
-        min_window_time = 10 / min_frequency
-        if name not in feature_ids:
-            continue
-        if window_time < min_window_time:
-            msg = (
-                f"HR analysis window too short for estimating PSD for feature {name}. "
-                f"{min_window_time:.1f}s required, got {window_time}s"
-            )
-            warnings.warn(msg, category=RuntimeWarning)
-
     rri_interp_times = np.arange(
         start=stage_times[0] - lookback,
         stop=stage_times[-1] + lookforward,
@@ -495,6 +467,40 @@ def _parse_feature_selection(
         warnings.warn(f"Duplicates in feature selection: {duplicate_ids}", RuntimeWarning)
 
     return list(required_groups), feature_ids, selected_cols
+
+
+def _check_frequencydomain_window_time(window_time: int, feature_ids: list[str]) -> None:
+    """
+    Warn if the duration of the analysis window is too short for a frequencydomain feature.
+
+    Each window duration should be at least 10 times the wavelength of the lower frequency
+    bound of the investigated component.
+
+    Parameters
+    ----------
+    window_time : int
+        The duration of the analysis window.
+    feature_ids : list[str]
+        A list containing the identifiers of all features to be extracted.
+    """
+    min_frequencies = {
+        "VLF": 0.0033,
+        "LF": 0.04,
+        "LF_norm": 0.04,
+        "HF": 0.15,
+        "HF_norm": 0.04,
+        "LF_HF_ratio": 0.04,
+    }
+    for name, min_frequency in min_frequencies.items():
+        min_window_time = 10 / min_frequency
+        if name not in feature_ids:
+            continue
+        if window_time < min_window_time:
+            msg = (
+                f"HR analysis window too short for estimating PSD for feature {name}. "
+                f"{min_window_time:.1f}s required, got {window_time}s"
+            )
+            warnings.warn(msg, category=RuntimeWarning)
 
 
 def preprocess_rri(
@@ -645,7 +651,6 @@ def _extract_features_single(
                     lookforward,
                     fs_rri_resample,
                     max_nans,
-                    feature_ids,
                 ),
             )
         elif feature_group == "metadata":
@@ -748,6 +753,7 @@ def extract_features(
         feature_selection = list(_FEATURE_GROUPS)
 
     required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
+    _check_frequencydomain_window_time(lookback + lookforward, feature_ids)
 
     # _extract_features_single has two return values, so the list returned by _parallel
     # needs to be unpacked
