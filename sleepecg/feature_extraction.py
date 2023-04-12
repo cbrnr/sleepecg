@@ -59,6 +59,15 @@ _FEATURE_GROUPS = {
 }
 _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
 
+_TIME_DOMAIN_EXPECTED_WARNING_MESSAGES = (
+    "All-NaN slice encountered",
+    "Degrees of freedom <= 0 for slice",
+    "divide by zero encountered in divide",
+    "divide by zero encountered in log10",
+    "invalid value encountered in sqrt",
+    "Mean of empty slice",
+)
+
 
 def _create_ragged_array(data: list[np.ndarray]) -> np.ndarray:
     """
@@ -614,15 +623,18 @@ def _extract_features_single(
     X = []
     for feature_group in required_groups:
         if feature_group == "hrv-time":
-            X.append(
-                _hrv_timedomain_features(
-                    rri,
-                    rri_times,
-                    stage_times,
-                    lookback,
-                    lookforward,
-                ),
-            )
+            with warnings.catch_warnings():
+                for message in _TIME_DOMAIN_EXPECTED_WARNING_MESSAGES:
+                    warnings.filterwarnings("ignore", message=message)
+                X.append(
+                    _hrv_timedomain_features(
+                        rri,
+                        rri_times,
+                        stage_times,
+                        lookback,
+                        lookforward,
+                    ),
+                )
         elif feature_group == "hrv-frequency":
             X.append(
                 _hrv_frequencydomain_features(
