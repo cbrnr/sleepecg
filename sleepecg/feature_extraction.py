@@ -471,7 +471,7 @@ def _parse_feature_selection(
 
 def _check_frequencydomain_window_time(window_time: int, feature_ids: list[str]) -> None:
     """
-    Warn if the duration of the analysis window is too short for a frequencydomain feature.
+    Warn if the duration of the analysis window is too short for a frequency domain feature.
 
     Each window duration should be at least 10 times the wavelength of the lower frequency
     bound of the investigated component.
