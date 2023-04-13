@@ -2,6 +2,7 @@
 ### Changed
 - Remove dependency on pandas for `read_gudb` ([#134](https://github.com/cbrnr/sleepecg/pull/134) by [Florian Hofer](https://github.com/hofaflo))
 - Update SHHS encoding and missing data handling for `read_shhs` ([#139](https://github.com/cbrnr/sleepecg/pull/139) by [Andrew Gilbert](https://github.com/adgilbert))
+- Ignore expected warnings during feature extraction ([#142](https://github.com/cbrnr/sleepecg/pull/142) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.5.3] - 2022-12-05
 ### Added

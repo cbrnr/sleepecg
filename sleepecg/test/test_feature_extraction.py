@@ -42,18 +42,14 @@ def test_feature_ids():
     )
     assert X_time.shape[1] == len(_FEATURE_GROUPS["hrv-time"])
 
-    # The analysis window (i.e. the sum of lookback and lookforward) must
-    # be at least 3030.3 seconds long to give useful PSD estimates in all
-    # frequency ranges, otherwise a warning is issued.
     X_frequency = _hrv_frequencydomain_features(
         rri,
         rri_times,
         stage_times,
-        lookback=3001,
+        lookback=0,
         lookforward=30,
         fs_rri_resample=4,
         max_nans=0,
-        feature_ids=_FEATURE_GROUPS["hrv-frequency"],
     )
     assert X_frequency.shape[1] == len(_FEATURE_GROUPS["hrv-frequency"])
 
