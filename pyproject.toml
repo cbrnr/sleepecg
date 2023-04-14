@@ -31,7 +31,7 @@ pretty = true
 
 [tool.pydocstyle]
 convention = 'numpy'
-add_ignore = 'D105'  # missing docstring in magic method
+add_ignore = 'D105'
 
 [tool.pytest.ini_options]
 markers = ['c_extension']
