@@ -1,28 +1,28 @@
 [build-system]
-requires = ["setuptools", "wheel", "oldest-supported-numpy"]
+requires = ['setuptools', 'wheel', 'oldest-supported-numpy']
 
 [tool.black]
 line-length = 92
 
 [tool.cibuildwheel]
-test-requires = "pytest"
-test-extras = "cibw"
-test-command = "pytest {package}"
-skip = "pp* *musllinux*"
+test-requires = 'pytest'
+test-extras = 'cibw'
+test-command = 'pytest {package}'
+skip = 'pp* *musllinux*'
 
 [tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux2014"
-archs = "x86_64"
+manylinux-x86_64-image = 'manylinux2014'
+archs = 'x86_64'
 
 [tool.cibuildwheel.macos]
-archs = "x86_64 arm64"
+archs = 'x86_64 arm64'
 
 [tool.cibuildwheel.windows]
-archs = "AMD64"
+archs = 'AMD64'
 
 [tool.mypy]
-packages = ["sleepecg"]
-exclude = "^sleepecg/test/"
+packages = ['sleepecg']
+exclude = '^sleepecg/test/'
 ignore_missing_imports = true
 disallow_untyped_defs = true
 warn_unreachable = true
@@ -30,8 +30,8 @@ strict_equality = true
 pretty = true
 
 [tool.pydocstyle]
-convention = numpy
-add_ignore = D105  # missing docstring in magic method
+convention = 'numpy'
+add_ignore = 'D105'  # missing docstring in magic method
 
 [tool.pytest.ini_options]
-markers = ["c_extension"]
+markers = ['c_extension']
