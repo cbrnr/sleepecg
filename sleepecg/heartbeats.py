@@ -442,7 +442,6 @@ def _thresholding_py(
             or (num_peaks_found == 0 and index > fs)  # original criterion
             or (num_peaks_found == 1 and index - previous_peak_index > 1.5 * fs)  # (1)
         ):  # (2)
-
             for i in range(1, 16):
                 found_a_candidate = False
 
