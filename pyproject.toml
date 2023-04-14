@@ -29,9 +29,5 @@ warn_unreachable = true
 strict_equality = true
 pretty = true
 
-[tool.pydocstyle]
-convention = 'numpy'
-add_ignore = 'D105'  # missing docstring in magic method
-
 [tool.pytest.ini_options]
 markers = ['c_extension']
