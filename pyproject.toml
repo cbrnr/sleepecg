@@ -7,7 +7,7 @@ line-length = 92
 [tool.cibuildwheel]
 test-requires = 'pytest'
 test-extras = 'cibw'
-test-command = 'pytest {package}'
+test-command = 'pytest {package}/test'
 skip = 'pp* *musllinux*'
 
 [tool.cibuildwheel.linux]
