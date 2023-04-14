@@ -1,5 +1,5 @@
 [flake8]
-extend-ignore = E203  # for Black compatibility
+extend-ignore = E203
 max-line-length = 92
 max-doc-length = 92
 exclude =
