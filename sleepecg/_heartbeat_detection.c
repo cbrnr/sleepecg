@@ -232,6 +232,14 @@ static PyObject *_thresholding(PyObject *self,
     int num_peaks_found = 0;
 
     double RR_missed_limit;
+    double PEAKF;
+
+    // RR_log_limit, RR_high_limit, and PEAKI are initialized here to avoid
+    // compiler warnings. The initialization value does not matter as their
+    // values will be set before being used for the first time.
+    double RR_low_limit = 0.0;
+    double RR_high_limit = 0.0;
+    double PEAKI = 0.0;
 
     // in case a searchback was unsuccessful, no new searchback will be
     // performed until another signal peak has been found regularly
@@ -244,9 +252,6 @@ static PyObject *_thresholding(PyObject *self,
     int index = 1;
     while (index < signal_len - 1)
     {
-        double PEAKF;
-        double PEAKI;
-
         char signal_peak_found = 0;
         char noise_peak_found = 0;
         // ----------------------------------------------------------------
@@ -441,9 +446,6 @@ static PyObject *_thresholding(PyObject *self,
             if (num_peaks_found > 1)
             {
                 RR_intervals[num_peaks_found] = peak_index - previous_peak_index;
-
-                double RR_low_limit;
-                double RR_high_limit;
 
                 // --------------------------------------------------------
                 // Learning phase 2

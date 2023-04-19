@@ -1,6 +1,8 @@
 [build-system]
 requires = ['setuptools', 'wheel', 'oldest-supported-numpy']
 
+[tool.black]
+line-length = 92
 
 [tool.cibuildwheel]
 test-requires = 'pytest'
@@ -8,23 +10,15 @@ test-extras = 'cibw'
 test-command = 'pytest {package}'
 skip = 'pp* *musllinux*'
 
-
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = 'manylinux2014'
 archs = 'x86_64'
 
-
-[tool.cibuildwheel.windows]
-archs = 'AMD64'
-
-
 [tool.cibuildwheel.macos]
 archs = 'x86_64 arm64'
 
-
-[tool.black]
-line-length = 92
-
+[tool.cibuildwheel.windows]
+archs = 'AMD64'
 
 [tool.mypy]
 packages = ['sleepecg']
@@ -34,3 +28,10 @@ disallow_untyped_defs = true
 warn_unreachable = true
 strict_equality = true
 pretty = true
+
+[tool.pydocstyle]
+convention = 'numpy'
+add_ignore = 'D105'
+
+[tool.pytest.ini_options]
+markers = ['c_extension']
