@@ -4,8 +4,6 @@
 
 """Interface for listing and downloading NSRR (sleepdata.org) data."""
 
-from __future__ import annotations
-
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path

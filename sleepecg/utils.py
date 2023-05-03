@@ -4,8 +4,6 @@
 
 """Utility functions."""
 
-from __future__ import annotations
-
 import datetime
 import warnings
 from typing import Any, Callable, Iterable, TypeVar

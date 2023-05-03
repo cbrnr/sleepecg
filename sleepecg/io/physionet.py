@@ -4,8 +4,6 @@
 
 """Simple interface for downloading PhysioNet data."""
 
-from __future__ import annotations
-
 import fnmatch
 from pathlib import Path
 from typing import Iterable

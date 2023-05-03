@@ -4,8 +4,6 @@
 
 """Heartbeat detection and detector evaluation."""
 
-from __future__ import annotations
-
 import warnings
 from typing import NamedTuple
 

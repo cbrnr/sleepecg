@@ -4,8 +4,6 @@
 
 """Read datasets containing ECG data and sleep stage annotations."""
 
-from __future__ import annotations
-
 import csv
 import datetime
 from dataclasses import dataclass
