@@ -8,7 +8,10 @@ import sys
 
 import numpy as np
 import pytest
-from scipy.misc import electrocardiogram
+try:
+    from scipy.datasets import electrocardiogram  # SciPy ≥ 1.10
+except ImportError:
+    from scipy.misc import electrocardiogram  # SciPy < 1.10
 from scipy.signal import resample_poly
 
 from sleepecg import compare_heartbeats, detect_heartbeats
