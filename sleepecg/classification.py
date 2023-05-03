@@ -305,7 +305,8 @@ def load_classifier(
             try:
                 classifier = keras.models.load_model(f"{tmpdir}/classifier")
             finally:
-                os.environ = environ_orig
+                os.environ.clear()
+                os.environ.update(environ_orig)
 
         else:
             raise ValueError(
