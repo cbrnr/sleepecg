@@ -296,7 +296,7 @@ def load_classifier(
 
         if classifier_info["model_type"] == "keras":
             import os
-            
+
             environ_orig = os.environ.copy()
             if silence_tf_messages:
                 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
