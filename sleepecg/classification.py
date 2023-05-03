@@ -269,7 +269,8 @@ def load_classifier(
         from the configuration. If `'SleepECG'`, load classifiers from
         `site-packages/sleepecg/classifiers`.
     silence_tf_messages : bool, optional
-        Whether or not to silence messages from TensorFlow when loading a model.
+        Whether or not to silence messages from TensorFlow when loading a model. By default
+        `True`.
 
     Returns
     -------
