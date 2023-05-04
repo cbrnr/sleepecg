@@ -35,4 +35,7 @@ add_ignore = 'D105'
 
 [tool.pytest.ini_options]
 markers = ['c_extension']
-filterwarnings = ['ignore:sample_rate:DeprecationWarning:pyedflib.*']
+filterwarnings = [
+    'ignore:.*sample_rate:DeprecationWarning:pyedflib',
+    'ignore:.*pkg_resources:DeprecationWarning',
+]
