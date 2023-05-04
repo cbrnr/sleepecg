@@ -636,5 +636,5 @@ def _thresholding_py(
 
 
 if "numba" in _available_backends:
-    _squared_moving_integration_numba = jit(_squared_moving_integration_py)
-    _thresholding_numba = jit(_thresholding_py)
+    _squared_moving_integration_numba = jit(_squared_moving_integration_py, nopython=True)
+    _thresholding_numba = jit(_thresholding_py, nopython=True)
