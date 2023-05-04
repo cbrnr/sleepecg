@@ -8,6 +8,7 @@ import sys
 
 import numpy as np
 import pytest
+
 try:
     from scipy.datasets import electrocardiogram  # SciPy ≥ 1.10
 except ImportError:

@@ -10,6 +10,7 @@ import datetime
 from pathlib import Path
 
 import numpy as np
+
 try:
     from scipy.datasets import electrocardiogram  # SciPy ≥ 1.10
 except ImportError:
