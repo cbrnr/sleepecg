@@ -252,6 +252,7 @@ class SleepClassifier:
 def load_classifier(
     name: str,
     classifiers_dir: Optional[str | Path] = None,
+    silence_tf_messages: bool = True,
 ) -> SleepClassifier:
     """
     Load a `SleepClassifier` from disk.
@@ -267,6 +268,9 @@ def load_classifier(
         Directory in which to look for `<name>.zip`. If `None` (default), the value is taken
         from the configuration. If `'SleepECG'`, load classifiers from
         `site-packages/sleepecg/classifiers`.
+    silence_tf_messages : bool, optional
+        Whether or not to silence messages from TensorFlow when loading a model. By default
+        `True`.
 
     Returns
     -------
@@ -292,9 +296,19 @@ def load_classifier(
             classifier_info = yaml.safe_load(infofile)
 
         if classifier_info["model_type"] == "keras":
+            import os
+
+            environ_orig = os.environ.copy()
+            if silence_tf_messages:
+                os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
             from tensorflow import keras
 
-            classifier = keras.models.load_model(f"{tmpdir}/classifier")
+            try:
+                classifier = keras.models.load_model(f"{tmpdir}/classifier")
+            finally:
+                os.environ.clear()
+                os.environ.update(environ_orig)
 
         else:
             raise ValueError(
