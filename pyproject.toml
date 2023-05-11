@@ -1,27 +1,28 @@
 [build-system]
-requires = ['setuptools', 'wheel', 'oldest-supported-numpy']
+requires = ["setuptools", "oldest-supported-numpy"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 92
 
 [tool.cibuildwheel]
-test-requires = 'pytest'
-test-extras = 'cibw'
-test-command = 'pytest {package}'
+test-requires = "pytest"
+test-extras = "cibw"
+test-command = "pytest {package}"
 skip = 'pp* *musllinux*'
 
 [tool.cibuildwheel.linux]
-manylinux-x86_64-image = 'manylinux2014'
-archs = 'x86_64'
+manylinux-x86_64-image = "manylinux2014"
+archs = "x86_64"
 
 [tool.cibuildwheel.macos]
-archs = 'x86_64 arm64'
+archs = "x86_64 arm64"
 
 [tool.cibuildwheel.windows]
-archs = 'AMD64'
+archs = "AMD64"
 
 [tool.mypy]
-packages = ['sleepecg']
+packages = ["sleepecg"]
 exclude = '^sleepecg/test/'
 ignore_missing_imports = true
 disallow_untyped_defs = true
@@ -30,13 +31,13 @@ strict_equality = true
 pretty = true
 
 [tool.pydocstyle]
-convention = 'numpy'
-add_ignore = 'D105'
+convention = "numpy"
+add_ignore = "D105"
 
 [tool.pytest.ini_options]
-markers = ['c_extension']
+markers = ["c_extension"]
 filterwarnings = [
-    'error',
+    "error",
     'ignore:.*sample_rate:DeprecationWarning:pyedflib',
     'ignore:.*pkg_resources:DeprecationWarning',
 ]
