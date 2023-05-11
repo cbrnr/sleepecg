@@ -2,6 +2,86 @@
 requires = ["setuptools", "oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "sleepecg"
+description = "A package for sleep stage classification using ECG data"
+license = {text = "BSD 3-Clause"}
+authors = [
+    {name = "Florian Hofer", email = "hofaflo@gmail.com"},
+    {name = "Clemens Brunner", email = "clemens.brunner@gmail.com"},
+]
+requires-python = ">=3.8"
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Typing :: Typed",
+]
+keywords = ["sleep", "ecg", "qrs", "peak"]
+dependencies = [
+    "numpy >= 1.20.0",
+    "PyYAML >= 5.4.0",
+    "requests >= 2.25.0",
+    "scipy >= 1.7.0",
+    "tqdm >= 4.60.0",
+]
+dynamic = ["version", "readme"]
+
+[project.optional-dependencies]
+full = [  # complete package functionality
+    "joblib >= 1.0.0",
+    "matplotlib >= 3.5.0",
+    "mne >= 1.0.0",
+    "numba >= 0.55.0",
+    "tensorflow >= 2.7.0; sys_platform != 'darwin'",
+    "tensorflow-macos >= 2.7.0; sys_platform == 'darwin' and python_version < '3.11'",
+    "tensorflow-metal >= 0.8.0; sys_platform == 'darwin' and python_version < '3.11'",
+    "wfdb >= 3.4.0",
+]
+
+dev = [  # everything needed for development
+    "black >= 22.6.0",
+    "flake8 >= 4.0.0",
+    "joblib >= 1.0.0",
+    "matplotlib >= 3.5.0",
+    "mkdocs-material >= 8.4.0",
+    "mkdocstrings-python >= 0.7.1",
+    "mne >= 1.0.0",
+    "mypy >= 0.991",
+    "numba >= 0.55.0",
+    "pre-commit >= 2.13.0",
+    "pyEDFlib >= 0.1.25",
+    "pytest >= 6.2.0",
+    "setuptools >= 56.0.0",
+    "sphinx >= 4.1.0",
+    "tensorflow >= 2.7.0; sys_platform != 'darwin'",
+    "tensorflow-macos >= 2.7.0; sys_platform == 'darwin' and python_version < '3.11'",
+    "tensorflow-metal >= 0.8.0; sys_platform == 'darwin' and python_version < '3.11'",
+    "wfdb >= 3.4.0",
+]
+
+doc = [  # RTD uses this when building the documentation
+    "mkdocs-material >= 8.4.0",
+    "mkdocstrings-python >= 0.8.2",
+]
+
+cibw = [  # cibuildwheel uses this for running the test suite
+    "mne >= 1.0.0",
+    "numba >= 0.55.0",
+    "pyEDFlib >= 0.1.25",
+    "wfdb >= 3.4.0",
+]
+
+[project.urls]
+homepage = "https://github.com/cbrnr/sleepecg"
+documentation = "https://sleepecg.readthedocs.io/en/latest/"
+repository = "https://github.com/cbrnr/sleepecg"
+changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
+
 [tool.black]
 line-length = 92
 
@@ -41,3 +121,13 @@ filterwarnings = [
     'ignore:.*sample_rate:DeprecationWarning:pyedflib',
     'ignore:.*pkg_resources:DeprecationWarning',
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "sleepecg.__version__"}
+readme = {file = "README.md", content-type = "text/markdown"}
+
+[tool.setuptools.packages.find]
+exclude = ["examples"]
+
+[tool.setuptools.package_data]
+sleepecg = ["*.pyi"]
