@@ -129,5 +129,5 @@ readme = {file = "README.md", content-type = "text/markdown"}
 [tool.setuptools.packages.find]
 exclude = ["examples"]
 
-[tool.setuptools.package_data]
-sleepecg = ["*.pyi"]
+[tool.setuptools.package-data]
+"*" = ["*.pyi"]
