@@ -45,7 +45,7 @@ conda install -c conda-forge sleepecg
 SleepECG with all optional dependencies can be installed with the following command:
 
 ```
-pip install sleepecg[full]
+pip install "sleepecg[full]"
 ```
 
 If you want the latest development version, use the following command:
