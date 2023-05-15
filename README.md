@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/cbrnr/sleepecg)](LICENSE)
 
 ## SleepECG
-SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography) (and to a lesser extent also movement data), SleepECG provides functions for
+SleepECG provides tools for sleep stage classification when [EEG](https://en.wikipedia.org/wiki/Electroencephalography) signals are not available. Based only on [ECG](https://en.wikipedia.org/wiki/Electrocardiography), SleepECG provides functions for
 
 - downloading and reading open polysomnography datasets,
 - detecting heartbeats from ECG signals, and
