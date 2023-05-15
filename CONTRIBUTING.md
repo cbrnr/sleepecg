@@ -38,7 +38,7 @@ If another PR is merged while you are working on something, a merge conflict may
 Make sure to use Python 3.8. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of working your main environment. In the root of the local clone of your fork, install SleepECG as follows:
 
 ```
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 
 When using the flag [`-e`](https://pip.pypa.io/en/stable/cli/pip_install/#install-editable), pip does not copy the package to `site-packages/`, but creates a link to your local repository. Any changes to the source code are directly reflected in the "installed" package. Installing the optional `[dev]` dependencies makes sure all tools for style checking, testing, and building documentation are locally available.
