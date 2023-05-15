@@ -1,4 +1,5 @@
 # %%
+import matplotlib.pyplot as plt
 from sleepecg import load_classifier, plot_hypnogram, read_slpdb, stage
 
 # The model was built using tensorflow 2.7, running on higher versions might create warnings
@@ -18,3 +19,5 @@ plot_hypnogram(
     stages_mode=clf.stages_mode,
     merge_annotations=True,
 )
+
+plt.show()
