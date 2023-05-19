@@ -9,8 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from ..config import get_config
-from .utils import _calculate_checksum
+from sleepecg.config import get_config
+from sleepecg.io.utils import _calculate_checksum
 
 _GUDB_MD5 = {
     "subject_00/sitting/ECG.tsv": "06cdda76a17ff6efe4d4b18ccbc66e0f",

@@ -12,7 +12,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from .utils import _download_file
+from sleepecg.io.utils import _download_file
 
 _PHYSIONET_FILES_URL = "https://physionet.org/files/"
 _CHECKSUM_FILENAME = "SHA256SUMS.txt"

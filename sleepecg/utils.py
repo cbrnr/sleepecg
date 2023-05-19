@@ -12,7 +12,7 @@ from typing import Any, Callable, Iterable, TypeVar
 
 import numpy as np
 
-from .io.sleep_readers import SleepStage
+from sleepecg.io.sleep_readers import SleepStage
 
 # required to propagate the return type annotation through _parallel
 _Returnable = TypeVar("_Returnable")

@@ -14,8 +14,8 @@ import numpy as np
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
-from .io.sleep_readers import SleepRecord, SleepStage
-from .utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time_to_sec
+from sleepecg.io.sleep_readers import SleepRecord, SleepStage
+from sleepecg.utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time_to_sec
 
 
 def plot_ecg(

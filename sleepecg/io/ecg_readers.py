@@ -16,11 +16,11 @@ from tqdm import tqdm
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
-from ..config import get_config
-from ..plot import plot_ecg
-from .gudb import _GUDB_MD5
-from .physionet import _list_physionet, download_physionet
-from .utils import _download_file
+from sleepecg.config import get_config
+from sleepecg.plot import plot_ecg
+from sleepecg.io.gudb import _GUDB_MD5
+from sleepecg.io.physionet import _list_physionet, download_physionet
+from sleepecg.io.utils import _download_file
 
 
 @dataclass

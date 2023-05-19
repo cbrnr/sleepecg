@@ -16,10 +16,10 @@ from xml.etree import ElementTree
 
 import numpy as np
 
-from ..config import get_config
-from ..heartbeats import detect_heartbeats
-from .nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr, download_nsrr
-from .physionet import _list_physionet, download_physionet
+from sleepecg.config import get_config
+from sleepecg.heartbeats import detect_heartbeats
+from sleepecg.io.nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr, download_nsrr
+from sleepecg.io.physionet import _list_physionet, download_physionet
 
 
 class SleepStage(IntEnum):

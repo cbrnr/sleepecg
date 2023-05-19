@@ -18,7 +18,7 @@ _all_backends = ("c", "numba", "python")
 _available_backends = list(_all_backends)
 
 try:
-    from ._heartbeat_detection import _squared_moving_integration, _thresholding
+    from sleepecg._heartbeat_detection import _squared_moving_integration, _thresholding
 except ImportError:
     _available_backends.remove("c")
 

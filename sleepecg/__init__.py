@@ -1,6 +1,6 @@
 """A package for sleep stage classification using ECG data."""
 
-from .classification import (
+from sleepecg.classification import (
     SleepClassifier,
     evaluate,
     list_classifiers,
@@ -10,10 +10,10 @@ from .classification import (
     save_classifier,
     stage,
 )
-from .config import get_config, set_config
-from .feature_extraction import extract_features, preprocess_rri
-from .heartbeats import compare_heartbeats, detect_heartbeats, rri_similarity
-from .io import *  # noqa: F403
-from .plot import plot_ecg, plot_hypnogram
+from sleepecg.config import get_config, set_config
+from sleepecg.feature_extraction import extract_features, preprocess_rri
+from sleepecg.heartbeats import compare_heartbeats, detect_heartbeats, rri_similarity
+from sleepecg.io import *  # noqa: F403
+from sleepecg.plot import plot_ecg, plot_hypnogram
 
 __version__ = "0.6.0-dev"

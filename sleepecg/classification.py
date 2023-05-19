@@ -16,10 +16,10 @@ from zipfile import ZipFile
 import numpy as np
 import yaml
 
-from .config import get_config
-from .feature_extraction import extract_features
-from .io.sleep_readers import SleepRecord, SleepStage
-from .utils import _STAGE_NAMES, _merge_sleep_stages
+from sleepecg.config import get_config
+from sleepecg.feature_extraction import extract_features
+from sleepecg.io.sleep_readers import SleepRecord, SleepStage
+from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
 
 
 def prepare_data_keras(
