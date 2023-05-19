@@ -14,8 +14,8 @@ from numpy.lib.stride_tricks import sliding_window_view
 from scipy.interpolate import interp1d
 from scipy.signal import periodogram
 
-from .io.sleep_readers import SleepRecord
-from .utils import _parallel, _time_to_sec
+from sleepecg.io.sleep_readers import SleepRecord
+from sleepecg.utils import _parallel, _time_to_sec
 
 _FEATURE_GROUPS = {
     "hrv-time": (
