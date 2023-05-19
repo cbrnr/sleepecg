@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- Use absolute imports internally ([#170](https://github.com/cbrnr/sleepecg/pull/170) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.4] - 2023-04-13
 ### Changed
