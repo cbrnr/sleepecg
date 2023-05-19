@@ -18,6 +18,7 @@ For best results, we recommend a sampling frequency of at least 100 Hz. Furtherm
 Let's detect heartbeats in a short electrocardiogram:
 
 ```python
+import numpy as np
 from scipy.misc import electrocardiogram
 from sleepecg import detect_heartbeats
 
