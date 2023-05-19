@@ -13,7 +13,7 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
-from sleepecg.utils import _download_file
+from sleepecg.io.utils import _download_file
 
 _nsrr_token = None
 
