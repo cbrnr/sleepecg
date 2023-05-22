@@ -60,5 +60,20 @@ If you want the latest development version, use the following command:
 pip install git+https://github.com/cbrnr/sleepecg
 ```
 
+### Example
+The following example detects heartbeats in a short ECG (a one-dimensional NumPy array):
+
+```python
+import numpy as np
+from scipy.misc import electrocardiogram
+from sleepecg import detect_heartbeats
+
+ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
+fs = 360
+beats = detect_heartbeats(ecg, fs)
+```
+
+More examples are available at https://github.com/cbrnr/sleepecg/tree/main/examples.
+
 ### Contributing
 The [contributing guide](https://github.com/cbrnr/sleepecg/blob/main/CONTRIBUTING.md) contains detailed instructions on how to contribute to SleepECG.
