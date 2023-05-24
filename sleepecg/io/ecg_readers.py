@@ -33,7 +33,7 @@ class ECGRecord:
     ecg : np.ndarray
         The ECG signal.
     fs : float
-        The sampling frequency.
+        The sampling frequency in Hz.
     annotation : np.ndarray
         Indices of annotated heartbeats.
     lead : str, optional
