@@ -1,14 +1,1 @@
-**/__pycache__/
-!/.gitignore
-**/.ipynb_checkpoints/
-.idea
-.vscode
-.mypy_cache
-examples/datasets/
-examples/benchmark/results/
-build
-dist
-site
-*.egg-info
-*.pyd
 *.so
