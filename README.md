@@ -69,8 +69,8 @@ from scipy.misc import electrocardiogram
 from sleepecg import detect_heartbeats
 
 ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
-fs = 360
-beats = detect_heartbeats(ecg, fs)
+fs = 360  # sampling frequency
+beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
 
 More examples are available at https://github.com/cbrnr/sleepecg/tree/main/examples.
