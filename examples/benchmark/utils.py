@@ -10,11 +10,14 @@ import time
 from typing import Any, Iterator
 
 import numpy as np
+
 import sleepecg
 from sleepecg.io.ecg_readers import ECGRecord
 
 
 class HeartpyWarning(Warning):
+    """Warning for all Heartpy-related warnings."""
+
     pass
 
 

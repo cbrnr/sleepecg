@@ -17,10 +17,10 @@ if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
 from sleepecg.config import get_config
-from sleepecg.plot import plot_ecg
 from sleepecg.io.gudb import _GUDB_MD5
 from sleepecg.io.physionet import _list_physionet, download_physionet
 from sleepecg.io.utils import _download_file
+from sleepecg.plot import plot_ecg
 
 
 @dataclass
