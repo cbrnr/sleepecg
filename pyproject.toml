@@ -43,7 +43,6 @@ full = [  # complete package functionality
 
 dev = [  # everything needed for development
     "black >= 22.6.0",
-    "flake8 >= 4.0.0",
     "joblib >= 1.0.0",
     "matplotlib >= 3.5.0",
     "mkdocs-material >= 8.4.0",
@@ -54,6 +53,7 @@ dev = [  # everything needed for development
     "pre-commit >= 2.13.0",
     "pyEDFlib >= 0.1.25",
     "pytest >= 6.2.0",
+    "ruff >= 0.0.263",
     "setuptools >= 56.0.0",
     "sphinx >= 4.1.0",
     "tensorflow >= 2.7.0",
@@ -106,10 +106,6 @@ warn_unreachable = true
 strict_equality = true
 pretty = true
 
-[tool.pydocstyle]
-convention = "numpy"
-add_ignore = "D105"
-
 [tool.pytest.ini_options]
 markers = ["c_extension"]
 filterwarnings = [
@@ -117,6 +113,19 @@ filterwarnings = [
     'ignore:.*sample_rate:DeprecationWarning:pyedflib',
     'ignore:.*pkg_resources:DeprecationWarning',
 ]
+
+[tool.ruff]
+select = ["D", "E", "F", "I", "W"]
+line-length = 92
+ignore = ["D105"]
+exclude = ["setup.py"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"**/examples/*.py" = ["D100"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
 
 [tool.setuptools.dynamic]
 version = {attr = "sleepecg.__version__"}
