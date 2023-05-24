@@ -8,6 +8,10 @@ Group identifier: `hrv-time`
 
 All time domain HRV features are either derived from normal-to-normal (NN) intervals, from successive differences between NN intervals (SD), or from the [Poincaré plot (PP)](https://en.wikipedia.org/wiki/Poincar%C3%A9_plot).
 
+!!! note
+    
+    SleepECG expects time in *seconds* to compute features. Since many features like RMSSD are typically specified in *milliseconds* in the field of heart rate variability research. Therefore, SleepECG features need to be manually rescaled before comparing to millisecond-based features.
+
 |Feature|Description|Signal|
 |-|-|-|
 |`meanNN`|average normal-normal (NN) interval|NN|
