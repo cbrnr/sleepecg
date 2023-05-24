@@ -10,7 +10,7 @@ All time domain HRV features are either derived from normal-to-normal (NN) inter
 
 !!! note
     
-    SleepECG expects time in *seconds* to compute features. Since many features like RMSSD are typically specified in *milliseconds* in the field of heart rate variability research, SleepECG features need to be manually rescaled before comparing to millisecond-based features.
+    SleepECG expects time in *seconds* to compute features. Since many features like RMSSD are typically specified in *milliseconds* in the field of heart rate variability research, the resulting features need to be manually rescaled before comparing to millisecond-based features.
 
 |Feature|Description|Signal|
 |-|-|-|
