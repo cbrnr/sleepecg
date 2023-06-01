@@ -16,4 +16,4 @@ from sleepecg.heartbeats import compare_heartbeats, detect_heartbeats, rri_simil
 from sleepecg.io import *  # noqa: F403
 from sleepecg.plot import plot_ecg, plot_hypnogram
 
-__version__ = "0.6.0-dev"
+__version__ = "0.5.5"
