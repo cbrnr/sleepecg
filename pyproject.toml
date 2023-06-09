@@ -55,7 +55,6 @@ dev = [  # everything needed for development
     "pytest >= 6.2.0",
     "ruff >= 0.0.263",
     "setuptools >= 56.0.0",
-    "sphinx >= 4.1.0",
     "tensorflow >= 2.7.0",
     "wfdb >= 3.4.0",
 ]
