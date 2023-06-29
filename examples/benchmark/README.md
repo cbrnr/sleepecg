@@ -2,7 +2,7 @@
 This example reproduces the benchmarks shown in the [docs](https://sleepecg.readthedocs.io/en/latest/heartbeat_detection.html).
 
 ## Usage
-To run the benchmark, create a virtual enviroment and install the requirements with:
+To run the benchmark, create a virtual environment and install the requirements with:
 ```
 pip install -r requirements-benchmark.txt
 ```

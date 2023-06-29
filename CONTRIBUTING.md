@@ -34,7 +34,7 @@ If another PR is merged while you are working on something, a merge conflict may
 - Push to your remote fork: `git push` (might require `git push --force`)
 
 
-## Development enviroment
+## Development environment
 Make sure to use Python 3.8. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of working your main environment. In the root of the local clone of your fork, install SleepECG as follows:
 
 ```

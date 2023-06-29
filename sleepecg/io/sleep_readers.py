@@ -445,7 +445,7 @@ def read_slpdb(
 
         # Most annotations are at sample indices which are multiples of 30*fs. However,
         # annotations which would be at sample index 0, are at sample index 1. Integer
-        # divison is used when calculating the stage index to move these annotations to
+        # division is used when calculating the stage index to move these annotations to
         # sample index 0.
         for sample_time, annotation in zip(annot_st.sample, annot_st.aux_note):
             if annotation[0] in STAGE_MAPPING:
