@@ -60,8 +60,6 @@ fs = 360  # sampling frequency
 beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
 
-More examples are available at https://github.com/cbrnr/sleepecg/tree/main/examples.
-
 
 ### Dependencies
 

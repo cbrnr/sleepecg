@@ -84,7 +84,7 @@ plt.show()
 ```
 
 
-## Classifying sleep stages in your own dataset
+## Sleep staging with a custom dataset
 
 This example requires `mne` and `tensorflow` packages. In addition, it uses an example file [`sleep.edf`](https://osf.io/download/mx7av/), which contains ECG data for a whole night. Download and save this file in your working directory before running this example.
 
