@@ -12,6 +12,7 @@ repos:
     - id: check-yaml
     - id: check-toml
     - id: mixed-line-ending
+      exclude: ^examples/data
     - id: check-builtin-literals
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
