@@ -2,10 +2,11 @@
 from datetime import datetime, timezone
 
 from mne.io import read_raw_edf
+
 import sleepecg
 
 # %% load dataset sleep.edf
-raw = read_raw_edf("sleep.edf", include="ECG")
+raw = read_raw_edf("data/sleep.edf", include="ECG")
 raw.set_channel_types({"ECG": "ecg"})
 fs = raw.info["sfreq"]
 
