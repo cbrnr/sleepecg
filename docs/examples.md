@@ -162,7 +162,7 @@ X = features[0]
 ```
 
 
-## Using the built-in classifier
+## Using a built-in classifier
 
 ```python
 import matplotlib.pyplot as plt
