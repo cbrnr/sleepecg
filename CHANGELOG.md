@@ -3,6 +3,7 @@
 ## [0.5.5] - 2023-06-01
 ### Changed
 - Use absolute imports internally ([#170](https://github.com/cbrnr/sleepecg/pull/170) by [Clemens Brunner](https://github.com/cbrnr))
+- Move usage examples to documentation website ([#190](https://github.com/cbrnr/sleepecg/pull/190) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.4] - 2023-04-13
 ### Changed

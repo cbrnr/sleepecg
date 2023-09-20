@@ -1,12 +1,5 @@
 # Examples
 
-To run the provided examples, download or clone the [GitHub Repository](https://github.com/cbrnr/sleepecg) and execute the scripts in this directory or its subdirectories.
-- Heartbeat detection demo:
-    ```
-    sleepecg/examples> python heartbeat_detection.py
-    ```
+This folder contains scripts to generate the built-in classifiers as well as to reproduce the benchmark (more info [here](https://github.com/cbrnr/sleepecg/tree/main/examples/benchmark)).
 
-- Benchmark heartbeat detector runtime (more info [here](https://github.com/cbrnr/sleepecg/tree/main/examples/benchmark)):
-    ```
-    sleepecg/examples/benchmark> python benchmark_detectors.py runtime
-    ```
+Usage examples can be found in the documentation.
