@@ -42,6 +42,7 @@ theme:
         name: Switch to dark theme
   features:
     - toc.integrate
+    - content.code.copy
 plugins:
   - search
   - mkdocstrings:
