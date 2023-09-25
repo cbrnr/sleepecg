@@ -4,6 +4,8 @@
 
 """Tests for heartbeat detection and detector evaluation."""
 
+from sys import version_info
+
 import numpy as np
 import pytest
 
@@ -29,7 +31,19 @@ def mitdb_234_MLII():
     return next(read_mitdb(records_pattern="234"))
 
 
-@pytest.mark.parametrize("backend", ["c", "numba", "python"])
+@pytest.mark.parametrize(
+    "backend",
+    [
+        "c",
+        pytest.param(
+            "numba",
+            marks=pytest.mark.skipif(
+                version_info >= (3, 12), reason="Numba does not support Python 3.12 yet"
+            ),
+        ),
+        "python",
+    ],
+)
 def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
     record = mitdb_234_MLII
