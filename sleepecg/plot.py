@@ -112,7 +112,7 @@ def plot_hypnogram(
         A single record (i.e. night).
     stages_pred : np.ndarray
         The predicted stages, either as a 1D array of integers or a 2D array of
-        probabilties.
+        probabilities.
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
