@@ -111,6 +111,7 @@ filterwarnings = [
     "error",
     'ignore:.*sample_rate:DeprecationWarning:pyedflib',
     'ignore:.*pkg_resources:DeprecationWarning',
+    'ignore:.*datetime.datetime.utcfromtimestamp\(\):DeprecationWarning',
 ]
 
 [tool.ruff]
