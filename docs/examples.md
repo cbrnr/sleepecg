@@ -104,7 +104,7 @@ stop = datetime(2023, 3, 2, 6, 0, 0)
 rec_start = datetime.combine(edf.startdate, edf.starttime)
 edf.slice_between_seconds((start - rec_start).seconds, (stop - rec_start).seconds)
 
-# get ECG time series and sampling freqeuncy
+# get ECG time series and sampling frequency
 ecg = edf.get_signal("ECG").data
 fs = edf.get_signal("ECG").sampling_frequency
 
