@@ -4,8 +4,6 @@
 
 """Plotting functions."""
 
-from __future__ import annotations
-
 from itertools import cycle
 from typing import TYPE_CHECKING, Optional
 
