@@ -202,7 +202,7 @@ def read_mesa(
     SleepRecord
         Each element in the generator is of type `SleepRecord`.
     """
-    from mne.io import read_raw_edf
+    from edfio import read_edf
 
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
@@ -330,11 +330,9 @@ def read_mesa(
                     checksums[edf_filename],
                 )
 
-            rec = read_raw_edf(edf_filepath, verbose=False)
-            ecg = rec.get_data("EKG").ravel()
-            fs = rec.info["sfreq"]
-            heartbeat_indices = detect_heartbeats(ecg, fs)
-            heartbeat_times = heartbeat_indices / fs
+            ecg = read_edf(edf_filepath).get_signal("EKG")
+            heartbeat_indices = detect_heartbeats(ecg.data, ecg.sampling_frequency)
+            heartbeat_times = heartbeat_indices / ecg.sampling_frequency
             np.save(heartbeats_file, heartbeat_times)
 
             if not edf_was_available and not keep_edfs:
@@ -513,7 +511,7 @@ def read_shhs(
     SleepRecord
         Each element in the generator is of type `SleepRecord`.
     """
-    from mne.io import read_raw_edf
+    from edfio import read_edf
 
     DB_SLUG = "shhs"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
@@ -643,11 +641,9 @@ def read_shhs(
                     checksums[edf_filename],
                 )
 
-            rec = read_raw_edf(edf_filepath, verbose=False)
-            ecg = rec.get_data("ECG").ravel()
-            fs = rec.info["sfreq"]
-            heartbeat_indices = detect_heartbeats(ecg, fs)
-            heartbeat_times = heartbeat_indices / fs
+            ecg = read_edf(edf_filepath).get_signal("ECG")
+            heartbeat_indices = detect_heartbeats(ecg.data, ecg.sampling_frequency)
+            heartbeat_times = heartbeat_indices / ecg.sampling_frequency
 
             heartbeats_file.parent.mkdir(parents=True, exist_ok=True)
             np.save(heartbeats_file, heartbeat_times)

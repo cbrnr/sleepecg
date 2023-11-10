@@ -10,12 +10,12 @@ import datetime
 from pathlib import Path
 
 import numpy as np
+from edfio import Edf, EdfSignal
 
 try:
     from scipy.datasets import electrocardiogram  # SciPy ≥ 1.10
 except ImportError:
     from scipy.misc import electrocardiogram  # SciPy < 1.10
-from pyedflib import highlevel
 
 from sleepecg import SleepStage, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
@@ -25,9 +25,8 @@ def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
     ECG_FS = 360
     ecg_5_min = electrocardiogram()
     seconds = int(hours * 60 * 60)
-    ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[np.newaxis, : seconds * ECG_FS]
-    signal_headers = highlevel.make_signal_headers([ecg_channel], sample_frequency=ECG_FS)
-    highlevel.write_edf(filename, ecg, signal_headers)
+    ecg = np.tile(ecg_5_min, int(np.ceil(seconds / 300)))[: seconds * ECG_FS]
+    Edf([EdfSignal(ecg, ECG_FS, label=ecg_channel)]).write(filename)
 
 
 def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
