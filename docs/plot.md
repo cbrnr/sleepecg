@@ -5,12 +5,10 @@ If [Matplotlib](https://matplotlib.org/) is installed, SleepECG can create usefu
 The function [`sleepecg.plot_ecg()`][sleepecg.plot_ecg] plots the time course of an ECG signal, optionally with one or more markers (such as detected heart beats). The following example demonstrates this functionality with toy data:
 
 ```python
-from scipy.misc import electrocardiogram
 import sleepecg
 
-fs = 360
-ecg = electrocardiogram()[:10 * fs]
-beats = sleepecg.detect_heartbeats(ecg, fs)
+ecg, fs = sleepecg.get_toy_ecg()  # 5 min of ECG data at 360 Hz
+beats = sleepecg.detect_heartbeats(ecg[:10 * fs], fs)
 
 sleepecg.plot_ecg(ecg, fs, correct=beats, bad=beats + 7)
 ```
@@ -22,11 +20,9 @@ In this example, we plotted two different annotations, `beats` (the detected hea
 Similarly, a [`sleepecg.ECGRecord`][sleepecg.ECGRecord] can be visualized with its [`sleepecg.ECGRecord.plot()`][sleepecg.ECGRecord.plot] method:
 
 ```python
-from scipy.misc import electrocardiogram
 import sleepecg
 
-fs = 360
-ecg = electrocardiogram()[:10 * fs]
+ecg, fs = sleepecg.get_toy_ecg()  # 5 min of ECG data at 360 Hz
 beats = sleepecg.detect_heartbeats(ecg, fs)
 
 record = sleepecg.ECGRecord(

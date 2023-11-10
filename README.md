@@ -52,11 +52,9 @@ The following example detects heartbeats in a short ECG (a one-dimensional NumPy
 
 ```python
 import numpy as np
-from scipy.datasets import electrocardiogram
-from sleepecg import detect_heartbeats
+from sleepecg import detect_heartbeats, get_toy_ecg
 
-ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
-fs = 360  # sampling frequency
+ecg, fs = get_toy_ecg()  # 5 min of ECG data at 360 Hz
 beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
 

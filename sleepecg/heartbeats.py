@@ -83,10 +83,8 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     --------
     Detect heartbeats in a short electrocardiogram:
 
-    >>> from scipy.misc import electrocardiogram
-    >>> from sleepecg import detect_heartbeats
-    >>> ecg = electrocardiogram()  # 5 min of ECG data at 360 Hz
-    >>> fs = 360
+    >>> from sleepecg import detect_heartbeats, get_toy_ecg
+    >>> ecg, fs = get_toy_ecg()  # 5 min of ECG data at 360 Hz
     >>> heartbeats = detect_heartbeats(ecg, fs)
     >>> print(f"{len(heartbeats)} heartbeats detected")
     478 heartbeats detected

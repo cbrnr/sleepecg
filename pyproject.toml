@@ -50,7 +50,6 @@ dev = [  # everything needed for development
     "mypy >= 0.991",
     "numba >= 0.55.0; python_version < '3.12'",
     "pre-commit >= 2.13.0",
-    "pooch >= 1.8.0",
     "pytest >= 6.2.0",
     "ruff >= 0.0.263",
     "setuptools >= 56.0.0",
@@ -66,7 +65,6 @@ doc = [  # RTD uses this when building the documentation
 cibw = [  # cibuildwheel uses this for running the test suite
     "edfio >= 0.1.1",
     "numba >= 0.55.0; python_version < '3.12'",
-    "pooch >= 1.8.0",
     "wfdb >= 3.4.0",
 ]
 
