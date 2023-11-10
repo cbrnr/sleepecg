@@ -1,5 +1,5 @@
 graft .github
-graft doc
+graft docs
 graft examples
 graft sleepecg
 global-exclude *.so
@@ -9,4 +9,5 @@ include .gitignore
 include .pre-commit-config.yaml
 include CHANGELOG.md
 include CONTRIBUTING.md
+include mkdocs.yml
 include readthedocs.yml
