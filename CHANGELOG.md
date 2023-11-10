@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- Use [edfio](https://github.com/the-siesta-group/edfio) for reading and writing EDF files ([#195](https://github.com/cbrnr/sleepecg/pull/195) by [Florian Hofer](https://github.com/hofaflo))
 
 ## [0.5.5] - 2023-06-01
 ### Changed
