@@ -8,18 +8,12 @@ import sys
 
 import numpy as np
 import pytest
-
-try:
-    from scipy.datasets import electrocardiogram  # SciPy ≥ 1.10
-except ImportError:
-    from scipy.misc import electrocardiogram  # SciPy < 1.10
 from scipy.signal import resample_poly
 
-from sleepecg import compare_heartbeats, detect_heartbeats
+from sleepecg import compare_heartbeats, detect_heartbeats, get_toy_ecg
 
 pytestmark = pytest.mark.c_extension
-ecg = electrocardiogram()
-fs = 360
+ecg, fs = get_toy_ecg()
 y_true = detect_heartbeats(ecg, fs)  # 478 true peaks
 
 

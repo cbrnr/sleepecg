@@ -86,27 +86,27 @@ plt.show()
 
 ## Sleep staging custom data
 
-This example requires `mne` and `tensorflow` packages. In addition, it uses an example file [`sleep.edf`](https://osf.io/download/mx7av/), which contains ECG data for a whole night. Download and save this file in your working directory before running this example.
+This example requires `edfio` and `tensorflow` packages. In addition, it uses an example file [`sleep.edf`](https://osf.io/download/mx7av/), which contains ECG data for a whole night. Download and save this file in your working directory before running this example.
 
 ```python
-from datetime import datetime, timezone
+from datetime import datetime
 
-from mne.io import read_raw_edf
+from edfio import read_edf
 
 import sleepecg
 
 # load dataset
-raw = read_raw_edf("sleep.edf", include="ECG")
-raw.set_channel_types({"ECG": "ecg"})
-fs = raw.info["sfreq"]
+edf = read_edf("sleep.edf")
 
 # crop dataset (we only want data for the sleep duration)
-start = datetime(2023, 3, 1, 23, 0, 0, tzinfo=timezone.utc)
-stop = datetime(2023, 3, 2, 6, 0, 0, tzinfo=timezone.utc)
-raw.crop((start - raw.info["meas_date"]).seconds, (stop - raw.info["meas_date"]).seconds)
+start = datetime(2023, 3, 1, 23, 0, 0)
+stop = datetime(2023, 3, 2, 6, 0, 0)
+rec_start = datetime.combine(edf.startdate, edf.starttime)
+edf.slice_between_seconds((start - rec_start).seconds, (stop - rec_start).seconds)
 
-# get ECG time series as 1D NumPy array
-ecg = raw.get_data().squeeze()
+# get ECG time series and sampling frequency
+ecg = edf.get_signal("ECG").data
+fs = edf.get_signal("ECG").sampling_frequency
 
 # detect heartbeats
 beats = sleepecg.detect_heartbeats(ecg, fs)

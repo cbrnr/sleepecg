@@ -4,10 +4,9 @@
 
 """Utility functions."""
 
-from __future__ import annotations
-
 import datetime
 import warnings
+from pathlib import Path
 from typing import Any, Callable, Iterable, TypeVar
 
 import numpy as np
@@ -168,3 +167,22 @@ def _merge_sleep_stages(stages: list[np.ndarray], stages_mode: str) -> list[np.n
             new_array[array == source_stage] = target_stage
         new_stages.append(new_array)
     return new_stages
+
+
+def get_toy_ecg() -> tuple[np.ndarray, int]:
+    """
+    Load a 5 minute long electrocardigram sampled at 360 Hz.
+
+    Data taken from scipy.datasets.electrocardiogram:
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.datasets.electrocardiogram.html
+
+    Returns
+    -------
+    ecg : np.ndarray
+        The electrocardiogram in millivolt (mV).
+    fs : int
+        The sampling frequency in Hz.
+    """
+    ecg = np.load(Path(__file__).parent / "data" / "ecg.npz")["ecg"]
+    fs = 360
+    return ecg, fs
