@@ -70,6 +70,7 @@ ecg, fs = get_toy_ecg()  # 5 min of ECG data at 360 Hz
 beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
 ### Example if Heart Rate data is available
+```
 data = [
     {'TimeStamp': '1690409900', 'HeartRate': '55'},
     {'TimeStamp': '1690410000', 'HeartRate': '60'},
@@ -96,8 +97,10 @@ plot_hypnogram(
     combined_stages_pred,
     stages_mode=stages_mode )
 plt.show()
-![output_figure](https://github.com/MashRiza/sleepecg/assets/133785714/f22c2e56-58f2-4f25-84a1-57247ebf33e7)
-
+```
+<center>
+  <img src="https://github.com/MashRiza/sleepecg/assets/133785714/f22c2e56-58f2-4f25-84a1-57247ebf33e7" alt="output_figure">
+</center>
 ### Dependencies
 
 SleepECG requires Python ≥ 3.9 and the following packages:
