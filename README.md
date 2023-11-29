@@ -69,7 +69,34 @@ from sleepecg import detect_heartbeats, get_toy_ecg
 ecg, fs = get_toy_ecg()  # 5 min of ECG data at 360 Hz
 beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
-
+### Example if Heart Rate data is available
+data = [
+    {'TimeStamp': '1690409900', 'HeartRate': '55'},
+    {'TimeStamp': '1690410000', 'HeartRate': '60'},
+    {'TimeStamp': '1690410120', 'HeartRate': '65'},
+    {'TimeStamp': '1690410300', 'HeartRate': '62'},
+    {'TimeStamp': '1690410600', 'HeartRate': '59'},
+    {'TimeStamp': '1690410900', 'HeartRate': '58'},
+    {'TimeStamp': '1690411200', 'HeartRate': '61'},
+    {'TimeStamp': '1690411320', 'HeartRate': '56'},
+    {'TimeStamp': '1690411380', 'HeartRate': '52'},
+    {'TimeStamp': '1690411440', 'HeartRate': '50'},
+    {'TimeStamp': '1690411500', 'HeartRate': '56'},
+    {'TimeStamp': '1690411560', 'HeartRate': '58'},
+    {'TimeStamp': '1690411620', 'HeartRate': '60'},
+    {'TimeStamp': '1690411680', 'HeartRate': '65'},
+    {'TimeStamp': '1690412740', 'HeartRate': '60'},
+    {'TimeStamp': '1690412800', 'HeartRate': '62'},
+    {'TimeStamp': '1690413800', 'HeartRate': '62'},
+    {'TimeStamp': '1690514000', 'HeartRate': '62'}
+]
+final_rec , combined_stages_pred , stages_mode ,long_interval_indices = sleepanalyse(data)
+plot_hypnogram(
+    final_rec,
+    combined_stages_pred,
+    stages_mode=stages_mode )
+plt.show()
+![output_figure](https://github.com/MashRiza/sleepecg/assets/133785714/f22c2e56-58f2-4f25-84a1-57247ebf33e7)
 
 ### Dependencies
 
