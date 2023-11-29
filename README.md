@@ -105,6 +105,7 @@ plt.show()
   <img src="https://github.com/MashRiza/sleepecg/assets/133785714/f22c2e56-58f2-4f25-84a1-57247ebf33e7" alt="output_figure">
 </center>
 
+the code for sleepanalyse function is in HeartRateData.py in the example folder .
 ### Dependencies
 
 SleepECG requires Python ≥ 3.9 and the following packages:
