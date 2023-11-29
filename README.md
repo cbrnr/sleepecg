@@ -13,7 +13,19 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes preprocessing, feature extraction, and classification).
 
+## HeartRate Data
+Description:
+I have introduced Changes to the SleepECG package, primarily focusing on enabling sleep stage classification using heart rate data when EEG signals are not available. Key features of this update include:
 
+Heart Rate to R-Interval Conversion:
+
+Implemented an algorithm to convert heart rate data into R-intervals. This crucial development allows the use of heart rate data, which is more readily available in many scenarios, for sleep stage classification.
+Handling Data Gaps:
+
+Added robustness to the system by integrating code that effectively handles scenarios where data might be missing for extended periods. This ensures more reliable performance and resilience in real-world applications.
+Web-Based and Local Application:
+
+Originally developed for a web-based project, these enhancements are equally applicable for local deployments, thereby broadening the usability scope of the SleepECG package.
 ### Documentation
 
 Documentation for SleepECG is available on [Read the Docs](https://sleepecg.readthedocs.io/en/stable/index.html). Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) to learn what we added, changed, or fixed.
