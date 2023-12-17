@@ -10,6 +10,8 @@ import warnings
 from typing import Iterable, Optional
 
 import numpy as np
+import pandas as pd
+import random
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy.interpolate import interp1d
 from scipy.signal import periodogram
@@ -776,3 +778,125 @@ def extract_features(
     stages = [y for _, y in Xy]
 
     return features, stages, feature_ids
+
+
+def HeartRateSleep (data , min_treshhold = 1500 , sleep_stage_duration = 60  , long_interval = 3600) : 
+    '''
+    
+    this function will get pandas dataframe of HeartRate and Timestamp 
+    will retrun "final_rec" , "combined_stages_pred" , "stages_mode" , "long_interval_indices"
+    
+    '''
+    # loading classifier
+    clf = load_classifier("wrn-gru-mesa-weighted", "SleepECG")
+    # converting to numeric values if needed
+    df['TimeStamp'] = pd.to_numeric(df['TimeStamp'])
+    df['HeartRate'] = pd.to_numeric(df['HeartRate'])
+    
+    # Convert to list
+    timestamps = df['TimeStamp'].to_list()
+    heart_rates = df['HeartRate'].to_list()
+
+
+    # Define a function to generate R-peak times on-the-fly to reduce cpu usage
+    # this function generates r peaks based on timeinterval between two timestamp and heart rate
+
+    def generate_synthetic_r_peaks(timestamps, heart_rates):
+        peak_count = 0
+        current_time = 0  # in unix seconds, relative to the start of recording
+        max_peaks = 0 
+        for i in range(len(timestamps) - 1):
+            time_interval = timestamps[i + 1] - timestamps[i]
+            n_peaks = int(time_interval / (60.0 / heart_rates[i]))
+            max_peaks += n_peaks
+
+            for j in range(n_peaks):
+                if peak_count >= max_peaks:
+                    return
+                r_peak_interval = (60.0 / heart_rates[i]) + random.uniform(0.001, 0.01)  # Add a small random
+                current_time += r_peak_interval
+                yield current_time  # Yield the R-peak time as needed
+                peak_count += 1
+
+
+
+    # Identify long intervals
+    long_interval_indices = []
+    for i in range(len(timestamps) - 1):
+        time_interval = timestamps[i + 1] - timestamps[i]
+        if time_interval > long_interval:  # 30 minutes by defult
+            long_interval_indices.append(i)
+            
+ 
+
+    combined_stages_pred = []
+    aggregated_heartbeat_times = []
+    start_idx = 0
+    for end_idx in long_interval_indices:
+        heartbeat_times_list = list(generate_synthetic_r_peaks(
+            timestamps[start_idx:end_idx + 1], heart_rates[start_idx:end_idx + 1]
+        ))
+        aggregated_heartbeat_times.extend(heartbeat_times_list)
+            # Check if heartbeat_times_list has enough elements 
+        if len(heartbeat_times_list) > min_treshhold: 
+            rec = SleepRecord(
+                sleep_stage_duration=sleep_stage_duration,
+                heartbeat_times=heartbeat_times_list
+            )
+            stages_pred = stage(clf, rec, return_mode="prob")
+            print(f"this is stages pred ,,,,,,,,,{stages_pred} : ")
+            combined_stages_pred.extend(stages_pred)
+        else:
+            print(f"Skipping segment starting at start index ({start_idx}) of data  because of not enough data.")
+            time_interval = timestamps[end_idx + 1] - timestamps[end_idx]
+            num_placeholder_blocks = int(time_interval / sleep_stage_duration)
+            placeholder_array = np.array([0.0, 0.0, 0.0, 0.0], dtype=np.float32)
+            combined_stages_pred.extend([placeholder_array] * num_placeholder_blocks)
+        
+        # Add placeholder for the long interval
+        #the place holder is [0,0,0,0]
+        time_interval = timestamps[end_idx + 1] - timestamps[end_idx]
+        num_placeholder_blocks = int(time_interval / sleep_stage_duration)
+        placeholder_array = np.array([0.0, 0.0, 0.0, 0.0], dtype=np.float32)
+        combined_stages_pred.extend([placeholder_array] * num_placeholder_blocks)
+        start_idx = end_idx + 1
+
+
+
+    # Handle the last segment if needed
+    if start_idx < len(timestamps) - 1:
+        heartbeat_times_list = list(generate_synthetic_r_peaks(
+            timestamps[start_idx:], heart_rates[start_idx:]
+    ))
+        if len(heartbeat_times_list) > min_treshhold:
+            rec = SleepRecord(
+                sleep_stage_duration=sleep_stage_duration,
+                heartbeat_times=heartbeat_times_list
+            )
+            stages_pred = stage(clf, rec, return_mode="prob")
+            combined_stages_pred.extend(stages_pred)
+        else:
+            print(f"Skipping the last segment because of not enough data.")
+            time_interval = timestamps[-1] - timestamps[start_idx]
+            num_placeholder_blocks = int(time_interval / sleep_stage_duration)
+            placeholder_array = np.array([0.0, 0.0, 0.0, 0.0], dtype=np.float32)
+            combined_stages_pred.extend([placeholder_array] * num_placeholder_blocks)
+
+
+    heartbeat_times_list = list(generate_synthetic_r_peaks(
+        timestamps[start_idx:], heart_rates[start_idx:]
+    ))
+    aggregated_heartbeat_times.extend(heartbeat_times_list)
+
+    # Create a SleepRecord object with aggregated heartbeat times
+    final_rec = SleepRecord(
+        sleep_stage_duration=sleep_stage_duration,
+        heartbeat_times=aggregated_heartbeat_times
+    )
+
+    # Convert to a NumPy array for easier modiy later if needed
+    combined_stages_pred = np.array(combined_stages_pred)
+    stages_mode=clf.stages_mode
+
+    return final_rec , combined_stages_pred , stages_mode , long_interval_indices
+
