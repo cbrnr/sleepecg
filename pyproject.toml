@@ -41,7 +41,6 @@ full = [  # complete package functionality
 ]
 
 dev = [  # everything needed for development
-    "black >= 22.6.0",
     "edfio >= 0.1.1",
     "joblib >= 1.0.0",
     "matplotlib >= 3.5.0",
@@ -51,7 +50,7 @@ dev = [  # everything needed for development
     "numba >= 0.55.0; python_version < '3.12'",
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
-    "ruff >= 0.0.263",
+    "ruff >= 0.1.8",
     "setuptools >= 56.0.0",
     "tensorflow >= 2.7.0; python_version < '3.12'",
     "wfdb >= 3.4.0",
@@ -73,9 +72,6 @@ homepage = "https://github.com/cbrnr/sleepecg"
 documentation = "https://sleepecg.readthedocs.io/en/latest/"
 repository = "https://github.com/cbrnr/sleepecg"
 changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
-
-[tool.black]
-line-length = 92
 
 [tool.cibuildwheel]
 test-requires = "pytest"
