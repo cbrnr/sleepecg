@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
 ]
@@ -35,7 +36,7 @@ full = [  # complete package functionality
     "edfio >= 0.1.1",
     "joblib >= 1.0.0",
     "matplotlib >= 3.5.0",
-    "numba >= 0.55.0; python_version < '3.12'",
+    "numba >= 0.59.0",
     "tensorflow >= 2.7.0; python_version < '3.12'",
     "wfdb >= 3.4.0",
 ]
@@ -47,7 +48,7 @@ dev = [  # everything needed for development
     "mkdocs-material >= 8.4.0",
     "mkdocstrings-python >= 0.7.1",
     "mypy >= 0.991",
-    "numba >= 0.55.0; python_version < '3.12'",
+    "numba >= 0.59.0",
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
     "ruff >= 0.1.8",
@@ -63,7 +64,7 @@ doc = [  # RTD uses this when building the documentation
 
 cibw = [  # cibuildwheel uses this for running the test suite
     "edfio >= 0.1.1",
-    "numba >= 0.55.0; python_version < '3.12'",
+    "numba >= 0.59.0",
     "wfdb >= 3.4.0",
 ]
 
