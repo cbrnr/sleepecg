@@ -1,4 +1,4 @@
-## [UNRELEASED] - YYYY-MM-DD
+## [0.5.7] - 2024-02-08
 ### Added
 - Add support for Python 3.12 ([#207](https://github.com/cbrnr/sleepecg/pull/207) by [Clemens Brunner](https://github.com/cbrnr))
 

@@ -17,4 +17,4 @@ from sleepecg.io import *  # noqa: F403
 from sleepecg.plot import plot_ecg, plot_hypnogram
 from sleepecg.utils import get_toy_ecg
 
-__version__ = "0.6.0-dev"
+__version__ = "0.5.7"
