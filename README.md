@@ -13,7 +13,6 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 - detecting heartbeats from ECG signals, and
 - classifying sleep stages (which includes preprocessing, feature extraction, and classification).
 
-
 ### Documentation
 
 Documentation for SleepECG is available on [Read the Docs](https://sleepecg.readthedocs.io/en/stable/index.html). Check out the [changelog](https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md) to learn what we added, changed, or fixed.
@@ -57,7 +56,6 @@ from sleepecg import detect_heartbeats, get_toy_ecg
 ecg, fs = get_toy_ecg()  # 5 min of ECG data at 360 Hz
 beats = detect_heartbeats(ecg, fs)  # indices of detected heartbeats
 ```
-
 
 ### Dependencies
 
