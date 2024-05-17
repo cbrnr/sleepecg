@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from sleepecg.config import get_config
 from sleepecg.io.utils import _calculate_checksum
@@ -370,7 +369,7 @@ _GUDB_MD5 = {
 }
 
 
-def _generate_gudb_md5(data_dir: Optional[str | Path] = None) -> dict[str, str]:
+def _generate_gudb_md5(data_dir: str | Path | None = None) -> dict[str, str]:
     """
     Compute checksums for files in GUDB.
 

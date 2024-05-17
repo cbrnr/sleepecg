@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import Iterable, Optional
+from collections.abc import Iterable
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -505,8 +505,8 @@ def _check_frequencydomain_window_time(window_time: int, feature_ids: list[str])
 
 def preprocess_rri(
     rri: np.ndarray,
-    min_rri: Optional[float] = None,
-    max_rri: Optional[float] = None,
+    min_rri: float | None = None,
+    max_rri: float | None = None,
 ) -> np.ndarray:
     """
     Replace invalid RRI samples with `np.nan`.
@@ -678,10 +678,10 @@ def extract_features(
     lookback: int = 0,
     lookforward: int = 30,
     sleep_stage_duration: int = 30,
-    feature_selection: Optional[list[str]] = None,
+    feature_selection: list[str] | None = None,
     fs_rri_resample: float = 4,
-    min_rri: Optional[float] = None,
-    max_rri: Optional[float] = None,
+    min_rri: float | None = None,
+    max_rri: float | None = None,
     max_nans: float = 0,
     n_jobs: int = 1,
 ) -> tuple[list[np.ndarray], list[np.ndarray | None], list[str]]:

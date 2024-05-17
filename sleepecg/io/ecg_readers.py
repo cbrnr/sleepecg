@@ -6,9 +6,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import TYPE_CHECKING
 
 import numpy as np
 from tqdm import tqdm
@@ -45,8 +46,8 @@ class ECGRecord:
     ecg: np.ndarray
     fs: float
     annotation: np.ndarray
-    lead: Optional[str] = None
-    id: Optional[str] = None
+    lead: str | None = None
+    id: str | None = None
 
     def export(self, filename: str | Path) -> None:
         """
@@ -59,7 +60,7 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, **kwargs: np.ndarray) -> tuple["plt.Figure", "plt.Axes"]:
+    def plot(self, **kwargs: np.ndarray) -> tuple[plt.Figure, plt.Axes]:
         """
         Plot ECG time series with optional markers.
 
@@ -107,7 +108,7 @@ def export_ecg_record(record: ECGRecord, filename: str | Path) -> None:
 def read_ltdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [LTDB](https://physionet.org/content/ltdb/).
@@ -138,7 +139,7 @@ def read_ltdb(
 def read_mitdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [MITDB](https://physionet.org/content/mitdb/).
@@ -235,7 +236,7 @@ def _read_mitbih(
 
 def read_gudb(
     offline: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
     """
     Lazily read records from [GUDB](https://berndporr.github.io/ECG-GUDB/).

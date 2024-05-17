@@ -6,8 +6,9 @@
 
 import datetime
 import warnings
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Callable, Iterable, TypeVar
+from typing import Any, Callable, TypeVar
 
 import numpy as np
 
