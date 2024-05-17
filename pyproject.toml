@@ -10,9 +10,13 @@ authors = [
     {name = "Florian Hofer", email = "hofaflo@gmail.com"},
     {name = "Clemens Brunner", email = "clemens.brunner@gmail.com"},
 ]
+readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
     "License :: OSI Approved :: BSD License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -29,7 +33,7 @@ dependencies = [
     "scipy >= 1.7.0",
     "tqdm >= 4.60.0",
 ]
-dynamic = ["version", "readme"]
+dynamic = ["version"]
 
 [project.optional-dependencies]
 full = [  # complete package functionality
@@ -37,24 +41,18 @@ full = [  # complete package functionality
     "joblib >= 1.0.0",
     "matplotlib >= 3.5.0",
     "numba >= 0.59.0",
-    "tensorflow >= 2.7.0; python_version < '3.12'",
+    "tensorflow >= 2.7.0",
     "wfdb >= 3.4.0",
 ]
 
 dev = [  # everything needed for development
-    "edfio >= 0.1.1",
-    "joblib >= 1.0.0",
-    "matplotlib >= 3.5.0",
-    "mkdocs-material >= 8.4.0",
-    "mkdocstrings-python >= 0.7.1",
+    "sleepecg[doc]",
+    "sleepecg[full]",
     "mypy >= 0.991",
-    "numba >= 0.59.0",
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
-    "ruff >= 0.1.8",
+    "ruff >= 0.4.0",
     "setuptools >= 56.0.0",
-    "tensorflow >= 2.7.0; python_version < '3.12'",
-    "wfdb >= 3.4.0",
 ]
 
 doc = [  # RTD uses this when building the documentation
@@ -108,16 +106,18 @@ filterwarnings = [
 ]
 
 [tool.ruff]
-select = ["D", "E", "F", "I", "W"]
 line-length = 92
-ignore = ["D105"]
 exclude = ["setup.py"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint]
+select = ["D", "E", "F", "I", "W", "UP"]
+ignore = ["D105"]
+
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/examples/*.py" = ["D100"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
 [tool.setuptools.dynamic]
