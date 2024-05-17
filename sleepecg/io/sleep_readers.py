@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import csv
 import datetime
+from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-from typing import Iterator, NamedTuple, Optional
+from typing import NamedTuple
 from xml.etree import ElementTree
 
 import numpy as np
@@ -60,9 +61,9 @@ class SubjectData:
         The subject's weight in kg, by default `None`.
     """
 
-    gender: Optional[int] = None
-    age: Optional[int] = None
-    weight: Optional[float] = None
+    gender: int | None = None
+    age: int | None = None
+    weight: float | None = None
 
 
 @dataclass
@@ -87,12 +88,12 @@ class SleepRecord:
         Dataclass containing subject data (such as gender or age), by default `None`.
     """
 
-    sleep_stages: Optional[np.ndarray] = None
-    sleep_stage_duration: Optional[int] = None
-    id: Optional[str] = None
-    recording_start_time: Optional[datetime.time] = None
-    heartbeat_times: Optional[np.ndarray] = None
-    subject_data: Optional[SubjectData] = None
+    sleep_stages: np.ndarray | None = None
+    sleep_stage_duration: int | None = None
+    id: str | None = None
+    recording_start_time: datetime.time | None = None
+    heartbeat_times: np.ndarray | None = None
+    subject_data: SubjectData | None = None
 
 
 class _ParseNsrrXmlResult(NamedTuple):
@@ -167,7 +168,7 @@ def read_mesa(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
@@ -362,7 +363,7 @@ def read_mesa(
 def read_slpdb(
     records_pattern: str = "*",
     offline: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
@@ -475,7 +476,7 @@ def read_shhs(
     heartbeats_source: str = "annotation",
     offline: bool = False,
     keep_edfs: bool = False,
-    data_dir: Optional[str | Path] = None,
+    data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).

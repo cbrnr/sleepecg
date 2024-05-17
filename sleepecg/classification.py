@@ -10,7 +10,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 from zipfile import ZipFile
 
 import numpy as np
@@ -90,7 +90,7 @@ def prepare_data_keras(
     return features_padded, stages_padded_onehot, sample_weight
 
 
-def print_class_balance(stages: np.ndarray, stages_mode: Optional[str] = None) -> None:
+def print_class_balance(stages: np.ndarray, stages_mode: str | None = None) -> None:
     """
     Print the number of samples and percentages of each class in `stages`.
 
@@ -131,8 +131,8 @@ def save_classifier(
     model: Any,
     stages_mode: str,
     feature_extraction_params: dict[str, Any],
-    mask_value: Optional[int] = None,
-    classifiers_dir: Optional[str | Path] = None,
+    mask_value: int | None = None,
+    classifiers_dir: str | Path | None = None,
 ) -> None:
     """
     Save a trained classifier to disk.
@@ -191,11 +191,9 @@ def save_classifier(
 
 
 class _Model(Protocol):
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-        ...
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None: ...
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        ...
+    def predict(self, X: np.ndarray) -> np.ndarray: ...
 
 
 @dataclass
@@ -228,8 +226,8 @@ class SleepClassifier:
     stages_mode: str
     feature_extraction_params: dict[str, Any]
     model_type: str
-    mask_value: Optional[int] = None
-    source_file: Optional[Path] = None
+    mask_value: int | None = None
+    source_file: Path | None = None
 
     def __repr__(self) -> str:
         if self.source_file is not None:
@@ -251,7 +249,7 @@ class SleepClassifier:
 
 def load_classifier(
     name: str,
-    classifiers_dir: Optional[str | Path] = None,
+    classifiers_dir: str | Path | None = None,
     silence_tf_messages: bool = True,
 ) -> SleepClassifier:
     """
@@ -322,7 +320,7 @@ def load_classifier(
     )
 
 
-def list_classifiers(classifiers_dir: Optional[str | Path] = None) -> None:
+def list_classifiers(classifiers_dir: str | Path | None = None) -> None:
     """
     List available classifiers.
 
