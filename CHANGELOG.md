@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- Switch to Keras 3 classifiers ([#217](https://github.com/cbrnr/sleepecg/pull/217) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.7] - 2024-02-08
 ### Added

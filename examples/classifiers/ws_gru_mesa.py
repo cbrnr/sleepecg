@@ -11,9 +11,11 @@ from sleepecg import (
     read_mesa,
     read_shhs,
     save_classifier,
+    set_nsrr_token,
 )
 
 # %% Read data and extract features
+set_nsrr_token("your-token-here")
 records = list(read_mesa())
 
 feature_extraction_params = {
