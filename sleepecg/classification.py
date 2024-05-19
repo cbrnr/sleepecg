@@ -183,7 +183,7 @@ def save_classifier(
             yaml.dump(classifier_info, infofile)
 
         if model_type == "keras":
-            model.save(f"{tmpdir}/classifier")
+            model.save(f"{tmpdir}/classifier.keras")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 
@@ -303,7 +303,7 @@ def load_classifier(
             from tensorflow import keras
 
             try:
-                classifier = keras.models.load_model(f"{tmpdir}/classifier")
+                classifier = keras.models.load_model(f"{tmpdir}/classifier.keras")
             finally:
                 os.environ.clear()
                 os.environ.update(environ_orig)
