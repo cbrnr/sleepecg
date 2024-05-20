@@ -89,8 +89,6 @@ archs = "x86_64 arm64"
 archs = "AMD64"
 
 [tool.mypy]
-packages = ["sleepecg"]
-exclude = ["^tests", "^examples"]
 ignore_missing_imports = true
 disallow_untyped_defs = true
 warn_unreachable = true
