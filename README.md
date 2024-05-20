@@ -71,11 +71,11 @@ SleepECG requires Python ≥ 3.9 and the following packages:
 
 Optional dependencies provide additional features:
 
-- [edfio](https://github.com/the-siesta-group/edfio/) ≥ 0.1.1 (read data from [MESA](https://sleepdata.org/datasets/mesa) and [SHHS](https://sleepdata.org/datasets/shhs))
+- [edfio](https://github.com/the-siesta-group/edfio/) ≥ 0.4.0 (read data from [MESA](https://sleepdata.org/datasets/mesa) and [SHHS](https://sleepdata.org/datasets/shhs))
 - [joblib](https://joblib.readthedocs.io/en/latest/) ≥ 1.0.0 (parallelized feature extraction)
 - [matplotlib](https://matplotlib.org/) ≥ 3.5.0 (plot ECG time courses, hypnograms, and confusion matrices)
-- [numba](https://numba.pydata.org/) ≥ 0.59.0 (JIT-compiled heartbeat detector)
-- [tensorflow](https://www.tensorflow.org/) ≥ 2.7.0 (sleep stage classification with Keras models)
+- [numba](https://numba.pydata.org/) ≥ 0.59.1 (JIT-compiled heartbeat detector)
+- [tensorflow](https://www.tensorflow.org/) ≥ 2.16.1 (sleep stage classification with Keras models)
 - [wfdb](https://github.com/MIT-LCP/wfdb-python/) ≥ 3.4.0 (read data from [SLPDB](https://physionet.org/content/slpdb), [MITDB](https://physionet.org/content/mitdb), and [LTDB](https://physionet.org/content/ltdb))
 
 

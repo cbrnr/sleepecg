@@ -37,11 +37,11 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 full = [  # complete package functionality
-    "edfio >= 0.1.1",
+    "edfio >= 0.4.0",
     "joblib >= 1.0.0",
     "matplotlib >= 3.5.0",
-    "numba >= 0.59.0",
-    "tensorflow >= 2.7.0",
+    "numba >= 0.59.1",
+    "tensorflow >= 2.16.1",
     "wfdb >= 3.4.0",
 ]
 
@@ -61,8 +61,8 @@ doc = [  # RTD uses this when building the documentation
 ]
 
 cibw = [  # cibuildwheel uses this for running the test suite
-    "edfio >= 0.1.1",
-    "numba >= 0.59.0",
+    "edfio >= 0.4.0",
+    "numba >= 0.59.1",
     "wfdb >= 3.4.0",
 ]
 
