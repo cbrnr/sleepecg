@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "oldest-supported-numpy"]
+requires = ["setuptools", "setuptools-scm", "oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -120,6 +120,3 @@ convention = "numpy"
 
 [tool.setuptools.dynamic]
 version = {attr = "sleepecg.__version__"}
-
-[tool.setuptools.package-data]
-"*" = ["*.pyi"]
