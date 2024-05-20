@@ -10,7 +10,7 @@ repos:
     rev: v1.10.0
     hooks:
     - id: mypy
-      exclude: ^sleepecg/test/|^examples
+      exclude: ^tests|^examples
       args: [--python-version=3.9]
       additional_dependencies:
       - types-PyYAML
