@@ -5,7 +5,6 @@
 """Tests for the configuration interface."""
 
 import pytest
-
 import sleepecg.config
 from sleepecg import get_config, set_config
 

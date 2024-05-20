@@ -11,7 +11,6 @@ from collections.abc import Iterator
 from typing import Any
 
 import numpy as np
-
 import sleepecg
 from sleepecg.io.ecg_readers import ECGRecord
 
