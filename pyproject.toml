@@ -122,7 +122,6 @@ convention = "numpy"
 
 [tool.setuptools.dynamic]
 version = {attr = "sleepecg.__version__"}
-readme = {file = "README.md", content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
 exclude = ["examples"]
