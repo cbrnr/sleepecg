@@ -123,4 +123,4 @@ version = {attr = "sleepecg.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src", "."]
-include = ["sleepecg", "examples", "tests"]
+include = ["sleepecg", "examples"]
