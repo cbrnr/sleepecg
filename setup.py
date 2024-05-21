@@ -5,7 +5,7 @@ setup(
     ext_modules=[
         Extension(
             "sleepecg._heartbeat_detection",
-            ["sleepecg/_heartbeat_detection.c"],
+            ["src/sleepecg/_heartbeat_detection.c"],
             include_dirs=[np.get_include()],
         ),
     ],

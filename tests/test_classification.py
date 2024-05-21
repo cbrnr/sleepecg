@@ -6,7 +6,6 @@
 
 import numpy as np
 import pytest
-
 from sleepecg.classification import _merge_sleep_stages
 
 

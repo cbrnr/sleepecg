@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "oldest-supported-numpy"]
+requires = ["setuptools", "setuptools-scm", "oldest-supported-numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -89,8 +89,6 @@ archs = "x86_64 arm64"
 archs = "AMD64"
 
 [tool.mypy]
-packages = ["sleepecg"]
-exclude = '^sleepecg/test/'
 ignore_missing_imports = true
 disallow_untyped_defs = true
 warn_unreachable = true
@@ -122,10 +120,3 @@ convention = "numpy"
 
 [tool.setuptools.dynamic]
 version = {attr = "sleepecg.__version__"}
-readme = {file = "README.md", content-type = "text/markdown"}
-
-[tool.setuptools.packages.find]
-exclude = ["examples"]
-
-[tool.setuptools.package-data]
-"*" = ["*.pyi"]

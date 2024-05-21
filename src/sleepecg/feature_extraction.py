@@ -65,6 +65,7 @@ _TIME_DOMAIN_EXPECTED_WARNING_MESSAGES = (
     "divide by zero encountered in divide",
     "divide by zero encountered in log10",
     "invalid value encountered in sqrt",
+    "invalid value encountered in divide",
     "Mean of empty slice",
 )
 
