@@ -120,7 +120,3 @@ convention = "numpy"
 
 [tool.setuptools.dynamic]
 version = {attr = "sleepecg.__version__"}
-
-[tool.setuptools.packages.find]
-where = ["src", "."]
-include = ["sleepecg", "examples"]
