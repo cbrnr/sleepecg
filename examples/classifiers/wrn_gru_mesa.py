@@ -1,4 +1,5 @@
-# %%
+import warnings
+
 from sleepecg import (
     evaluate,
     extract_features,
@@ -13,85 +14,96 @@ from sleepecg import (
 from tensorflow.keras import layers, models
 from tqdm import tqdm
 
-# %% Read data and extract features
 set_nsrr_token("your-token-here")
-records = list(read_mesa())
 
-feature_extraction_params = {
-    "lookback": 120,
-    "lookforward": 150,
-    "feature_selection": [
-        "hrv-time",
-        "hrv-frequency",
-        "recording_start_time",
-        "age",
-        "gender",
-    ],
-    "min_rri": 0.3,
-    "max_rri": 2,
-    "max_nans": 0.5,
-}
+TRAIN = True  # set to False to skip training and load classifier from disk
 
-features_train, stages_train, feature_ids = extract_features(
-    tqdm(records),
-    **feature_extraction_params,
-    n_jobs=-2,
+# silence warnings (which might pop up during feature extraction)
+warnings.filterwarnings(
+    "ignore", category=RuntimeWarning, message="HR analysis window too short"
 )
 
-# %% Merge sleep stages, pad and mask data as preparation for keras NN
-stages_mode = "wake-rem-nrem"
+if TRAIN:
+    print("‣  Starting training...")
+    print("‣‣ Extracting features...")
+    records = list(read_mesa(offline=False))
 
-features_train_pad, stages_train_pad, _ = prepare_data_keras(
-    features_train,
-    stages_train,
-    stages_mode,
-)
-print_class_balance(stages_train_pad, stages_mode)
+    feature_extraction_params = {
+        "lookback": 120,
+        "lookforward": 150,
+        "feature_selection": [
+            "hrv-time",
+            "hrv-frequency",
+            "recording_start_time",
+            "age",
+            "gender",
+        ],
+        "min_rri": 0.3,
+        "max_rri": 2,
+        "max_nans": 0.5,
+    }
 
-# %% Define and train model
-model = models.Sequential(
-    [
-        layers.Input((None, features_train_pad.shape[2])),
-        layers.Masking(-1),
-        layers.BatchNormalization(),
-        layers.Dense(64),
-        layers.ReLU(),
-        layers.Bidirectional(layers.GRU(8, return_sequences=True)),
-        layers.Bidirectional(layers.GRU(8, return_sequences=True)),
-        layers.Dense(stages_train_pad.shape[-1], activation="softmax"),
-    ]
-)
+    features_train, stages_train, feature_ids = extract_features(
+        tqdm(records),
+        **feature_extraction_params,
+        n_jobs=-1,
+    )
 
-model.compile(
-    optimizer="rmsprop",
-    loss="categorical_crossentropy",
-    metrics=["accuracy"],
-)
-model.build()
-model.summary()
+    print("‣‣ Preparing data for Keras...")
+    stages_mode = "wake-rem-nrem"
 
-# %% Train model
-model.fit(
-    features_train_pad,
-    stages_train_pad,
-    epochs=25,
-)
+    features_train_pad, stages_train_pad, _ = prepare_data_keras(
+        features_train,
+        stages_train,
+        stages_mode,
+    )
+    print_class_balance(stages_train_pad, stages_mode)
 
-# %% Store classifier
-save_classifier(
-    name="wrn-gru-mesa",
-    model=model,
-    stages_mode=stages_mode,
-    feature_extraction_params=feature_extraction_params,
-    mask_value=-1,
-    classifiers_dir="./classifiers",
-)
+    print("‣‣ Defining model...")
+    model = models.Sequential(
+        [
+            layers.Input((None, features_train_pad.shape[2])),
+            layers.Masking(-1),
+            layers.BatchNormalization(),
+            layers.Dense(64),
+            layers.ReLU(),
+            layers.Bidirectional(layers.GRU(8, return_sequences=True)),
+            layers.Bidirectional(layers.GRU(8, return_sequences=True)),
+            layers.Dense(stages_train_pad.shape[-1], activation="softmax"),
+        ]
+    )
 
-# %% Load classifier from disk for validation
+    model.compile(
+        optimizer="rmsprop",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"],
+    )
+    model.build()
+    model.summary()
+
+    print("‣‣ Training model...")
+    model.fit(
+        features_train_pad,
+        stages_train_pad,
+        epochs=25,
+    )
+
+    print("‣‣ Saving classifier...")
+    save_classifier(
+        name="wrn-gru-mesa",
+        model=model,
+        stages_mode=stages_mode,
+        feature_extraction_params=feature_extraction_params,
+        mask_value=-1,
+        classifiers_dir="./classifiers",
+    )
+
+print("‣  Starting testing...")
+print("‣‣ Loading classifier...")
 clf = load_classifier("wrn-gru-mesa", "./classifiers")
 
-# %% Read data and extract features
-shhs = list(read_shhs())
+print("‣‣ Extracting features...")
+shhs = list(read_shhs(offline=False))
 
 features_test, stages_test, feature_ids = extract_features(
     tqdm(shhs),
@@ -99,7 +111,7 @@ features_test, stages_test, feature_ids = extract_features(
     n_jobs=-2,
 )
 
-# %% Predict & evaluate
+print("‣‣ Evaluating classifier...")
 features_test_pad, stages_test_pad, _ = prepare_data_keras(
     features_test,
     stages_test,
