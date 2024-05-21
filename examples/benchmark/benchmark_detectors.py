@@ -32,7 +32,6 @@ try:
 except KeyError:
     raise ValueError(f"Invalid benchmark: {benchmark!r}, available: {list(cfg)}.") from None
 
-
 if cfg.get("suppress_warnings", False):
     warnings.filterwarnings("ignore")
 
@@ -70,16 +69,12 @@ fieldnames = [
 if cfg.get("calc_rri_similarity", False):
     fieldnames += ["pearsonr", "spearmanr", "rmse"]
 
-# Trigger imports and jit compilation to make runtime benchmarks representative
+# trigger imports and jit compilation to make runtime benchmarks representative
 for detector in cfg["detectors"]:
     detector_dispatch(records[0].ecg[: 10 * records[0].fs], records[0].fs, detector)
 
-
 with open(csv_filepath, "w", newline="") as csv_file:
-    writer = csv.DictWriter(
-        csv_file,
-        fieldnames=fieldnames,
-    )
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
     for signal_len in cfg["signal_lengths"]:
         print(f"==== Signal length: {signal_len} minutes ====")

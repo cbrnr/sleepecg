@@ -171,9 +171,7 @@ def evaluate_single(
 
     except HeartpyWarning:
         runtime = np.nan
-        TP = []
-        FP = []
-        FN = annotation
+        TP, FP, FN = [], [], annotation
 
         if calc_rri_similarity:
             pearsonr = np.nan
@@ -193,11 +191,5 @@ def evaluate_single(
         "FN": len(FN),
     }
     if calc_rri_similarity:
-        result.update(
-            {
-                "pearsonr": pearsonr,
-                "spearmanr": spearmanr,
-                "rmse": rmse,
-            }
-        )
+        result.update({"pearsonr": pearsonr, "spearmanr": spearmanr, "rmse": rmse})
     return result
