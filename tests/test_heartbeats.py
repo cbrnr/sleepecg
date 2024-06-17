@@ -4,8 +4,6 @@
 
 """Tests for heartbeat detection and detector evaluation."""
 
-from sys import version_info
-
 import numpy as np
 import pytest
 from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
@@ -34,12 +32,7 @@ def mitdb_234_MLII():
     "backend",
     [
         "c",
-        pytest.param(
-            "numba",
-            marks=pytest.mark.skipif(
-                version_info >= (3, 12), reason="Numba does not support Python 3.12 yet"
-            ),
-        ),
+        "numba",
         "python",
     ],
 )
