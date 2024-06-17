@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords = ["sleep", "ecg", "qrs", "peak"]
 dependencies = [
-    "numpy >= 2.0.0",
+    "numpy >= 1.25.0, < 2.0.0",
     "PyYAML >= 5.4.0",
     "requests >= 2.25.0",
     "scipy >= 1.7.0",
