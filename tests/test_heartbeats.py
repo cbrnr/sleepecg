@@ -4,8 +4,6 @@
 
 """Tests for heartbeat detection and detector evaluation."""
 
-from sys import version_info
-
 import numpy as np
 import pytest
 from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
