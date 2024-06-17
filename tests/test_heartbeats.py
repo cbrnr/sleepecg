@@ -34,12 +34,7 @@ def mitdb_234_MLII():
     "backend",
     [
         "c",
-        pytest.param(
-            "numba",
-            marks=pytest.mark.skipif(
-                version_info >= (3, 12), reason="Numba does not support Python 3.12 yet"
-            ),
-        ),
+        "numba",
         "python",
     ],
 )
