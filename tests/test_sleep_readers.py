@@ -11,7 +11,6 @@ from pathlib import Path
 
 import numpy as np
 from edfio import Edf, EdfSignal
-
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
 

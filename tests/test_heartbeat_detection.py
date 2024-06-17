@@ -9,7 +9,6 @@ import sys
 import numpy as np
 import pytest
 from scipy.signal import resample_poly
-
 from sleepecg import compare_heartbeats, detect_heartbeats, get_toy_ecg
 
 pytestmark = pytest.mark.c_extension
