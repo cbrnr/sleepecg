@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Fixed
+- Fix `plot_ecg` for newer versions of Matplotlib ([#225](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.5.8] - 2024-05-21
 ### Changed
