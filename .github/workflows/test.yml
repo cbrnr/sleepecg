@@ -1,23 +1,13 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     paths-ignore:
-      - 'doc/**'
-  workflow_dispatch:
-    # allow manual runs on branches without a PR
-
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
-
+    - 'docs/**'
 
 jobs:
-  pre-commit:
-    name: Pre-commit checks
+  style:
+    name: Check style
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
@@ -26,22 +16,17 @@ jobs:
         python-version: '3.12'
     - uses: pre-commit/action@v3.0.1
 
-
   test:
-    needs: [pre-commit]
-    name: Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
+    needs: style
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-2022, macos-14]
-
+    name: Run tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Build wheels and run pytest
+      - name: Build wheels and run tests
         uses: pypa/cibuildwheel@v2.19.2
-
       - uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ matrix.os }}
