@@ -66,6 +66,7 @@ def plot_ecg(
     given by `heartbeats`.
     """
     import matplotlib.pyplot as plt
+    from matplotlib import colormaps
 
     t = np.arange(0, len(ecg) / fs, 1 / fs)
     fig, ax = plt.subplots()
@@ -74,7 +75,8 @@ def plot_ecg(
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    colors = cycle(plt.get_cmap("tab10").colors)
+    cm = colormaps["tab10"]
+    colors = cycle(cm(n) for n in np.linspace(0, 1, cm.N))
     markers = cycle(("*", "o", "s", "D", "v", "<", ">", "^", "X", "p"))
     for label, pos, color, marker in zip(kwargs.keys(), kwargs.values(), colors, markers):
         ax.plot(
