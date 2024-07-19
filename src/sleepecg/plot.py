@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time_to_sec
@@ -22,7 +23,7 @@ def plot_ecg(
     fs: float,
     title: str | None = None,
     **kwargs: np.ndarray,
-) -> tuple["plt.Figure", "plt.Axes"]:
+) -> tuple[Figure, Axes]:
     """
     Plot ECG time series with optional markers.
 
@@ -99,7 +100,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-) -> tuple["plt.Figure", list["plt.Axes"]]:
+) -> tuple[Figure, list[Axes]]:
     """
     Plot a hypnogram for a single record.
 
@@ -229,7 +230,7 @@ def plot_hypnogram(
 def _plot_confusion_matrix(
     confmat: np.ndarray,
     stage_names: list[str],
-) -> tuple["plt.Figure", "plt.Axes"]:
+) -> tuple[Figure, Axes]:
     """
     Create a labeled plot of a confusion matrix.
 
