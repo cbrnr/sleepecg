@@ -3,9 +3,10 @@
 # License: BSD (3-clause)
 
 """Functions for getting and setting configuration values."""
+from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -28,7 +29,7 @@ def _read_yaml(path: Path) -> dict[str, Any]:
     return cfg
 
 
-def get_config(key: Optional[str] = None) -> Any:
+def get_config(key: str | None = None) -> Any:
     """
     Read SleepECG preferences from the configuration file.
 

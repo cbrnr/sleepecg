@@ -3,10 +3,10 @@
 # License: BSD (3-clause)
 
 """I/O- and download-related utilities."""
+from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import Optional
 
 import requests
 
@@ -42,8 +42,8 @@ def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
 def _download_file(
     url: str,
     target_filepath: Path,
-    checksum: Optional[str] = None,
-    checksum_type: Optional[str] = None,
+    checksum: str | None = None,
+    checksum_type: str | None = None,
     verbose: bool = False,
 ) -> None:
     """
