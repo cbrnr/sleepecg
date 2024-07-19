@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -21,7 +22,7 @@ class HeartpyWarning(Warning):
     pass
 
 
-def reader_dispatch(db_slug: str, data_dir: str) -> Iterator[ECGRecord]:
+def reader_dispatch(db_slug: str, data_dir: str | Path) -> Iterator[ECGRecord]:
     """
     Read ECG records from mitdb, ltdb or gudb.
 

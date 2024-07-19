@@ -17,7 +17,7 @@ from xml.etree import ElementTree
 
 import numpy as np
 
-from sleepecg.config import get_config
+from sleepecg.config import get_config_key
 from sleepecg.heartbeats import detect_heartbeats
 from sleepecg.io.nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr, download_nsrr
 from sleepecg.io.physionet import _list_physionet, download_physionet
@@ -221,7 +221,7 @@ def read_mesa(
         )
 
     if data_dir is None:
-        data_dir = get_config("data_dir")
+        data_dir = get_config_key("data_dir")
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
@@ -401,7 +401,7 @@ def read_slpdb(
     }
 
     if data_dir is None:
-        data_dir = get_config("data_dir")
+        data_dir = get_config_key("data_dir")
 
     data_dir = Path(data_dir).expanduser()
     db_dir = data_dir / DB_SLUG
@@ -531,7 +531,7 @@ def read_shhs(
         )
 
     if data_dir is None:
-        data_dir = get_config("data_dir")
+        data_dir = get_config_key("data_dir")
 
     data_dir = Path(data_dir).expanduser()
     db_dir = data_dir / DB_SLUG
