@@ -3,6 +3,7 @@
 # License: BSD (3-clause)
 
 """I/O- and download-related utilities."""
+
 from __future__ import annotations
 
 import hashlib
