@@ -19,7 +19,7 @@ from sleepecg.utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time
 def plot_ecg(
     ecg: np.ndarray,
     fs: float,
-    title: Optional[str] = None,
+    title: str | None = None,
     **kwargs: np.ndarray,
 ) -> tuple["plt.Figure", "plt.Axes"]:
     """
