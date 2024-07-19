@@ -3,6 +3,7 @@
 # License: BSD (3-clause)
 
 """Functions for getting and setting configuration values."""
+
 from __future__ import annotations
 
 from pathlib import Path
