@@ -15,7 +15,8 @@ import numpy as np
 from tqdm import tqdm
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 from sleepecg.config import get_config
 from sleepecg.io.gudb import _GUDB_MD5
@@ -60,7 +61,7 @@ class ECGRecord:
         """
         export_ecg_record(self, filename)
 
-    def plot(self, **kwargs: np.ndarray) -> tuple[plt.Figure, plt.Axes]:
+    def plot(self, **kwargs: np.ndarray) -> tuple[Figure, Axes]:
         """
         Plot ECG time series with optional markers.
 
