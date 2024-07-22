@@ -4,13 +4,16 @@
 
 """Plotting functions."""
 
+from __future__ import annotations
+
 from itertools import cycle
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time_to_sec
@@ -19,9 +22,9 @@ from sleepecg.utils import _STAGE_INTS, _STAGE_NAMES, _merge_sleep_stages, _time
 def plot_ecg(
     ecg: np.ndarray,
     fs: float,
-    title: Optional[str] = None,
+    title: str | None = None,
     **kwargs: np.ndarray,
-) -> tuple["plt.Figure", "plt.Axes"]:
+) -> tuple[Figure, Axes]:
     """
     Plot ECG time series with optional markers.
 
@@ -63,6 +66,7 @@ def plot_ecg(
     given by `heartbeats`.
     """
     import matplotlib.pyplot as plt
+    from matplotlib import colormaps
 
     t = np.arange(0, len(ecg) / fs, 1 / fs)
     fig, ax = plt.subplots()
@@ -71,7 +75,8 @@ def plot_ecg(
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    colors = cycle(plt.get_cmap("tab10").colors)
+    cm = colormaps["tab10"]
+    colors = cycle(cm(n) for n in np.linspace(0, 1, cm.N))
     markers = cycle(("*", "o", "s", "D", "v", "<", ">", "^", "X", "p"))
     for label, pos, color, marker in zip(kwargs.keys(), kwargs.values(), colors, markers):
         ax.plot(
@@ -98,7 +103,7 @@ def plot_hypnogram(
     stages_pred_duration: int = 30,
     merge_annotations: bool = False,
     show_bpm: bool = False,
-) -> tuple["plt.Figure", list["plt.Axes"]]:
+) -> tuple[Figure, list[Axes]]:
     """
     Plot a hypnogram for a single record.
 
@@ -228,7 +233,7 @@ def plot_hypnogram(
 def _plot_confusion_matrix(
     confmat: np.ndarray,
     stage_names: list[str],
-) -> tuple["plt.Figure", "plt.Axes"]:
+) -> tuple[Figure, Axes]:
     """
     Create a labeled plot of a confusion matrix.
 

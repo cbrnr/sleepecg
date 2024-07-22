@@ -4,8 +4,10 @@
 
 """Functions for getting and setting configuration values."""
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -28,24 +30,18 @@ def _read_yaml(path: Path) -> dict[str, Any]:
     return cfg
 
 
-def get_config(key: Optional[str] = None) -> Any:
+def get_config() -> dict[str, str]:
     """
-    Read SleepECG preferences from the configuration file.
+    Read SleepECG configuration.
 
     For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
     falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
     [configuration](../configuration.md) for a list of possible settings.
 
-    Parameters
-    ----------
-    key : str, optional
-        The configuration key to look for. If `None`, all configuration settings are
-        returned in a dictionary, by default `None`.
-
     Returns
     -------
-    typing.Any
-        The configuration value.
+    dict[str, str]
+        All configuration keys and values.
     """
     config = _read_yaml(_DEFAULT_CONFIG_PATH)
     user_config = _read_yaml(_USER_CONFIG_PATH)
@@ -54,9 +50,29 @@ def get_config(key: Optional[str] = None) -> Any:
             f"Invalid key(s) found in user config at {_USER_CONFIG_PATH}: {invalid_keys}"
         )
     config.update(user_config)
+    return config
 
-    if key is None:
-        return config
+
+def get_config_value(key: str) -> str:
+    """
+    Read specific SleepECG configuration value.
+
+    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
+    falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
+    [configuration](../configuration.md) for a list of possible settings.
+
+    Parameters
+    ----------
+    key : str
+        The configuration key to look for.
+
+    Returns
+    -------
+    str
+        The configuration value.
+    """
+    config = get_config()
+
     if key not in config:
         options = ", ".join(config)
         raise ValueError(

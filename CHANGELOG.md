@@ -1,4 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Changed
+- Split `get_config` function into `get_config` and `get_config_value` to get the entire configuration (as a dictionary) or an individual configuration key, respectively ([#229](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))
+
 ### Fixed
 - Fix `plot_ecg` for newer versions of Matplotlib ([#225](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))
 
