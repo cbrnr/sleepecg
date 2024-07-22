@@ -32,7 +32,7 @@ def _read_yaml(path: Path) -> dict[str, Any]:
 
 def get_config() -> dict[str, str]:
     """
-    Read all SleepECG preferences from the configuration file.
+    Read SleepECG configuration.
 
     For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
     falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
@@ -53,9 +53,9 @@ def get_config() -> dict[str, str]:
     return config
 
 
-def get_config_key(key: str) -> str:
+def get_config_value(key: str) -> str:
     """
-    Read specific SleepECG preference from the configuration file.
+    Read specific SleepECG configuration value.
 
     For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
     falls back to the default values defined in `site-packages/sleepecg/config.yml`. See

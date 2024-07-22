@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
-from sleepecg.config import get_config_key
+from sleepecg.config import get_config_value
 from sleepecg.io.gudb import _GUDB_MD5
 from sleepecg.io.physionet import _list_physionet, download_physionet
 from sleepecg.io.utils import _download_file
@@ -133,7 +133,7 @@ def read_ltdb(
         `.lead`, and `.id`.
     """
     if data_dir is None:
-        data_dir = get_config_key("data_dir")
+        data_dir = get_config_value("data_dir")
     yield from _read_mitbih("ltdb", records_pattern, offline, data_dir)
 
 
@@ -164,7 +164,7 @@ def read_mitdb(
         `.lead`, and `.id`.
     """
     if data_dir is None:
-        data_dir = get_config_key("data_dir")
+        data_dir = get_config_value("data_dir")
     yield from _read_mitbih("mitdb", records_pattern, offline, data_dir)
 
 
@@ -265,7 +265,7 @@ def read_gudb(
     FS = 250
 
     if data_dir is None:
-        data_dir = get_config_key("data_dir")
+        data_dir = get_config_value("data_dir")
 
     db_dir = Path(data_dir).expanduser() / "gudb"
 

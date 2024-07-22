@@ -10,7 +10,7 @@ from sleepecg.classification import (
     save_classifier,
     stage,
 )
-from sleepecg.config import get_config, get_config_key, set_config
+from sleepecg.config import get_config, get_config_value, set_config
 from sleepecg.feature_extraction import extract_features, preprocess_rri
 from sleepecg.heartbeats import compare_heartbeats, detect_heartbeats, rri_similarity
 from sleepecg.io import *  # noqa: F403

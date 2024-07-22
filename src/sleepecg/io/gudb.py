@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from sleepecg.config import get_config_key
+from sleepecg.config import get_config_value
 from sleepecg.io.utils import _calculate_checksum
 
 _GUDB_MD5 = {
@@ -391,7 +391,7 @@ def _generate_gudb_md5(data_dir: str | Path | None = None) -> dict[str, str]:
     EXPERIMENTS = ["sitting", "maths", "walking", "hand_bike", "jogging"]
 
     if data_dir is None:
-        data_dir = get_config_key("data_dir")
+        data_dir = get_config_value("data_dir")
 
     db_dir = Path(data_dir).expanduser() / "gudb"
     checksums = {}

@@ -16,7 +16,7 @@ from zipfile import ZipFile
 import numpy as np
 import yaml
 
-from sleepecg.config import get_config_key
+from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
@@ -165,7 +165,7 @@ def save_classifier(
     load_classifier : Load classifiers saved with this function.
     """
     if classifiers_dir is None:
-        classifiers_dir = get_config_key("classifiers_dir")
+        classifiers_dir = get_config_value("classifiers_dir")
 
     target_file = Path(classifiers_dir).expanduser() / name
 
@@ -283,7 +283,7 @@ def load_classifier(
     if classifiers_dir == "SleepECG":
         classifiers_dir = Path(__file__).parent / "classifiers"
     elif classifiers_dir is None:
-        classifiers_dir = get_config_key("classifiers_dir")
+        classifiers_dir = get_config_value("classifiers_dir")
 
     soure_file = Path(classifiers_dir).expanduser() / f"{name}.zip"
 
@@ -339,7 +339,7 @@ def list_classifiers(classifiers_dir: str | Path | None = None) -> None:
         classifiers_dir = Path(__file__).parent / "classifiers"
         print("Classifiers in SleepECG:")
     elif classifiers_dir is None:
-        classifiers_dir = get_config_key("classifiers_dir")
+        classifiers_dir = get_config_value("classifiers_dir")
         print(f"Classifiers in {classifiers_dir}:")
     else:
         print(f"Classifiers in {classifiers_dir}:")
