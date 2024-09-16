@@ -6,6 +6,7 @@
 
 import numpy as np
 import pytest
+
 from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
 
 
@@ -28,14 +29,7 @@ def mitdb_234_MLII():
     return next(read_mitdb(records_pattern="234"))
 
 
-@pytest.mark.parametrize(
-    "backend",
-    [
-        "c",
-        "numba",
-        "python",
-    ],
-)
+@pytest.mark.parametrize("backend", ["c", "numba", "python"])
 def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
     record = mitdb_234_MLII

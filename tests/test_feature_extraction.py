@@ -8,6 +8,7 @@ import datetime
 
 import numpy as np
 import pytest
+
 from sleepecg.feature_extraction import (
     _FEATURE_GROUPS,
     _hrv_frequencydomain_features,

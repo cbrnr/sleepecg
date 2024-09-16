@@ -1,5 +1,8 @@
 import warnings
 
+from tensorflow.keras import layers, models
+from tqdm import tqdm
+
 from sleepecg import (
     evaluate,
     extract_features,
@@ -11,8 +14,6 @@ from sleepecg import (
     save_classifier,
     set_nsrr_token,
 )
-from tensorflow.keras import layers, models
-from tqdm import tqdm
 
 set_nsrr_token("your-token-here")
 
