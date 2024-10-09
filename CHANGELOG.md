@@ -1,4 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Added
+- Add support for Python 3.13 ([#241](https://github.com/cbrnr/sleepecg/pull/241) by [Clemens Brunner](https://github.com/cbrnr))
+
 ### Changed
 - Split `get_config` function into `get_config` and `get_config_value` to get the entire configuration (as a dictionary) or an individual configuration key, respectively ([#229](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))
 
