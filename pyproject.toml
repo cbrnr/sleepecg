@@ -22,27 +22,28 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
 ]
 keywords = ["sleep", "ecg", "qrs", "peak"]
 dependencies = [
-    "numpy >= 1.25.0, < 3.0.0",
-    "PyYAML >= 5.4.0",
-    "requests >= 2.25.0",
-    "scipy >= 1.7.0",
-    "tqdm >= 4.60.0",
+    "numpy >= 1.26.0",
+    "pyyaml >= 6.0.0",
+    "requests >= 2.32.3",
+    "scipy >= 1.14.0",
+    "tqdm >= 4.66.0",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
 full = [  # complete package functionality
-    "edfio >= 0.4.0",
-    "joblib >= 1.0.0",
-    "matplotlib >= 3.5.0",
-    "numba >= 0.59.1",
-    "tensorflow >= 2.16.1",
-    "wfdb >= 3.4.0",
+    "edfio >= 0.4.4",
+    "joblib >= 1.4.2",
+    "matplotlib >= 3.9.2",
+    "numba >= 0.60.0; python_version < '3.13'",
+    "tensorflow >= 2.17.0; python_version < '3.13'",
+    "wfdb >= 4.1.2",
 ]
 
 dev = [  # everything needed for development
@@ -56,16 +57,14 @@ dev = [  # everything needed for development
 ]
 
 doc = [  # RTD uses this when building the documentation
-    "mkdocs-material >= 8.4.0",
-    "mkdocstrings-python >= 0.8.2",
+    "mkdocs-material >= 9.5.0",
+    "mkdocstrings-python >= 1.11.1",
 ]
 
 cibw = [  # cibuildwheel uses this for running the test suite
-    "edfio >= 0.4.0",
-    "numba >= 0.59.1",
-    "wfdb >= 3.4.0",
-    # https://github.com/MIT-LCP/wfdb-python/pull/511
-    "numpy < 2.0.0",  # TODO: just for wfdb!
+    "edfio >= 0.4.4",
+    "numba >= 0.60.0; python_version < '3.13'",
+    "wfdb >= 4.1.2",
 ]
 
 [project.urls]
