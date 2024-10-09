@@ -1,11 +1,14 @@
 # Contributing to SleepECG
+
 If you want to implement a new feature, fix an existing bug, or help improve SleepECG in any other way (such as adding or improving documentation), please consider submitting a [pull request](https://github.com/cbrnr/sleepecg/pulls) on GitHub. It might be a good idea to open an [issue](https://github.com/cbrnr/sleepecg/issues) beforehand and discuss your planned contributions with the developers.
 
 Before you start working on your contribution, please make sure to follow the guidelines described in this document.
 
 
 ## GitHub workflow
+
 ### Setup
+
 - Create a [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of the [repository](https://github.com/cbrnr/sleepecg).
 - Clone the fork to your machine:
     ```
@@ -19,6 +22,7 @@ Before you start working on your contribution, please make sure to follow the gu
 
 
 ### Add a feature or fix a bug
+
 - Create and switch to a new branch (use a self-explanatory branch name).
 - Make changes and commit them.
 - Push the changes to your remote fork.
@@ -27,6 +31,7 @@ Before you start working on your contribution, please make sure to follow the gu
 
 
 ### Rebasing
+
 If another PR is merged while you are working on something, a merge conflict may arise. To resolve it, perform the following steps in your local clone:
 - Fetch the upstream changes: `git fetch upstream`
 - Rebase your commits: `git rebase upstream/main`
@@ -35,7 +40,8 @@ If another PR is merged while you are working on something, a merge conflict may
 
 
 ## Development environment
-Make sure to use Python 3.9. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of working your main environment. In the root of the local clone of your fork, install SleepECG as follows:
+
+Make sure to use a supported Python version. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of working your main environment. In the root of the local clone of your fork, install SleepECG as follows:
 
 ```
 pip install -e ".[dev]"
@@ -45,7 +51,8 @@ When using the flag [`-e`](https://pip.pypa.io/en/stable/cli/pip_install/#instal
 
 
 ## Code style
-SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Black](https://black.readthedocs.io/en/stable/index.html), with the following exceptions/specifications:
+
+SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Ruff](https://astral.sh/ruff), with the following exceptions/specifications:
 - Each source file contains the following header:
     ```python
     # © SleepECG developers
@@ -57,6 +64,7 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Blac
 
 
 ## Public API
+
 - Every non-public member (i.e. every member not intended to be accessed by an end user) is prefixed with an underscore `_`.
 - Inside a (sub-)package's `__init__.py`, public module members are imported explicitly.
 - `__all__` is never set.
@@ -64,6 +72,7 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Blac
 
 
 ## Documentation
+
 For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html), with the following exceptions/specifications:
 - The maximum line length is `92`.
 - For parameters that may take multiple types, pipe characters are used instead of the word `or`, for example `param_name : int | float`.
@@ -73,6 +82,7 @@ For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.
 
 
 ## Pre-commit
+
 Coding and documentation style are checked via a CI job. To make sure your contribution passes those checks, you can use [`pre-commit`](https://pre-commit.com/) locally. To install the hooks configured in `.pre-commit-config.yml`, run
 
 ```
@@ -83,18 +93,23 @@ inside your local clone. After that, the checks required by the CI job will be r
 
 
 ## Tests
-SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The structure of `sleepecg/test/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/test/io/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies (i.e. listed under `install_requires` in `setup.cfg`), make sure to add it to the optional requirement categories `dev` and `cibw`.
+
+SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The structure of `sleepecg/tests/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/tests/io/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies, make sure to add it to the optional requirement categories `dev` and `cibw`.
 
 To run the tests, execute
+
 ```
 pytest
 ```
+
 in the project or package root. The tests for the C extension can be excluded using
+
 ```
 pytest -m "not c_extension"
 ```
 
 ## Releases
+
 Follow these steps to release a new version of SleepECG:
 - In `src/sleepecg/__init__.py` remove the `-dev` suffix in `__version__`.
     - In case of a patch release, modify the version number accordingly.
