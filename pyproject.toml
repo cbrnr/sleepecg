@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm", "numpy"]
+requires = ["setuptools", "setuptools-scm", "numpy >= 2.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords = ["sleep", "ecg", "qrs", "peak"]
 dependencies = [
-    "numpy >= 2.0.0",
+    "numpy >= 1.26.0",
     "pyyaml >= 6.0.0",
     "requests >= 2.32.3",
     "scipy >= 1.14.0",
@@ -52,7 +52,7 @@ dev = [  # everything needed for development
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
     "ruff >= 0.4.0",
-    "setuptools >= 56.0.0",
+    "setuptools >= 72.1.0",
 ]
 
 doc = [  # RTD uses this when building the documentation
