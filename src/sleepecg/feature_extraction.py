@@ -367,10 +367,10 @@ def _hrv_frequencydomain_features(
     lf_mask = (0.04 < freq) & (freq <= 0.15)
     hf_mask = (0.15 < freq) & (freq <= 0.4)
 
-    total_power = np.trapz(psd[:, total_power_mask], freq[total_power_mask])
-    vlf = np.trapz(psd[:, vlf_mask], freq[vlf_mask])
-    lf = np.trapz(psd[:, lf_mask], freq[lf_mask])
-    hf = np.trapz(psd[:, hf_mask], freq[hf_mask])
+    total_power = np.trapezoid(psd[:, total_power_mask], freq[total_power_mask])
+    vlf = np.trapezoid(psd[:, vlf_mask], freq[vlf_mask])
+    lf = np.trapezoid(psd[:, lf_mask], freq[lf_mask])
+    hf = np.trapezoid(psd[:, hf_mask], freq[hf_mask])
 
     lf_norm = lf / (lf + hf) * 100
     hf_norm = hf / (lf + hf) * 100
