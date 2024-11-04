@@ -68,10 +68,14 @@ def _get_nsrr_url(db_slug: str) -> str:
         if not _nsrr_token:
             try:
                 from sleepecg import get_config_value
+
                 _nsrr_token = get_config_value("nsrr_token")
             except ValueError:
-                raise RuntimeError("NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`, set the token in the "
-                                   "'config.yml' file or set an environment variable 'nsrr_token'!")
+                raise RuntimeError(
+                    "NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`, set the "
+                    "token in the 'config.yml' file or set an environment variable "
+                    "'nsrr_token'!"
+                )
     return f"https://sleepdata.org/datasets/{db_slug}/files/a/{_nsrr_token}/m/sleepecg/"
 
 
