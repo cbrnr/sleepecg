@@ -6,12 +6,12 @@
 
 from __future__ import annotations
 
+import os
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
 import requests
-import os
 from tqdm import tqdm
 
 from sleepecg.io.utils import _download_file

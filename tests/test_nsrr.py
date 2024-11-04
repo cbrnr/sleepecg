@@ -4,11 +4,12 @@
 
 """Tests for the handling of the nsrr data."""
 
-import pytest
 from unittest.mock import patch
 
-import sleepecg.io.nsrr
+import pytest
+
 import sleepecg.config
+import sleepecg.io.nsrr
 from sleepecg.io.nsrr import _get_nsrr_url
 
 
