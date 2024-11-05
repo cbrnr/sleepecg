@@ -63,9 +63,9 @@ def _get_nsrr_url(db_slug: str) -> str:
         The download URL.
     """
     global _nsrr_token
-    if not _nsrr_token:
+    if _nsrr_token is None:
         _nsrr_token = os.environ.get("nsrr_token")
-        if not _nsrr_token:
+        if _nsrr_token is None:
             try:
                 from sleepecg import get_config_value
 
