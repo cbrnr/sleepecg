@@ -40,6 +40,23 @@ set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa()  # note that this is a generator
 ```
 
+As an alternative to always using the 'set_nsrr_token' function, the NSRR token can be set either in the config file
+(nsrr_token) or as an environment variable (NSRR_TOKEN). How to set an environment variable depends on your operating system and should be looked up in a relevant manual.
+Setting the NSRR token in the config file is done via  [`config.py`](https://github.com/cbrnr/sleepecg/blob/main/src/sleepecg/config.py).
+The following code snippet shows how the set the NSRR token in the config file:
+
+```python
+from sleepecg.config import set_config 
+set_config(nsrr_token="your_nsrr_token")
+```
+
+Since the NSRR token can be set in multiple ways, a priority list is defined as such:
+1. NSRR token set via [`set_nsrr_token()`][sleepecg.set_nsrr_token]
+2. NSRR token set as an environment variable
+3. NSRR token set in the config
+
+So if for instance the NSRR token was set both via 1. and 3. the NSRR token set via 1. is used.
+
 You can also select a subset of records from a dataset. This example will download and read all records having IDs starting with `00` (i.e. records `0001`–`0099`):
 
 ```python
