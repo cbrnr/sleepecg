@@ -41,13 +41,6 @@ mesa = read_mesa()  # note that this is a generator
 ```
 
 Instead of always using [`set_nsrr_token()`](sleepecg.set_nsrr_token), you can set the NSRR token via [`set_config(nsrr_token="YOUR_TOKEN")`](sleepecg.set_config) or as an environment variable (`NSRR_TOKEN`).
-Setting the NSRR token in the config file is done via  [`config.py`](https://github.com/cbrnr/sleepecg/blob/main/src/sleepecg/config.py).
-The following code snippet shows how the set the NSRR token in the config file:
-
-```python
-from sleepecg.config import set_config 
-set_config(nsrr_token="your_nsrr_token")
-```
 
 Since the NSRR token can be set in multiple ways, a priority list is defined as such:
 1. NSRR token set via [`set_nsrr_token()`][sleepecg.set_nsrr_token]
