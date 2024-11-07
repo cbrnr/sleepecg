@@ -40,8 +40,7 @@ set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa()  # note that this is a generator
 ```
 
-As an alternative to always using the 'set_nsrr_token' function, the NSRR token can be set either in the config file
-(nsrr_token) or as an environment variable (NSRR_TOKEN). How to set an environment variable depends on your operating system and should be looked up in a relevant manual.
+Instead of always using [`set_nsrr_token()`](sleepecg.set_nsrr_token), you can set the NSRR token via [`set_config(nsrr_token="YOUR_TOKEN")`](sleepecg.set_config) or as an environment variable (`NSRR_TOKEN`).
 Setting the NSRR token in the config file is done via  [`config.py`](https://github.com/cbrnr/sleepecg/blob/main/src/sleepecg/config.py).
 The following code snippet shows how the set the NSRR token in the config file:
 
