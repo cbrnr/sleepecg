@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import os
 from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path
@@ -13,6 +14,7 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
+from sleepecg.config import get_config_value
 from sleepecg.io.utils import _download_file
 
 _nsrr_token = None
@@ -61,8 +63,16 @@ def _get_nsrr_url(db_slug: str) -> str:
     str
         The download URL.
     """
-    if _nsrr_token is None:
-        raise RuntimeError("NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`!")
+    global _nsrr_token
+    if (
+        _nsrr_token := _nsrr_token
+        or os.environ.get("NSRR_TOKEN")
+        or get_config_value("nsrr_token")
+    ) is None:
+        raise RuntimeError(
+            "NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`, set the token "
+            "in the configuration, or set an environment variable NSRR_TOKEN."
+        )
     return f"https://sleepdata.org/datasets/{db_slug}/files/a/{_nsrr_token}/m/sleepecg/"
 
 
