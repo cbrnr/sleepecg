@@ -65,9 +65,9 @@ def _get_nsrr_url(db_slug: str) -> str:
     """
     global _nsrr_token
     if (
-            _nsrr_token := _nsrr_token
-                           or os.environ.get("NSRR_TOKEN")
-                           or get_config_value("nsrr_token")
+        _nsrr_token := _nsrr_token
+        or os.environ.get("NSRR_TOKEN")
+        or get_config_value("nsrr_token")
     ) is None:
         raise RuntimeError(
             "NSRR token not set, use `sleepecg.set_nsrr_token(<token>)`, set the token "
