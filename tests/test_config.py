@@ -10,20 +10,6 @@ import sleepecg.config
 from sleepecg import get_config, get_config_value, set_config
 
 
-@pytest.fixture(autouse=True)
-def temp_test_config(tmp_path):
-    """Create, use and delete a temporary user config file for testing."""
-    # setup
-    user_config_path_backup = sleepecg.config._USER_CONFIG_PATH
-    sleepecg.config._USER_CONFIG_PATH = tmp_path / "testconfig.yml"
-
-    # execute test
-    yield
-
-    # cleanup
-    sleepecg.config._USER_CONFIG_PATH = user_config_path_backup
-
-
 def test_get_set_del_config():
     """Test setting, getting and deleting a setting."""
     assert get_config_value("data_dir") == "~/.sleepecg/datasets"
