@@ -13,15 +13,6 @@ import sleepecg.io.nsrr
 from sleepecg.io.nsrr import _get_nsrr_url
 
 
-@pytest.fixture(autouse=True)
-def temp_test_config(tmp_path):
-    """Create, use, and delete a temporary user config file for testing."""
-    user_config_path_backup = sleepecg.config._USER_CONFIG_PATH
-    sleepecg.config._USER_CONFIG_PATH = tmp_path / "testconfig.yml"
-    yield
-    sleepecg.config._USER_CONFIG_PATH = user_config_path_backup
-
-
 def test_get_nsrr_url_no_nsrr_token_set(monkeypatch):
     """Test the _get_nsrr_url method with no token set."""
     monkeypatch.delenv("NSRR_TOKEN", raising=False)
