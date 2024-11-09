@@ -4,8 +4,6 @@
 
 """Tests for the handling of the nsrr data."""
 
-from unittest.mock import patch
-
 import pytest
 
 import sleepecg.config
@@ -36,9 +34,9 @@ def test_get_nsrr_url_config_nsrr_token_set(monkeypatch):
     assert nsrr_url == "https://sleepdata.org/datasets/mesa/files/a/token/m/sleepecg/"
 
 
-@patch("sleepecg.io.nsrr._nsrr_token", "token")
 def test_get_nsrr_url_function_nsrr_token_set(monkeypatch):
     """Test the _get_nsrr_url method with token set via the set_nsrr_token function."""
     monkeypatch.delenv("NSRR_TOKEN", raising=False)
+    monkeypatch.setattr("sleepecg.io.nsrr._nsrr_token", "token")
     nsrr_url = _get_nsrr_url("mesa")
     assert nsrr_url == "https://sleepdata.org/datasets/mesa/files/a/token/m/sleepecg/"
