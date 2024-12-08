@@ -10,10 +10,34 @@ import datetime
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
+
+
+def _dummy_nsrr_overlap(filename: str):
+    overlap_data = {
+        "mesaid": [1, 2],
+        "line": [563, 301],
+        "linetime": ["20:30:00", "21:00:00"],
+        "starttime_psg": ["20:29:59", "20:59:59"],
+    }
+
+    overlap_df = pd.DataFrame(overlap_data)
+    overlap_df.to_csv(filename)
+
+
+def _dummy_nsrr_actigraphy(filename: str):
+    actigraphy_data = {
+        "mesaid": [1] * 10,
+        "line": list(range(563, 573)),
+        "activity": [10] * 10,
+    }
+
+    actigraphy_df = pd.DataFrame(actigraphy_data)
+    actigraphy_df.to_csv(filename)
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):

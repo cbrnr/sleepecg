@@ -458,6 +458,8 @@ def read_mesa(
                     & (activity_data["line"] <= end_line)
                 ]["activity"].to_list()
 
+                activity_counts = np.array(activity_counts)
+
             yield SleepRecord(
                 sleep_stages=parsed_xml.sleep_stages,
                 sleep_stage_duration=parsed_xml.sleep_stage_duration,
