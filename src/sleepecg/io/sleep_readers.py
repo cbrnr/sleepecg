@@ -323,7 +323,7 @@ def read_mesa(
         requested_records = sorted([file.stem[:-5] for file in xml_paths])
         if activity_source == "actigraphy":
             overlap_filename = "mesa-actigraphy-psg-overlap.csv"
-            overlap_filepath = db_dir / overlap_filename
+            overlap_filepath = overlap_dir / overlap_filename
             if not overlap_filepath.is_file():
                 raise RuntimeError(
                     "Overlap file not found, make sure it is in the correct directory "
@@ -469,15 +469,15 @@ def read_mesa(
                 subject_data=subject_data[record_id],
                 activity_counts=activity_counts,
             )
-
-        yield SleepRecord(
-            sleep_stages=parsed_xml.sleep_stages,
-            sleep_stage_duration=parsed_xml.sleep_stage_duration,
-            id=record_id,
-            recording_start_time=parsed_xml.recording_start_time,
-            heartbeat_times=heartbeat_times,
-            subject_data=subject_data[record_id],
-        )
+        else:
+            yield SleepRecord(
+                sleep_stages=parsed_xml.sleep_stages,
+                sleep_stage_duration=parsed_xml.sleep_stage_duration,
+                id=record_id,
+                recording_start_time=parsed_xml.recording_start_time,
+                heartbeat_times=heartbeat_times,
+                subject_data=subject_data[record_id],
+            )
 
 
 def read_slpdb(
