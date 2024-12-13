@@ -237,10 +237,10 @@ def read_mesa(
         )
 
     activity_source_options = {None, "cached", "actigraphy"}
-    if activity_source not in activitiy_source_options:
+    if activity_source not in activity_source_options:
         raise ValueError(
             f"Invalid value for parameter `activity_source`: {activity_source}, "
-            f"possible options: {activitiy_source_options}"
+            f"possible options: {activity_source_options}"
         )
 
     if data_dir is None:
