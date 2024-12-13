@@ -236,7 +236,7 @@ def read_mesa(
             f"possible options: {heartbeats_source_options}"
         )
 
-    activitiy_source_options = {None, "cached", "actigraphy"}
+    activity_source_options = {None, "cached", "actigraphy"}
     if activity_source not in activitiy_source_options:
         raise ValueError(
             f"Invalid value for parameter `activity_source`: {activity_source}, "
