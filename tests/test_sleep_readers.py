@@ -10,7 +10,6 @@ import datetime
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
@@ -18,15 +17,10 @@ from sleepecg.io.sleep_readers import Gender
 
 
 def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
-    overlap_data = {
-        "mesaid": mesa_ids,
-        "line": [563, 301],
-        "linetime": ["20:30:00", "21:00:00"],
-        "starttime_psg": ["20:29:59", "20:59:59"],
-    }
-
-    overlap_df = pd.DataFrame(overlap_data)
-    overlap_df.to_csv(filename, index=False)
+    with open(filename, "w") as csv:
+        csv.write("mesaid,line,linetime,starttime_psg\n")
+        for i in range(len(mesa_ids)):
+            csv.write(f"{mesa_ids[i][-1]},563,20:30:00,20:29:59\n")
 
 
 def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
@@ -38,15 +32,10 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
         for i in range(10)
     ]
 
-    actigraphy_data = {
-        "mesaid": [mesa_id] * 10,
-        "line": list(range(563, 573)),
-        "linetime": linetimes,
-        "activity": [10] * 10,
-    }
-
-    actigraphy_df = pd.DataFrame(actigraphy_data)
-    actigraphy_df.to_csv(filename)
+    with open(filename, "w") as csv:
+        csv.write("mesaid,line,linetime,activity\n")
+        for i in range(10):
+            csv.write(f"{mesa_id[-1]},{563 + i},{linetimes[i]},10\n")
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
