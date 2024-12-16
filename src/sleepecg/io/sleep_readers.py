@@ -16,8 +16,6 @@ from typing import NamedTuple
 from xml.etree import ElementTree
 
 import numpy as np
-import pandas as pd
-from pandas import read_csv
 
 from sleepecg.config import get_config_value
 from sleepecg.heartbeats import detect_heartbeats
@@ -346,7 +344,13 @@ def read_mesa(
         )
 
     if activity_source == "actigraphy":
-        overlap_data = read_csv(overlap_filepath)
+        overlap_data = []
+
+        with open(overlap_filepath) as csv_file:
+            reader = csv.reader(csv_file, delimiter=",")
+            header = next(reader)
+            for row in reader:
+                overlap_data.append(dict(zip(header, row)))
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f"{record_id}.npy"
@@ -424,7 +428,13 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data = pd.read_csv(activity_filepath)
+                activity_data = []
+
+                with open(activity_filepath) as csv_file:
+                    reader = csv.reader(csv_file, delimiter=",")
+                    header = next(reader)
+                    for row in reader:
+                        activity_data.append(dict(zip(header, row)))
 
                 recording_start_time = parsed_xml.recording_start_time
                 recording_duration = parsed_xml.recording_duration
@@ -444,19 +454,24 @@ def read_mesa(
                 )
                 recording_end_time = recording_end_time.strftime("%H:%M:%S").lstrip("0")
 
-                mesa_id = activity_data["mesaid"].iloc[0]
+                mesa_id = activity_data[0].get("mesaid")
 
-                start_line = overlap_data.loc[
-                    overlap_data["mesaid"] == mesa_id, "line"
-                ].iloc[0]
-                end_line = activity_data.loc[
-                    activity_data["linetime"] == recording_end_time, "line"
-                ].iloc[0]
+                start_line = int(
+                    next(
+                        row["line"] for row in overlap_data if row.get("mesaid") == mesa_id
+                    )
+                )
+                end_line = int(
+                    next(
+                        row["line"]
+                        for row in activity_data
+                        if row.get("linetime") == recording_end_time
+                    )
+                )
 
-                activity_counts = activity_data[
-                    (activity_data["line"] >= start_line)
-                    & (activity_data["line"] <= end_line)
-                ]["activity"].to_list()
+                activity_counts = [
+                    row["activity"] for row in activity_data[start_line - 1 : end_line]
+                ]
 
                 activity_counts = np.array(activity_counts)
 

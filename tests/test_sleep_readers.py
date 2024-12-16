@@ -20,7 +20,7 @@ def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,starttime_psg\n")
         for i in range(len(mesa_ids)):
-            csv.write(f"{mesa_ids[i][-1]},563,20:30:00,20:29:59\n")
+            csv.write(f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n")
 
 
 def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
@@ -35,7 +35,7 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,activity\n")
         for i in range(10):
-            csv.write(f"{mesa_id[-1]},{563 + i},{linetimes[i]},10\n")
+            csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
