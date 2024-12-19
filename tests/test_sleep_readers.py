@@ -13,8 +13,8 @@ import numpy as np
 from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
+from sleepecg.io.nsrr import set_nsrr_token
 from sleepecg.io.sleep_readers import Gender
-from sleepecg.io.nsrr import set_nsrr_token, _list_nsrr, _download_nsrr_file, _get_nsrr_url
 
 
 def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
@@ -36,6 +36,7 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
         csv.write("mesaid,line,linetime,activity\n")
         for i in range(10):
             csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
+
 
 def _dummy_nsrr_actigraphy_cached(filename: str):
     activity_counts = np.array([10, 10, 10, 10, 10, 10])
@@ -132,7 +133,9 @@ def _create_dummy_mesa(
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
         if actigraphy:
             _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
-            _dummy_nsrr_actigraphy_cached(f"{activity_counts_dir}/{record_id}-activity-counts.npy")
+            _dummy_nsrr_actigraphy_cached(
+                f"{activity_counts_dir}/{record_id}-activity-counts.npy"
+            )
             record_ids.append(record_id)
 
     if actigraphy:
@@ -213,6 +216,7 @@ def test_read_mesa_actigraphy(tmp_path):
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 6
 
+
 def test_read_mesa_actigraphy_cached(tmp_path):
     """Basic sanity checks for records read via read_mesa including cached actigraphy."""
     durations = [0.1, 0.2]  # hours
@@ -235,8 +239,9 @@ def test_read_mesa_actigraphy_cached(tmp_path):
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 6
 
+
 def test_read_mesa_actigraphy_online(tmp_path):
-    """Basic sanity checks for records read via read_mesa including actigraphy with online data."""
+    """Basic sanity checks for records read via read_mesa with online data."""
     set_nsrr_token("YOUR TOKEN")
     records = list(
         read_mesa(
@@ -244,8 +249,9 @@ def test_read_mesa_actigraphy_online(tmp_path):
             heartbeats_source="ecg",
             offline=False,
             activity_source="actigraphy",
-            records_pattern="0001"
-        ))
+            records_pattern="0001",
+        )
+    )
 
     assert len(records) == 1
 

@@ -302,7 +302,10 @@ def read_mesa(
 
         if activity_source is not None:
             activity_files = _list_nsrr(
-                db_slug = DB_SLUG, subfolder = "actigraphy", pattern=f"mesa-sleep-{records_pattern}.csv", shallow=True
+                db_slug=DB_SLUG,
+                subfolder="actigraphy",
+                pattern=f"mesa-sleep-{records_pattern}.csv",
+                shallow=True,
             )
             checksums.update(activity_files)
             overlap_filename, overlap_checksum = _list_nsrr(
@@ -413,7 +416,9 @@ def read_mesa(
 
         if activity_source is not None:
             if activity_source == "cached":
-                activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
+                activity_counts_file = (
+                    activity_counts_dir / f"{record_id}-activity-counts.npy"
+                )
                 if not activity_counts_file.is_file():
                     print(f"Skipping {record_id} due to missing cached activity counts.")
                     continue
