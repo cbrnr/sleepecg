@@ -175,7 +175,7 @@ def read_mesa(
     offline: bool = False,
     keep_edfs: bool = False,
     data_dir: str | Path | None = None,
-    activity_source: str = None,
+    activity_source: str | None = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
@@ -219,8 +219,8 @@ def read_mesa(
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
-    ACTIVITY_DIRNAME = "actigraphy/"
-    OVERLAP_DIRNAME = "overlap/"
+    ACTIVITY_DIRNAME = "actigraphy"
+    OVERLAP_DIRNAME = "overlap"
     HEARTBEATS_DIRNAME = "preprocessed/heartbeats"
     ACTIVITY_COUNTS_DIRNAME = "preprocessed/activity_counts"
     RPOINTS_DIRNAME = "polysomnography/annotations-rpoints"
@@ -302,7 +302,7 @@ def read_mesa(
 
         if activity_source is not None:
             activity_files = _list_nsrr(
-                DB_SLUG, ACTIVITY_DIRNAME, pattern=f"mesa-sleep-{records_pattern}.csv"
+                db_slug = DB_SLUG, subfolder = "actigraphy", pattern=f"mesa-sleep-{records_pattern}.csv", shallow=True
             )
             checksums.update(activity_files)
             overlap_filename, overlap_checksum = _list_nsrr(
@@ -413,7 +413,7 @@ def read_mesa(
 
         if activity_source is not None:
             if activity_source == "cached":
-                activity_counts_file = activity_dir / f"{record_id}-activity-counts.npy"
+                activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
                 if not activity_counts_file.is_file():
                     print(f"Skipping {record_id} due to missing cached activity counts.")
                     continue

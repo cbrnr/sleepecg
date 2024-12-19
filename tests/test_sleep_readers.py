@@ -14,6 +14,7 @@ from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
+from sleepecg.io.nsrr import set_nsrr_token, _list_nsrr, _download_nsrr_file, _get_nsrr_url
 
 
 def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
@@ -26,7 +27,6 @@ def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
 def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
     base_time = datetime.datetime(2024, 1, 1, 20, 30, 0)
 
-    # Generate linetime values as strings
     linetimes = [
         (base_time + datetime.timedelta(seconds=30 * i)).strftime("%H:%M:%S")
         for i in range(10)
@@ -36,6 +36,10 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
         csv.write("mesaid,line,linetime,activity\n")
         for i in range(10):
             csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
+
+def _dummy_nsrr_actigraphy_cached(filename: str):
+    activity_counts = np.array([10, 10, 10, 10, 10, 10])
+    np.save(filename, activity_counts)
 
 
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
@@ -104,6 +108,7 @@ def _create_dummy_mesa(
     CSV_DIRNAME = "datasets"
     OVERLAP_DIRNAME = "overlap"
     ACTIVITY_DIRNAME = "actigraphy"
+    ACTIVITY_COUNTS_DIRNAME = "preprocessed/activity_counts"
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
@@ -111,12 +116,13 @@ def _create_dummy_mesa(
     csv_dir = db_dir / CSV_DIRNAME
     overlap_dir = db_dir / OVERLAP_DIRNAME
     activity_dir = db_dir / ACTIVITY_DIRNAME
+    activity_counts_dir = db_dir / ACTIVITY_COUNTS_DIRNAME
 
     for directory in (annotations_dir, edf_dir, csv_dir):
         directory.mkdir(parents=True, exist_ok=True)
 
     if actigraphy:
-        for directory in (overlap_dir, activity_dir):
+        for directory in (overlap_dir, activity_dir, activity_counts_dir):
             directory.mkdir(parents=True, exist_ok=True)
             record_ids = []
 
@@ -126,6 +132,7 @@ def _create_dummy_mesa(
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
         if actigraphy:
             _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
+            _dummy_nsrr_actigraphy_cached(f"{activity_counts_dir}/{record_id}-activity-counts.npy")
             record_ids.append(record_id)
 
     if actigraphy:
@@ -205,6 +212,45 @@ def test_read_mesa_actigraphy(tmp_path):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 6
+
+def test_read_mesa_actigraphy_cached(tmp_path):
+    """Basic sanity checks for records read via read_mesa including cached actigraphy."""
+    durations = [0.1, 0.2]  # hours
+    valid_stages = {int(s) for s in SleepStage}
+
+    _create_dummy_mesa(data_dir=tmp_path, durations=durations, actigraphy=True)
+    records = list(
+        read_mesa(
+            data_dir=tmp_path,
+            heartbeats_source="ecg",
+            offline=True,
+            activity_source="cached",
+        )
+    )
+
+    assert len(records) == 2
+
+    for rec in records:
+        assert rec.sleep_stage_duration == 30
+        assert set(rec.sleep_stages) - valid_stages == set()
+        assert len(rec.activity_counts) == 6
+
+def test_read_mesa_actigraphy_online(tmp_path):
+    """Basic sanity checks for records read via read_mesa including actigraphy with online data."""
+    set_nsrr_token("YOUR TOKEN")
+    records = list(
+        read_mesa(
+            data_dir=tmp_path,
+            heartbeats_source="ecg",
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="0001"
+        ))
+
+    assert len(records) == 1
+
+    for rec in records:
+        assert len(rec.activity_counts) == 1441
 
 
 def test_read_shhs(tmp_path):
