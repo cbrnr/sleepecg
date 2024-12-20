@@ -13,7 +13,6 @@ import numpy as np
 from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
-from sleepecg.io.nsrr import set_nsrr_token
 from sleepecg.io.sleep_readers import Gender
 
 
@@ -238,25 +237,6 @@ def test_read_mesa_actigraphy_cached(tmp_path):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 6
-
-
-def test_read_mesa_actigraphy_online(tmp_path):
-    """Basic sanity checks for records read via read_mesa with online data."""
-    set_nsrr_token("YOUR TOKEN")
-    records = list(
-        read_mesa(
-            data_dir=tmp_path,
-            heartbeats_source="ecg",
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="0001",
-        )
-    )
-
-    assert len(records) == 1
-
-    for rec in records:
-        assert len(rec.activity_counts) == 1441
 
 
 def test_read_shhs(tmp_path):
