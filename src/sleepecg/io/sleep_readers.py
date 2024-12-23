@@ -145,9 +145,9 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         raise RuntimeError(f"EpochLength not found in {xml_filepath}.")
     epoch_length = int(epoch_length)
 
-    recording_duration = root.find(".//ScoredEvent").findtext(".//Duration")
-    if recording_duration is not None:
-        recording_duration = float(recording_duration)
+    scored_event = root.find(".//ScoredEvent")
+    if scored_event is not None:
+        recording_duration = float(scored_event.findtext(".//Duration"))
     else:
         raise ValueError(f"Recording duration not found in {xml_filepath}.")
 
