@@ -147,9 +147,9 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
     scored_event = root.find(".//ScoredEvent")
     if scored_event is not None:
-        recording_duration = float(scored_event.findtext(".//Duration"))
+        recording_duration = float(scored_event.findtext(".//Duration", ""))
     else:
-        raise ValueError(f"Recording duration not found in {xml_filepath}.")
+        raise RuntimeError(f"Recording duration not found in {xml_filepath}.")
 
     start_time = None
     annot_stages = []
