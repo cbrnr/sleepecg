@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import datetime
+import os.path
 from pathlib import Path
 
 import numpy as np
@@ -214,6 +215,9 @@ def test_read_mesa_actigraphy(tmp_path):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 6
+        assert os.path.exists(
+            f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
+        )
 
 
 def test_read_mesa_actigraphy_cached(tmp_path):

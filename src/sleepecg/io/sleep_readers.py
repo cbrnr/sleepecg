@@ -145,7 +145,11 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         raise RuntimeError(f"EpochLength not found in {xml_filepath}.")
     epoch_length = int(epoch_length)
 
-    recording_duration = float(root.find(".//ScoredEvent").findtext(".//Duration"))
+    recording_duration = root.find(".//ScoredEvent").findtext(".//Duration")
+    if recording_duration is not None:
+        recording_duration = float(recording_duration)
+    else:
+        raise ValueError(f"Recording duration not found in {xml_filepath}.")
 
     start_time = None
     annot_stages = []
@@ -415,10 +419,8 @@ def read_mesa(
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
         if activity_source is not None:
+            activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
             if activity_source == "cached":
-                activity_counts_file = (
-                    activity_counts_dir / f"{record_id}-activity-counts.npy"
-                )
                 if not activity_counts_file.is_file():
                     print(f"Skipping {record_id} due to missing cached activity counts.")
                     continue
@@ -457,7 +459,7 @@ def read_mesa(
                 recording_end_time = recording_end_time + datetime.timedelta(
                     seconds=rounding_seconds
                 )
-                recording_end_time = recording_end_time.strftime("%H:%M:%S").lstrip("0")
+                recording_end_time_str = recording_end_time.strftime("%H:%M:%S").lstrip("0")
 
                 mesa_id = activity_data[0].get("mesaid")
 
@@ -470,7 +472,7 @@ def read_mesa(
                     next(
                         row["line"]
                         for row in activity_data
-                        if row.get("linetime") == recording_end_time
+                        if row.get("linetime") == recording_end_time_str
                     )
                 )
 
@@ -479,6 +481,7 @@ def read_mesa(
                 ]
 
                 activity_counts = np.array(activity_counts)
+                np.save(activity_counts_file, activity_counts)
 
             yield SleepRecord(
                 sleep_stages=parsed_xml.sleep_stages,
