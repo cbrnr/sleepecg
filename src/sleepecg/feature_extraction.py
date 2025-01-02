@@ -58,8 +58,11 @@ _FEATURE_GROUPS = {
     "metadata": ("recording_start_time", "age", "gender", "weight"),
     "actigraphy": ("activity_counts", "dummy_feature"),
 }
-_FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items()
-                        for id in (ids if isinstance(ids, tuple) else(ids,))}
+_FEATURE_ID_TO_GROUP = {
+    id: group
+    for group, ids in _FEATURE_GROUPS.items()
+    for id in (ids if isinstance(ids, tuple) else (ids,))
+}
 
 _TIME_DOMAIN_EXPECTED_WARNING_MESSAGES = (
     "All-NaN slice encountered",
@@ -659,7 +662,7 @@ def _extract_features_single(
         elif feature_group == "metadata":
             X.append(_metadata_features(record, num_stages))
         elif feature_group == "actigraphy":
-            X.append(record.activity_counts.reshape(-1,1))
+            X.append(record.activity_counts.reshape(-1, 1))
     features = np.hstack(X)[:, col_indices]
 
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:

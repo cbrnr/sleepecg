@@ -27,7 +27,9 @@ warnings.filterwarnings(
 if TRAIN:
     print("‣  Starting training...")
     print("‣‣ Extracting features...")
-    records = list(read_mesa(offline=False, records_pattern="000*", activity_source="actigraphy"))
+    records = list(
+        read_mesa(offline=False, records_pattern="000*", activity_source="actigraphy")
+    )
 
     feature_extraction_params = {
         "lookback": 120,
@@ -38,7 +40,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
-            "activity_counts"
+            "activity_counts",
         ],
         "min_rri": 0.3,
         "max_rri": 2,

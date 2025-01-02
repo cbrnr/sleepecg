@@ -463,18 +463,26 @@ def read_mesa(
 
                 mesa_id = activity_data[0].get("mesaid")
 
-                start_line = int(
-                    next(
-                        row["line"] for row in overlap_data if row.get("mesaid") == mesa_id
+                start_line = (
+                    int(
+                        next(
+                            row["line"]
+                            for row in overlap_data
+                            if row.get("mesaid") == mesa_id
+                        )
                     )
-                ) + 1
-                end_line = int(
-                    next(
-                        row["line"]
-                        for row in activity_data
-                        if row.get("linetime") == recording_end_time_str
+                    + 1
+                )
+                end_line = (
+                    int(
+                        next(
+                            row["line"]
+                            for row in activity_data
+                            if row.get("linetime") == recording_end_time_str
+                        )
                     )
-                ) - 1
+                    - 1
+                )
 
                 activity_counts = [
                     row["activity"] for row in activity_data[start_line - 1 : end_line]
