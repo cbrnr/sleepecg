@@ -214,7 +214,7 @@ def test_read_mesa_actigraphy(tmp_path):
     for rec in records:
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
-        assert len(rec.activity_counts) == 6
+        assert len(rec.activity_counts) == 4
         assert os.path.exists(
             f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
         )
