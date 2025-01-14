@@ -27,6 +27,7 @@ classifiers = [
 ]
 keywords = ["sleep", "ecg", "qrs", "peak"]
 dependencies = [
+    # https://github.com/MIT-LCP/wfdb-python/pull/511
     "numpy >= 1.25.0, < 2.0.0",  # TODO: Due to wfdb!
     "PyYAML >= 5.4.0",
     "requests >= 2.25.0",
