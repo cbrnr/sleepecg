@@ -11,13 +11,14 @@ on:
     branches:
       - main
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
   style:
     name: Check style
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    timeout-minutes: 2
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -35,15 +36,13 @@ jobs:
           - os: ubuntu-22.04
             arch: aarch64
       fail-fast: false
-    timeout-minutes: 10
+    timeout-minutes: 15
     name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      # Decide if we're running the
       - name: Set wheel tests to be skipped on emulated archs on PRs
         run: |
-          # Skip if on a
           if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ matrix.arch }}" == "aarch64" ]]; then
             echo "CIBW_TEST_COMMAND=\"\"" | tee -a $GITHUB_ENV
             echo "CIBW_BEFORE_TEST=\"\"" | tee -a $GITHUB_ENV
@@ -75,6 +74,7 @@ jobs:
             pip-extra: 'wfdb numpy<2'
     name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     steps:
       - uses: actions/setup-python@v5
         with:
