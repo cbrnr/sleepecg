@@ -87,7 +87,7 @@ class SleepRecord:
     subject_data : SubjectData, optional
         Dataclass containing subject data (such as gender or age), by default `None`.
     activity_counts: np.ndarray, optional
-        Activity counts according to actiwacth actigraphy, by default `None`.
+        Activity counts according to Actiwatch actigraphy, by default `None`.
     """
 
     sleep_stages: np.ndarray | None = None
@@ -208,9 +208,9 @@ def read_mesa(
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored. If `None` (default), the value will be
         taken from the configuration.
-    activity_source :{'actigraphy', 'cached', None'},  str, optional
-        If None (default), actigraphy data will not be downloaded. If 'actigraphy',
-        download actigraphy data from mesa dataset. If 'cached', get the cached activity
+    activity_source : {'actigraphy', 'cached', None}, optional
+        If `None` (default), actigraphy data will not be downloaded. If `'actigraphy'`,
+        download actigraphy data from MESA dataset. If `'cached'`, get the cached activity
         counts.
 
     Yields
