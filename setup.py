@@ -10,7 +10,7 @@ from wheel.bdist_wheel import bdist_wheel
 # selector needs to change in pyproject.toml
 
 class bdist_wheel_abi3(bdist_wheel):
-    def get_tag(self):
+    def get_tag(self) -> tuple:
         python, abi, plat = super().get_tag()
 
         if python.startswith("cp"):
@@ -30,4 +30,5 @@ setup(
             py_limited_api=True,
         ),
     ],
+    cmdclass={"bdist_wheel": bdist_wheel_abi3},
 )
