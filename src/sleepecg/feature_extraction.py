@@ -11,6 +11,7 @@ from collections.abc import Iterable
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
+from scipy.integrate import trapezoid
 from scipy.interpolate import interp1d
 from scipy.signal import periodogram
 
@@ -367,10 +368,10 @@ def _hrv_frequencydomain_features(
     lf_mask = (0.04 < freq) & (freq <= 0.15)
     hf_mask = (0.15 < freq) & (freq <= 0.4)
 
-    total_power = np.trapz(psd[:, total_power_mask], freq[total_power_mask])
-    vlf = np.trapz(psd[:, vlf_mask], freq[vlf_mask])
-    lf = np.trapz(psd[:, lf_mask], freq[lf_mask])
-    hf = np.trapz(psd[:, hf_mask], freq[hf_mask])
+    total_power = trapezoid(psd[:, total_power_mask], freq[total_power_mask])
+    vlf = trapezoid(psd[:, vlf_mask], freq[vlf_mask])
+    lf = trapezoid(psd[:, lf_mask], freq[lf_mask])
+    hf = trapezoid(psd[:, hf_mask], freq[hf_mask])
 
     lf_norm = lf / (lf + hf) * 100
     hf_norm = hf / (lf + hf) * 100
