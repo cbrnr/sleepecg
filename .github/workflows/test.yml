@@ -32,7 +32,7 @@ jobs:
           - os: ubuntu-22.04
             archs: aarch64
       fail-fast: false
-    name: Run tests (${{ matrix.os }})
+    name: Run tests (${{ matrix.os }} ${{ matrix.archs }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
