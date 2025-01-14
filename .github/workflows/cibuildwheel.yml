@@ -87,7 +87,7 @@ jobs:
           path: dist
       - run: ls -al dist
         shell: bash
-      - run: python -m pip install ./dist/*.whl pytest ${{ matrix.pip-extra }}
+      - run: python -m pip install ./dist/*.whl pytest numba edfio ${{ matrix.pip-extra }}
         shell: bash
       - run: pytest tests/
       # TODO: Add codecov?
@@ -104,6 +104,7 @@ jobs:
           python-version: 3.12
       - name: Build sdist
         run: |
+          set -eo pipefail
           python -m pip install build numpy
           python -m build --sdist
       - uses: actions/upload-artifact@v4
