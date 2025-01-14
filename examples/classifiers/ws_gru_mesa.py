@@ -10,14 +10,13 @@ from sleepecg import (
     prepare_data_keras,
     print_class_balance,
     read_mesa,
-    read_shhs,
     save_classifier,
     set_nsrr_token,
 )
 
-set_nsrr_token("your-token-here")
+set_nsrr_token("YOUR TOKEN HERE")
 
-TRAIN = True  # set to False to skip training and load classifier from disk
+TRAIN = False  # set to False to skip training and load classifier from disk
 
 # silence warnings (which might pop up during feature extraction)
 warnings.filterwarnings(
@@ -38,6 +37,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
+            "activity_counts",
         ],
         "min_rri": 0.3,
         "max_rri": 2,
@@ -105,10 +105,18 @@ print("‣‣ Loading classifier...")
 clf = load_classifier("ws-gru-mesa", "./classifiers")
 
 print("‣‣ Extracting features...")
-shhs = list(read_shhs(offline=False))
-
+# shhs = list(read_shhs(offline=False))
+test_data = list(
+    read_mesa(
+        offline=False,
+        activity_source="actigraphy",
+        keep_edfs=True,
+        data_dir="D:/SleepData/",
+        records_pattern="2***",
+    )
+)
 features_test, stages_test, feature_ids = extract_features(
-    tqdm(shhs),
+    tqdm(test_data),
     **clf.feature_extraction_params,
     n_jobs=-1,
 )

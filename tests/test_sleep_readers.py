@@ -7,13 +7,18 @@
 from __future__ import annotations
 
 import datetime
-import os.path
 from pathlib import Path
 
 import numpy as np
 from edfio import Edf, EdfSignal
 
-from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
+from sleepecg import (
+    SleepStage,
+    get_toy_ecg,
+    read_mesa,
+    read_shhs,
+    read_slpdb,
+)
 from sleepecg.io.sleep_readers import Gender
 
 
@@ -215,9 +220,9 @@ def test_read_mesa_actigraphy(tmp_path):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
         assert len(rec.activity_counts) == 4
-        assert os.path.exists(
+        assert Path(
             f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
-        )
+        ).exists()
 
 
 def test_read_mesa_actigraphy_cached(tmp_path):
