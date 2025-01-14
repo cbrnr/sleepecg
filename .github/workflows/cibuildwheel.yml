@@ -59,7 +59,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ matrix.os }}-${{ matrix.arch }}
-          path: ./wheelhouse/*.whl\
+          path: ./wheelhouse/*.whl
 
   test:
     needs: build_wheels
@@ -71,16 +71,23 @@ jobs:
           - os: ubuntu-22.04
             python-version: '3.12'
             pip-extra: 'wfdb "numpy<2"'
+      fail-fast: false
     name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'  # test abi3 wheel with latest Python
-      - run: ls -al wheelhouse
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-${{ matrix.os }}-native
+          merge-multiple: true
+          path: dist
+      - run: ls -al dist
         shell: bash
-      - run: python -m pip install ./wheelhouse/*.whl pytest ${{ matrix.pip-extra }}
+      - run: python -m pip install ./dist/*.whl pytest ${{ matrix.pip-extra }}
         shell: bash
       - run: pytest tests/
       # TODO: Add codecov?
@@ -111,10 +118,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact-*
+          pattern: artifact-*
           merge-multiple: true
           path: dist
-      - run: ls -al wheelhouse
+      - run: ls -al dist
         shell: bash
       - uses: actions/setup-python@v5
         with:
@@ -124,7 +131,7 @@ jobs:
 
   upload-pypi:
     name: Upload to PyPI
-    needs: check_wheels
+    needs: [check_wheels, test]
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
     steps:
