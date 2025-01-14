@@ -66,20 +66,19 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
-        python-version: ['3.13']
+        python-version: ['3.12']
         include:
           - os: ubuntu-22.04
-            python-version: '3.12'
-            pip-extra: 'wfdb "numpy<2"'
+            python-version: '3.13'
       fail-fast: false
-    name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
+    name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'  # test abi3 wheel with latest Python
+          python-version: ${{ matrix.python-version }}
       - uses: actions/download-artifact@v4
         with:
           pattern: artifact-${{ matrix.os }}-native
@@ -87,7 +86,14 @@ jobs:
           path: dist
       - run: ls -al dist
         shell: bash
-      - run: python -m pip install ./dist/*.whl pytest numba edfio ${{ matrix.pip-extra }}
+      - name: Triage dependencies
+        shell: bash
+        run: |
+          set -xeo pipefail
+          if [[ "${{ matrix.python-version }}" != "3.13" ]]; then
+            PIP_EXTRA="wfdb \"numpy<2\" numba"
+          fi
+      - run: python -m pip install ./dist/*.whl pytest edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
         shell: bash
       - run: pytest tests/
       # TODO: Add codecov?
