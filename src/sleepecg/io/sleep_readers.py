@@ -418,6 +418,7 @@ def read_mesa(
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
+        activity_counts = None
         if activity_source is not None:
             activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
             if activity_source == "cached":
@@ -491,24 +492,15 @@ def read_mesa(
                 activity_counts = np.array(activity_counts)
                 np.save(activity_counts_file, activity_counts)
 
-            yield SleepRecord(
-                sleep_stages=parsed_xml.sleep_stages,
-                sleep_stage_duration=parsed_xml.sleep_stage_duration,
-                id=record_id,
-                recording_start_time=parsed_xml.recording_start_time,
-                heartbeat_times=heartbeat_times,
-                subject_data=subject_data[record_id],
-                activity_counts=activity_counts,
-            )
-        else:
-            yield SleepRecord(
-                sleep_stages=parsed_xml.sleep_stages,
-                sleep_stage_duration=parsed_xml.sleep_stage_duration,
-                id=record_id,
-                recording_start_time=parsed_xml.recording_start_time,
-                heartbeat_times=heartbeat_times,
-                subject_data=subject_data[record_id],
-            )
+        yield SleepRecord(
+            sleep_stages=parsed_xml.sleep_stages,
+            sleep_stage_duration=parsed_xml.sleep_stage_duration,
+            id=record_id,
+            recording_start_time=parsed_xml.recording_start_time,
+            heartbeat_times=heartbeat_times,
+            subject_data=subject_data[record_id],
+            activity_counts=activity_counts,
+        )
 
 
 def read_slpdb(
