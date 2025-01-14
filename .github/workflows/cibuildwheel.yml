@@ -71,9 +71,12 @@ jobs:
           - os: ubuntu-22.04
             python-version: '3.13'
       fail-fast: false
-    name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }}
+    name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash -eo pipefail {0}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -85,17 +88,14 @@ jobs:
           merge-multiple: true
           path: dist
       - run: ls -al dist
-        shell: bash
       - name: Triage dependencies
-        shell: bash
         run: |
-          set -xeo pipefail
           if [[ "${{ matrix.python-version }}" != "3.13" ]]; then
-            PIP_EXTRA="wfdb \"numpy<2\" numba"
+            echo "PIP_EXTRA=wfdb \"numpy<2\" numba pytest-error-for-skips\" | tee -a $GITHUB_ENV
+            echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
           fi
       - run: python -m pip install ./dist/*.whl pytest edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
-        shell: bash
-      - run: pytest tests/
+      - run: pytest -rfEXs --cov-report=xml --tb=short --cov-branch --junit-xml=junit-results.xml --color=yes $PYTEST_EXTRA tests/
       # TODO: Add codecov?
 
   build_sdist:
