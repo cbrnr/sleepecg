@@ -1,9 +1,15 @@
 name: Test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
+  cancel-in-progress: true
 
 on:
   pull_request:
     paths-ignore:
     - 'docs/**'
+  push:
+    branches:
+      - main
 
 jobs:
   style:
@@ -24,7 +30,8 @@ jobs:
         archs: [native]
         include:
           - os: ubuntu-22.04
-            archs: [aarch64]
+            archs: aarch64
+      fail-fast: false
     name: Run tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     steps:
