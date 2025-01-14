@@ -44,12 +44,23 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}-${{ matrix.archs }}
           path: ./wheelhouse/*.whl
+
+  test-python:
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        python-version: ['3.13']
+        include:
+          - os: ubuntu-22.04
+            python-version: '3.12'
+            pip-extra: 'wfdb numpy<2'
+    name: Run independent tests (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
+    runs-on: ${{ matrix.os }}
+    steps:
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'  # test abi3 wheel
-        if: matrix.archs == 'native'
-      - run: python -m pip install ./wheelhouse/*.whl pytest
-        if: matrix.archs == 'native'
+          python-version: '3.13'  # test abi3 wheel with latest Python
+      - run: python -m pip install ./wheelhouse/*.whl pytest ${{ matrix.pip-extra }}
       - run: pytest tests/
-        if: matrix.archs == 'native'
       # TODO: Add codecov?
