@@ -91,7 +91,7 @@ jobs:
       - name: Triage dependencies
         run: |
           if [[ "${{ matrix.python-version }}" != "3.13" ]]; then
-            echo "PIP_EXTRA=wfdb \"numpy<2\" numba pytest-error-for-skips\" | tee -a $GITHUB_ENV
+            echo "PIP_EXTRA=wfdb \"numpy<2\" numba pytest-error-for-skips" | tee -a $GITHUB_ENV
             echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
           fi
       - run: python -m pip install ./dist/*.whl pytest edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
