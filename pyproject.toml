@@ -97,6 +97,9 @@ archs = "x86_64 arm64"
 
 [tool.cibuildwheel.windows]
 archs = "AMD64"
+repair-wheel-command = [
+  "delvewheel repair -w {dest_dir} {wheel}",
+]
 
 [tool.mypy]
 ignore_missing_imports = true

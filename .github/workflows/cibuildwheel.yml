@@ -36,10 +36,19 @@ jobs:
             arch: aarch64
       fail-fast: false
     timeout-minutes: 10
-    name: Run tests (${{ matrix.os }} ${{ matrix.arch }})
+    name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      # Decide if we're running the
+      - name: Set wheel tests to be skipped on emulated archs on PRs
+        run: |
+          # Skip if on a
+          if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ matrix.arch }}" == "aarch64" ]]; then
+            echo "CIBW_TEST_COMMAND=\"\"" | tee -a $GITHUB_ENV
+            echo "CIBW_BEFORE_TEST=\"\"" | tee -a $GITHUB_ENV
+          fi
+        shell: bash
       # For aarch64 support https://cibuildwheel.pypa.io/en/stable/faq/#emulation
       - uses: docker/setup-qemu-action@v3
         with:
@@ -52,7 +61,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ matrix.os }}-${{ matrix.arch }}
-          path: ./wheelhouse/*.whl
+          path: ./wheelhouse/*.whl\
 
   test:
     needs: build_wheels
@@ -64,7 +73,7 @@ jobs:
           - os: ubuntu-22.04
             python-version: '3.12'
             pip-extra: 'wfdb numpy<2'
-    name: Run independent tests (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
+    name: Test wheels (${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.pip-extra }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-python@v5
@@ -97,7 +106,7 @@ jobs:
 
   check_wheels:
     needs: [build_wheels, build_sdist]
-    name: Check wheels
+    name: Check wheels and source distribution
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v4
