@@ -19,16 +19,22 @@ jobs:
     needs: style
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-14]
+        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        archs: [native]
+        include:
+          - os: ubuntu-22.04
+            archs: [aarch64]
     name: Build wheels (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels and run tests
         uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS: ${{ matrix.archs }}
       - uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ matrix.os }}
+          name: artifact-${{ matrix.os }}-${{ matrix.archs }}
           path: ./wheelhouse/*.whl
 
   build_sdist:

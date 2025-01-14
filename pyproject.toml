@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm", "numpy"]
+requires = ["setuptools", "setuptools-scm", "wheel", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -77,6 +77,10 @@ test-requires = "pytest"
 test-extras = "cibw"
 test-command = "pytest {package}"
 skip = 'pp* *musllinux*'
+build = "cp39-*"  # abi3
+repair-wheel-command = [
+  "pipx run abi3audit --strict --report {wheel}",
+]
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux2014"
