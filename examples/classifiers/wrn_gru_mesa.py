@@ -15,9 +15,9 @@ from sleepecg import (
     set_nsrr_token,
 )
 
-set_nsrr_token("your-token-here")
+set_nsrr_token("YOUR TOKEN HERE")
 
-TRAIN = True  # set to False to skip training and load classifier from disk
+TRAIN = False  # set to False to skip training and load classifier from disk
 
 # silence warnings (which might pop up during feature extraction)
 warnings.filterwarnings(
@@ -38,6 +38,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
+            "activity_counts",
         ],
         "min_rri": 0.3,
         "max_rri": 2,
