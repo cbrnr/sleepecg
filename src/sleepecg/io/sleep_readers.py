@@ -442,7 +442,7 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data = []
+                activity_data: list[dict[str,str]] = []
 
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")
