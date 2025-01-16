@@ -354,8 +354,8 @@ def read_mesa(
         overlap_data = {}
 
         with open(overlap_filepath) as csv_file:
-            reader = csv.DictReader(csv_file, delimiter=",")
-            for row in reader:
+            overlap_reader = csv.DictReader(csv_file, delimiter=",")
+            for row in overlap_reader:
                 mesaid = int(row["mesaid"])
                 line = int(row["line"])
                 overlap_data[mesaid] = line
