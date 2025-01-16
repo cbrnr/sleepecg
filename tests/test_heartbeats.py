@@ -26,6 +26,7 @@ def test_compare_heartbeats():
 @pytest.fixture(scope="session")
 def mitdb_234_MLII():
     """Fetch record for detector tests."""
+    pytest.importorskip("wfdb")
     return next(read_mitdb(records_pattern="234"))
 
 
