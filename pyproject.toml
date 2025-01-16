@@ -133,7 +133,7 @@ filterwarnings = [
     'ignore:.*datetime.datetime.utcfromtimestamp\(\):DeprecationWarning',
     'ignore:(?s).*Pyarrow:DeprecationWarning',
 ]
-addopts = "--cov=sleepecg --cov-report html"
+addopts = "--cov"
 
 [tool.ruff]
 line-length = 92
