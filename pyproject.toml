@@ -51,6 +51,7 @@ dev = [  # everything needed for development
     "mypy >= 0.991",
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
+    "pytest-cov >= 6.0.0",
     "ruff >= 0.4.0",
     "setuptools >= 56.0.0",
 ]
@@ -85,7 +86,7 @@ build = "cp39-*"  # abi3
 select = "*"
 inherit.repair-wheel-command = "append"
 repair-wheel-command = [
-  "pipx run abi3audit --strict --report {wheel}",
+    "pipx run abi3audit --strict --report {wheel}",
 ]
 
 [tool.cibuildwheel.linux]
@@ -99,7 +100,23 @@ archs = "x86_64 arm64"
 archs = "AMD64"
 before-build = "pip install delvewheel"
 repair-wheel-command = [
-  "delvewheel repair -w {dest_dir} {wheel}",
+    "delvewheel repair -w {dest_dir} {wheel}",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["sleepecg"]
+omit = [
+    "*/examples/*",
+    "*/setup.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "@abstractmethod",
+    "@abstractclassmethod",
 ]
 
 [tool.mypy]
@@ -116,6 +133,7 @@ filterwarnings = [
     'ignore:.*datetime.datetime.utcfromtimestamp\(\):DeprecationWarning',
     'ignore:(?s).*Pyarrow:DeprecationWarning',
 ]
+addopts = "--cov=sleepecg --cov-report html"
 
 [tool.ruff]
 line-length = 92
