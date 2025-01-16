@@ -351,13 +351,14 @@ def read_mesa(
         )
 
     if activity_source == "actigraphy":
-        overlap_data = []
+        overlap_data = {}
 
         with open(overlap_filepath) as csv_file:
-            reader = csv.reader(csv_file, delimiter=",")
-            header = next(reader)
+            reader = csv.DictReader(csv_file, delimiter=",")
             for row in reader:
-                overlap_data.append(dict(zip(header, row)))
+                mesaid = int(row["mesaid"])
+                line = int(row["line"])
+                overlap_data[mesaid] = line
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f"{record_id}.npy"
@@ -427,6 +428,11 @@ def read_mesa(
                     continue
                 activity_counts = np.load(activity_counts_file)
             else:
+                mesaid = int(record_id.split("-")[2])
+                if mesaid not in overlap_data:
+                    print(f"Skipping {record_id} due to missing overlap data.")
+                    continue
+
                 activity_filename = ACTIVITY_DIRNAME + f"/{record_id}.csv"
                 activity_filepath = db_dir / activity_filename
                 if not offline:
@@ -462,18 +468,8 @@ def read_mesa(
                 )
                 recording_end_time_str = recording_end_time.strftime("%H:%M:%S").lstrip("0")
 
-                mesa_id = activity_data[0].get("mesaid")
+                start_line = overlap_data[mesaid] + 1
 
-                start_line = (
-                    int(
-                        next(
-                            row["line"]
-                            for row in overlap_data
-                            if row.get("mesaid") == mesa_id
-                        )
-                    )
-                    + 1
-                )
                 end_line = (
                     int(
                         next(
