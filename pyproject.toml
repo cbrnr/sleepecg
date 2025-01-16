@@ -105,11 +105,7 @@ repair-wheel-command = [
 
 [tool.coverage.run]
 branch = true
-source = ["sleepecg"]
-omit = [
-    "*/examples/*",
-    "*/setup.py",
-]
+source = ["src/sleepecg"]
 
 [tool.mypy]
 ignore_missing_imports = true
