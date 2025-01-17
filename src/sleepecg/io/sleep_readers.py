@@ -355,9 +355,9 @@ def read_mesa(
 
         with open(overlap_filepath) as csv_file:
             overlap_reader = csv.DictReader(csv_file, delimiter=",")
-            for row in overlap_reader:
-                mesaid = int(row["mesaid"])
-                line = int(row["line"])
+            for entry in overlap_reader:
+                mesaid = int(entry["mesaid"])
+                line = int(entry["line"])
                 overlap_data[mesaid] = line
 
     for record_id in requested_records:
@@ -442,7 +442,7 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data: list[dict[str,str]] = []
+                activity_data = []
 
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")
