@@ -10,6 +10,7 @@ import datetime
 from pathlib import Path
 
 import numpy as np
+import pytest
 from edfio import Edf, EdfSignal
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
@@ -259,6 +260,7 @@ def test_read_shhs(tmp_path):
 
 def test_read_slpdb():
     """Basic test for read_slpdb."""
+    pytest.importorskip("wfdb")
     rec = next(read_slpdb(records_pattern="slp01a"))
     assert rec.sleep_stages.shape == (240,)
     assert rec.sleep_stage_duration == 30
