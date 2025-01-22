@@ -68,7 +68,7 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
             start += epoch_duration
 
         xml_file.write(
-            "</ScoredEvents>\n" "</PSGAnnotation>\n",
+            "</ScoredEvents>\n</PSGAnnotation>\n",
         )
 
 
