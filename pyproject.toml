@@ -41,9 +41,9 @@ full = [  # complete package functionality
     "edfio >= 0.4.4",
     "joblib >= 1.4.2",
     "matplotlib >= 3.9.2",
-    "numba >= 0.60.0; python_version < '3.13'",
+    "numba >= 0.61.0",
     "tensorflow >= 2.17.0; python_version < '3.13'",
-    "wfdb >= 4.1.2",
+    "wfdb >= 4.2.0",
 ]
 
 dev = [  # everything needed for development
@@ -63,8 +63,8 @@ doc = [  # RTD uses this when building the documentation
 
 cibw = [  # cibuildwheel uses this for running the test suite
     "edfio >= 0.4.4",
-    "numba >= 0.60.0; python_version < '3.13'",
-    "wfdb >= 4.1.2",
+    "numba >= 0.61.0",
+    "wfdb >= 4.2.0",
 ]
 
 [project.urls]
