@@ -90,10 +90,8 @@ jobs:
       - run: ls -al dist
       - name: Triage dependencies
         run: |
-          if [[ "${{ matrix.python-version }}" != "3.13" ]]; then
-            echo "PIP_EXTRA=wfdb numpy<2 numba pytest-error-for-skips" | tee -a $GITHUB_ENV
-            echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
-          fi
+          echo "PIP_EXTRA=wfdb numba pytest-error-for-skips" | tee -a $GITHUB_ENV
+          echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
       - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
       - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes $PYTEST_EXTRA tests/
       - uses: codecov/codecov-action@v5
