@@ -36,4 +36,4 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       run: uv python install ${{ matrix.python-version }}
     - name: Run tests
-      run: uv run --extra cibw pytest --cov tests
+      run: uv run --extra cibw pytest --cov=sleepecg tests
