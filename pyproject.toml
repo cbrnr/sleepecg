@@ -64,6 +64,8 @@ doc = [  # RTD uses this when building the documentation
 cibw = [  # cibuildwheel uses this for running the test suite
     "edfio >= 0.4.4",
     "numba >= 0.61.0",
+    "pytest >= 6.2.0",
+    "pytest-cov >= 6.0.0",
     "wfdb >= 4.2.0",
 ]
 
