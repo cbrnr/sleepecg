@@ -1,0 +1,151 @@
+name: Test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths-ignore:
+    - 'docs/**'
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
+
+jobs:
+  style:
+    name: Check style
+    runs-on: ubuntu-22.04
+    timeout-minutes: 2
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - uses: pre-commit/action@v3.0.1
+
+  build_wheels:
+    needs: style
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        arch: [native]
+        include:
+          - os: ubuntu-22.04
+            arch: aarch64
+      fail-fast: false
+    timeout-minutes: 15  # Linux ~1 min, Windows ~4 min, aarch64 emulated ~8 min with tests (~3 min without)
+    name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set wheel tests to be skipped on emulated archs on PRs
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ matrix.arch }}" == "aarch64" ]]; then
+            echo "CIBW_TEST_SKIP=*" | tee -a $GITHUB_ENV
+          fi
+        shell: bash
+      # For aarch64 support https://cibuildwheel.pypa.io/en/stable/faq/#emulation
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+        if: runner.os == 'Linux' && matrix.arch == 'aarch64'
+      - name: Build wheels and run tests
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS: ${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.os }}-${{ matrix.arch }}
+          path: ./wheelhouse/*.whl
+
+  test:
+    needs: build_wheels
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        python-version: ['3.12']
+        include:
+          - os: ubuntu-22.04
+            python-version: '3.13'
+      fail-fast: false
+    name: Test wheels (${{ matrix.os }} py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash -eo pipefail {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-${{ matrix.os }}-native
+          merge-multiple: true
+          path: dist
+      - run: ls -al dist
+      - name: Triage dependencies
+        run: |
+          echo "PIP_EXTRA=wfdb numba pytest-error-for-skips" | tee -a $GITHUB_ENV
+          echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
+      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
+      - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes $PYTEST_EXTRA tests/
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+        if: success() || failure()
+
+  build_sdist:
+    needs: style
+    name: Build source distribution
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        name: Install Python
+        with:
+          python-version: 3.12
+      - name: Build sdist
+        run: |
+          set -eo pipefail
+          python -m pip install build numpy
+          python -m build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-sdist
+          path: dist/*.tar.gz
+
+  check_wheels:
+    needs: [build_wheels, build_sdist]
+    name: Check wheels and source distribution
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-*
+          merge-multiple: true
+          path: dist
+      - run: ls -al dist
+        shell: bash
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - run: python -m pip install twine
+      - run: python -m twine check --strict dist/*
+
+  upload-pypi:
+    name: Upload to PyPI
+    needs: [check_wheels, test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-*
+          merge-multiple: true
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@v1.12.3

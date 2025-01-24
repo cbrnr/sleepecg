@@ -6,3 +6,6 @@
 __pycache__/
 site/
 sleepecg.egg-info/
+/build
+/coverage.xml
+/.coverage
