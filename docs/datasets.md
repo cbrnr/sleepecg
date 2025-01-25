@@ -44,7 +44,7 @@ Instead of always using [`set_nsrr_token()`](sleepecg.set_nsrr_token), you can s
 
 SleepECG checks for the NSRR token in the following order:
 
-1. Token set via [`set_nsrr_token()`][sleepecg.set_nsrr_token]
+1. Token set via [`set_nsrr_token()`](sleepecg.set_nsrr_token)
 2. Token set via environment variable `NSRR_TOKEN`
 3. Token set in the user configuration
 
@@ -58,6 +58,14 @@ from sleepecg import read_mesa, set_nsrr_token
 set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa(records_pattern="00*")  # note that this is a generator
 ```
+
+For the mesa dataset SleepECG also supports downloading and  storing the so-called activity counts. These are metrics
+that quantify movement of the subject via the recording and processing of 3D accelerometer measurements. They are
+calculated via a proprietary algorithm in the Actiware software by Phillips. In order to include activity counts in the 
+datasets downloaded from the mesa database, the [`read_mesa()`](sleepecg.read_mesa) function needs to be called with the
+parameter *activity_source* set either to *'actigraphy'* to download the data outright or *'cached'* to use cached
+activity counts if they were already downloaded previously.
+
 
 !!! note
     Reader functions are generators, so they do not return the data directly. To access the data, you need to consume the generator, either by iterating over it or with subsequent calls of `next()`.
