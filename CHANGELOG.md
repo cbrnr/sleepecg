@@ -1,4 +1,4 @@
-## [UNRELEASED] - YYYY-MM-DD
+## [0.5.9] - 2025-01-31
 ### Added
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add Python 3.13+ support by transforming wheel builds using ABI3 mode ([#251](https://github.com/cbrnr/sleepecg/pull/251) by [Eric Larson](https://github.com/larsoner))
