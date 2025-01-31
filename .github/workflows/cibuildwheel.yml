@@ -31,20 +31,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
-        arch: [native]
       fail-fast: false
-    timeout-minutes: 15  # Linux ~1 min, Windows ~4 min, aarch64 emulated ~8 min with tests (~3 min without)
-    name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
+    timeout-minutes: 10  # Linux ~1 min, Windows ~4 min
+    name: cibuildwheel (${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels and run tests
         uses: pypa/cibuildwheel@v2.22.0
-        env:
-          CIBW_ARCHS: ${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ matrix.os }}-${{ matrix.arch }}
+          name: artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   test:
@@ -70,7 +67,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/download-artifact@v4
         with:
-          pattern: artifact-${{ matrix.os }}-native
+          pattern: artifact-${{ matrix.os }}
           merge-multiple: true
           path: dist
       - run: ls -al dist

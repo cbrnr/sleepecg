@@ -79,6 +79,7 @@ test-extras = "cibw"
 test-command = "pytest {package}"
 skip = 'pp* *musllinux*'
 build = "cp310-*"  # abi3
+archs = "native"
 
 [[tool.cibuildwheel.overrides]]
 select = "*"
@@ -89,10 +90,6 @@ repair-wheel-command = [
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux2014"
-archs = "x86_64"
-
-[tool.cibuildwheel.macos]
-archs = "x86_64 arm64"
 
 [tool.cibuildwheel.windows]
 archs = "AMD64"
