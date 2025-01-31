@@ -76,6 +76,7 @@ changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 [tool.cibuildwheel]
 test-requires = "pytest"
 test-extras = "cibw"
+before-test = "pip install --only-binary=\"numba,llvmlite\" numba"
 test-command = "pytest {package}"
 skip = 'pp* *musllinux*'
 build = "cp310-*"  # abi3

@@ -71,7 +71,7 @@ jobs:
           merge-multiple: true
           path: dist
       - run: ls -al dist
-      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio wfdb numba pytest-error-for-skips --only-binary="numpy,numba,edfio"
+      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio wfdb numba pytest-error-for-skips --only-binary="numpy,numba,llvmlite,edfio"
       - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes --error-for-skips tests/
       - uses: codecov/codecov-action@v5
         with:
