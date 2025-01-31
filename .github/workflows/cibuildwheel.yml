@@ -30,28 +30,14 @@ jobs:
     needs: style
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
         arch: [native]
-        include:
-          - os: ubuntu-22.04
-            arch: aarch64
       fail-fast: false
     timeout-minutes: 15  # Linux ~1 min, Windows ~4 min, aarch64 emulated ~8 min with tests (~3 min without)
     name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set wheel tests to be skipped on emulated archs on PRs
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ matrix.arch }}" == "aarch64" ]]; then
-            echo "CIBW_TEST_SKIP=*" | tee -a $GITHUB_ENV
-          fi
-        shell: bash
-      # For aarch64 support https://cibuildwheel.pypa.io/en/stable/faq/#emulation
-      - uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-        if: runner.os == 'Linux' && matrix.arch == 'aarch64'
       - name: Build wheels and run tests
         uses: pypa/cibuildwheel@v2.22.0
         env:
@@ -65,7 +51,7 @@ jobs:
     needs: build_wheels
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
         python-version: ['3.12']
         include:
           - os: ubuntu-22.04
