@@ -1,3 +1,5 @@
+## [UNRELEASED] - YYYY-MM-DD
+
 ## [0.5.9] - 2025-02-01
 ### Added
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
