@@ -1,10 +1,15 @@
 ## [UNRELEASED] - YYYY-MM-DD
+
+## [0.5.9] - 2025-02-01
 ### Added
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add Python 3.13+ support by transforming wheel builds using ABI3 mode ([#251](https://github.com/cbrnr/sleepecg/pull/251) by [Eric Larson](https://github.com/larsoner))
 
 ### Changed
 - Split `get_config` function into `get_config` and `get_config_value` to get the entire configuration (as a dictionary) or an individual configuration key, respectively ([#229](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))
+
+### Removed
+- Remove Python 3.9 support ([#241](https://github.com/cbrnr/sleepecg/pull/241) by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Fixed
 - Fix `plot_ecg` for newer versions of Matplotlib ([#225](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))

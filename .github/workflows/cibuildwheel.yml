@@ -30,42 +30,25 @@ jobs:
     needs: style
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
-        arch: [native]
-        include:
-          - os: ubuntu-22.04
-            arch: aarch64
+        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
       fail-fast: false
-    timeout-minutes: 15  # Linux ~1 min, Windows ~4 min, aarch64 emulated ~8 min with tests (~3 min without)
-    name: cibuildwheel (${{ matrix.os }} ${{ matrix.arch }})
+    timeout-minutes: 10  # Linux ~1 min, Windows ~4 min
+    name: cibuildwheel (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set wheel tests to be skipped on emulated archs on PRs
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ matrix.arch }}" == "aarch64" ]]; then
-            echo "CIBW_TEST_SKIP=*" | tee -a $GITHUB_ENV
-          fi
-        shell: bash
-      # For aarch64 support https://cibuildwheel.pypa.io/en/stable/faq/#emulation
-      - uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-        if: runner.os == 'Linux' && matrix.arch == 'aarch64'
       - name: Build wheels and run tests
         uses: pypa/cibuildwheel@v2.22.0
-        env:
-          CIBW_ARCHS: ${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ matrix.os }}-${{ matrix.arch }}
+          name: artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   test:
     needs: build_wheels
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-15, macos-13]
+        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
         python-version: ['3.12']
         include:
           - os: ubuntu-22.04
@@ -84,18 +67,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/download-artifact@v4
         with:
-          pattern: artifact-${{ matrix.os }}-native
+          pattern: artifact-${{ matrix.os }}
           merge-multiple: true
           path: dist
       - run: ls -al dist
-      - name: Triage dependencies
-        run: |
-          if [[ "${{ matrix.python-version }}" != "3.13" ]]; then
-            echo "PIP_EXTRA=wfdb numpy<2 numba pytest-error-for-skips" | tee -a $GITHUB_ENV
-            echo "PYTEST_EXTRA=--error-for-skips" | tee -a $GITHUB_ENV
-          fi
-      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio $PIP_EXTRA --only-binary="numpy,numba,edfio"
-      - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes $PYTEST_EXTRA tests/
+      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio wfdb numba pytest-error-for-skips --only-binary="numpy,numba,llvmlite,edfio"
+      - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes --error-for-skips tests/
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -144,10 +121,12 @@ jobs:
     needs: [check_wheels, test]
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
+    permissions:
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
           pattern: artifact-*
           merge-multiple: true
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1.12.3
+      - uses: pypa/gh-action-pypi-publish@v1.12.4
