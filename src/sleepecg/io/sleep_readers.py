@@ -447,6 +447,7 @@ def read_mesa(
 
                 if not os.path.exists(activity_filepath):
                     print(f"Skipping {record_id} due to missing activity data.")
+                    continue
 
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")
@@ -474,16 +475,18 @@ def read_mesa(
 
                 start_line = overlap_data[mesaid] + 1
 
-                end_line = (
-                    int(
-                        next(
-                            row["line"]
-                            for row in activity_data
-                            if row.get("linetime") == recording_end_time_str
-                        )
+                end_line = -1
+                for row in activity_data:
+                    if row.get("linetime") == recording_end_time_str:
+                        end_line = int(row["line"]) - 1
+                        break
+
+                if end_line == -1:
+                    print(
+                        f"Skipping {record_id} due to missing line matching "
+                        f"{recording_end_time_str}."
                     )
-                    - 1
-                )
+                    continue
 
                 activity_counts = [
                     row["activity"] for row in activity_data[start_line - 1 : end_line]
