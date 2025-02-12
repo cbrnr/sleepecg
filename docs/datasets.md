@@ -59,12 +59,7 @@ set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa(records_pattern="00*")  # note that this is a generator
 ```
 
-For the mesa dataset SleepECG also supports downloading and  storing the so-called activity counts. These are metrics
-that quantify movement of the subject via the recording and processing of 3D accelerometer measurements. They are
-calculated via a proprietary algorithm in the Actiware software by Phillips. In order to include activity counts in the 
-datasets downloaded from the mesa database, the [`read_mesa()`](sleepecg.read_mesa) function needs to be called with the
-parameter *activity_source* set either to *'actigraphy'* to download the data outright or *'cached'* to use cached
-activity counts if they were already downloaded previously.
+SleepECG supports downloading and storing activity counts for the MESA dataset. These metrics quantify a subject's movement based on accelerometer measurements recorded and processed using a proprietary algorithm in Philips Actiware. To access activity counts, call [`read_mesa()`](sleepecg.read_mesa) with `activity_source='actigraphy'` to download the data or `activity_source='cached'` to use previously downloaded counts.
 
 
 !!! note
