@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import csv
 import datetime
+import os
 from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import IntEnum
@@ -443,6 +444,9 @@ def read_mesa(
                     )
 
                 activity_data = []
+
+                if not os.path.exists(activity_filepath):
+                    print(f"Skipping {record_id} due to missing activity data.")
 
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")

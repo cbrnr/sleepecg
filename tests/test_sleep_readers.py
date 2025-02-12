@@ -25,6 +25,7 @@ def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
 
 
 def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
+    """Create dummy actigraphy file with four usable activity counts."""
     base_time = datetime.datetime(2024, 1, 1, 20, 30, 0)
 
     linetimes = [
@@ -39,6 +40,7 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
 
 
 def _dummy_nsrr_actigraphy_cached(filename: str):
+    """Create dummy npy file that resembles cached activity counts."""
     activity_counts = np.array([10, 10, 10, 10, 10, 10])
     np.save(filename, activity_counts)
 
