@@ -443,7 +443,7 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data = []
+                activity_data:list[dict[str, str]] = []
 
                 if not os.path.exists(activity_filepath):
                     print(f"Skipping {record_id} due to missing activity data.")
