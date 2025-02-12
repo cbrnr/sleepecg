@@ -33,6 +33,8 @@ def mitdb_234_MLII():
 @pytest.mark.parametrize("backend", ["c", "numba", "python"])
 def test_detect_heartbeats(mitdb_234_MLII, backend):
     """Test heartbeat detection on mitdb:234:MLII."""
+    if backend == "numba":
+        pytest.importorskip("numba")
     record = mitdb_234_MLII
     detection = detect_heartbeats(record.ecg, record.fs, backend=backend)
     TP, FP, FN = compare_heartbeats(detection, record.annotation, int(record.fs / 10))
