@@ -3,7 +3,7 @@
 ## [0.5.9] - 2025-02-01
 ### Added
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
-- Add download and storage of activity_counts for mesa data ([#249](https://github.com/cbrnr/sleepecg/pull/249) by [Simon Pusterhofer](https://github.com/simon-p-2000))
+- Add support for downloading and storing activity counts for the MESA dataset ([#249](https://github.com/cbrnr/sleepecg/pull/249) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add Python 3.13+ support by transforming wheel builds using ABI3 mode ([#251](https://github.com/cbrnr/sleepecg/pull/251) by [Eric Larson](https://github.com/larsoner))
 
 ### Changed
