@@ -61,7 +61,6 @@ mesa = read_mesa(records_pattern="00*")  # note that this is a generator
 
 SleepECG supports downloading and storing activity counts for the MESA dataset. These metrics quantify a subject's movement based on accelerometer measurements recorded and processed using a proprietary algorithm in Philips Actiware. To access activity counts, call [`read_mesa()`](sleepecg.read_mesa) with `activity_source='actigraphy'` to download the data or `activity_source='cached'` to use previously downloaded counts.
 
-
 !!! note
     Reader functions are generators, so they do not return the data directly. To access the data, you need to consume the generator, either by iterating over it or with subsequent calls of `next()`.
 
