@@ -475,13 +475,11 @@ def read_mesa(
 
                 start_line = overlap_data[mesaid] + 1
 
-                end_line = -1
                 for item in activity_data:
                     if item.get("linetime") == recording_end_time_str:
                         end_line = int(item["line"]) - 1
                         break
-
-                if end_line == -1:
+                else:
                     print(
                         f"Skipping {record_id} due to missing line matching "
                         f"{recording_end_time_str}."
