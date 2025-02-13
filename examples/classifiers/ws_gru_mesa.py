@@ -15,7 +15,7 @@ from sleepecg import (
     set_nsrr_token,
 )
 
-set_nsrr_token("your-token-here")
+set_nsrr_token("25042-5JxoCwc8KQ3uV3ubyK-D")
 
 TRAIN = True  # set to False to skip training and load classifier from disk
 
@@ -27,7 +27,7 @@ warnings.filterwarnings(
 if TRAIN:
     print("‣  Starting training...")
     print("‣‣ Extracting features...")
-    records = list(read_mesa(offline=False))
+    records = list(read_mesa(offline=False, activity_source="actigraphy"))
 
     feature_extraction_params = {
         "lookback": 240,
@@ -38,6 +38,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
+            "activity_counts"
         ],
         "min_rri": 0.3,
         "max_rri": 2,
