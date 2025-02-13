@@ -21,6 +21,7 @@ from sleepecg.feature_extraction import extract_features
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
 
+
 def prepare_data_keras(
     features: list[np.ndarray],
     stages: list[np.ndarray],
