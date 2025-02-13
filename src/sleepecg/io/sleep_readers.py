@@ -443,11 +443,11 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data = []
-
                 if not os.path.exists(activity_filepath):
                     print(f"Skipping {record_id} due to missing activity data.")
                     continue
+
+                activity_data = []
 
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")
