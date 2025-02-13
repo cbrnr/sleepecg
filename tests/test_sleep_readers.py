@@ -17,6 +17,34 @@ from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
 
 
+def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
+    with open(filename, "w") as csv:
+        csv.write("mesaid,line,linetime,starttime_psg\n")
+        for i in range(len(mesa_ids)):
+            csv.write(f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n")
+
+
+def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
+    """Create dummy actigraphy file with four usable activity counts."""
+    base_time = datetime.datetime(2024, 1, 1, 20, 30, 0)
+
+    linetimes = [
+        (base_time + datetime.timedelta(seconds=30 * i)).strftime("%H:%M:%S")
+        for i in range(10)
+    ]
+
+    with open(filename, "w") as csv:
+        csv.write("mesaid,line,linetime,activity\n")
+        for i in range(10):
+            csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
+
+
+def _dummy_nsrr_actigraphy_cached(filename: str):
+    """Create dummy npy file that resembles cached activity counts."""
+    activity_counts = np.array([10, 10, 10, 10, 10, 10])
+    np.save(filename, activity_counts)
+
+
 def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
     ecg_5_min, fs = get_toy_ecg()
     seconds = int(hours * 60 * 60)
@@ -26,6 +54,7 @@ def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
 
 def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
     EPOCH_LENGTH = 30
+    RECORDING_DURATION = 154.0
     STAGES = [
         "Wake|0",
         "Stage 1 sleep|1",
@@ -47,6 +76,7 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
             "<ScoredEvent>\n"
             "<EventType/>\n"
             "<EventConcept>Recording Start Time</EventConcept>\n"
+            f"<Duration>{RECORDING_DURATION}</Duration>\n"
             "<ClockTime>01.01.85 20.29.59</ClockTime>\n"
             "</ScoredEvent>\n",
         )
@@ -72,24 +102,46 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
         )
 
 
-def _create_dummy_mesa(data_dir: str, durations: list[float], random_state: int = 42):
+def _create_dummy_mesa(
+    data_dir: str, durations: list[float], random_state: int = 42, actigraphy: bool = False
+):
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
     CSV_DIRNAME = "datasets"
+    OVERLAP_DIRNAME = "overlap"
+    ACTIVITY_DIRNAME = "actigraphy"
+    ACTIVITY_COUNTS_DIRNAME = "preprocessed/activity_counts"
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
     annotations_dir = db_dir / ANNOTATION_DIRNAME
     edf_dir = db_dir / EDF_DIRNAME
     csv_dir = db_dir / CSV_DIRNAME
+    overlap_dir = db_dir / OVERLAP_DIRNAME
+    activity_dir = db_dir / ACTIVITY_DIRNAME
+    activity_counts_dir = db_dir / ACTIVITY_COUNTS_DIRNAME
 
     for directory in (annotations_dir, edf_dir, csv_dir):
         directory.mkdir(parents=True, exist_ok=True)
+
+    if actigraphy:
+        for directory in (overlap_dir, activity_dir, activity_counts_dir):
+            directory.mkdir(parents=True, exist_ok=True)
+            record_ids = []
 
     for i, hours in enumerate(durations):
         record_id = f"mesa-sleep-{i:04}"
         _dummy_nsrr_edf(f"{edf_dir}/{record_id}.edf", hours, ecg_channel="EKG")
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
+        if actigraphy:
+            _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
+            _dummy_nsrr_actigraphy_cached(
+                f"{activity_counts_dir}/{record_id}-activity-counts.npy"
+            )
+            record_ids.append(record_id)
+
+    if actigraphy:
+        _dummy_nsrr_overlap(f"{overlap_dir}/mesa-actigraphy-psg-overlap.csv", record_ids)
 
     with open(csv_dir / "mesa-sleep-dataset-0.0.0.csv", "w") as csv:
         csv.write("mesaid,examnumber,race1c,gender1,cucmcn1c,sleepage5c\n")
@@ -142,6 +194,55 @@ def test_read_mesa(tmp_path):
     for rec in records:
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
+
+
+def test_read_mesa_actigraphy(tmp_path):
+    """Basic sanity checks for records read via read_mesa including actigraphy."""
+    durations = [0.1, 0.2]  # hours
+    valid_stages = {int(s) for s in SleepStage}
+
+    _create_dummy_mesa(data_dir=tmp_path, durations=durations, actigraphy=True)
+    records = list(
+        read_mesa(
+            data_dir=tmp_path,
+            heartbeats_source="ecg",
+            offline=True,
+            activity_source="actigraphy",
+        )
+    )
+
+    assert len(records) == 2
+
+    for rec in records:
+        assert rec.sleep_stage_duration == 30
+        assert set(rec.sleep_stages) - valid_stages == set()
+        assert len(rec.activity_counts) == 4
+        assert Path(
+            f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
+        ).exists()
+
+
+def test_read_mesa_actigraphy_cached(tmp_path):
+    """Basic sanity checks for records read via read_mesa including cached actigraphy."""
+    durations = [0.1, 0.2]  # hours
+    valid_stages = {int(s) for s in SleepStage}
+
+    _create_dummy_mesa(data_dir=tmp_path, durations=durations, actigraphy=True)
+    records = list(
+        read_mesa(
+            data_dir=tmp_path,
+            heartbeats_source="ecg",
+            offline=True,
+            activity_source="cached",
+        )
+    )
+
+    assert len(records) == 2
+
+    for rec in records:
+        assert rec.sleep_stage_duration == 30
+        assert set(rec.sleep_stages) - valid_stages == set()
+        assert len(rec.activity_counts) == 6
 
 
 def test_read_shhs(tmp_path):

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import csv
 import datetime
+import os
 from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import IntEnum
@@ -86,6 +87,8 @@ class SleepRecord:
         Times of heartbeats relative to recording start in seconds, by default `None`.
     subject_data : SubjectData, optional
         Dataclass containing subject data (such as gender or age), by default `None`.
+    activity_counts: np.ndarray, optional
+        Activity counts according to Actiwatch actigraphy, by default `None`.
     """
 
     sleep_stages: np.ndarray | None = None
@@ -94,12 +97,14 @@ class SleepRecord:
     recording_start_time: datetime.time | None = None
     heartbeat_times: np.ndarray | None = None
     subject_data: SubjectData | None = None
+    activity_counts: np.ndarray | None = None
 
 
 class _ParseNsrrXmlResult(NamedTuple):
     sleep_stages: np.ndarray
     sleep_stage_duration: int
     recording_start_time: datetime.time
+    recording_duration: float
 
 
 def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
@@ -120,6 +125,8 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         Duration of each sleep stage in seconds.
     recording_start_time : datetime.time
         Time at which the recording was started.
+    recording_duration: float
+        Duration of the recording in seconds.
 
     """
     STAGE_MAPPING = {
@@ -139,6 +146,12 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         raise RuntimeError(f"EpochLength not found in {xml_filepath}.")
     epoch_length = int(epoch_length)
 
+    scored_event = root.find(".//ScoredEvent")
+    if scored_event is not None:
+        recording_duration = float(scored_event.findtext(".//Duration", ""))
+    else:
+        raise RuntimeError(f"Recording duration not found in {xml_filepath}.")
+
     start_time = None
     annot_stages = []
 
@@ -157,9 +170,7 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         raise RuntimeError(f"'Recording Start Time' not found in {xml_filepath}.")
 
     return _ParseNsrrXmlResult(
-        np.array(annot_stages, dtype=np.int8),
-        epoch_length,
-        start_time,
+        np.array(annot_stages, dtype=np.int8), epoch_length, start_time, recording_duration
     )
 
 
@@ -169,6 +180,7 @@ def read_mesa(
     offline: bool = False,
     keep_edfs: bool = False,
     data_dir: str | Path | None = None,
+    activity_source: str | None = None,
 ) -> Iterator[SleepRecord]:
     """
     Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
@@ -197,6 +209,10 @@ def read_mesa(
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored. If `None` (default), the value will be
         taken from the configuration.
+    activity_source : {'actigraphy', 'cached', None}, optional
+        If `None` (default), actigraphy data will not be downloaded. If `'actigraphy'`,
+        download actigraphy data from MESA dataset. If `'cached'`, get the cached activity
+        counts.
 
     Yields
     ------
@@ -208,7 +224,10 @@ def read_mesa(
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
+    ACTIVITY_DIRNAME = "actigraphy"
+    OVERLAP_DIRNAME = "overlap"
     HEARTBEATS_DIRNAME = "preprocessed/heartbeats"
+    ACTIVITY_COUNTS_DIRNAME = "preprocessed/activity_counts"
     RPOINTS_DIRNAME = "polysomnography/annotations-rpoints"
 
     GENDER_MAPPING = {0: Gender.FEMALE, 1: Gender.MALE}
@@ -218,6 +237,13 @@ def read_mesa(
         raise ValueError(
             f"Invalid value for parameter `heartbeats_source`: {heartbeats_source}, "
             f"possible options: {heartbeats_source_options}"
+        )
+
+    activity_source_options = {None, "cached", "actigraphy"}
+    if activity_source not in activity_source_options:
+        raise ValueError(
+            f"Invalid value for parameter `activity_source`: {activity_source}, "
+            f"possible options: {activity_source_options}"
         )
 
     if data_dir is None:
@@ -230,6 +256,13 @@ def read_mesa(
 
     for directory in (annotations_dir, edf_dir, heartbeats_dir):
         directory.mkdir(parents=True, exist_ok=True)
+
+    if activity_source is not None:
+        activity_dir = db_dir / ACTIVITY_DIRNAME
+        activity_counts_dir = db_dir / ACTIVITY_COUNTS_DIRNAME
+        overlap_dir = db_dir / OVERLAP_DIRNAME
+        for directory in (activity_dir, activity_counts_dir, overlap_dir):
+            directory.mkdir(parents=True, exist_ok=True)
 
     if not offline:
         download_url = _get_nsrr_url(DB_SLUG)
@@ -271,10 +304,37 @@ def read_mesa(
             shallow=True,
         )
         checksums.update(rpoints_files)
+
+        if activity_source is not None:
+            activity_files = _list_nsrr(
+                db_slug=DB_SLUG,
+                subfolder="actigraphy",
+                pattern=f"mesa-sleep-{records_pattern}.csv",
+                shallow=True,
+            )
+            checksums.update(activity_files)
+            overlap_filename, overlap_checksum = _list_nsrr(
+                db_slug="mesa", subfolder="overlap", shallow=True
+            )[0]
+            overlap_filepath = db_dir / overlap_filename
+            _download_nsrr_file(
+                download_url + overlap_filename,
+                target_filepath=overlap_filepath,
+                checksum=overlap_checksum,
+            )
+
     else:
         subject_data_filepath = next((db_dir / "datasets").glob("mesa-sleep-dataset-*.csv"))
         xml_paths = annotations_dir.glob(f"mesa-sleep-{records_pattern}-nsrr.xml")
         requested_records = sorted([file.stem[:-5] for file in xml_paths])
+        if activity_source == "actigraphy":
+            overlap_filename = "mesa-actigraphy-psg-overlap.csv"
+            overlap_filepath = overlap_dir / overlap_filename
+            if not overlap_filepath.is_file():
+                raise RuntimeError(
+                    "Overlap file not found, make sure it is in the correct directory "
+                    "overlap/mesa-actigraphy-psg-overlap.csv."
+                )
 
     subject_data_array = np.loadtxt(
         subject_data_filepath,
@@ -290,6 +350,16 @@ def read_mesa(
             gender=GENDER_MAPPING[gender],
             age=age,
         )
+
+    if activity_source == "actigraphy":
+        overlap_data = {}
+
+        with open(overlap_filepath) as csv_file:
+            overlap_reader = csv.DictReader(csv_file, delimiter=",")
+            for entry in overlap_reader:
+                mesaid = int(entry["mesaid"])
+                line = int(entry["line"])
+                overlap_data[mesaid] = line
 
     for record_id in requested_records:
         heartbeats_file = heartbeats_dir / f"{record_id}.npy"
@@ -350,6 +420,79 @@ def read_mesa(
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
+        activity_counts = None
+        if activity_source is not None:
+            activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
+            if activity_source == "cached":
+                if not activity_counts_file.is_file():
+                    print(f"Skipping {record_id} due to missing cached activity counts.")
+                    continue
+                activity_counts = np.load(activity_counts_file)
+            else:
+                mesaid = int(record_id.split("-")[2])
+                if mesaid not in overlap_data:
+                    print(f"Skipping {record_id} due to missing overlap data.")
+                    continue
+
+                activity_filename = ACTIVITY_DIRNAME + f"/{record_id}.csv"
+                activity_filepath = db_dir / activity_filename
+                if not offline:
+                    _download_nsrr_file(
+                        download_url + activity_filename,
+                        activity_filepath,
+                        checksums[activity_filename],
+                    )
+
+                if not os.path.exists(activity_filepath):
+                    print(f"Skipping {record_id} due to missing activity data.")
+                    continue
+
+                activity_data = []
+
+                with open(activity_filepath) as csv_file:
+                    reader = csv.reader(csv_file, delimiter=",")
+                    header = next(reader)
+                    for row in reader:
+                        activity_data.append(dict(zip(header, row)))
+
+                recording_start_time = parsed_xml.recording_start_time
+                recording_duration = parsed_xml.recording_duration
+                recording_end_time = datetime.datetime.combine(
+                    datetime.datetime.today(), recording_start_time
+                ) + datetime.timedelta(seconds=recording_duration)
+
+                recording_end_time_seconds = recording_end_time.second
+                rounding_seconds = (
+                    (30 - recording_end_time_seconds % 30)
+                    if recording_end_time_seconds % 30 >= 15
+                    else -(recording_end_time_seconds % 30)
+                )
+
+                recording_end_time = recording_end_time + datetime.timedelta(
+                    seconds=rounding_seconds
+                )
+                recording_end_time_str = recording_end_time.strftime("%H:%M:%S").lstrip("0")
+
+                start_line = overlap_data[mesaid] + 1
+
+                for item in activity_data:
+                    if item.get("linetime") == recording_end_time_str:
+                        end_line = int(item["line"]) - 1
+                        break
+                else:
+                    print(
+                        f"Skipping {record_id} due to missing line matching "
+                        f"{recording_end_time_str}."
+                    )
+                    continue
+
+                activity_counts = [
+                    item["activity"] for item in activity_data[start_line - 1 : end_line]
+                ]
+
+                activity_counts = np.array(activity_counts)
+                np.save(activity_counts_file, activity_counts)
+
         yield SleepRecord(
             sleep_stages=parsed_xml.sleep_stages,
             sleep_stage_duration=parsed_xml.sleep_stage_duration,
@@ -357,6 +500,7 @@ def read_mesa(
             recording_start_time=parsed_xml.recording_start_time,
             heartbeat_times=heartbeat_times,
             subject_data=subject_data[record_id],
+            activity_counts=activity_counts,
         )
 
 
