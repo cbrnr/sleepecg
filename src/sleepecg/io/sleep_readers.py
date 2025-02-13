@@ -443,7 +443,7 @@ def read_mesa(
                         checksums[activity_filename],
                     )
 
-                activity_data:list[dict[str, str]] = []
+                activity_data = []
 
                 if not os.path.exists(activity_filepath):
                     print(f"Skipping {record_id} due to missing activity data.")
@@ -476,9 +476,9 @@ def read_mesa(
                 start_line = overlap_data[mesaid] + 1
 
                 end_line = -1
-                for row in activity_data:
-                    if row.get("linetime") == recording_end_time_str:
-                        end_line = int(row["line"]) - 1
+                for item in activity_data:
+                    if item.get("linetime") == recording_end_time_str:
+                        end_line = int(item["line"]) - 1
                         break
 
                 if end_line == -1:
@@ -489,7 +489,7 @@ def read_mesa(
                     continue
 
                 activity_counts = [
-                    row["activity"] for row in activity_data[start_line - 1 : end_line]
+                    item["activity"] for item in activity_data[start_line - 1 : end_line]
                 ]
 
                 activity_counts = np.array(activity_counts)
