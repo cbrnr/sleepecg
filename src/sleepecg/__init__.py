@@ -6,7 +6,6 @@ from sleepecg.classification import (
     list_classifiers,
     load_classifier,
     prepare_data_keras,
-    prepare_data_sklearn,
     print_class_balance,
     save_classifier,
     stage,
