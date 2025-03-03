@@ -15,6 +15,8 @@ from zipfile import ZipFile
 
 import numpy as np
 import yaml
+import joblib
+
 
 from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
@@ -229,6 +231,8 @@ def save_classifier(
 
         if model_type == "keras":
             model.save(f"{tmpdir}/classifier.keras")
+        elif model_type == "sklearn":
+            joblib.dump(model, f"{tmpdir}/classifier.joblib")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 
@@ -352,7 +356,8 @@ def load_classifier(
             finally:
                 os.environ.clear()
                 os.environ.update(environ_orig)
-
+        elif classifier_info["model_type"] == "sklearn":
+                classifier = joblib.load(f"{tmpdir}/classifier.joblib")
         else:
             raise ValueError(
                 f"Loading model of type {classifier_info['model_type']} is not supported"
