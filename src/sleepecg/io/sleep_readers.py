@@ -420,7 +420,7 @@ def read_mesa(
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
-        activity_counts = None
+        activity_counts: None | list[int] | np.array = None
         if activity_source is not None:
             activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
             if activity_source == "cached":
@@ -477,7 +477,7 @@ def read_mesa(
 
                 for item in activity_data:
                     if item.get("linetime") == recording_end_time_str:
-                        end_line = int(item["line"]) - 1
+                        end_line = int(item["line"])
                         break
                 else:
                     print(
@@ -487,10 +487,25 @@ def read_mesa(
                     continue
 
                 activity_counts = [
-                    item["activity"] for item in activity_data[start_line - 1 : end_line]
+                    item["activity"] for item in activity_data[start_line: end_line]
                 ]
 
                 activity_counts = np.array(activity_counts)
+                sleep_stages = np.array(parsed_xml.sleep_stages)
+
+                diff = len(activity_counts) - len(sleep_stages)
+                if np.abs(diff) > 2:
+                    print(f"Skipping {record_id} due to invalid activity counts.")
+                    continue
+                elif 0 < diff <= 2:
+                    activity_counts = activity_counts[:-diff]
+                elif 0 < diff * -1 <= 2:
+                    activity_counts = np.append(activity_counts, activity_counts[-diff:])
+
+                activity_counts[activity_counts == ''] = 0
+                activity_counts = activity_counts.astype(float).astype(int)
+                if len(activity_counts) != len(parsed_xml.sleep_stages):
+                    continue
                 np.save(activity_counts_file, activity_counts)
 
         yield SleepRecord(
