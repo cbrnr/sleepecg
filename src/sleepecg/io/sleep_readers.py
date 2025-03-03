@@ -487,7 +487,7 @@ def read_mesa(
                     continue
 
                 activity_counts = [
-                    item["activity"] for item in activity_data[start_line: end_line]
+                    item["activity"] for item in activity_data[start_line:end_line]
                 ]
 
                 activity_counts = np.array(activity_counts)
@@ -502,7 +502,7 @@ def read_mesa(
                 elif 0 < diff * -1 <= 2:
                     activity_counts = np.append(activity_counts, activity_counts[-diff:])
 
-                activity_counts[activity_counts == ''] = 0
+                activity_counts[activity_counts == ""] = 0
                 activity_counts = activity_counts.astype(float).astype(int)
                 if len(activity_counts) != len(parsed_xml.sleep_stages):
                     continue

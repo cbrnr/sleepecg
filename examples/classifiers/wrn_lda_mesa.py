@@ -1,15 +1,10 @@
 import warnings
 
-
-import numpy as np
 import sklearn
-
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.utils import compute_sample_weight
-
 from tqdm import tqdm
 
 from sleepecg import (
@@ -19,7 +14,6 @@ from sleepecg import (
     prepare_data_sklearn,
     print_class_balance,
     read_mesa,
-    read_shhs,
     save_classifier,
     set_nsrr_token,
 )
@@ -34,31 +28,33 @@ warnings.filterwarnings(
 )
 
 feature_extraction_params = {
-        "lookback": 240,
-        "lookforward": 270,
-        "feature_selection": [
-            "hrv-time",
-            "hrv-frequency",
-            "recording_start_time",
-            "age",
-            "gender",
-            "activity_counts"
-        ],
-        "min_rri": 0.3,
-        "max_rri": 2,
-        "max_nans": 0.5,
-    }
+    "lookback": 240,
+    "lookforward": 270,
+    "feature_selection": [
+        "hrv-time",
+        "hrv-frequency",
+        "recording_start_time",
+        "age",
+        "gender",
+        "activity_counts",
+    ],
+    "min_rri": 0.3,
+    "max_rri": 2,
+    "max_nans": 0.5,
+}
 
-records = list(read_mesa(offline=True, data_dir="D:\SleepData", activity_source="actigraphy"))
+records = list(
+    read_mesa(offline=True, data_dir=r"D:\SleepData", activity_source="actigraphy")
+)
 features, stages, feature_ids = extract_features(
-        tqdm(records),
-        **feature_extraction_params,
-        n_jobs=-1,
-    )
+    tqdm(records),
+    **feature_extraction_params,
+    n_jobs=-1,
+)
 
-features_train, features_test, stages_train, stages_test = train_test_split(features,
-                                                                                stages,
-                                                                                test_size=0.2)
+features_train, features_test, stages_train, stages_test = train_test_split(
+    features, stages, test_size=0.2
+)
 
 if TRAIN:
     print("‣  Starting training...")
@@ -104,9 +100,9 @@ print("‣‣ Loading classifier...")
 clf = load_classifier("wrn-lda-mesa", "./classifiers")
 stages_mode = clf.stages_mode
 features_test_pad, stages_test_pad, record_ids = prepare_data_sklearn(
-        features_test,
-        stages_test,
-        stages_mode,
-    )
+    features_test,
+    stages_test,
+    stages_mode,
+)
 y_pred = clf.model.predict(features_test_pad)
 evaluate(stages_test_pad, y_pred, stages_mode)

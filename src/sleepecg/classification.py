@@ -13,15 +13,15 @@ from tempfile import TemporaryDirectory
 from typing import Any, Protocol
 from zipfile import ZipFile
 
+import joblib
 import numpy as np
 import yaml
-import joblib
-
 
 from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
+
 
 def prepare_data_sklearn(
     features: list[np.ndarray],
@@ -50,6 +50,7 @@ def prepare_data_sklearn(
     stages_mode : str
         Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
         `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+
     Returns
     -------
     features_stacked : np.ndarray
@@ -68,6 +69,7 @@ def prepare_data_sklearn(
     valid = stages_stacked != SleepStage.UNDEFINED
 
     return features_stacked[valid], stages_stacked[valid], record_ids[valid]
+
 
 def prepare_data_keras(
     features: list[np.ndarray],
@@ -357,7 +359,7 @@ def load_classifier(
                 os.environ.clear()
                 os.environ.update(environ_orig)
         elif classifier_info["model_type"] == "sklearn":
-                classifier = joblib.load(f"{tmpdir}/classifier.joblib")
+            classifier = joblib.load(f"{tmpdir}/classifier.joblib")
         else:
             raise ValueError(
                 f"Loading model of type {classifier_info['model_type']} is not supported"
