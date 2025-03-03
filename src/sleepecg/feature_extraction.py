@@ -659,8 +659,8 @@ def _extract_features_single(
             X.append(_metadata_features(record, num_stages))
         elif feature_group == "actigraphy":
             if record.activity_counts is not None:
-                activty_counts = record.activity_counts
-                X.append(np.vstack((activty_counts, activty_counts)).T)
+                activity_counts = record.activity_counts
+                X.append(np.vstack((activity_counts, activity_counts)).T)
     features = np.hstack(X)[:, col_indices]
 
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:
