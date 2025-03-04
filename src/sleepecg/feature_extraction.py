@@ -11,9 +11,9 @@ from collections.abc import Iterable
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
+from scipy.integrate import trapezoid
 from scipy.interpolate import interp1d
 from scipy.signal import periodogram
-from scipy.integrate import trapezoid
 
 from sleepecg.io.sleep_readers import SleepRecord
 from sleepecg.utils import _parallel, _time_to_sec

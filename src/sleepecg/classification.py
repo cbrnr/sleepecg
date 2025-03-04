@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import pickle
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +14,6 @@ from tempfile import TemporaryDirectory
 from typing import Any, Protocol
 from zipfile import ZipFile
 
-import joblib
 import numpy as np
 import yaml
 
@@ -234,7 +234,8 @@ def save_classifier(
         if model_type == "keras":
             model.save(f"{tmpdir}/classifier.keras")
         elif model_type == "sklearn":
-            joblib.dump(model, f"{tmpdir}/classifier.joblib")
+            with open(f"{tmpdir}/classifier.pkl", "wb") as classifier_file:
+                pickle.dump(model, classifier_file)
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 
@@ -359,7 +360,8 @@ def load_classifier(
                 os.environ.clear()
                 os.environ.update(environ_orig)
         elif classifier_info["model_type"] == "sklearn":
-            classifier = joblib.load(f"{tmpdir}/classifier.joblib")
+            with open(f"{tmpdir}/classifier.pkl", "rb") as classifier_file:
+                classifier = pickle.load(classifier_file)
         else:
             raise ValueError(
                 f"Loading model of type {classifier_info['model_type']} is not supported"
