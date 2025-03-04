@@ -420,7 +420,7 @@ def read_mesa(
 
         parsed_xml = _parse_nsrr_xml(xml_filepath)
 
-        activity_counts: None | list[int] | np.array = None
+        activity_counts = None
         if activity_source is not None:
             activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
             if activity_source == "cached":
