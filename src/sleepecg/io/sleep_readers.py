@@ -500,7 +500,7 @@ def read_mesa(
                 elif 0 < diff <= 2:
                     activity_counts = activity_counts[:-diff]
                 elif 0 < diff * -1 <= 2:
-                    activity_counts = np.append(activity_counts, activity_counts[-diff:])
+                    activity_counts = np.append(activity_counts, activity_counts[diff:])
 
                 activity_counts[activity_counts == ""] = 0
                 activity_counts = activity_counts.astype(float).astype(int)
