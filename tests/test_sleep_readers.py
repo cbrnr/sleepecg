@@ -12,7 +12,6 @@ from pathlib import Path
 import numpy as np
 import pytest
 from edfio import Edf, EdfSignal
-from sympy import false
 
 from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
 from sleepecg.io.sleep_readers import Gender
@@ -143,8 +142,7 @@ def _create_dummy_mesa(
         if actigraphy:
             _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
             _dummy_nsrr_actigraphy_cached(
-                f"{activity_counts_dir}/{record_id}-activity-counts.npy",
-                hours
+                f"{activity_counts_dir}/{record_id}-activity-counts.npy", hours
             )
             record_ids.append(record_id)
 
