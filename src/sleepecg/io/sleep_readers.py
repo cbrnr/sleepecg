@@ -491,9 +491,8 @@ def read_mesa(
                 ]
 
                 activity_counts = np.array(activity_counts)
-                sleep_stages = np.array(parsed_xml.sleep_stages)
 
-                diff = len(activity_counts) - len(sleep_stages)
+                diff = len(activity_counts) - len(parsed_xml.sleep_stages)
                 if np.abs(diff) > 2:
                     print(f"Skipping {record_id} due to invalid activity counts.")
                     continue
@@ -502,10 +501,8 @@ def read_mesa(
                 elif 0 < diff * -1 <= 2:
                     activity_counts = np.append(activity_counts, activity_counts[diff:])
 
-                activity_counts[activity_counts == ""] = 0
-                activity_counts = activity_counts.astype(float).astype(int)
-                if len(activity_counts) != len(parsed_xml.sleep_stages):
-                    continue
+                activity_counts[activity_counts == ""] = "0"
+                activity_counts = activity_counts.astype(float)
                 np.save(activity_counts_file, activity_counts)
 
         yield SleepRecord(
