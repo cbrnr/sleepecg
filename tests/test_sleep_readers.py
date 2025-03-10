@@ -24,18 +24,19 @@ def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
             csv.write(f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n")
 
 
-def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
+def _dummy_nsrr_actigraphy(filename: str, mesa_id: str, hours: float):
     """Create dummy actigraphy file with four usable activity counts."""
     base_time = datetime.datetime(2024, 1, 1, 20, 30, 0)
-
+    # hours * 3600 / 30 second epoch, additional 20 counts for safety
+    number_activity_counts = int(hours * 120) + 20
     linetimes = [
         (base_time + datetime.timedelta(seconds=30 * i)).strftime("%H:%M:%S")
-        for i in range(40)
+        for i in range(number_activity_counts)
     ]
 
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,activity\n")
-        for i in range(40):
+        for i in range(number_activity_counts):
             csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
 
 
@@ -140,7 +141,8 @@ def _create_dummy_mesa(
         _dummy_nsrr_edf(f"{edf_dir}/{record_id}.edf", hours, ecg_channel="EKG")
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
         if actigraphy:
-            _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
+            _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv",
+                                   mesa_id=record_id, hours=hours)
             _dummy_nsrr_actigraphy_cached(
                 f"{activity_counts_dir}/{record_id}-activity-counts.npy", hours
             )
