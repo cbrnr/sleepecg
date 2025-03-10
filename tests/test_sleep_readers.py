@@ -141,8 +141,9 @@ def _create_dummy_mesa(
         _dummy_nsrr_edf(f"{edf_dir}/{record_id}.edf", hours, ecg_channel="EKG")
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
         if actigraphy:
-            _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv",
-                                   mesa_id=record_id, hours=hours)
+            _dummy_nsrr_actigraphy(
+                f"{activity_dir}/{record_id}.csv", mesa_id=record_id, hours=hours
+            )
             _dummy_nsrr_actigraphy_cached(
                 f"{activity_counts_dir}/{record_id}-activity-counts.npy", hours
             )
