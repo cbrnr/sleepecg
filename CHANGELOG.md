@@ -5,6 +5,8 @@
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add support for downloading and storing activity counts for the MESA dataset ([#249](https://github.com/cbrnr/sleepecg/pull/249) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add Python 3.13+ support by transforming wheel builds using ABI3 mode ([#251](https://github.com/cbrnr/sleepecg/pull/251) by [Eric Larson](https://github.com/larsoner))
+- Add support for performing feature extraction with activity counts. ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
+
 
 ### Changed
 - Split `get_config` function into `get_config` and `get_config_value` to get the entire configuration (as a dictionary) or an individual configuration key, respectively ([#229](https://github.com/cbrnr/sleepecg/pull/225) by [Clemens Brunner](https://github.com/cbrnr))

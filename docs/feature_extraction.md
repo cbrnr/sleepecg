@@ -66,3 +66,10 @@ Group identifier: `metadata`
 |`age`|age of the subject in years|
 |`gender`|`0` (female) or `1` (male)|
 |`weight`|weight of the subject in kg|
+
+## Actigraphy faetures
+Group identifier: `actigraphy`
+
+| Feature           | Description                                                                                           |
+|-------------------|-------------------------------------------------------------------------------------------------------|
+| `activity_counts` | SiemensActiwatch proprietary metric to quantify amount of patient movement measured via accelerometry |
