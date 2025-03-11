@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import pickle
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,11 +16,60 @@ from zipfile import ZipFile
 
 import numpy as np
 import yaml
+import torch
 
 from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
+
+
+def prepare_data_sklearn(
+    features: list[np.ndarray],
+    stages: list[np.ndarray],
+    stages_mode: str,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Prepare sleep records for a sklearn model.
+
+    The following steps are performed:
+
+    - Merge sleep stages in `stages` according to `stage_mode`.
+    - Set features corresponding to `SleepStage.UNDEFINED` as invalid.
+    - Replace `np.nan` and `np.inf` in `features` with `mask_value`.
+    - Pad to a common length, where `mask_value` is used for `features` and
+      `SleepStage.UNDEFINED` (i.e `0`) is used for stages.
+
+    Parameters
+    ----------
+    features : list[np.ndarray]
+        Each 2D array in this list is a feature matrix of shape `(n_samples, n_features)`
+        corresponding to a single record as returned by `extract_features()`.
+    stages : list[np.ndarray]
+        Each 1D array in this list contains the sleep stages of a single record as returned
+        by `extract_features()`.
+    stages_mode : str
+        Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
+        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+
+    Returns
+    -------
+    features_stacked : np.ndarray
+        A 2D array of shape `(total samples, features)`.
+    stages_stacked : np.ndarray
+        A 1D array containing the annotated sleep stage for each sample. The sleep stages
+        are merged based on the stages_mode parameter.
+    record_ids : np.ndarray
+        A 1D array containing a calculated index for each valid sample that is returned.
+    """
+    record_ids = np.hstack([i * np.ones(len(X)) for i, X in enumerate(features)])
+    features_stacked = np.vstack(features)
+    stages_stacked = np.hstack(_merge_sleep_stages(stages, stages_mode))
+    features_stacked[np.isinf(features_stacked)] = -1
+    features_stacked[np.abs(features_stacked) > 1e9] = -1
+    valid = stages_stacked != SleepStage.UNDEFINED
+
+    return features_stacked[valid], stages_stacked[valid], record_ids[valid]
 
 
 def prepare_data_keras(
@@ -85,6 +135,78 @@ def prepare_data_keras(
     # samples corresponding to SleepStage.UNDEFINED are ignored, so their count shouldn't
     # influence the class weights -> slice with [1:]
     class_weight = np.sum(stage_counts[1:]) / stage_counts
+    sample_weight = class_weight[stages_padded]
+
+    return features_padded, stages_padded_onehot, sample_weight
+
+def prepare_data_pytorch(
+    features: list[np.ndarray],
+    stages: list[np.ndarray],
+    stages_mode: str,
+    mask_value: int = -1,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Mask and pad data and calculate sample weights for a pytorch model.
+
+    The following steps are performed:
+
+    - Merge sleep stages in `stages` according to `stage_mode`.
+    - Set features corresponding to `SleepStage.UNDEFINED` to `mask_value`.
+    - Replace `np.nan` and `np.inf` in `features` with `mask_value`.
+    - Pad to a common length, where `mask_value` is used for `features` and
+      `SleepStage.UNDEFINED` (i.e `0`) is used for stages.
+    - One-hot encode stages.
+    - Calculate sample weights with class weights taken as `n_samples /
+      (n_classes * np.bincount(y))`.
+
+    Parameters
+    ----------
+    features : list[np.ndarray]
+        Each 2D array in this list is a feature matrix of shape `(n_samples, n_features)`
+        corresponding to a single record as returned by `extract_features()`.
+    stages : list[np.ndarray]
+        Each 1D array in this list contains the sleep stages of a single record as returned
+        by `extract_features()`.
+    stages_mode : str
+        Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
+        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+    mask_value : int, optional
+        Value used to pad features and replace `np.nan` and `np.inf`, by default `-1`.
+        Remember to pass the same value to `layers.Masking` in your model.
+
+    Returns
+    -------
+    features_padded : np.ndarray
+        A 3D array of shape `(n_records, max_n_samples, n_features)`, where `n_records` is
+        the length of `features`/`stages` and `max_n_samples` is the maximum number of rows
+        of all feature matrices in `features`.
+    stages_padded_onehot : np.ndarray
+        A 3D array of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
+        the number of classes remaining after merging sleep stages (excluding
+        `SleepStage.UNDEFINED`).
+    sample_weight : np.ndarray
+        A 2D array of shape `(n_records, max_n_samples)`.
+    """
+    from torch.nn.utils.rnn import pad_sequence
+    import torch.nn.functional as F
+
+    stages_merged = _merge_sleep_stages(stages, stages_mode)
+    stages_merged_tensor = [torch.tensor(stage, dtype=torch.long) for stage in
+                            stages_merged]
+    stages_padded = pad_sequence(stages_merged_tensor, padding_value=SleepStage.UNDEFINED,
+                                 batch_first=True)
+    stages_padded_onehot = F.one_hot(stages_padded)
+
+    features_tensor = [torch.tensor(feature, dtype=torch.float32) for feature in features]
+    features_padded = pad_sequence(features_tensor, padding_value=mask_value,
+                                   batch_first=True)
+    features_padded[stages_padded == SleepStage.UNDEFINED, :] = mask_value
+    features_padded[~torch.isfinite(features_padded)] = mask_value
+
+    stage_counts = stages_padded_onehot.sum(0).sum(0)
+    # samples corresponding to SleepStage.UNDEFINED are ignored, so their count shouldn't
+    # influence the class weights -> slice with [1:]
+    class_weight = stage_counts[1:].sum() / stage_counts
     sample_weight = class_weight[stages_padded]
 
     return features_padded, stages_padded_onehot, sample_weight
@@ -184,6 +306,11 @@ def save_classifier(
 
         if model_type == "keras":
             model.save(f"{tmpdir}/classifier.keras")
+        elif model_type == "sklearn":
+            with open(f"{tmpdir}/classifier.pkl", "wb") as classifier_file:
+                pickle.dump(model, classifier_file)
+        elif model_type == "torch":
+                torch.save(model, f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 
@@ -307,7 +434,11 @@ def load_classifier(
             finally:
                 os.environ.clear()
                 os.environ.update(environ_orig)
-
+        elif classifier_info["model_type"] == "sklearn":
+            with open(f"{tmpdir}/classifier.pkl", "rb") as classifier_file:
+                classifier = pickle.load(classifier_file)
+        elif classifier_info["model_type"] == "torch":
+            classifier = torch.load(f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(
                 f"Loading model of type {classifier_info['model_type']} is not supported"
