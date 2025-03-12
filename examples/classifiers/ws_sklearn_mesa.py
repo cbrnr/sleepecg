@@ -18,9 +18,9 @@ from sleepecg import (
     set_nsrr_token,
 )
 
-set_nsrr_token("25042-5JxoCwc8KQ3uV3ubyK-D")
+set_nsrr_token("your-token-here")
 
-TRAIN = True  # set to False to skip training and load classifier from disk
+TRAIN = False  # set to False to skip training and load classifier from disk
 
 # silence warnings (which might pop up during feature extraction)
 warnings.filterwarnings(

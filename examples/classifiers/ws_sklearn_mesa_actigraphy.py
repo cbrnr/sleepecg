@@ -17,9 +17,9 @@ from sleepecg import (
     set_nsrr_token,
 )
 
-set_nsrr_token("25042-5JxoCwc8KQ3uV3ubyK-D")
+set_nsrr_token("your-token-here")
 
-TRAIN = True  # set to False to skip training and load classifier from disk
+TRAIN = False  # set to False to skip training and load classifier from disk
 
 # silence warnings (which might pop up during feature extraction)
 warnings.filterwarnings(
@@ -48,80 +48,70 @@ if TRAIN:
     records_train = (
         list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="0*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="1*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="2*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="3*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="4*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="50*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
-                activity_source="actigraphy",
+                offline=False,
+               activity_source="actigraphy",
                 records_pattern="51*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="52*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="53*",
             )
         )
         + list(
             read_mesa(
-                offline=True,
-                data_dir=r"D:\SleepData",
+                offline=False,
                 activity_source="actigraphy",
                 records_pattern="54*",
             )
@@ -148,7 +138,7 @@ if TRAIN:
     pipe = make_pipeline(
         SimpleImputer(),
         StandardScaler(),
-        sklearn.discriminant_analysis.LinearDiscriminantAnalysis(),
+        sklearn.ensemble.RandomForestClassifier(),
         verbose=False,
     )
 
@@ -178,48 +168,42 @@ print("‣‣ Extracting features...")
 records_test = (
     list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
+            offline=False,
             activity_source="actigraphy",
             records_pattern="55*",
         )
     )
     + list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
-            activity_source="actigraphy",
+            offline=False,
+           activity_source="actigraphy",
             records_pattern="56*",
         )
     )
     + list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
+            offline=False,
             activity_source="actigraphy",
             records_pattern="57*",
         )
     )
     + list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
+            offline=False,
             activity_source="actigraphy",
             records_pattern="58*",
         )
     )
     + list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
+            offline=False,
             activity_source="actigraphy",
             records_pattern="59*",
         )
     )
     + list(
         read_mesa(
-            offline=True,
-            data_dir=r"D:\SleepData",
+            offline=False,
             activity_source="actigraphy",
             records_pattern="6*",
         )
