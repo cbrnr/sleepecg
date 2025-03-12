@@ -1,9 +1,12 @@
 # Feature extraction
 
 ## Heart rate variability features
+
 Features are based on standards of heart rate variability (HRV) measurement and interpretation described in [Task Force of the European Society of Cardiology (1996)](https://doi.org/10.1161/01.CIR.93.5.1043) and [Shaffer & Ginsberg (2017)](https://doi.org/10.3389/fpubh.2017.00258).
 
+
 ### Time domain
+
 Group identifier: `hrv-time`
 
 All time domain HRV features are either derived from normal-to-normal (NN) intervals, from successive differences between NN intervals (SD), or from the [Poincaré plot (PP)](https://en.wikipedia.org/wiki/Poincar%C3%A9_plot).
@@ -41,7 +44,9 @@ All time domain HRV features are either derived from normal-to-normal (NN) inter
 |`CSI`|cardiac sympathetic index|PP|
 |`CVI`|cardiac vagal index|PP|
 
+
 ### Frequency domain
+
 Group identifier: `hrv-frequency`
 
 For calculating frequency domain HRV features, the RR time series is resampled at regular intervals, after which the power spectral density (PSD) is estimated using [Welch's method](https://en.wikipedia.org/wiki/Welch%27s_method).
@@ -58,6 +63,7 @@ For calculating frequency domain HRV features, the RR time series is resampled a
 
 
 ## Metadata features
+
 Group identifier: `metadata`
 
 |Feature|Description|
@@ -67,9 +73,11 @@ Group identifier: `metadata`
 |`gender`|`0` (female) or `1` (male)|
 |`weight`|weight of the subject in kg|
 
-## Actigraphy faetures
+
+## Actigraphy features
+
 Group identifier: `actigraphy`
 
-| Feature           | Description                                                                                           |
-|-------------------|-------------------------------------------------------------------------------------------------------|
-| `activity_counts` | SiemensActiwatch proprietary metric to quantify amount of patient movement measured via accelerometry |
+| Feature           | Description                                                                                            |
+|-------------------|--------------------------------------------------------------------------------------------------------|
+| `activity_counts` | Philips Actiwatch proprietary metric to quantify amount of patient movement measured via accelerometry |
