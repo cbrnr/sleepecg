@@ -493,7 +493,7 @@ def read_mesa(
                 activity_counts = np.array(activity_counts)
 
                 diff = len(activity_counts) - len(parsed_xml.sleep_stages)
-                
+
                 if abs(diff) > 2:
                     print(f"Skipping {record_id} due to invalid activity counts.")
                     continue

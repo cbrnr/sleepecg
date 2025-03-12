@@ -10,7 +10,6 @@ from sleepecg import (
     prepare_data_keras,
     print_class_balance,
     read_mesa,
-    read_shhs,
     save_classifier,
     set_nsrr_token,
 )
@@ -28,76 +27,76 @@ if TRAIN:
     print("‣  Starting training...")
     print("‣‣ Extracting features...")
     records_train = (
-            list(
-                read_mesa(
-                    offline=False,
-                    activity_source="actigraphy",
-                    records_pattern="0*",
-                )
+        list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="0*",
             )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="1*",
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="2*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="1*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="3*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="2*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="4*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="3*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="50*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="4*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="51*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="50*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="52*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="51*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="53*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="52*",
+            )
         )
-    )
-            + list(
-        read_mesa(
-            offline=False,
-            activity_source="actigraphy",
-            records_pattern="54*",
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="53*",
+            )
         )
-    )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="54*",
+            )
+        )
     )
 
     feature_extraction_params = {

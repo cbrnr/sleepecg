@@ -15,8 +15,8 @@ from typing import Any, Protocol
 from zipfile import ZipFile
 
 import numpy as np
-import yaml
 import torch
+import yaml
 
 from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
@@ -139,6 +139,7 @@ def prepare_data_keras(
 
     return features_padded, stages_padded_onehot, sample_weight
 
+
 def prepare_data_pytorch(
     features: list[np.ndarray],
     stages: list[np.ndarray],
@@ -187,19 +188,22 @@ def prepare_data_pytorch(
     sample_weight : np.ndarray
         A 2D array of shape `(n_records, max_n_samples)`.
     """
-    from torch.nn.utils.rnn import pad_sequence
     import torch.nn.functional as F
+    from torch.nn.utils.rnn import pad_sequence
 
     stages_merged = _merge_sleep_stages(stages, stages_mode)
-    stages_merged_tensor = [torch.tensor(stage, dtype=torch.long) for stage in
-                            stages_merged]
-    stages_padded = pad_sequence(stages_merged_tensor, padding_value=SleepStage.UNDEFINED,
-                                 batch_first=True)
+    stages_merged_tensor = [
+        torch.tensor(stage, dtype=torch.long) for stage in stages_merged
+    ]
+    stages_padded = pad_sequence(
+        stages_merged_tensor, padding_value=SleepStage.UNDEFINED, batch_first=True
+    )
     stages_padded_onehot = F.one_hot(stages_padded)
 
     features_tensor = [torch.tensor(feature, dtype=torch.float32) for feature in features]
-    features_padded = pad_sequence(features_tensor, padding_value=mask_value,
-                                   batch_first=True)
+    features_padded = pad_sequence(
+        features_tensor, padding_value=mask_value, batch_first=True
+    )
     features_padded[stages_padded == SleepStage.UNDEFINED, :] = mask_value
     features_padded[~torch.isfinite(features_padded)] = mask_value
 
@@ -310,7 +314,7 @@ def save_classifier(
             with open(f"{tmpdir}/classifier.pkl", "wb") as classifier_file:
                 pickle.dump(model, classifier_file)
         elif model_type == "torch":
-                torch.save(model, f"{tmpdir}/classifier.pth")
+            torch.save(model, f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
 

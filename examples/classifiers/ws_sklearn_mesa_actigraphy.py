@@ -91,7 +91,7 @@ if TRAIN:
         + list(
             read_mesa(
                 offline=False,
-               activity_source="actigraphy",
+                activity_source="actigraphy",
                 records_pattern="51*",
             )
         )
@@ -176,7 +176,7 @@ records_test = (
     + list(
         read_mesa(
             offline=False,
-           activity_source="actigraphy",
+            activity_source="actigraphy",
             records_pattern="56*",
         )
     )
