@@ -17,7 +17,7 @@ from sleepecg import (
 
 set_nsrr_token("your-token-here")
 
-TRAIN = False  # set to False to skip training and load classifier from disk
+TRAIN = True  # set to False to skip training and load classifier from disk
 
 # silence warnings (which might pop up during feature extraction)
 warnings.filterwarnings(
