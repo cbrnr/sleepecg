@@ -82,18 +82,12 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
             "</ScoredEvent>\n",
         )
         start = 0
-        record_duration_exceeded = False
-
-        while True:
-            if start > record_duration or record_duration_exceeded:
-                break
-            epoch_duration = rng.choice(np.arange(4, 21)) * EPOCH_LENGTH
+        while start < record_duration:
+            # choose a candidate epoch duration in seconds.
+            epoch_duration_candidate = rng.choice(np.arange(4, 21)) * EPOCH_LENGTH
+            # use the remaining time if the candidate overshoots the record duration
+            epoch_duration = min(epoch_duration_candidate, record_duration - start)
             stage = rng.choice(STAGES)
-
-            if start + epoch_duration > record_duration:
-                epoch_duration = record_duration - start
-                record_duration_exceeded = True
-
             xml_file.write(
                 "<ScoredEvent>\n"
                 "<EventType>Stages|Stages</EventType>\n"
@@ -226,7 +220,7 @@ def test_read_mesa_actigraphy(tmp_path):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
         # multiply with 3600 to convert duration (hours) to seconds, divide by 30 (epoch
-        # lenght for this test)
+        # length for this test)
         assert len(rec.activity_counts) == int(durations[i] * 120)
         assert Path(
             f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
