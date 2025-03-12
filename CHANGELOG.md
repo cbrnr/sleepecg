@@ -1,4 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
+## Added
+- Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 
 ## [0.5.9] - 2025-02-01
 ### Added
