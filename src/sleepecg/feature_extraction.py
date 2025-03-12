@@ -57,6 +57,7 @@ _FEATURE_GROUPS = {
         "LF_HF_ratio",
     ),
     "metadata": ("recording_start_time", "age", "gender", "weight"),
+    "actigraphy": ("activity_counts",),
 }
 _FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
 
@@ -657,6 +658,9 @@ def _extract_features_single(
             )
         elif feature_group == "metadata":
             X.append(_metadata_features(record, num_stages))
+        elif feature_group == "actigraphy":
+            if record.activity_counts is not None:
+                X.append(record.activity_counts.reshape(-1, 1))
     features = np.hstack(X)[:, col_indices]
 
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:

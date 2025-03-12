@@ -24,24 +24,26 @@ def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
             csv.write(f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n")
 
 
-def _dummy_nsrr_actigraphy(filename: str, mesa_id: str):
+def _dummy_nsrr_actigraphy(filename: str, mesa_id: str, hours: float):
     """Create dummy actigraphy file with four usable activity counts."""
     base_time = datetime.datetime(2024, 1, 1, 20, 30, 0)
-
+    # hours * 3600 / 30 second epoch, additional 20 counts for safety
+    number_activity_counts = int(hours * 120) + 20
     linetimes = [
         (base_time + datetime.timedelta(seconds=30 * i)).strftime("%H:%M:%S")
-        for i in range(10)
+        for i in range(number_activity_counts)
     ]
 
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,activity\n")
-        for i in range(10):
+        for i in range(number_activity_counts):
             csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
 
 
-def _dummy_nsrr_actigraphy_cached(filename: str):
+def _dummy_nsrr_actigraphy_cached(filename: str, hours: float):
     """Create dummy npy file that resembles cached activity counts."""
-    activity_counts = np.array([10, 10, 10, 10, 10, 10])
+    number_activity_counts = int(hours * 120)
+    activity_counts = np.array([10 for i in range(number_activity_counts)])
     np.save(filename, activity_counts)
 
 
@@ -54,7 +56,6 @@ def _dummy_nsrr_edf(filename: str, hours: float, ecg_channel: str):
 
 def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
     EPOCH_LENGTH = 30
-    RECORDING_DURATION = 154.0
     STAGES = [
         "Wake|0",
         "Stage 1 sleep|1",
@@ -66,7 +67,7 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
     ]
 
     rng = np.random.default_rng(random_state)
-
+    record_duration = hours * 60 * 60
     with open(filename, "w") as xml_file:
         xml_file.write(
             '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n'
@@ -76,16 +77,16 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
             "<ScoredEvent>\n"
             "<EventType/>\n"
             "<EventConcept>Recording Start Time</EventConcept>\n"
-            f"<Duration>{RECORDING_DURATION}</Duration>\n"
+            f"<Duration>{record_duration}</Duration>\n"
             "<ClockTime>01.01.85 20.29.59</ClockTime>\n"
             "</ScoredEvent>\n",
         )
-        record_duration = hours * 60 * 60
         start = 0
-        while True:
-            if start > record_duration:
-                break
-            epoch_duration = rng.choice(np.arange(4, 21)) * EPOCH_LENGTH
+        while start < record_duration:
+            # choose a candidate epoch duration in seconds.
+            epoch_duration_candidate = rng.choice(np.arange(4, 21)) * EPOCH_LENGTH
+            # use the remaining time if the candidate overshoots the record duration
+            epoch_duration = min(epoch_duration_candidate, record_duration - start)
             stage = rng.choice(STAGES)
             xml_file.write(
                 "<ScoredEvent>\n"
@@ -134,9 +135,11 @@ def _create_dummy_mesa(
         _dummy_nsrr_edf(f"{edf_dir}/{record_id}.edf", hours, ecg_channel="EKG")
         _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
         if actigraphy:
-            _dummy_nsrr_actigraphy(f"{activity_dir}/{record_id}.csv", mesa_id=record_id)
+            _dummy_nsrr_actigraphy(
+                f"{activity_dir}/{record_id}.csv", mesa_id=record_id, hours=hours
+            )
             _dummy_nsrr_actigraphy_cached(
-                f"{activity_counts_dir}/{record_id}-activity-counts.npy"
+                f"{activity_counts_dir}/{record_id}-activity-counts.npy", hours
             )
             record_ids.append(record_id)
 
@@ -213,10 +216,12 @@ def test_read_mesa_actigraphy(tmp_path):
 
     assert len(records) == 2
 
-    for rec in records:
+    for i, rec in enumerate(records):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
-        assert len(rec.activity_counts) == 4
+        # multiply with 3600 to convert duration (hours) to seconds, divide by 30 (epoch
+        # length for this test)
+        assert len(rec.activity_counts) == int(durations[i] * 120)
         assert Path(
             f"{tmp_path}/mesa/preprocessed/activity_counts/{rec.id}-activity-counts.npy"
         ).exists()
@@ -239,10 +244,10 @@ def test_read_mesa_actigraphy_cached(tmp_path):
 
     assert len(records) == 2
 
-    for rec in records:
+    for i, rec in enumerate(records):
         assert rec.sleep_stage_duration == 30
         assert set(rec.sleep_stages) - valid_stages == set()
-        assert len(rec.activity_counts) == 6
+        assert len(rec.activity_counts) == int(durations[i] * 120)
 
 
 def test_read_shhs(tmp_path):

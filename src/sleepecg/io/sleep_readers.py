@@ -477,7 +477,7 @@ def read_mesa(
 
                 for item in activity_data:
                     if item.get("linetime") == recording_end_time_str:
-                        end_line = int(item["line"]) - 1
+                        end_line = int(item["line"])
                         break
                 else:
                     print(
@@ -487,10 +487,22 @@ def read_mesa(
                     continue
 
                 activity_counts = [
-                    item["activity"] for item in activity_data[start_line - 1 : end_line]
+                    item["activity"] for item in activity_data[start_line:end_line]
                 ]
 
                 activity_counts = np.array(activity_counts)
+
+                diff = len(activity_counts) - len(parsed_xml.sleep_stages)
+                if abs(diff) > 2:
+                    print(f"Skipping {record_id} due to invalid activity counts.")
+                    continue
+                elif diff > 0:
+                    activity_counts = activity_counts[:-diff]
+                elif diff < 0:
+                    activity_counts = np.append(activity_counts, activity_counts[diff:])
+
+                activity_counts[activity_counts == ""] = "0"
+                activity_counts = activity_counts.astype(float)
                 np.save(activity_counts_file, activity_counts)
 
         yield SleepRecord(
