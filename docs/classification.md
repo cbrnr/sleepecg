@@ -4,11 +4,21 @@
 SleepECG contains classifiers trained on large open sleep datasets.
 Note that the performance metrics are averages, so a classifier might perform much better or much worse for an individual record.
 
-|Identifier|Stages|Model|Training set (nights)|Test set (nights)|Acc|κ|Source|
-|-|-|-|-|-|-|-|-|
-|`ws-gru-mesa`|WAKE–SLEEP|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.83|0.60|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_gru_mesa.py)|
-|`wrn-gru-mesa`|WAKE–REM–NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.75|0.54|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa.py)|
-|`wrn-gru-mesa-weighted`|WAKE–REM–NREM|[GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)|MESA (1971)|SHHS (1000)|0.70|0.53|[Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)|
+| Identifier                                | Stages        | Model                                                                    | Training set (nights) | Test set (nights) | Acc  | κ    | Source                                                                                                 |
+|-------------------------------------------|---------------|--------------------------------------------------------------------------|-----------------------|-------------------|------|------|--------------------------------------------------------------------------------------------------------|
+| `ws-gru-mesa`                             | WAKE–SLEEP    | [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)                | MESA (1971)           | SHHS (1000)       | 0.83 | 0.60 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_gru_mesa.py)                |
+| `wrn-gru-mesa`                            | WAKE–REM–NREM | [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)                | MESA (1971)           | SHHS (1000)       | 0.75 | 0.54 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa.py)               |
+| `wrn-gru-mesa-weighted`                   | WAKE–REM–NREM | [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)                | MESA (1971)           | SHHS (1000)       | 0.70 | 0.53 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/wrn_gru_mesa_weighted.py)      |
+| `ws-logistic_regression-mesa`             | WAKE–SLEEP    | [Logistic regression](https://en.wikipedia.org/wiki/Logistic_regression) | MESA (1971)           | SHHS (1000)       | 0.78 | 0.46 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa.py)            |
+| `ws-logistic_regression-mesa-actigraphy`  | WAKE–SLEEP    | [Logistic regression](https://en.wikipedia.org/wiki/Logistic_regression) | MESA (1354)           | MESA (343)        | 0.78 | 0.53 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa_actigraphy.py) |
+| `ws-lda-mesa`                             | WAKE–SLEEP    | [LDA](https://en.wikipedia.org/wiki/Linear_discriminant_analysis)        | MESA (1971)           | SHHS (1000)       | 0.78 | 0.44 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa.py)            |
+| `ws-lda-mesa-actigraphy`                  | WAKE–SLEEP    | [LDA](https://en.wikipedia.org/wiki/Linear_discriminant_analysis)        | MESA (1354)           | MESA (343)        | 0.78 | 0.51 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa_actigraphy.py) |
+| `wrn-logistic_regression-mesa`            | WAKE–REM-NREM | [Logistic regression](https://en.wikipedia.org/wiki/Logistic_regression) | MESA (1971)           | SHHS (1000)       | 0.66 | 0.35 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa.py)            |
+| `wrn-logistic_regression-mesa-actigraphy` | WAKE–REM-NREM | [Logistic regression](https://en.wikipedia.org/wiki/Logistic_regression) | MESA (1354)           | MESA (343)        | 0.68 | 0.42 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa_actigraphy.py) |
+| `wrn-lda-mesa`                            | WAKE–REM-NREM | [LDA](https://en.wikipedia.org/wiki/Linear_discriminant_analysis)        | MESA (1971)           | SHHS (1000)       | 0.65 | 0.34 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa.py)            |
+| `wrn-lda-mesa-actigraphy`                 | WAKE–REM-NREM | [LDA](https://en.wikipedia.org/wiki/Linear_discriminant_analysis)        | MESA (1354)           | MESA (343)        | 0.69 | 0.43 | [Link](https://github.com/cbrnr/sleepecg/blob/main/examples/classifiers/ws_sklearn_mesa_actigraphy.py) |
+
+
 
 As REM is much less common than NREM and WAKE, the current models show limited performance in WAKE–REM–NREM classification.
 Using no sample weights, the `wrn-gru-mesa` model identifies 64% of actual REM stages as NREM as shown in the confusion matrix below (left).
@@ -18,7 +28,7 @@ A weaker weighting approach is likely required to find the optimal middle ground
 
 ![wrn-gru-mesa confusion matrix](./img/wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./img/wrn-gru-mesa-weighted.svg)
 
-
+Additional classifiers using the Sklearn library have been added. The classifiers denoted with the 'actigraphy' suffix used the activity counts feature during training.
 ## Usage examples
 The example [`try_ws_gru_mesa.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/try_ws_gru_mesa.py) demonstrates how to use the WAKE–SLEEP classifier `ws-gru-mesa`, a [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)-based classifier bundled with SleepECG which was trained on 1971 nights of the [MESA](https://sleepdata.org/datasets/mesa/) dataset.
 
