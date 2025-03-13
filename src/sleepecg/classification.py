@@ -15,7 +15,6 @@ from typing import Any, Protocol
 from zipfile import ZipFile
 
 import numpy as np
-import torch
 import yaml
 
 from sleepecg.config import get_config_value
@@ -188,6 +187,7 @@ def prepare_data_pytorch(
     sample_weight : np.ndarray
         A 2D array of shape `(n_records, max_n_samples)`.
     """
+    import torch
     import torch.nn.functional as F
     from torch.nn.utils.rnn import pad_sequence
 
@@ -314,6 +314,8 @@ def save_classifier(
             with open(f"{tmpdir}/classifier.pkl", "wb") as classifier_file:
                 pickle.dump(model, classifier_file)
         elif model_type == "torch":
+            import torch
+
             torch.save(model, f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
@@ -442,6 +444,8 @@ def load_classifier(
             with open(f"{tmpdir}/classifier.pkl", "rb") as classifier_file:
                 classifier = pickle.load(classifier_file)
         elif classifier_info["model_type"] == "torch":
+            import torch
+
             classifier = torch.load(f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(
