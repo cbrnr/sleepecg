@@ -313,9 +313,8 @@ def save_classifier(
         elif model_type == "sklearn":
             with open(f"{tmpdir}/classifier.pkl", "wb") as classifier_file:
                 pickle.dump(model, classifier_file)
-        elif model_type == "torch":
+        elif "torch" in str(type(model)).lower():
             import torch
-
             torch.save(model, f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")
@@ -443,10 +442,10 @@ def load_classifier(
         elif classifier_info["model_type"] == "sklearn":
             with open(f"{tmpdir}/classifier.pkl", "rb") as classifier_file:
                 classifier = pickle.load(classifier_file)
-        elif classifier_info["model_type"] == "torch":
+        elif classifier_info["model_type"] == "__main__":
             import torch
 
-            classifier = torch.load(f"{tmpdir}/classifier.pth")
+            classifier = torch.load(f"{tmpdir}/classifier.pth", weights_only=False)
         else:
             raise ValueError(
                 f"Loading model of type {classifier_info['model_type']} is not supported"
