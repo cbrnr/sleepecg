@@ -11,9 +11,8 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 from zipfile import ZipFile
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import torch
