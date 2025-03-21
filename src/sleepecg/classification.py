@@ -15,6 +15,7 @@ from typing import Any, Protocol
 from zipfile import ZipFile
 
 import numpy as np
+import torch
 import yaml
 
 from sleepecg.config import get_config_value
@@ -144,7 +145,7 @@ def prepare_data_pytorch(
     stages: list[np.ndarray],
     stages_mode: str,
     mask_value: int = -1,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[torch.float32, torch.int64]:
     """
     Mask and pad data and calculate sample weights for a PyTorch model.
 
