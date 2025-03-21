@@ -13,9 +13,12 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, Protocol
 from zipfile import ZipFile
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import torch
 
 import numpy as np
-import torch
 import yaml
 
 from sleepecg.config import get_config_value
