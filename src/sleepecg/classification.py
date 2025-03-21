@@ -146,7 +146,7 @@ def prepare_data_pytorch(
     mask_value: int = -1,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Mask and pad data and calculate sample weights for a pytorch model.
+    Mask and pad data and calculate sample weights for a PyTorch model.
 
     The following steps are performed:
 
@@ -156,8 +156,6 @@ def prepare_data_pytorch(
     - Pad to a common length, where `mask_value` is used for `features` and
       `SleepStage.UNDEFINED` (i.e `0`) is used for stages.
     - One-hot encode stages.
-    - Calculate sample weights with class weights taken as `n_samples /
-      (n_classes * np.bincount(y))`.
 
     Parameters
     ----------
@@ -176,16 +174,14 @@ def prepare_data_pytorch(
 
     Returns
     -------
-    features_padded : np.ndarray
-        A 3D array of shape `(n_records, max_n_samples, n_features)`, where `n_records` is
-        the length of `features`/`stages` and `max_n_samples` is the maximum number of rows
-        of all feature matrices in `features`.
-    stages_padded_onehot : np.ndarray
-        A 3D array of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
+    features_padded : torch.float32
+        A PyTorch tensor of shape `(n_records, max_n_samples, n_features)`,
+        where `n_records` is the length of `features`/`stages` and `max_n_samples` is the
+        maximum number of rows of all feature matrices in `features`.
+    stages_padded_onehot : torch.int64
+        A PyTorch of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
         the number of classes remaining after merging sleep stages (excluding
         `SleepStage.UNDEFINED`).
-    sample_weight : np.ndarray
-        A 2D array of shape `(n_records, max_n_samples)`.
     """
     import torch
     import torch.nn.functional as F
@@ -207,13 +203,7 @@ def prepare_data_pytorch(
     features_padded[stages_padded == SleepStage.UNDEFINED, :] = mask_value
     features_padded[~torch.isfinite(features_padded)] = mask_value
 
-    stage_counts = stages_padded_onehot.sum(0).sum(0)
-    # samples corresponding to SleepStage.UNDEFINED are ignored, so their count shouldn't
-    # influence the class weights -> slice with [1:]
-    class_weight = stage_counts[1:].sum() / stage_counts
-    sample_weight = class_weight[stages_padded]
-
-    return features_padded, stages_padded_onehot, sample_weight
+    return features_padded, stages_padded_onehot
 
 
 def print_class_balance(stages: np.ndarray, stages_mode: str | None = None) -> None:
@@ -315,6 +305,7 @@ def save_classifier(
                 pickle.dump(model, classifier_file)
         elif "torch" in str(type(model)).lower():
             import torch
+
             torch.save(model, f"{tmpdir}/classifier.pth")
         else:
             raise ValueError(f"Saving model of type {type(model)} is not supported")

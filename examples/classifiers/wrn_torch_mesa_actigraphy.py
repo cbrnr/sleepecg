@@ -13,7 +13,6 @@ from sleepecg import (
     prepare_data_pytorch,
     print_class_balance,
     read_mesa,
-    read_shhs,
     save_classifier,
     set_nsrr_token,
 )
@@ -29,6 +28,7 @@ class Torch_mesa(nn.Module):
         A fully connected linear layer (fc)
         Two gru layers (gru1, gru2)
         Another fully connected  linear layer as the output layer (output).
+
     In addition, features with the specified mask_value are omitted. During training, the
     cross-entropy loss is measured and the model is trained using a RMS propagation
     optimizer.
@@ -42,6 +42,7 @@ class Torch_mesa(nn.Module):
         self.gru2 = nn.GRU(hidden_dim * 2, hidden_dim, batch_first=True, bidirectional=True)
         self.output = nn.Linear(hidden_dim * 2, output_dim)
         self.mask_value = mask_value
+        self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
         """
@@ -50,7 +51,7 @@ class Torch_mesa(nn.Module):
         Parameters
         ----------
         x: torch.Tensor
-            Input tensor with shape (batch_size, seq_len, input_dim
+            Input tensor with shape (batch_size, seq_len, input_dim)
 
         Returns
         -------
@@ -67,7 +68,6 @@ class Torch_mesa(nn.Module):
         x, _ = self.gru2(x)
 
         x = self.output(x)
-
         return x
 
 
@@ -83,7 +83,78 @@ warnings.filterwarnings(
 if TRAIN:
     print("‣  Starting training...")
     print("‣‣ Extracting features...")
-    records = list(read_mesa(offline=False, data_dir=r"D:\SleepData"))
+    records_train = (
+        list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="0*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="1*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="2*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="3*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="4*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="50*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="51*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="52*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="53*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="54*",
+            )
+        )
+    )
 
     feature_extraction_params = {
         "lookback": 240,
@@ -94,6 +165,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
+            "activity_counts",
         ],
         "min_rri": 0.3,
         "max_rri": 2,
@@ -101,14 +173,14 @@ if TRAIN:
     }
 
     features_train, stages_train, feature_ids = extract_features(
-        tqdm(records),
+        tqdm(records_train),
         **feature_extraction_params,
         n_jobs=-1,
     )
 
     print("‣‣ Preparing data for Pytorch...")
-    stages_mode = "wake-sleep"
-    features_train_pad, stages_train_pad = prepare_data_pytorch(
+    stages_mode = "wake-rem-nrem"
+    features_train_pad, stages_train_pad, sample_weights = prepare_data_pytorch(
         features_train,
         stages_train,
         stages_mode,
@@ -131,7 +203,7 @@ if TRAIN:
     train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 
     model.train()
-    for epoch in range(25):
+    for epoch in range(50):
         epoch_loss = 0.0
         for batch_x, batch_y in train_loader:
             optimizer.zero_grad()
@@ -144,11 +216,11 @@ if TRAIN:
             optimizer.step()
             epoch_loss += loss.item()
 
-        print(f"Epoch {epoch + 1}/25, Loss: {epoch_loss / len(train_loader):.4f}")
+        print(f"Epoch {epoch + 1}/50, Loss: {epoch_loss / len(train_loader):.4f}")
 
     print("‣‣ Saving classifier...")
     save_classifier(
-        name="ws-pytorch-mesa",
+        name="wrn-pytorch-mesa-actigraphy",
         model=model,
         stages_mode=stages_mode,
         feature_extraction_params=feature_extraction_params,
@@ -158,20 +230,63 @@ if TRAIN:
 
 print("‣  Starting testing...")
 print("‣‣ Loading classifier...")
-clf = load_classifier("ws-pytorch-mesa", "./classifiers")
+clf = load_classifier("wrn-pytorch-mesa-actigraphy", "./classifiers")
 model = clf.model
 
 print("‣‣ Extracting features...")
-shhs = list(read_shhs(offline=False))
+records_test = (
+    list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="55*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="56*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="57*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="58*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="59*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="6*",
+        )
+    )
+)
 
 features_test, stages_test, feature_ids = extract_features(
-    tqdm(shhs),
+    tqdm(records_test),
     **clf.feature_extraction_params,
     n_jobs=-1,
 )
 
 print("‣‣ Evaluating classifier...")
-features_test_pad, stages_test_pad, sample_weight = prepare_data_pytorch(
+features_test_pad, stages_test_pad = prepare_data_pytorch(
     features_test,
     stages_test,
     clf.stages_mode,

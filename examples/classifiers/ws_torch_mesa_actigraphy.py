@@ -13,7 +13,6 @@ from sleepecg import (
     prepare_data_pytorch,
     print_class_balance,
     read_mesa,
-    read_shhs,
     save_classifier,
     set_nsrr_token,
 )
@@ -67,7 +66,6 @@ class Torch_mesa(nn.Module):
         x, _ = self.gru2(x)
 
         x = self.output(x)
-
         return x
 
 
@@ -83,7 +81,78 @@ warnings.filterwarnings(
 if TRAIN:
     print("‣  Starting training...")
     print("‣‣ Extracting features...")
-    records = list(read_mesa(offline=False, data_dir=r"D:\SleepData"))
+    records_train = (
+        list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="0*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="1*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="2*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="3*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="4*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="50*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="51*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="52*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="53*",
+            )
+        )
+        + list(
+            read_mesa(
+                offline=False,
+                activity_source="actigraphy",
+                records_pattern="54*",
+            )
+        )
+    )
 
     feature_extraction_params = {
         "lookback": 240,
@@ -94,6 +163,7 @@ if TRAIN:
             "recording_start_time",
             "age",
             "gender",
+            "activity_counts",
         ],
         "min_rri": 0.3,
         "max_rri": 2,
@@ -101,7 +171,7 @@ if TRAIN:
     }
 
     features_train, stages_train, feature_ids = extract_features(
-        tqdm(records),
+        tqdm(records_train),
         **feature_extraction_params,
         n_jobs=-1,
     )
@@ -148,7 +218,7 @@ if TRAIN:
 
     print("‣‣ Saving classifier...")
     save_classifier(
-        name="ws-pytorch-mesa",
+        name="ws-pytorch-mesa-actigraphy",
         model=model,
         stages_mode=stages_mode,
         feature_extraction_params=feature_extraction_params,
@@ -158,14 +228,57 @@ if TRAIN:
 
 print("‣  Starting testing...")
 print("‣‣ Loading classifier...")
-clf = load_classifier("ws-pytorch-mesa", "./classifiers")
+clf = load_classifier("ws-pytorch-mesa-actigraphy", "./classifiers")
 model = clf.model
 
 print("‣‣ Extracting features...")
-shhs = list(read_shhs(offline=False))
+records_test = (
+    list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="55*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="56*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="57*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="58*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="59*",
+        )
+    )
+    + list(
+        read_mesa(
+            offline=False,
+            activity_source="actigraphy",
+            records_pattern="6*",
+        )
+    )
+)
 
 features_test, stages_test, feature_ids = extract_features(
-    tqdm(shhs),
+    tqdm(records_test),
     **clf.feature_extraction_params,
     n_jobs=-1,
 )

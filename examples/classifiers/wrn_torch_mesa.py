@@ -29,6 +29,7 @@ class Torch_mesa(nn.Module):
         A fully connected linear layer (fc)
         Two gru layers (gru1, gru2)
         Another fully connected  linear layer as the output layer (output).
+
     In addition, features with the specified mask_value are omitted. During training, the
     cross-entropy loss is measured and the model is trained using a RMS propagation
     optimizer.
@@ -50,7 +51,7 @@ class Torch_mesa(nn.Module):
         Parameters
         ----------
         x: torch.Tensor
-            Input tensor with shape (batch_size, seq_len, input_dim
+            Input tensor with shape (batch_size, seq_len, input_dim)
 
         Returns
         -------
@@ -67,7 +68,6 @@ class Torch_mesa(nn.Module):
         x, _ = self.gru2(x)
 
         x = self.output(x)
-
         return x
 
 
@@ -107,7 +107,7 @@ if TRAIN:
     )
 
     print("‣‣ Preparing data for Pytorch...")
-    stages_mode = "wake-sleep"
+    stages_mode = "wake-rem-nrem"
     features_train_pad, stages_train_pad = prepare_data_pytorch(
         features_train,
         stages_train,
@@ -148,7 +148,7 @@ if TRAIN:
 
     print("‣‣ Saving classifier...")
     save_classifier(
-        name="ws-pytorch-mesa",
+        name="wrn-pytorch-mesa",
         model=model,
         stages_mode=stages_mode,
         feature_extraction_params=feature_extraction_params,
@@ -158,7 +158,7 @@ if TRAIN:
 
 print("‣  Starting testing...")
 print("‣‣ Loading classifier...")
-clf = load_classifier("ws-pytorch-mesa", "./classifiers")
+clf = load_classifier("wrn-pytorch-mesa", "./classifiers")
 model = clf.model
 
 print("‣‣ Extracting features...")
