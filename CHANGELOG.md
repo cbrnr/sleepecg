@@ -1,7 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ## Added
 - Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
-- Adding sklearn classifiers along with necessary infrastructure to save/load them ([#262](https://github.com/cbrnr/sleepecg/pull/263) by [Simon Pusterhofer](https://github.com/simon-p-2000))
+- Added support for Scikit-Learn and PyTorch models ([#263](https://github.com/cbrnr/sleepecg/pull/263) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 
 ## [0.5.9] - 2025-02-01
 ### Added

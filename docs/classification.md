@@ -28,7 +28,8 @@ A weaker weighting approach is likely required to find the optimal middle ground
 
 ![wrn-gru-mesa confusion matrix](./img/wrn-gru-mesa.svg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![wrn-gru-mesa-weighted confusion matrix](./img/wrn-gru-mesa-weighted.svg)
 
-Additional classifiers using the Sklearn library have been added. The classifiers denoted with the 'actigraphy' suffix used the activity counts feature during training.
+Additional classifiers using [Scikit-Learn](https://scikit-learn.org/stable/) can be trained with the example scripts available in the `examples/classifiers` folder.
+
 ## Usage examples
 The example [`try_ws_gru_mesa.py`](https://github.com/cbrnr/sleepecg/blob/main/examples/try_ws_gru_mesa.py) demonstrates how to use the WAKE–SLEEP classifier `ws-gru-mesa`, a [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit)-based classifier bundled with SleepECG which was trained on 1971 nights of the [MESA](https://sleepdata.org/datasets/mesa/) dataset.
 
