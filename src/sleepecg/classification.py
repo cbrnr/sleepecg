@@ -38,7 +38,7 @@ def prepare_data_sklearn(
 
     - Merge sleep stages in `stages` according to `stage_mode`.
     - Set feature values of infinity to `-1`.
-    - Set features corresponding to `SleepStage.UNDEFINED` as invalid.
+    - Mark features corresponding to `SleepStage.UNDEFINED` as invalid.
 
     Parameters
     ----------
@@ -66,7 +66,6 @@ def prepare_data_sklearn(
     features_stacked = np.vstack(features)
     stages_stacked = np.hstack(_merge_sleep_stages(stages, stages_mode))
     features_stacked[np.isinf(features_stacked)] = -1
-    features_stacked[np.abs(features_stacked) > 1e9] = -1
     valid = stages_stacked != SleepStage.UNDEFINED
 
     return features_stacked[valid], stages_stacked[valid], record_ids[valid]
