@@ -37,10 +37,8 @@ def prepare_data_sklearn(
     The following steps are performed:
 
     - Merge sleep stages in `stages` according to `stage_mode`.
+    - Set feature values of infinity to `-1`.
     - Set features corresponding to `SleepStage.UNDEFINED` as invalid.
-    - Replace `np.nan` and `np.inf` in `features` with `mask_value`.
-    - Pad to a common length, where `mask_value` is used for `features` and
-      `SleepStage.UNDEFINED` (i.e `0`) is used for stages.
 
     Parameters
     ----------
@@ -57,12 +55,12 @@ def prepare_data_sklearn(
     Returns
     -------
     features_stacked : np.ndarray
-        A 2D array of shape `(total samples, features)`.
+        A 2D array of shape `(n_samples, n_features)`.
     stages_stacked : np.ndarray
         A 1D array containing the annotated sleep stage for each sample. The sleep stages
-        are merged based on the stages_mode parameter.
+        are merged based on the `stages_mode` parameter.
     record_ids : np.ndarray
-        A 1D array containing a calculated index for each valid sample that is returned.
+        A 1D index array for each valid sample that is returned.
     """
     record_ids = np.hstack([i * np.ones(len(X)) for i, X in enumerate(features)])
     features_stacked = np.vstack(features)
@@ -182,8 +180,8 @@ def prepare_data_pytorch(
         where `n_records` is the length of `features`/`stages` and `max_n_samples` is the
         maximum number of rows of all feature matrices in `features`.
     stages_padded_onehot : torch.int64
-        A PyTorch of shape `(n_records, max_n_samples, n_classes+1)`, where `n_classes` is
-        the number of classes remaining after merging sleep stages (excluding
+        A PyTorch tensor of shape `(n_records, max_n_samples, n_classes+1)`, where
+        `n_classes` is the number of classes remaining after merging sleep stages (excluding
         `SleepStage.UNDEFINED`).
     """
     import torch
