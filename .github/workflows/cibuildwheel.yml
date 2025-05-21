@@ -17,7 +17,7 @@ on:
 jobs:
   style:
     name: Check style
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
     - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
     needs: style
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15, macos-13]
       fail-fast: false
     timeout-minutes: 10  # Linux ~1 min, Windows ~4 min
     name: cibuildwheel (${{ matrix.os }})
@@ -48,10 +48,10 @@ jobs:
     needs: build_wheels
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04-arm, windows-2022, macos-15, macos-13]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15, macos-13]
         python-version: ['3.12']
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             python-version: '3.13'
       fail-fast: false
     name: Test wheels (${{ matrix.os }} py${{ matrix.python-version }})
@@ -81,7 +81,7 @@ jobs:
   build_sdist:
     needs: style
     name: Build source distribution
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -101,7 +101,7 @@ jobs:
   check_wheels:
     needs: [build_wheels, build_sdist]
     name: Check wheels and source distribution
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -119,7 +119,7 @@ jobs:
   upload-pypi:
     name: Upload to PyPI
     needs: [check_wheels, test]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name == 'release'
     permissions:
       id-token: write
