@@ -92,6 +92,3 @@ ignore = ["D105"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-[tool.setuptools.bdist_wheel]
-py-limited-api = "cp310"
