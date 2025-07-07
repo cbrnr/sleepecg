@@ -109,9 +109,7 @@ pretty = true
 
 [tool.pytest.ini_options]
 markers = ["c_extension"]
-filterwarnings = [
-    "error",
-]
+filterwarnings = ["error"]
 
 [tool.ruff]
 line-length = 92
