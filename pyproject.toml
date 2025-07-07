@@ -131,6 +131,3 @@ ignore = ["D105"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-[tool.setuptools.dynamic]
-version = {attr = "sleepecg.__version__"}
