@@ -1,5 +1,7 @@
 """A package for sleep stage classification using ECG data."""
 
+from importlib.metadata import PackageNotFoundError, version
+
 from sleepecg.classification import (
     SleepClassifier,
     evaluate,
@@ -17,4 +19,7 @@ from sleepecg.io import *  # noqa: F403
 from sleepecg.plot import plot_ecg, plot_hypnogram
 from sleepecg.utils import get_toy_ecg
 
-__version__ = "0.6.0-dev"
+try:
+    __version__ = version("sleepecg")
+except PackageNotFoundError:
+    __version__ = "unknown"

@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sleepecg"
+version = "0.6.0.dev0"
 description = "A package for sleep stage classification using ECG data"
 license = {text = "BSD 3-Clause"}
 authors = [
@@ -33,7 +34,6 @@ dependencies = [
     "scipy >= 1.13.0",
     "tqdm >= 4.66.0",
 ]
-dynamic = ["version"]
 
 [project.optional-dependencies]
 cibw = [  # cibuildwheel uses this for running the test suite
@@ -44,12 +44,10 @@ cibw = [  # cibuildwheel uses this for running the test suite
     "numba >= 0.61.0; platform_machine != 'aarch64'",
     "wfdb >= 4.2.0",
 ]
-
 docs = [  # RTD uses this when building the documentation
     "mkdocs-material >= 9.5.0",
     "mkdocstrings-python >= 1.11.1",
 ]
-
 full = [  # complete package functionality
     "edfio >= 0.4.4",
     "joblib >= 1.4.2",
@@ -131,6 +129,3 @@ ignore = ["D105"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-[tool.setuptools.dynamic]
-version = {attr = "sleepecg.__version__"}
