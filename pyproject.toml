@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sleepecg"
+version = "0.6.0.dev0"
 description = "A package for sleep stage classification using ECG data"
 license = {text = "BSD 3-Clause"}
 authors = [
@@ -33,7 +34,6 @@ dependencies = [
     "scipy >= 1.13.0",
     "tqdm >= 4.66.0",
 ]
-dynamic = ["version"]
 
 [project.optional-dependencies]
 cibw = [  # cibuildwheel uses this for running the test suite
