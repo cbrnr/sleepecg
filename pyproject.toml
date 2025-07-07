@@ -111,8 +111,6 @@ pretty = true
 markers = ["c_extension"]
 filterwarnings = [
     "error",
-    'ignore:.*datetime.datetime.utcfromtimestamp\(\):DeprecationWarning',
-    'ignore:(?s).*Pyarrow:DeprecationWarning',
 ]
 
 [tool.ruff]
