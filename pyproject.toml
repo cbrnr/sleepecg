@@ -36,14 +36,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-cibw = [  # cibuildwheel uses this for running the test suite
-    "edfio >= 0.4.4",
-    # numba 0.61.0 is available on aarch64, but is not compatible with the image
-    # we use to build it. So skip numba tests on aarch64 during cibuildwheel there,
-    # and rely on CIs with Ubuntu to test it with numba.
-    "numba >= 0.61.0; platform_machine != 'aarch64'",
-    "wfdb >= 4.2.0",
-]
 docs = [  # RTD uses this when building the documentation
     "mkdocs-material >= 9.5.0",
     "mkdocstrings-python >= 1.11.1",
@@ -75,31 +67,6 @@ documentation = "https://sleepecg.readthedocs.io/en/latest/"
 repository = "https://github.com/cbrnr/sleepecg"
 changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 
-[tool.cibuildwheel]
-test-requires = "pytest"
-test-extras = "cibw"
-test-command = "pytest {package}"
-skip = 'pp* *musllinux*'
-build = "cp310-*"  # abi3
-archs = "native"
-
-[[tool.cibuildwheel.overrides]]
-select = "*"
-inherit.repair-wheel-command = "append"
-repair-wheel-command = [
-  "pipx run abi3audit --strict --report {wheel}",
-]
-
-[tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux2014"
-
-[tool.cibuildwheel.windows]
-archs = "AMD64"
-before-build = "pip install delvewheel"
-repair-wheel-command = [
-  "delvewheel repair -w {dest_dir} {wheel}",
-]
-
 [tool.mypy]
 ignore_missing_imports = true
 disallow_untyped_defs = true
@@ -125,3 +92,6 @@ ignore = ["D105"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.setuptools.bdist_wheel]
+py-limited-api = "cp310"

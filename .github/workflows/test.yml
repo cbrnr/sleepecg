@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  pull_request:
+    paths-ignore:
+    - 'docs/**'
+  push:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  style:
+    name: Check style
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: astral-sh/ruff-action@v3
+    - uses: astral-sh/ruff-action@v3
+      with:
+        args: "format --diff"
+
+  test:
+    needs: style
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-13, windows-2022]
+      fail-fast: false
+    name: Run tests (Python ${{ matrix.python-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: astral-sh/setup-uv@v6
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+    - name: Install the project
+      run: uv sync --all-extras
+    - name: Run tests
+      run: uv run pytest -W error tests

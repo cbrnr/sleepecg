@@ -5,8 +5,7 @@ from wheel.bdist_wheel import bdist_wheel
 # Following https://github.com/joerick/python-abi3-package-sample
 
 # Currently set to 3.10. If this is bumped for example to 3.11, the hex in the Extension
-# needs to change to 0x030B0000, and the cibuildwheel `build` selector needs to change
-# in pyproject.toml.
+# needs to change to 0x030B0000, and the Python version needs to change in release.yml
 
 
 class bdist_wheel_abi3(bdist_wheel):

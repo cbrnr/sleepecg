@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  build_wheels:
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15, macos-13]
+      fail-fast: false
+    name: Build wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Set up Python 3.10 for ABI3
+        run: uv python install 3.10
+      - name: Build ABI3 wheels
+        run: uv build --wheel
+      - name: Repair Windows wheels
+        if: startsWith(matrix.os, 'windows')
+        run: uv tool run delvewheel repair -w dist dist/*.whl && rm dist/*-win*.whl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.os }}
+          path: dist/*.whl
+
+  build_sdist:
+    needs: test
+    name: Build source distribution
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Set up Python 3.10
+        run: uv python install 3.10
+      - name: Build sdist
+        run: uv build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-sdist
+          path: dist/*.tar.gz
+
+  check_wheels:
+    needs: [build_wheels, build_sdist]
+    name: Check wheels and source distribution
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-*
+          merge-multiple: true
+          path: dist
+      - uses: astral-sh/setup-uv@v6
+      - name: Set up Python 3.10
+        run: uv python install 3.10
+      - name: Check sdist
+        run: uv tool run twine check --strict dist/*
+      - name: Check ABI3 wheels
+        run: uv tool run abi3audit --strict --report dist/*.whl
+
+  publish:
+    needs: check_wheels
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: artifact-*
+          merge-multiple: true
+          path: dist
+      - uses: astral-sh/setup-uv@v6
+      - name: Publish to PyPI
+        run: uv publish
