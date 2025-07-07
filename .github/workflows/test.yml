@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.10', '3.11', '3.12', '3.13']
-        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-13, windows-2022]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, windows-2022]
       fail-fast: false
     name: Run tests (Python ${{ matrix.python-version }} on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
