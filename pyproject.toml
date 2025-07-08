@@ -79,25 +79,25 @@ changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 test-requires = "pytest"
 test-extras = "cibw"
 test-command = "pytest {package}"
-skip = '*musllinux*'
+skip = ["*musllinux*", "pp*"]
 build = "cp310-*"  # abi3
 archs = "native"
+
+[tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.windows]
+before-build = "pip install delvewheel"
+repair-wheel-command = [
+    "delvewheel repair -w {dest_dir} {wheel}",
+]
 
 [[tool.cibuildwheel.overrides]]
 select = "*"
 inherit.repair-wheel-command = "append"
 repair-wheel-command = [
   "pipx run abi3audit --strict --report {wheel}",
-]
-
-[tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux2014"
-
-[tool.cibuildwheel.windows]
-archs = "AMD64"
-before-build = "pip install delvewheel"
-repair-wheel-command = [
-  "delvewheel repair -w {dest_dir} {wheel}",
 ]
 
 [tool.mypy]
