@@ -63,7 +63,7 @@ jobs:
 
   upload-pypi:
     name: Upload to PyPI
-    needs: [build_wheels, build_sdist, test]
+    needs: [build_wheels, build_sdist]
     runs-on: ubuntu-24.04
     if: github.event_name == 'release'
     permissions:
