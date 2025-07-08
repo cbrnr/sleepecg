@@ -79,7 +79,7 @@ changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 test-requires = "pytest"
 test-extras = "cibw"
 test-command = "pytest {package}"
-skip = 'pp* *musllinux*'
+skip = '*musllinux*'
 build = "cp310-*"  # abi3
 archs = "native"
 
