@@ -81,8 +81,8 @@ build = "cp310-*"  # abi3
 archs = "native"
 
 [tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux2014"
-manylinux-aarch64-image = "manylinux2014"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
 
 [tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
