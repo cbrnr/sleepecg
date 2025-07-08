@@ -1,8 +1,14 @@
 name: Release
 
+# on:
+#   release:
+#     types: [published]
 on:
-  release:
-    types: [published]
+  pull_request:
+    paths-ignore:
+    - 'docs/**'
+  push:
+    branches: [main]
 
 jobs:
   test:
@@ -65,17 +71,17 @@ jobs:
       - name: Check ABI3 wheels
         run: uv tool run abi3audit --strict --report dist/*.whl
 
-  publish:
-    needs: check_wheels
-    runs-on: ubuntu-24.04
-    permissions:
-      id-token: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: artifact-*
-          merge-multiple: true
-          path: dist
-      - uses: astral-sh/setup-uv@v6
-      - name: Publish to PyPI
-        run: uv publish
+  # publish:
+  #   needs: check_wheels
+  #   runs-on: ubuntu-24.04
+  #   permissions:
+  #     id-token: write
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: artifact-*
+  #         merge-multiple: true
+  #         path: dist
+  #     - uses: astral-sh/setup-uv@v6
+  #     - name: Publish to PyPI
+  #       run: uv publish
