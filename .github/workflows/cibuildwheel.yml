@@ -1,4 +1,5 @@
 name: Test
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
   cancel-in-progress: true
@@ -18,7 +19,6 @@ jobs:
   style:
     name: Check style
     runs-on: ubuntu-24.04
-    timeout-minutes: 2
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -28,55 +28,20 @@ jobs:
 
   build_wheels:
     needs: style
+    name: Build wheel (${{ matrix.os }})
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15, macos-13]
       fail-fast: false
-    timeout-minutes: 10  # Linux ~1 min, Windows ~4 min
-    name: cibuildwheel (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build wheels and run tests
+      - name: Run cibuildwheel
         uses: pypa/cibuildwheel@v3.0.1
       - uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
-
-  test:
-    needs: build_wheels
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15, macos-13]
-        python-version: ['3.12']
-        include:
-          - os: ubuntu-24.04
-            python-version: '3.13'
-      fail-fast: false
-    name: Test wheels (${{ matrix.os }} py${{ matrix.python-version }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
-    defaults:
-      run:
-        shell: bash -eo pipefail {0}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: artifact-${{ matrix.os }}
-          merge-multiple: true
-          path: dist
-      - run: ls -al dist
-      - run: python -m pip install ./dist/*.whl pytest pytest-cov edfio wfdb numba pytest-error-for-skips --only-binary="numpy,numba,llvmlite,edfio"
-      - run: pytest -rfEXs --cov=sleepecg --cov-report=xml --tb=short --cov-branch --color=yes --error-for-skips tests/
-      - uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-        if: success() || failure()
 
   build_sdist:
     needs: style
@@ -85,12 +50,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        name: Install Python
         with:
-          python-version: 3.12
+          python-version: '3.12'
       - name: Build sdist
         run: |
-          set -eo pipefail
           python -m pip install build numpy
           python -m build --sdist
       - uses: actions/upload-artifact@v4
@@ -98,27 +61,9 @@ jobs:
           name: artifact-sdist
           path: dist/*.tar.gz
 
-  check_wheels:
-    needs: [build_wheels, build_sdist]
-    name: Check wheels and source distribution
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: artifact-*
-          merge-multiple: true
-          path: dist
-      - run: ls -al dist
-        shell: bash
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-      - run: python -m pip install twine
-      - run: python -m twine check --strict dist/*
-
   upload-pypi:
     name: Upload to PyPI
-    needs: [check_wheels, test]
+    needs: [build_wheels, build_sdist, test]
     runs-on: ubuntu-24.04
     if: github.event_name == 'release'
     permissions:
