@@ -1,8 +1,8 @@
-![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fcbrnr%2Fsleepecg%2Frefs%2Fheads%2Fmain%2Fpyproject.toml&logo=python&logoColor=white)
+![Python](https://img.shields.io/pypi/pyversions/sleepecg.svg?logo=python&logoColor=white)
 [![PyPI](https://img.shields.io/pypi/v/sleepecg)](https://pypi.org/project/sleepecg/)
-[![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/en/stable/index.html)
+[![Docs](https://readthedocs.org/projects/sleepecg/badge/?version=latest)](https://sleepecg.readthedocs.io/)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.05411/status.svg)](https://doi.org/10.21105/joss.05411)
-[![License](https://img.shields.io/github/license/cbrnr/sleepecg)](LICENSE)
+[![License](https://img.shields.io/github/license/cbrnr/sleepecg?color=68%2C192%2C58)](LICENSE)
 
 ## SleepECG
 
