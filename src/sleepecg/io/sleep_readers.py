@@ -141,16 +141,13 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
 
     root = ElementTree.parse(xml_filepath).getroot()
 
-    epoch_length = root.findtext("EpochLength")
-    if epoch_length is None:
+    if (epoch_length_str := root.findtext("EpochLength")) is None:
         raise RuntimeError(f"EpochLength not found in {xml_filepath}.")
-    epoch_length = int(epoch_length)
+    epoch_length = int(epoch_length_str)
 
-    scored_event = root.find(".//ScoredEvent")
-    if scored_event is not None:
-        recording_duration = float(scored_event.findtext(".//Duration", ""))
-    else:
+    if (scored_event := root.find(".//ScoredEvent")) is None:
         raise RuntimeError(f"Recording duration not found in {xml_filepath}.")
+    recording_duration = float(scored_event.findtext(".//Duration", ""))
 
     start_time = None
     annot_stages = []

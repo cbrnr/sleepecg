@@ -64,6 +64,8 @@ dev = [
     "pytest-cov >= 6.0.0",
     "ruff >= 0.4.0",
     "setuptools >= 72.1.0",
+    "types-requests",
+    "types-pyyaml",
 ]
 
 [project.urls]
