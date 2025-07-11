@@ -286,9 +286,8 @@ def read_gudb(
                         pass  # file not available
                     else:
                         _download_file(ecg_file_url, target_filepath, checksum, "md5")
-            ecg_data = {
-                lead: signal
-                for lead, signal in zip(
+            ecg_data = dict(
+                zip(
                     ("chest", "II", "III"),
                     np.loadtxt(
                         db_dir / experiment_subdir / "ECG.tsv",
@@ -297,7 +296,7 @@ def read_gudb(
                         unpack=True,
                     ),
                 )
-            }
+            )
             annotations_chest_file = db_dir / experiment_subdir / "annotation_cs.tsv"
             if annotations_chest_file.is_file():
                 yield ECGRecord(
