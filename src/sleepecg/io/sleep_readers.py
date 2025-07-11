@@ -444,13 +444,10 @@ def read_mesa(
                     print(f"Skipping {record_id} due to missing activity data.")
                     continue
 
-                activity_data = []
-
                 with open(activity_filepath) as csv_file:
                     reader = csv.reader(csv_file, delimiter=",")
                     header = next(reader)
-                    for row in reader:
-                        activity_data.append(dict(zip(header, row)))
+                    activity_data = [dict(zip(header, row)) for row in reader]
 
                 recording_start_time = parsed_xml.recording_start_time
                 recording_duration = parsed_xml.recording_duration
