@@ -86,6 +86,9 @@ archs = "native"
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 
+[tool.cibuildwheel.macos]
+archs = ["arm64", "x86_64"]
+
 [tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = [
