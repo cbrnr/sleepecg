@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "sleepecg"
 version = "0.6.0.dev0"
 description = "A package for sleep stage classification using ECG data"
-license = {text = "BSD 3-Clause"}
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 authors = [
     {name = "Florian Hofer", email = "hofaflo@gmail.com"},
     {name = "Clemens Brunner", email = "clemens.brunner@gmail.com"},
