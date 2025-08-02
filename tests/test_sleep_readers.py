@@ -20,8 +20,9 @@ from sleepecg.io.sleep_readers import Gender
 def _dummy_nsrr_overlap(filename: str, mesa_ids: list[int]):
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,starttime_psg\n")
-        for i in range(len(mesa_ids)):
-            csv.write(f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n")
+        csv.writelines(
+            f"{mesa_ids[i][-1]},1,20:30:00,20:29:59\n" for i in range(len(mesa_ids))
+        )
 
 
 def _dummy_nsrr_actigraphy(filename: str, mesa_id: str, hours: float):
@@ -36,8 +37,10 @@ def _dummy_nsrr_actigraphy(filename: str, mesa_id: str, hours: float):
 
     with open(filename, "w") as csv:
         csv.write("mesaid,line,linetime,activity\n")
-        for i in range(number_activity_counts):
-            csv.write(f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n")
+        csv.writelines(
+            f"{mesa_id[-1]},{1 + i},{linetimes[i]},10\n"
+            for i in range(number_activity_counts)
+        )
 
 
 def _dummy_nsrr_actigraphy_cached(filename: str, hours: float):
