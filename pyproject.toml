@@ -118,7 +118,7 @@ line-length = 92
 exclude = ["setup.py"]
 
 [tool.ruff.lint]
-select = ["C4", "D", "E", "F", "I", "PERF", "W", "UP"]
+select = ["C4", "D", "E", "F", "FURB", "I", "PERF", "W", "UP"]
 ignore = ["D105"]
 
 [tool.ruff.lint.per-file-ignores]
