@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Run cibuildwheel
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v3.3.0
       - uses: actions/upload-artifact@v5
         with:
           name: artifact-${{ matrix.os }}
