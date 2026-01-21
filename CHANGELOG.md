@@ -1,6 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ## Added
 - Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
+- Added support for Scikit-Learn and PyTorch models ([#263](https://github.com/cbrnr/sleepecg/pull/263) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 
 ### Removed
 - Remove support for macOS on Intel architecture (x86_64) ([#301](https://github.com/cbrnr/sleepecg/pull/301) by [Clemens Brunner](https://github.com/cbrnr))
