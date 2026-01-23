@@ -1,13 +1,13 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.2
+    rev: v0.14.14
     hooks:
       - id: ruff-check
         args: [ --fix ]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.16.1
+    rev: v1.19.1
     hooks:
     - id: mypy
       exclude: ^tests|^examples
@@ -16,3 +16,10 @@ repos:
       - types-PyYAML
       - types-requests
       - types-urllib3
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: uvx ty check . --ignore unresolved-import
+        language: python
