@@ -78,6 +78,46 @@ Group identifier: `metadata`
 
 Group identifier: `actigraphy`
 
-| Feature           | Description                                                                                            |
-|-------------------|--------------------------------------------------------------------------------------------------------|
-| `activity_counts` | Philips Actiwatch proprietary metric to quantify amount of patient movement measured via accelerometry |
+| Feature           | Description                                      |
+|-------------------|--------------------------------------------------|
+| `activity_counts` | Activity-count value for each feature-extraction epoch |
+
+[`read_mesa()`][sleepecg.read_mesa] can load activity counts calculated by Philips
+Actiware. For other datasets, externally calculated counts can be passed directly to
+[`SleepRecord`][sleepecg.SleepRecord]:
+
+```python
+import numpy as np
+from agcounts.extract import get_counts
+
+from sleepecg import SleepRecord, extract_features
+
+# raw_xyz has shape (n_samples, 3)
+axis_counts = get_counts(raw_xyz, freq=sampling_frequency, epoch=30)
+activity_counts = np.linalg.norm(axis_counts, axis=1)
+
+record = SleepRecord(
+    sleep_stages=sleep_stages,
+    sleep_stage_duration=30,
+    activity_counts=activity_counts,
+)
+features, stages, feature_ids = extract_features(
+    [record],
+    feature_selection=["actigraphy"],
+)
+```
+
+[`agcounts`](https://github.com/actigraph/agcounts) is an external package and is not
+installed with SleepECG.
+
+!!! warning
+
+    Activity counts are specific to the device and calculation method. For example,
+    ActiGraph counts calculated by `agcounts` are not equivalent to the proprietary Philips
+    Actiwatch values provided with MESA. Use the same method for training and prediction,
+    and make sure that the count epoch matches the `sleep_stage_duration` passed to
+    `extract_features()`.
+
+The classifiers bundled with SleepECG do not use actigraphy. Using activity counts for
+staging therefore requires a classifier trained with `activity_counts` in its feature
+selection.
