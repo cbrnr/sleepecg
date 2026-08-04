@@ -63,7 +63,6 @@ dev = [
     "pytest >= 6.2.0",
     "pytest-cov >= 6.0.0",
     "ruff >= 0.8.0",
-    "setuptools >= 72.1.0",
     "types-requests",
     "types-pyyaml",
 ]
