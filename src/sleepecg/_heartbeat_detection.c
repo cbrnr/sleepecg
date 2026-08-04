@@ -248,6 +248,7 @@ static PyObject *_thresholding(PyObject *self,
     // initialize, so searchback before any peak has been detected works
     int peak_index = -REFRACTORY_SAMPLES + 1;
     int previous_peak_index = -REFRACTORY_SAMPLES + 1;
+    int searchback_start_index = previous_peak_index + REFRACTORY_SAMPLES;
 
     int index = 1;
     while (index < signal_len - 1)
@@ -298,7 +299,7 @@ static PyObject *_thresholding(PyObject *self,
                 char found_a_candidate = 0;
 
                 int searchback_divisor = 1 << i; // 2^i
-                int best_searchback_index = previous_peak_index + REFRACTORY_SAMPLES;
+                int best_searchback_index = searchback_start_index;
                 double best_candidate_amplitude = -1;
                 int searchback_index = best_searchback_index;
 
@@ -342,6 +343,14 @@ static PyObject *_thresholding(PyObject *self,
                     do_searchback = 0;
                     break;
                 }
+            }
+
+            // The thresholds do not change while searchback is active.
+            // If this pass found no candidate, the next pass only needs
+            // to inspect samples added since now.
+            if (!signal_peak_found)
+            {
+                searchback_start_index = index;
             }
         }
         else if (filtered_ecg[index] > filtered_ecg[index + 1])
@@ -510,6 +519,7 @@ static PyObject *_thresholding(PyObject *self,
 
             // previous peak index is required to calculate the RR interval
             previous_peak_index = peak_index;
+            searchback_start_index = peak_index + REFRACTORY_SAMPLES;
 
             // no peak can happen during the refractory period, so skip it
             index = peak_index + REFRACTORY_SAMPLES;

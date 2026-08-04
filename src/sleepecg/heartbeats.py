@@ -394,6 +394,7 @@ def _thresholding_py(
     # initialize, so searchback before any peak has been detected works
     peak_index = -REFRACTORY_SAMPLES + 1
     previous_peak_index = -REFRACTORY_SAMPLES + 1
+    searchback_start_index = previous_peak_index + REFRACTORY_SAMPLES
 
     index = 1
     while index < signal_len - 1:
@@ -442,7 +443,7 @@ def _thresholding_py(
                 found_a_candidate = False
 
                 searchback_divisor = 1 << i  # 2^i
-                best_searchback_index = previous_peak_index + REFRACTORY_SAMPLES
+                best_searchback_index = searchback_start_index
                 best_candidate_amplitude = -1
                 searchback_index = best_searchback_index
 
@@ -488,6 +489,11 @@ def _thresholding_py(
                     # to avoid endless loops
                     do_searchback = False
                     break
+
+            # The thresholds do not change while searchback is active. If this pass found
+            # no candidate, the next pass only needs to inspect samples added since now.
+            if not signal_peak_found:
+                searchback_start_index = index
 
         elif filtered_ecg[index] > filtered_ecg[index + 1]:
             if filtered_ecg[index] > filtered_ecg[index - 1]:
@@ -615,6 +621,7 @@ def _thresholding_py(
 
             # previous peak index is required to calculate the RR interval
             previous_peak_index = peak_index
+            searchback_start_index = peak_index + REFRACTORY_SAMPLES
 
             # no peak can happen during the refractory period, so skip it
             index = peak_index + REFRACTORY_SAMPLES
