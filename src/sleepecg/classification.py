@@ -285,10 +285,10 @@ def load_classifier(
     elif classifiers_dir is None:
         classifiers_dir = get_config_value("classifiers_dir")
 
-    soure_file = Path(classifiers_dir).expanduser() / f"{name}.zip"
+    source_file = Path(classifiers_dir).expanduser() / f"{name}.zip"
 
     with TemporaryDirectory() as tmpdir:
-        shutil.unpack_archive(soure_file, tmpdir)
+        shutil.unpack_archive(source_file, tmpdir)
 
         with open(f"{tmpdir}/info.yml") as infofile:
             classifier_info = yaml.safe_load(infofile)
@@ -315,7 +315,7 @@ def load_classifier(
 
     return SleepClassifier(
         model=classifier,
-        source_file=soure_file,
+        source_file=source_file,
         **classifier_info,
     )
 

@@ -35,7 +35,7 @@ Make sure it contains the following elements:
 
 ## Sleep stage labels
 Records read with one of SleepECG's reader functions contain sleep stage annotations according to the [AASM guidelines](https://www.sleep.pitt.edu/wp-content/uploads/2020/03/The-AASM-Manual-for-Scoring-of-Sleep-and-Associated-Events-2007-.pdf), represented by integers as defined in [`SleepStage`][sleepecg.SleepStage].
-To facilitate working with classifiers which do not discrimate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
+To facilitate working with classifiers which do not discriminate between all five AASM stages, SleepECG supports merging of sleep stages into groups:
 
 - LIGHT: N1 + N2
 - NREM: N1 + N2 + N3
