@@ -14,6 +14,7 @@ from sleepecg.feature_extraction import (
     _hrv_frequencydomain_features,
     _hrv_timedomain_features,
     _metadata_features,
+    extract_features,
 )
 from sleepecg.io.sleep_readers import SleepRecord, SubjectData
 
@@ -81,3 +82,44 @@ def test_metadata_features(metadata, feature_vec):
     X = _metadata_features(rec, num_stages)
     assert X.shape == (num_stages, 4)
     assert np.allclose(X, np.array(feature_vec), equal_nan=True)
+
+
+def test_actigraphy_features():
+    """Extract externally calculated activity counts."""
+    activity_counts = np.array([10.0, 20.0, 30.0, 40.0])
+    record = SleepRecord(
+        id="test",
+        sleep_stages=np.array([5, 2, 2, 4]),
+        sleep_stage_duration=30,
+        activity_counts=activity_counts,
+    )
+
+    features, stages, feature_ids = extract_features(
+        [record], feature_selection=["actigraphy"]
+    )
+
+    assert feature_ids == ["activity_counts"]
+    assert features[0].shape == (4, 1)
+    assert np.array_equal(features[0][:, 0], activity_counts)
+    assert np.array_equal(stages[0], record.sleep_stages)
+
+
+@pytest.mark.parametrize(
+    ("activity_counts", "message"),
+    [
+        (None, "without activity_counts"),
+        (np.ones((4, 1)), "must be a one-dimensional array"),
+        (np.ones(3), "contains 3 values, but 4 are required"),
+    ],
+)
+def test_actigraphy_features_invalid(activity_counts, message):
+    """Reject missing or misaligned activity counts."""
+    record = SleepRecord(
+        id="test",
+        sleep_stages=np.array([5, 2, 2, 4]),
+        sleep_stage_duration=30,
+        activity_counts=activity_counts,
+    )
+
+    with pytest.raises(ValueError, match=message):
+        extract_features([record], feature_selection=["actigraphy"])

@@ -88,7 +88,9 @@ class SleepRecord:
     subject_data : SubjectData, optional
         Dataclass containing subject data (such as gender or age), by default `None`.
     activity_counts: np.ndarray, optional
-        Activity counts according to Actiwatch actigraphy, by default `None`.
+        One activity-count value per feature-extraction epoch, by default `None`. Activity
+        counts depend on the device and calculation method, so values produced by
+        different methods are not necessarily comparable.
     """
 
     sleep_stages: np.ndarray | None = None

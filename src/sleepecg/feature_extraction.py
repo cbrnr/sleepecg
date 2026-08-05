@@ -659,8 +659,21 @@ def _extract_features_single(
         elif feature_group == "metadata":
             X.append(_metadata_features(record, num_stages))
         elif feature_group == "actigraphy":
-            if record.activity_counts is not None:
-                X.append(record.activity_counts.reshape(-1, 1))
+            if record.activity_counts is None:
+                raise ValueError(
+                    f"Cannot extract actigraphy features for {record.id} without "
+                    "activity_counts."
+                )
+            if record.activity_counts.ndim != 1:
+                raise ValueError(
+                    f"activity_counts for {record.id} must be a one-dimensional array."
+                )
+            if len(record.activity_counts) != num_stages:
+                raise ValueError(
+                    f"activity_counts for {record.id} contains "
+                    f"{len(record.activity_counts)} values, but {num_stages} are required."
+                )
+            X.append(record.activity_counts.reshape(-1, 1))
     features = np.hstack(X)[:, col_indices]
 
     if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:
