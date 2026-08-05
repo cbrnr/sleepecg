@@ -31,7 +31,7 @@ jobs:
     name: Build wheel (${{ matrix.os }})
     strategy:
       matrix:
-        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15-intel, macos-15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
