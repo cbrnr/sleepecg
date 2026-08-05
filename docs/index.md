@@ -9,22 +9,22 @@ SleepECG provides tools for sleep stage classification when [EEG](https://en.wik
 
 ## Installation
 
-SleepECG is available on PyPI and can be installed with [pip](https://pip.pypa.io/en/stable/):
+SleepECG is available on PyPI and can be installed with [uv](https://docs.astral.sh/uv/):
 
 ```
-pip install sleepecg
+uv pip install sleepecg
 ```
 
 SleepECG with all optional dependencies can be installed with the following command:
 
 ```
-pip install "sleepecg[full]"
+uv pip install "sleepecg[full]"
 ```
 
 If you want the latest development version, use the following command:
 
 ```
-pip install git+https://github.com/cbrnr/sleepecg
+uv pip install git+https://github.com/cbrnr/sleepecg
 ```
 
 
