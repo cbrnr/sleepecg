@@ -109,7 +109,7 @@ markers = ["c_extension"]
 filterwarnings = ["error"]
 
 [tool.ruff.lint]
-select = ["C4", "D", "E", "F", "FURB", "I", "PERF", "W", "UP"]
+extend-select = ["C4", "D", "FURB", "I", "PERF", "W", "UP"]
 ignore = ["D105"]
 exclude = ["setup.py"]
 
