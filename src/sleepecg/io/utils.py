@@ -95,13 +95,12 @@ def _download_file(
     verbose : bool, optional
         If `True`, output information during download. By default `False`.
     """
-    if target_filepath.is_file():
-        if checksum is not None and checksum_type is not None:
-            calculated_checksum = _calculate_checksum(target_filepath, checksum_type)
-            if calculated_checksum == checksum:
-                if verbose:
-                    print(f"Skipping {url}, already downloaded.")
-                return
+    if target_filepath.is_file() and checksum is not None and checksum_type is not None:
+        calculated_checksum = _calculate_checksum(target_filepath, checksum_type)
+        if calculated_checksum == checksum:
+            if verbose:
+                print(f"Skipping {url}, already downloaded.")
+            return
 
     target_filepath.parent.mkdir(parents=True, exist_ok=True)
 

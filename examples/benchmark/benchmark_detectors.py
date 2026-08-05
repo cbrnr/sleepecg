@@ -20,7 +20,7 @@ if len(sys.argv) == 1:
     benchmark = "runtime"
 elif len(sys.argv) > 2:
     print("Usage: python benchmark_detectors.py [<benchmark>]")
-    exit()
+    sys.exit()
 else:
     benchmark = sys.argv[1]
 

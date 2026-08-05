@@ -20,8 +20,6 @@ from sleepecg.io.ecg_readers import ECGRecord
 class HeartpyWarning(Warning):
     """Warning for all Heartpy-related warnings."""
 
-    pass
-
 
 def reader_dispatch(db_slug: str, data_dir: str | Path) -> Iterator[ECGRecord]:
     """

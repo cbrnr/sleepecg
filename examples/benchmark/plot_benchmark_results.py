@@ -13,7 +13,7 @@ import plotly.express as px
 
 if len(sys.argv) != 2:
     print("Usage: python plot_benchmark_results.py <results>.csv")
-    exit()
+    sys.exit()
 
 results_filepath = Path(sys.argv[1])
 benchmark, db_slug, *_ = results_filepath.stem.split("__")

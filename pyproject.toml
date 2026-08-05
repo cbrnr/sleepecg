@@ -110,12 +110,12 @@ filterwarnings = ["error"]
 
 [tool.ruff.lint]
 extend-select = ["C4", "D", "FURB", "I", "PERF", "W", "UP"]
-ignore = ["D105"]
-exclude = ["setup.py"]
+ignore = ["D105", "DTZ"]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "F403"]
 "**/examples/*.py" = ["D100"]
+"setup.py" = ["D10"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
