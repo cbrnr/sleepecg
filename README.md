@@ -23,19 +23,19 @@ Documentation for SleepECG is available on [Read the Docs](https://sleepecg.read
 SleepECG is available on PyPI and can be installed with [uv](https://docs.astral.sh/uv/):
 
 ```
-uv pip install sleepecg
+uv install sleepecg
 ```
 
 SleepECG with all optional dependencies can be installed with the following command:
 
 ```
-uv pip install "sleepecg[full]"
+uv install "sleepecg[full]"
 ```
 
 If you want the latest development version, use the following command:
 
 ```
-uv pip install git+https://github.com/cbrnr/sleepecg
+uv install git+https://github.com/cbrnr/sleepecg
 ```
 
 

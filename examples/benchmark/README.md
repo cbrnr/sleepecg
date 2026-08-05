@@ -7,7 +7,7 @@ This example reproduces the benchmarks shown in the [docs](https://sleepecg.read
 To run the benchmark, create a virtual environment and install the requirements with:
 
 ```
-uv pip install -r requirements-benchmark.txt
+uv install -r requirements-benchmark.txt
 ```
 
 Then execute
