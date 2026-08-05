@@ -30,7 +30,9 @@ with open("config.yml") as config_file:
 try:
     cfg = cfg[benchmark]
 except KeyError:
-    raise ValueError(f"Invalid benchmark: {benchmark!r}, available: {list(cfg)}.") from None
+    raise ValueError(
+        f"Invalid benchmark: {benchmark!r}, available: {list(cfg)}."
+    ) from None
 
 if cfg.get("suppress_warnings", False):
     warnings.filterwarnings("ignore")

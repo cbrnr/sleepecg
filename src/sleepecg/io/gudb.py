@@ -398,7 +398,11 @@ def _generate_gudb_md5(data_dir: str | Path | None = None) -> dict[str, str]:
     for subject_id in range(25):
         for experiment in EXPERIMENTS:
             experiment_subdir = f"subject_{subject_id:02}/{experiment}"
-            for tsv_filename in ("ECG.tsv", "annotation_cs.tsv", "annotation_cables.tsv"):
+            for tsv_filename in (
+                "ECG.tsv",
+                "annotation_cs.tsv",
+                "annotation_cables.tsv",
+            ):
                 target_filepath = db_dir / experiment_subdir / tsv_filename
                 try:
                     checksum = _calculate_checksum(target_filepath, "md5")

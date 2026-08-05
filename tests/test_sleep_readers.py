@@ -108,7 +108,10 @@ def _dummy_nsrr_xml(filename: str, hours: float, random_state: int):
 
 
 def _create_dummy_mesa(
-    data_dir: str, durations: list[float], random_state: int = 42, actigraphy: bool = False
+    data_dir: str,
+    durations: list[float],
+    random_state: int = 42,
+    actigraphy: bool = False,
 ):
     DB_SLUG = "mesa"
     ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
@@ -148,7 +151,9 @@ def _create_dummy_mesa(
             record_ids.append(record_id)
 
     if actigraphy:
-        _dummy_nsrr_overlap(f"{overlap_dir}/mesa-actigraphy-psg-overlap.csv", record_ids)
+        _dummy_nsrr_overlap(
+            f"{overlap_dir}/mesa-actigraphy-psg-overlap.csv", record_ids
+        )
 
     with open(csv_dir / "mesa-sleep-dataset-0.0.0.csv", "w") as csv:
         csv.write("mesaid,examnumber,race1c,gender1,cucmcn1c,sleepage5c\n")
@@ -176,7 +181,9 @@ def _create_dummy_shhs(data_dir: str, durations: list[float], random_state: int 
         for visit in ("shhs1", "shhs2"):
             record_id = f"{visit}/{visit}-20{i:04}"
             _dummy_nsrr_edf(f"{edf_dir}/{record_id}.edf", hours, ecg_channel="ECG")
-            _dummy_nsrr_xml(f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state)
+            _dummy_nsrr_xml(
+                f"{annotations_dir}/{record_id}-nsrr.xml", hours, random_state
+            )
 
     with open(csv_dir / "shhs1-dataset-0.0.0.csv", "w") as csv:
         csv.write("nsrrid,age_s1,gender,weight\n")

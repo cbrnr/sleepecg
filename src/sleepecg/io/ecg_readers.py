@@ -78,7 +78,9 @@ class ECGRecord:
         ax : matplotlib.axes.Axes
             The axes in the figure.
         """
-        return plot_ecg(self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs)
+        return plot_ecg(
+            self.ecg, self.fs, title=self.id, beats=self.annotation, **kwargs
+        )
 
 
 def export_ecg_record(record: ECGRecord, filename: str | Path) -> None:
@@ -306,7 +308,9 @@ def read_gudb(
                     lead="chest",
                     id=f"{subject_id:02}_{experiment}",
                 )
-            annotations_chest_file = db_dir / experiment_subdir / "annotation_cables.tsv"
+            annotations_chest_file = (
+                db_dir / experiment_subdir / "annotation_cables.tsv"
+            )
             if annotations_chest_file.is_file():
                 annotations = np.loadtxt(annotations_chest_file, dtype=np.int32)
                 for lead in ("II", "III"):

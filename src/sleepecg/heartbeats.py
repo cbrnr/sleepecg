@@ -139,7 +139,9 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
         integrated_ecg = _squared_moving_integration(derivative, moving_window_width)
         beat_mask = _thresholding(filtered_ecg, integrated_ecg, fs)
     elif backend == "numba":
-        integrated_ecg = _squared_moving_integration_numba(derivative, moving_window_width)
+        integrated_ecg = _squared_moving_integration_numba(
+            derivative, moving_window_width
+        )
         beat_mask = _thresholding_numba(filtered_ecg, integrated_ecg, fs)
     elif backend == "python":
         integrated_ecg = np.convolve(
@@ -639,5 +641,7 @@ def _thresholding_py(
 
 
 if "numba" in _available_backends:
-    _squared_moving_integration_numba = jit(_squared_moving_integration_py, nopython=True)
+    _squared_moving_integration_numba = jit(
+        _squared_moving_integration_py, nopython=True
+    )
     _thresholding_numba = jit(_thresholding_py, nopython=True)

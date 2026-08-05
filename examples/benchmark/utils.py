@@ -106,9 +106,9 @@ def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
         import neurokit2
 
         clean_ecg = neurokit2.ecg.ecg_clean(ecg, int(fs), method="kalidas2017")
-        detection = neurokit2.ecg.ecg_findpeaks(clean_ecg, int(fs), method="kalidas2017")[
-            "ECG_R_Peaks"
-        ]
+        detection = neurokit2.ecg.ecg_findpeaks(
+            clean_ecg, int(fs), method="kalidas2017"
+        )["ECG_R_Peaks"]
     elif detector == "sleepecg-c":
         detection = sleepecg.detect_heartbeats(ecg, fs, backend="c")
     elif detector == "sleepecg-numba":

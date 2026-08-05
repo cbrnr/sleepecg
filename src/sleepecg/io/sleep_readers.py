@@ -20,7 +20,12 @@ import numpy as np
 
 from sleepecg.config import get_config_value
 from sleepecg.heartbeats import detect_heartbeats
-from sleepecg.io.nsrr import _download_nsrr_file, _get_nsrr_url, _list_nsrr, download_nsrr
+from sleepecg.io.nsrr import (
+    _download_nsrr_file,
+    _get_nsrr_url,
+    _list_nsrr,
+    download_nsrr,
+)
 from sleepecg.io.physionet import _list_physionet, download_physionet
 
 
@@ -169,7 +174,10 @@ def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
         raise RuntimeError(f"'Recording Start Time' not found in {xml_filepath}.")
 
     return _ParseNsrrXmlResult(
-        np.array(annot_stages, dtype=np.int8), epoch_length, start_time, recording_duration
+        np.array(annot_stages, dtype=np.int8),
+        epoch_length,
+        start_time,
+        recording_duration,
     )
 
 
@@ -323,7 +331,9 @@ def read_mesa(
             )
 
     else:
-        subject_data_filepath = next((db_dir / "datasets").glob("mesa-sleep-dataset-*.csv"))
+        subject_data_filepath = next(
+            (db_dir / "datasets").glob("mesa-sleep-dataset-*.csv")
+        )
         xml_paths = annotations_dir.glob(f"mesa-sleep-{records_pattern}-nsrr.xml")
         requested_records = sorted([file.stem[:-5] for file in xml_paths])
         if activity_source == "actigraphy":
@@ -421,10 +431,14 @@ def read_mesa(
 
         activity_counts = None
         if activity_source is not None:
-            activity_counts_file = activity_counts_dir / f"{record_id}-activity-counts.npy"
+            activity_counts_file = (
+                activity_counts_dir / f"{record_id}-activity-counts.npy"
+            )
             if activity_source == "cached":
                 if not activity_counts_file.is_file():
-                    print(f"Skipping {record_id} due to missing cached activity counts.")
+                    print(
+                        f"Skipping {record_id} due to missing cached activity counts."
+                    )
                     continue
                 activity_counts = np.load(activity_counts_file)
             else:
@@ -467,7 +481,9 @@ def read_mesa(
                 recording_end_time = recording_end_time + datetime.timedelta(
                     seconds=rounding_seconds
                 )
-                recording_end_time_str = recording_end_time.strftime("%H:%M:%S").lstrip("0")
+                recording_end_time_str = recording_end_time.strftime("%H:%M:%S").lstrip(
+                    "0"
+                )
 
                 start_line = overlap_data[mesaid] + 1
 
@@ -587,7 +603,9 @@ def read_slpdb(
 
         # Some 30 second windows don't have a sleep stage annotation, so the annotation
         # array is initialized with `SleepStage.UNDEFINED` for every 30 second window.
-        for sample_time, annotation in zip(annot_st.sample[::-1], annot_st.aux_note[::-1]):
+        for sample_time, annotation in zip(
+            annot_st.sample[::-1], annot_st.aux_note[::-1]
+        ):
             if annotation[0] in STAGE_MAPPING:
                 number_of_sleep_stages = sample_time // (30 * fs) + 1
                 break
@@ -736,8 +754,12 @@ def read_shhs(
     subject_data = {}
 
     if any(r.startswith("shhs1") for r in requested_records):
-        subject_data_file_shhs1 = next((db_dir / "datasets").glob("shhs1-dataset-*.csv"))
-        with open(subject_data_file_shhs1, newline="", encoding="windows-1252") as csvfile:
+        subject_data_file_shhs1 = next(
+            (db_dir / "datasets").glob("shhs1-dataset-*.csv")
+        )
+        with open(
+            subject_data_file_shhs1, newline="", encoding="windows-1252"
+        ) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs1-{row['nsrrid']}"
@@ -747,8 +769,12 @@ def read_shhs(
                     weight=float(row["weight"]) if row["weight"] else None,
                 )
     if any(r.startswith("shhs2") for r in requested_records):
-        subject_data_file_shhs2 = next((db_dir / "datasets").glob("shhs2-dataset-*.csv"))
-        with open(subject_data_file_shhs2, newline="", encoding="windows-1252") as csvfile:
+        subject_data_file_shhs2 = next(
+            (db_dir / "datasets").glob("shhs2-dataset-*.csv")
+        )
+        with open(
+            subject_data_file_shhs2, newline="", encoding="windows-1252"
+        ) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 record_id = f"shhs2-{row['nsrrid']}"

@@ -39,7 +39,9 @@ if benchmark == "runtime":
         .apply(lambda x: 1 / x)  # reverse order
         .to_dict()
     )
-    results = results.sort_values(by=["detector", "signal_len"], key=lambda x: x.map(order))
+    results = results.sort_values(
+        by=["detector", "signal_len"], key=lambda x: x.map(order)
+    )
 
     # each detector should have the same color in each benchmark
     colors = [px.colors.qualitative.Plotly[i] for i in [0, 1, 7, 5, 8, 4, 2, 3, 9, 6]]
@@ -72,7 +74,9 @@ elif benchmark == "metrics":
     results["f1"] = 2 / (results["recall"] ** -1 + results["precision"] ** -1)
     fig = (
         px.box(
-            results.melt(id_vars=["detector"], value_vars=["precision", "recall", "f1"]),
+            results.melt(
+                id_vars=["detector"], value_vars=["precision", "recall", "f1"]
+            ),
             color="detector",
             y="value",
             labels={"value": ""},
