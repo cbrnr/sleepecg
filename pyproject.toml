@@ -58,8 +58,8 @@ dev = [
     {include-group = "docs"},
 ]
 lint = [
-    "mypy >= 2.3.0",
     "ruff >= 0.16.1",
+    "ty >= 0.0.67",
     "types-pyyaml",
     "types-requests",
     "types-urllib3",
@@ -100,14 +100,6 @@ repair-wheel-command = [
   "pipx run abi3audit --strict --report {wheel}",
 ]
 
-[tool.mypy]
-python_version = "3.10"
-ignore_missing_imports = true
-disallow_untyped_defs = true
-warn_unreachable = true
-strict_equality = true
-pretty = true
-
 [tool.pytest.ini_options]
 markers = ["c_extension"]
 filterwarnings = ["error"]
@@ -123,3 +115,19 @@ ignore = ["D105", "DTZ"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.ty.src]
+include = ["src"]
+
+[tool.ty.analysis]
+allowed-unresolved-imports = [
+    "edfio",
+    "joblib",
+    "matplotlib",
+    "matplotlib.*",
+    "numba",
+    "tensorflow",
+    "tensorflow.keras.**",
+    "wfdb",
+]
+strict-equality-semantics = true
