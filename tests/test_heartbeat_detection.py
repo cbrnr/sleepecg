@@ -76,6 +76,47 @@ def test_flat_data():
         detect_heartbeats([], fs)
 
 
+def test_unsuccessful_searchback_scans_incrementally():
+    """Do not rescan an unusable interval after a failed searchback."""
+    from sleepecg.heartbeats import _thresholding_py
+
+    class CountingArray(np.ndarray):
+        def __new__(cls, values, counter):
+            array = np.asarray(values).view(cls)
+            array.counter = counter
+            return array
+
+        def __array_finalize__(self, source):
+            self.counter = getattr(source, "counter", [0])
+
+        def __getitem__(self, key):
+            if isinstance(key, int | np.integer):
+                self.counter[0] += 1
+            return super().__getitem__(key)
+
+    reads = [0]
+    unusable = CountingArray(-np.ones(500), reads)
+    beat_mask = _thresholding_py(unusable, unusable, fs=100.0)
+
+    assert not beat_mask.any()
+    assert reads[0] < 50_000
+
+
+@pytest.mark.parametrize("backend", ["c", "numba", "python"])
+def test_large_initial_artifact_does_not_stall(backend):
+    """Finish detection when an initial artifact makes later peaks undetectable."""
+    if backend == "numba":
+        pytest.importorskip("numba")
+
+    rng = np.random.default_rng(42)
+    unusable_ecg = rng.normal(scale=1e-6, size=1_000)
+    unusable_ecg[50] = 1e6
+
+    beats = detect_heartbeats(unusable_ecg, fs=100.0, backend=backend)
+
+    np.testing.assert_array_equal(beats, [50])
+
+
 def test_squared_moving_integration_args():
     """Test squared moving window integration argument parsing."""
     from sleepecg._heartbeat_detection import _squared_moving_integration

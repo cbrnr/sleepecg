@@ -5,6 +5,9 @@
 ### Removed
 - Remove support for macOS on Intel architecture (x86_64) ([#301](https://github.com/cbrnr/sleepecg/pull/301) by [Clemens Brunner](https://github.com/cbrnr))
 
+### Fixed
+- Avoid repeated searchback scans when heartbeat detection encounters long unusable ECG intervals ([#319](https://github.com/cbrnr/sleepecg/pull/319) by [Daria Agafonova](https://github.com/viranovskaya))
+
 ## [0.5.9] - 2025-02-01
 ### Added
 - Add support to store NSRR token in environment variable or user config ([#243](https://github.com/cbrnr/sleepecg/pull/243) by [Simon Pusterhofer](https://github.com/simon-p-2000))
