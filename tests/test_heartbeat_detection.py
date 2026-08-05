@@ -90,7 +90,7 @@ def test_unsuccessful_searchback_scans_incrementally():
             self.counter = getattr(source, "counter", [0])
 
         def __getitem__(self, key):
-            if isinstance(key, (int, np.integer)):
+            if isinstance(key, int | np.integer):
                 self.counter[0] += 1
             return super().__getitem__(key)
 
