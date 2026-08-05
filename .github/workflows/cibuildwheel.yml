@@ -36,6 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v9.0.0
       - name: Run cibuildwheel
         uses: pypa/cibuildwheel@v4.1.1
       - uses: actions/upload-artifact@v7
@@ -49,12 +50,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uvv9.0.0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Build sdist
         run: |
-          python -m uv pip install build numpy
+          uv pip install build numpy
           python -m build --sdist
       - uses: actions/upload-artifact@v7
         with:
