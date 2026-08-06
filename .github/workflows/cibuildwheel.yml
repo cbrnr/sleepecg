@@ -45,14 +45,16 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .cache/sleepecg-test-data
-          key: physionet-slpdb-slp01a-v1
+          key: physionet-slpdb-slp01a-mitdb-234-v1
       - name: Run cibuildwheel
         uses: pypa/cibuildwheel@v4.1.1
         env:
-          # SLEEPECG_TEST_DATA_DIR points test_read_slpdb at the cache above instead of
-          # re-downloading from PhysioNet on every run. On Linux, tests run inside a Docker
-          # container where the host filesystem is mounted read/write at /host, so writes
-          # there are visible to the cache step afterwards; macOS/Windows run natively.
+          # SLEEPECG_TEST_DATA_DIR points test_read_slpdb and
+          # test_detect_heartbeats at the cache above instead of re-downloading
+          # from PhysioNet on every run. On Linux, tests run inside a Docker
+          # container where the host filesystem is mounted read/write at /host,
+          # so writes there are visible to the cache step afterwards;
+          # macOS/Windows run natively.
           CIBW_ENVIRONMENT_PASS_LINUX: GITHUB_WORKSPACE
           CIBW_ENVIRONMENT_LINUX: SLEEPECG_TEST_DATA_DIR=/host$GITHUB_WORKSPACE/.cache/sleepecg-test-data
           CIBW_ENVIRONMENT_MACOS: SLEEPECG_TEST_DATA_DIR=$GITHUB_WORKSPACE/.cache/sleepecg-test-data

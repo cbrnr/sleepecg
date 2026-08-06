@@ -4,6 +4,8 @@
 
 """Tests for heartbeat detection and detector evaluation."""
 
+import os
+
 import numpy as np
 import pytest
 
@@ -27,7 +29,10 @@ def test_compare_heartbeats():
 def mitdb_234_MLII():
     """Fetch record for detector tests."""
     pytest.importorskip("wfdb")
-    return next(read_mitdb(records_pattern="234"))
+    # CI caches downloaded PhysioNet files across runs in this directory, see
+    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise.
+    data_dir = os.environ.get("SLEEPECG_TEST_DATA_DIR")
+    return next(read_mitdb(records_pattern="234", data_dir=data_dir))
 
 
 @pytest.mark.parametrize("backend", ["c", "numba", "python"])
