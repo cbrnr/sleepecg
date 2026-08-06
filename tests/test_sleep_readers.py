@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import datetime
+import os
 from pathlib import Path
 
 import numpy as np
@@ -271,7 +272,10 @@ def test_read_shhs(tmp_path):
 def test_read_slpdb():
     """Basic test for read_slpdb."""
     pytest.importorskip("wfdb")
-    rec = next(read_slpdb(records_pattern="slp01a"))
+    # CI caches downloaded PhysioNet files across runs in this directory, see
+    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise.
+    data_dir = os.environ.get("SLEEPECG_TEST_DATA_DIR")
+    rec = next(read_slpdb(records_pattern="slp01a", data_dir=data_dir))
     assert rec.sleep_stages.shape == (240,)
     assert rec.sleep_stage_duration == 30
     assert rec.id == "slp01a"

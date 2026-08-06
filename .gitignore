@@ -1,5 +1,6 @@
 *.pyd
 *.so
+.cache/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
