@@ -52,9 +52,13 @@ full = [  # complete package functionality
 
 [dependency-groups]
 dev = [
-    "mypy >= 2.3.0",
     "pytest >= 6.2.0",
     "pytest-cov >= 6.0.0",
+    {include-group = "lint"},
+    {include-group = "docs"},
+]
+lint = [
+    "mypy >= 2.3.0",
     "ruff >= 0.16.1",
     "types-pyyaml",
     "types-requests",
