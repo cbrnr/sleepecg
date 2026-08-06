@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import datetime
+import json
 from pathlib import Path
 
 import numpy as np
@@ -229,6 +230,68 @@ def test_read_capslpdb_rebases_heartbeats(monkeypatch, tmp_path):
         SleepStage.N2,
     ]
     np.testing.assert_array_equal(record.heartbeat_times, [0, 30, 60])
+    metadata = json.loads(
+        (db_dir / "preprocessed/heartbeats/record.json").read_text(encoding="utf-8")
+    )
+    assert metadata == {
+        "recording_start_time": "22:00:00",
+        "recording_duration": 120.0,
+    }
+
+
+def test_read_capslpdb_cached_does_not_download_or_read_edf(monkeypatch, tmp_path):
+    """Use cached heartbeat and recording data without accessing an EDF."""
+    db_dir = tmp_path / "capslpdb"
+    heartbeats_dir = db_dir / "preprocessed/heartbeats"
+    heartbeats_dir.mkdir(parents=True)
+    np.save(heartbeats_dir / "record.npy", np.array([0, 30, 90]))
+    (heartbeats_dir / "record.json").write_text(
+        json.dumps(
+            {
+                "recording_start_time": "22:00:00",
+                "recording_duration": 120.0,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def _download(**kwargs):
+        assert kwargs["extensions"] == [".txt"]
+        _write_annotation(
+            db_dir / "record.txt",
+            [
+                ("W", "22:00:30", "SLEEP-S0", "30"),
+                ("S1", "22:01:00", "SLEEP-S1", "30"),
+                ("S2", "22:01:30", "SLEEP-S2", "30"),
+            ],
+        )
+
+    monkeypatch.setattr(
+        "sleepecg.io.capslpdb._list_physionet",
+        lambda **kwargs: ["record.edf"],
+    )
+    monkeypatch.setattr("sleepecg.io.capslpdb.download_physionet", _download)
+    monkeypatch.setattr(
+        "edfio.read_edf",
+        lambda *args, **kwargs: pytest.fail("cached mode must not read an EDF"),
+    )
+
+    record = next(
+        read_capslpdb(
+            records_pattern="record",
+            heartbeats_source="cached",
+            data_dir=tmp_path,
+        )
+    )
+
+    assert not (db_dir / "record.edf").exists()
+    assert record.recording_start_time == datetime.time(22, 0, 30)
+    assert record.sleep_stages.tolist() == [
+        SleepStage.WAKE,
+        SleepStage.N1,
+        SleepStage.N2,
+    ]
+    np.testing.assert_array_equal(record.heartbeat_times, [0, 30])
 
 
 def test_read_capslpdb_skips_n16(monkeypatch, tmp_path):
@@ -257,11 +320,14 @@ def test_read_capslpdb_removes_downloaded_edf(monkeypatch, tmp_path):
 
     def _download(**kwargs):
         db_dir.mkdir(exist_ok=True)
-        _write_edf(db_dir / "record.edf")
-        _write_annotation(
-            db_dir / "record.txt",
-            [("W", "22:00:00", "SLEEP-S0", "30")],
-        )
+        if kwargs["extensions"] == [".edf"]:
+            _write_edf(db_dir / "record.edf")
+        else:
+            assert kwargs["extensions"] == [".txt"]
+            _write_annotation(
+                db_dir / "record.txt",
+                [("W", "22:00:00", "SLEEP-S0", "30")],
+            )
 
     monkeypatch.setattr(
         "sleepecg.io.capslpdb._list_physionet",
@@ -277,3 +343,5 @@ def test_read_capslpdb_removes_downloaded_edf(monkeypatch, tmp_path):
 
     assert not (db_dir / "record.edf").exists()
     assert (db_dir / "record.txt").exists()
+    assert (db_dir / "preprocessed/heartbeats/record.npy").exists()
+    assert (db_dir / "preprocessed/heartbeats/record.json").exists()

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import csv
 import datetime
+import json
 import warnings
 from collections.abc import Iterator
 from itertools import pairwise
@@ -194,6 +195,26 @@ def _shift_time(value: datetime.time, seconds: int) -> datetime.time:
     return (start + datetime.timedelta(seconds=seconds)).time()
 
 
+def _save_recording_metadata(
+    filepath: Path,
+    recording_start_time: datetime.time,
+    recording_duration: float,
+) -> None:
+    metadata = {
+        "recording_start_time": recording_start_time.isoformat(),
+        "recording_duration": recording_duration,
+    }
+    filepath.write_text(json.dumps(metadata), encoding="utf-8")
+
+
+def _load_recording_metadata(filepath: Path) -> tuple[datetime.time, float]:
+    metadata = json.loads(filepath.read_text(encoding="utf-8"))
+    return (
+        datetime.time.fromisoformat(metadata["recording_start_time"]),
+        float(metadata["recording_duration"]),
+    )
+
+
 def read_capslpdb(
     records_pattern: str = "*",
     heartbeats_source: str = "ecg",
@@ -231,8 +252,6 @@ def read_capslpdb(
     SleepRecord
         Each element in the generator is of type `SleepRecord`.
     """
-    from edfio import read_edf
-
     db_slug = "capslpdb"
     if heartbeats_source not in {"cached", "ecg"}:
         raise ValueError(
@@ -262,38 +281,56 @@ def read_capslpdb(
             stacklevel=2,
         )
         requested_records.remove("n16")
-    edf_was_available = {
-        record_id: (db_dir / f"{record_id}.edf").is_file()
-        for record_id in requested_records
-    }
     if not offline:
         download_physionet(
             db_slug=db_slug,
             requested_records=requested_records,
-            extensions=[".edf", ".txt"],
+            extensions=[".txt"],
             data_dir=data_dir,
         )
+    edf_was_available = {}
+    if heartbeats_source == "ecg":
+        edf_was_available = {
+            record_id: (db_dir / f"{record_id}.edf").is_file()
+            for record_id in requested_records
+        }
+        if not offline:
+            download_physionet(
+                db_slug=db_slug,
+                requested_records=requested_records,
+                extensions=[".edf"],
+                data_dir=data_dir,
+            )
 
     for record_id in requested_records:
         edf_filepath = db_dir / f"{record_id}.edf"
         annotation_filepath = db_dir / f"{record_id}.txt"
         heartbeats_filepath = heartbeats_dir / f"{record_id}.npy"
+        metadata_filepath = heartbeats_dir / f"{record_id}.json"
 
-        if heartbeats_source == "cached" and not heartbeats_filepath.is_file():
-            print(f"Skipping {record_id} due to missing cached heartbeats.")
-            continue
+        if heartbeats_source == "cached":
+            if not heartbeats_filepath.is_file() or not metadata_filepath.is_file():
+                print(f"Skipping {record_id} due to incomplete cached data.")
+                continue
+            heartbeat_times = np.load(heartbeats_filepath)
+            recording_start_time, recording_duration = _load_recording_metadata(
+                metadata_filepath
+            )
+        else:
+            from edfio import read_edf
 
-        edf = read_edf(edf_filepath, lazy_load_data=True)
+            edf = read_edf(edf_filepath, lazy_load_data=True)
+            recording_start_time = edf.starttime
+            recording_duration = edf.duration
+
         parsed = _parse_capslpdb_annotation(
             annotation_filepath,
-            recording_start_time=edf.starttime,
-            recording_duration=edf.duration,
+            recording_start_time=recording_start_time,
+            recording_duration=recording_duration,
         )
         scored_duration = len(parsed.sleep_stages) * 30
 
-        if heartbeats_source == "cached":
-            heartbeat_times = np.load(heartbeats_filepath)
-        else:
+        if heartbeats_source == "ecg":
             ecg_data = _get_capslpdb_ecg(edf)
             if ecg_data is None:
                 warnings.warn(
@@ -314,20 +351,24 @@ def read_capslpdb(
                 (heartbeat_times >= 0) & (heartbeat_times < scored_duration)
             ]
             np.save(heartbeats_filepath, heartbeat_times)
+            _save_recording_metadata(
+                metadata_filepath,
+                recording_start_time,
+                recording_duration,
+            )
+            if not edf_was_available[record_id] and not keep_edfs:
+                edf_filepath.unlink()
 
         heartbeat_times = heartbeat_times[
             (heartbeat_times >= 0) & (heartbeat_times < scored_duration)
         ]
-
-        if not edf_was_available[record_id] and not keep_edfs:
-            edf_filepath.unlink()
 
         yield SleepRecord(
             sleep_stages=parsed.sleep_stages,
             sleep_stage_duration=30,
             id=record_id,
             recording_start_time=_shift_time(
-                edf.starttime,
+                recording_start_time,
                 parsed.scoring_start_offset,
             ),
             heartbeat_times=heartbeat_times,
