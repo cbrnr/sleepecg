@@ -3177,8 +3177,8 @@ provides-extras = ["cibw", "full"]
 dev = [
     { name = "mkdocs-material", specifier = ">=9.5.0" },
     { name = "mkdocstrings-python", specifier = ">=1.11.1" },
-    { name = "pytest", specifier = ">=6.2.0" },
-    { name = "pytest-cov", specifier = ">=6.0.0" },
+    { name = "pytest", specifier = ">=9.1.0" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "ruff", specifier = ">=0.16.1" },
     { name = "ty", specifier = ">=0.0.67" },
     { name = "types-pyyaml" },
