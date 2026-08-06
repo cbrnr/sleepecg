@@ -58,11 +58,13 @@ full = [  # complete package functionality
 dev = [
     "sleepecg[docs]",
     "sleepecg[full]",
-    "pre-commit >= 2.13.0",
+    "mypy >= 2.3.0",
     "pytest >= 6.2.0",
     "pytest-cov >= 6.0.0",
-    "types-requests",
+    "ruff >= 0.16.1",
     "types-pyyaml",
+    "types-requests",
+    "types-urllib3",
 ]
 
 [project.urls]
@@ -97,6 +99,7 @@ repair-wheel-command = [
 ]
 
 [tool.mypy]
+python_version = "3.10"
 ignore_missing_imports = true
 disallow_untyped_defs = true
 warn_unreachable = true

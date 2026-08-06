@@ -347,7 +347,7 @@ def _hrv_frequencydomain_features(
        93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
     """
     rri_interp_times = np.arange(
-        start=stage_times[0] - lookback,
+        stage_times[0] - lookback,
         stop=stage_times[-1] + lookforward,
         step=1 / fs_rri_resample,
     )

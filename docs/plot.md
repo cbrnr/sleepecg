@@ -8,7 +8,7 @@ The function [`sleepecg.plot_ecg()`][sleepecg.plot_ecg] plots the time course of
 import sleepecg
 
 ecg, fs = sleepecg.get_toy_ecg()  # 5 min of ECG data at 360 Hz
-beats = sleepecg.detect_heartbeats(ecg[:10 * fs], fs)
+beats = sleepecg.detect_heartbeats(ecg[: 10 * fs], fs)
 
 sleepecg.plot_ecg(ecg, fs, correct=beats, bad=beats + 7)
 ```

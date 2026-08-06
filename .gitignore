@@ -3,6 +3,7 @@
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+.venv/
 __pycache__/
 site/
 sleepecg.egg-info/
