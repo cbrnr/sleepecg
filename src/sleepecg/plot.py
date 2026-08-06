@@ -78,7 +78,9 @@ def plot_ecg(
     cm = colormaps["tab10"]
     colors = cycle(cm(n) for n in np.linspace(0, 1, cm.N))
     markers = cycle(("*", "o", "s", "D", "v", "<", ">", "^", "X", "p"))
-    for label, pos, color, marker in zip(kwargs.keys(), kwargs.values(), colors, markers):
+    for label, pos, color, marker in zip(
+        kwargs.keys(), kwargs.values(), colors, markers
+    ):
         ax.plot(
             t[pos],
             ecg[pos],
@@ -88,7 +90,9 @@ def plot_ecg(
             linestyle="",
             label=label,
         )
-    if len(kwargs) >= 2:  # add legend if there are at least two sequences of annotations
+    if (
+        len(kwargs) >= 2
+    ):  # add legend if there are at least two sequences of annotations
         plt.legend()
     if title is not None:
         ax.set_title(title)

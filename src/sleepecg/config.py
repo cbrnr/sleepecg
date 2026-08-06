@@ -26,7 +26,7 @@ def _read_yaml(path: Path) -> dict[str, Any]:
     if cfg is None:
         return {}
     if not isinstance(cfg, dict):
-        raise ValueError(f"Invalid YAML config file at {path}")
+        raise ValueError(f"Invalid YAML config file at {path}")  # noqa: TRY004
     return cfg
 
 

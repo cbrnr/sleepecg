@@ -51,7 +51,9 @@ def _list_physionet(
 
     records_filepath = data_dir / db_slug / _RECORDS_FILENAME
     records_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_RECORDS_FILENAME}"
-    checksum = _get_physionet_checksums(data_dir, db_slug, db_version)[_RECORDS_FILENAME]
+    checksum = _get_physionet_checksums(data_dir, db_slug, db_version)[
+        _RECORDS_FILENAME
+    ]
 
     if not records_filepath.is_file():
         _download_file(records_url, records_filepath, checksum, _CHECKSUM_TYPE)

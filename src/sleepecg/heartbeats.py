@@ -139,7 +139,9 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
         integrated_ecg = _squared_moving_integration(derivative, moving_window_width)
         beat_mask = _thresholding(filtered_ecg, integrated_ecg, fs)
     elif backend == "numba":
-        integrated_ecg = _squared_moving_integration_numba(derivative, moving_window_width)
+        integrated_ecg = _squared_moving_integration_numba(
+            derivative, moving_window_width
+        )
         beat_mask = _thresholding_numba(filtered_ecg, integrated_ecg, fs)
     elif backend == "python":
         integrated_ecg = np.convolve(
@@ -457,21 +459,25 @@ def _thresholding_py(
                             # one signal is between the reduced and original threshold, the
                             # other one above the reduced threshold
                             if (
-                                threshold_F1 / searchback_divisor < PEAKF
-                                and PEAKF < threshold_F1
-                                and threshold_I1 / searchback_divisor < PEAKI
-                            ) or (
-                                threshold_I1 / searchback_divisor < PEAKI
-                                and PEAKI < threshold_I1
-                                and threshold_F1 / searchback_divisor < PEAKF
-                            ):
-                                if PEAKF > best_candidate_amplitude:
-                                    # highest one so far
-                                    best_searchback_index = searchback_index
-                                    best_candidate_amplitude = filtered_ecg[
-                                        searchback_index
-                                    ]
-                                    found_a_candidate = True
+                                (
+                                    threshold_F1 / searchback_divisor
+                                    < PEAKF
+                                    < threshold_F1
+                                    and threshold_I1 / searchback_divisor < PEAKI
+                                )
+                                or (
+                                    threshold_I1 / searchback_divisor
+                                    < PEAKI
+                                    < threshold_I1
+                                    and threshold_F1 / searchback_divisor < PEAKF
+                                )
+                            ) and PEAKF > best_candidate_amplitude:
+                                # highest one so far
+                                best_searchback_index = searchback_index
+                                best_candidate_amplitude = filtered_ecg[
+                                    searchback_index
+                                ]
+                                found_a_candidate = True
 
                         # the amplitude of the next sample is lower, so it can't be a peak
                         # -> skip it
@@ -539,8 +545,7 @@ def _thresholding_py(
                     if amplitude_before > amplitude_here:
                         break
                     slope = amplitude_here - amplitude_before
-                    if slope > max_slope_in_this_peak:
-                        max_slope_in_this_peak = slope
+                    max_slope_in_this_peak = max(max_slope_in_this_peak, slope)
                     reverse_index -= 1
 
                 reverse_index = previous_peak_index
@@ -551,8 +556,7 @@ def _thresholding_py(
                     if amplitude_before > amplitude_here:
                         break
                     slope = amplitude_here - amplitude_before
-                    if slope > max_slope_in_previous_peak:
-                        max_slope_in_previous_peak = slope
+                    max_slope_in_previous_peak = max(max_slope_in_previous_peak, slope)
                     reverse_index -= 1
 
                 if max_slope_in_this_peak < max_slope_in_previous_peak / 2.0:
@@ -596,7 +600,7 @@ def _thresholding_py(
                 irregular = False
                 for i in range(num_peaks_found, 1, -1):
                     RR_n = RR_intervals[i]
-                    if RR_low_limit < RR_n and RR_n < RR_high_limit:
+                    if RR_low_limit < RR_n < RR_high_limit:
                         RR_sum += RR_n
                         RR_count += 1
                         if RR_count >= 8:
@@ -639,5 +643,7 @@ def _thresholding_py(
 
 
 if "numba" in _available_backends:
-    _squared_moving_integration_numba = jit(_squared_moving_integration_py, nopython=True)
+    _squared_moving_integration_numba = jit(
+        _squared_moving_integration_py, nopython=True
+    )
     _thresholding_numba = jit(_thresholding_py, nopython=True)

@@ -108,17 +108,14 @@ pretty = true
 markers = ["c_extension"]
 filterwarnings = ["error"]
 
-[tool.ruff]
-line-length = 92
-exclude = ["setup.py"]
-
 [tool.ruff.lint]
-select = ["C4", "D", "E", "F", "FURB", "I", "PERF", "W", "UP"]
-ignore = ["D105"]
+extend-select = ["C4", "D", "PERF", "W"]
+ignore = ["D105", "DTZ"]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "F403"]
 "**/examples/*.py" = ["D100"]
+"setup.py" = ["D10"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

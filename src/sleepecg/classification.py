@@ -347,18 +347,20 @@ def list_classifiers(classifiers_dir: str | Path | None = None) -> None:
     classifiers_dir = Path(classifiers_dir).expanduser()
 
     for classifier_filepath in classifiers_dir.glob("*.zip"):
-        with ZipFile(classifier_filepath, "r") as zip_file:
-            with zip_file.open("info.yml") as infofile:
-                classifier_info = yaml.safe_load(infofile)
-                features = ", ".join(
-                    classifier_info["feature_extraction_params"]["feature_selection"]
-                )
-                print(
-                    f"  {classifier_filepath.stem}\n"
-                    f"      stages_mode: {classifier_info['stages_mode'].upper()}\n"
-                    f"      model type: {classifier_info['model_type']}\n"
-                    f"      features: {features}\n"
-                )
+        with (
+            ZipFile(classifier_filepath, "r") as zip_file,
+            zip_file.open("info.yml") as infofile,
+        ):
+            classifier_info = yaml.safe_load(infofile)
+            features = ", ".join(
+                classifier_info["feature_extraction_params"]["feature_selection"]
+            )
+            print(
+                f"  {classifier_filepath.stem}\n"
+                f"      stages_mode: {classifier_info['stages_mode'].upper()}\n"
+                f"      model type: {classifier_info['model_type']}\n"
+                f"      features: {features}\n"
+            )
 
 
 def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, N: int) -> np.ndarray:

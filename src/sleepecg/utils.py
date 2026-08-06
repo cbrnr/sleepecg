@@ -75,7 +75,9 @@ def _parallel(
             warnings.warn("joblib not installed, cannot run in parallel.")
         return [function(x, *args, **kwargs) for x in iterable]
 
-    return Parallel(n_jobs=n_jobs)(delayed(function)(x, *args, **kwargs) for x in iterable)
+    return Parallel(n_jobs=n_jobs)(
+        delayed(function)(x, *args, **kwargs) for x in iterable
+    )
 
 
 def _time_to_sec(time: datetime.time) -> int:
@@ -159,7 +161,9 @@ def _merge_sleep_stages(stages: list[np.ndarray], stages_mode: str) -> list[np.n
     """
     if stages_mode not in _SLEEP_STAGE_MAPPING:
         options = list(_SLEEP_STAGE_MAPPING.keys())
-        raise ValueError(f"Invalid stages_mode: {stages_mode}. Possible options: {options}")
+        raise ValueError(
+            f"Invalid stages_mode: {stages_mode}. Possible options: {options}"
+        )
 
     new_stages = []
     for array in stages:

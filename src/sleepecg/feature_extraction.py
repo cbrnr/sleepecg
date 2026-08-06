@@ -59,7 +59,9 @@ _FEATURE_GROUPS = {
     "metadata": ("recording_start_time", "age", "gender", "weight"),
     "actigraphy": ("activity_counts",),
 }
-_FEATURE_ID_TO_GROUP = {id: group for group, ids in _FEATURE_GROUPS.items() for id in ids}
+_FEATURE_ID_TO_GROUP = {
+    id: group for group, ids in _FEATURE_GROUPS.items() for id in ids
+}
 
 _TIME_DOMAIN_EXPECTED_WARNING_MESSAGES = (
     "All-NaN slice encountered",
@@ -137,7 +139,9 @@ def _split_into_windows(
     return windows
 
 
-def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> tuple[np.ndarray, np.ndarray]:
+def _nanpsd(
+    x: np.ndarray, fs: float, max_nans: float = 0
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Compute power spectral density (PSD) along axis 1, ignoring NaNs.
 
@@ -172,7 +176,9 @@ def _nanpsd(x: np.ndarray, fs: float, max_nans: float = 0) -> tuple[np.ndarray, 
 
     # remaining rows with less than max_nans NaNs
     empty_rows_mask = nan_fraction == 1
-    for i in np.where((nan_fraction <= max_nans) & ~(full_rows_mask | empty_rows_mask))[0]:
+    for i in np.where((nan_fraction <= max_nans) & ~(full_rows_mask | empty_rows_mask))[
+        0
+    ]:
         semi_valid_window = x[i]
         valid_part = semi_valid_window[~np.isnan(semi_valid_window)]
         _, Pxx[i] = periodogram(valid_part, fs=fs, window="hann", nfft=nfft)
@@ -467,12 +473,16 @@ def _parse_feature_selection(
 
     duplicate_ids = {x for x in feature_ids if feature_ids.count(x) > 1}
     if duplicate_ids:
-        warnings.warn(f"Duplicates in feature selection: {duplicate_ids}", RuntimeWarning)
+        warnings.warn(
+            f"Duplicates in feature selection: {duplicate_ids}", RuntimeWarning
+        )
 
     return list(required_groups), feature_ids, selected_cols
 
 
-def _check_frequencydomain_window_time(window_time: int, feature_ids: list[str]) -> None:
+def _check_frequencydomain_window_time(
+    window_time: int, feature_ids: list[str]
+) -> None:
     """
     Warn if the duration of the analysis window is too short for a frequency domain feature.
 
@@ -676,11 +686,16 @@ def _extract_features_single(
             X.append(record.activity_counts.reshape(-1, 1))
     features = np.hstack(X)[:, col_indices]
 
-    if record.sleep_stages is None or sleep_stage_duration == record.sleep_stage_duration:
+    if (
+        record.sleep_stages is None
+        or sleep_stage_duration == record.sleep_stage_duration
+    ):
         stages = record.sleep_stages
     else:
         if record.sleep_stage_duration is None:
-            raise ValueError(f"sleep_stage_duration not available for record {record.id}")
+            raise ValueError(
+                f"sleep_stage_duration not available for record {record.id}"
+            )
         stages = interp1d(
             np.arange(len(record.sleep_stages)) * record.sleep_stage_duration,
             record.sleep_stages,
@@ -771,7 +786,9 @@ def extract_features(
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)
 
-    required_groups, feature_ids, col_indices = _parse_feature_selection(feature_selection)
+    required_groups, feature_ids, col_indices = _parse_feature_selection(
+        feature_selection
+    )
     _check_frequencydomain_window_time(lookback + lookforward, feature_ids)
 
     # _extract_features_single has two return values, so the list returned by _parallel
