@@ -41,13 +41,15 @@ If another PR is merged while you are working on something, a merge conflict may
 
 ## Development environment
 
-Make sure to use a supported Python version. You might want to [create a virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments) instead of working your main environment. In the root of the local clone of your fork, install SleepECG as follows:
+We recommend using [uv](https://docs.astral.sh/uv/) to install and manage your Python environment. Install the tool according to the instructions on the website (there is no need to install Python separately, as uv will automatically download and install a suitable version).
+
+In a terminal, change to the `sleepecg` folder containing your fork and run the following command:
 
 ```
-pip install -e . --group dev
+uv sync --locked --all-extras --all-groups
 ```
 
-When using the flag [`-e`](https://pip.pypa.io/en/stable/cli/pip_install/#install-editable), pip does not copy the package to `site-packages/`, but creates a link to your local repository. Any changes to the source code are directly reflected in the "installed" package. Installing the optional `[dev]` dependencies makes sure all tools for style checking, testing, and building documentation are locally available.
+This installs SleepECG in editable mode together with all development dependencies (for style checking, testing, and building documentation). Any changes to the source code are directly reflected in the installed package. You can then run a command inside this environment with `uv run <command>`, for example `uv run pytest`.
 
 
 ## Code style
@@ -61,6 +63,16 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Ruff
     ```
 - The maximum line length is `92`.
 - [Type hints](https://www.python.org/dev/peps/pep-0484/) are encouraged.
+
+Coding and documentation style are checked via a CI job using [Ruff](https://docs.astral.sh/ruff/) and [mypy](https://mypy-lang.org/). To make sure your contribution passes those checks, run the following commands inside your local clone before pushing:
+
+```
+uv run ruff check
+uv run ruff format
+uv run mypy src
+```
+
+`ruff check` reports linting issues (many can be fixed automatically with `uv run ruff check --fix`), and `ruff format` reformats the code in place.
 
 
 ## Public API
@@ -81,17 +93,6 @@ For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.
 - Generators are treated similarly, so a type annotation `Iterator[int]` becomes just `int` in the docstring.
 
 
-## Pre-commit
-
-Coding and documentation style are checked via a CI job. To make sure your contribution passes those checks, you can use [`pre-commit`](https://pre-commit.com/) locally. To install the hooks configured in `.pre-commit-config.yml`, run
-
-```
-pre-commit install
-```
-
-inside your local clone. After that, the checks required by the CI job will be run on all staged files when you commit – and abort the commit if any issues are found (in which case you should fix the issues and commit again).
-
-
 ## Tests
 
 SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The structure of `sleepecg/tests/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/tests/io/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies, make sure to add it to the optional requirement categories `dev` and `cibw`.
@@ -99,13 +100,13 @@ SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The structure of
 To run the tests, execute
 
 ```
-pytest
+uv run pytest
 ```
 
 in the project or package root. The tests for the C extension can be excluded using
 
 ```
-pytest -m "not c_extension"
+uv run pytest -m "not c_extension"
 ```
 
 ## Releases
@@ -114,6 +115,7 @@ Follow these steps to make a new [PyPI](https://pypi.org/project/sleepecg/) rele
 
 - Remove the `.dev0` suffix from the `version` field in `pyproject.toml` (and/or adapt the version to be released if necessary)
 - Update the section in `CHANGELOG.md` corresponding to the new release with the version and current date
+- Run `uv lock` to update the lockfile
 - Commit these changes and push
 - Create a new release on GitHub and use the version as the tag name (make sure to prepend the version with a `v`, e.g. `v0.7.0`)
 - A GitHub Action takes care of building and uploading wheels to PyPI
@@ -122,5 +124,17 @@ This concludes the new release. Now prepare the source for the next planned rele
 
 - Update the `version` field to the next planned release and append `.dev0`
 - Start a new section at the top of `CHANGELOG.md` titled `## [UNRELEASED] - YYYY-MM-DD`
+- Run `uv lock` to update the lockfile
 
 Don't forget to push these changes!
+
+
+## Upgrading dependencies
+
+To upgrade all locked dependencies to their latest allowed versions, run:
+
+```
+uv lock --upgrade
+```
+
+Commit the resulting `uv.lock` changes. This can be done at any time, independently of a release.

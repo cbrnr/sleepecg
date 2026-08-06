@@ -8,13 +8,42 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from typing import Any
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 _HASH_FUNCTIONS = {
     "md5": hashlib.md5,
     "sha256": hashlib.sha256,
 }
+
+_TIMEOUT = (10, 30)  # (connect, read) timeout in seconds
+
+_session = requests.Session()
+_retries = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+_session.mount("https://", HTTPAdapter(max_retries=_retries))
+_session.mount("http://", HTTPAdapter(max_retries=_retries))
+
+
+def _get(url: str, **kwargs: Any) -> requests.Response:
+    """
+    Send a GET request with a timeout and automatic retries on transient failures.
+
+    Parameters
+    ----------
+    url : str
+        URL to request.
+    **kwargs : dict, optional
+        Keyword arguments passed on to `requests.Session.get`.
+
+    Returns
+    -------
+    requests.Response
+        The response object.
+    """
+    return _session.get(url, timeout=_TIMEOUT, **kwargs)
 
 
 def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
@@ -79,7 +108,7 @@ def _download_file(
     if verbose:
         print(f"Downloading {url}...")
 
-    response = requests.get(url)
+    response = _get(url)
     response.raise_for_status()
 
     with open(target_filepath, "wb") as file:

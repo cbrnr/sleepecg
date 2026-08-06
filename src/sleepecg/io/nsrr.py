@@ -11,11 +11,10 @@ from fnmatch import fnmatch
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
-import requests
 from tqdm import tqdm
 
 from sleepecg.config import get_config_value
-from sleepecg.io.utils import _download_file
+from sleepecg.io.utils import _download_file, _get
 
 _nsrr_token = None
 
@@ -32,7 +31,7 @@ def set_nsrr_token(token: str) -> None:
     token : str
         NSRR [download token](https://sleepdata.org/token).
     """
-    response = requests.get(
+    response = _get(
         "https://sleepdata.org/api/v1/account/profile.json",
         params={"auth_token": token},
     )
@@ -111,7 +110,7 @@ def _list_nsrr(
     """
     api_url = f"https://sleepdata.org/api/v1/datasets/{db_slug}/files.json"
 
-    response = requests.get(api_url, params={"path": subfolder})
+    response = _get(api_url, params={"path": subfolder})
     try:
         response_json = response.json()
     except JSONDecodeError:
@@ -152,7 +151,7 @@ def _download_nsrr_file(
         # If the token is invalid for the requested dataset, the request is redirected to a
         # files overview page. The response is an HTML-page which doesn't have a
         # "content-disposition" header.
-        response = requests.get(url, stream=True)
+        response = _get(url, stream=True)
         if "content-disposition" not in response.headers:
             db_slug = url.split("/")[4]
             raise RuntimeError(f"Make sure you have access to {db_slug}!") from error

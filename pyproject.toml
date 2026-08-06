@@ -41,10 +41,6 @@ cibw = [  # cibuildwheel uses this for running the test suite
     "numba >= 0.61.0",
     "wfdb >= 4.2.0",
 ]
-docs = [  # RTD uses this when building the documentation
-    "mkdocs-material >= 9.5.0",
-    "mkdocstrings-python >= 1.11.1",
-]
 full = [  # complete package functionality
     "edfio >= 0.4.4",
     "joblib >= 1.4.2",
@@ -56,13 +52,17 @@ full = [  # complete package functionality
 
 [dependency-groups]
 dev = [
-    "sleepecg[docs]",
-    "sleepecg[full]",
-    "pre-commit >= 2.13.0",
+    "mypy >= 2.3.0",
     "pytest >= 6.2.0",
     "pytest-cov >= 6.0.0",
-    "types-requests",
+    "ruff >= 0.16.1",
     "types-pyyaml",
+    "types-requests",
+    "types-urllib3",
+]
+docs = [  # RTD uses this when building the documentation
+    "mkdocs-material >= 9.5.0",
+    "mkdocstrings-python >= 1.11.1",
 ]
 
 [project.urls]
@@ -97,6 +97,7 @@ repair-wheel-command = [
 ]
 
 [tool.mypy]
+python_version = "3.10"
 ignore_missing_imports = true
 disallow_untyped_defs = true
 warn_unreachable = true
