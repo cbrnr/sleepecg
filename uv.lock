@@ -3335,10 +3335,6 @@ cibw = [
     { name = "numba" },
     { name = "wfdb" },
 ]
-docs = [
-    { name = "mkdocs-material" },
-    { name = "mkdocstrings-python" },
-]
 full = [
     { name = "edfio" },
     { name = "joblib" },
@@ -3355,10 +3351,13 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
-    { name = "sleepecg", extra = ["docs", "full"] },
     { name = "types-pyyaml" },
     { name = "types-requests" },
     { name = "types-urllib3" },
+]
+docs = [
+    { name = "mkdocs-material" },
+    { name = "mkdocstrings-python" },
 ]
 
 [package.metadata]
@@ -3367,8 +3366,6 @@ requires-dist = [
     { name = "edfio", marker = "extra == 'full'", specifier = ">=0.4.4" },
     { name = "joblib", marker = "extra == 'full'", specifier = ">=1.4.2" },
     { name = "matplotlib", marker = "extra == 'full'", specifier = ">=3.9.2" },
-    { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.5.0" },
-    { name = "mkdocstrings-python", marker = "extra == 'docs'", specifier = ">=1.11.1" },
     { name = "numba", marker = "extra == 'cibw'", specifier = ">=0.61.0" },
     { name = "numba", marker = "extra == 'full'", specifier = ">=0.61.0" },
     { name = "numpy", specifier = ">=1.26.0" },
@@ -3380,7 +3377,7 @@ requires-dist = [
     { name = "wfdb", marker = "extra == 'cibw'", specifier = ">=4.2.0" },
     { name = "wfdb", marker = "extra == 'full'", specifier = ">=4.2.0" },
 ]
-provides-extras = ["cibw", "docs", "full"]
+provides-extras = ["cibw", "full"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -3388,11 +3385,13 @@ dev = [
     { name = "pytest", specifier = ">=6.2.0" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "ruff", specifier = ">=0.16.1" },
-    { name = "sleepecg", extras = ["docs"] },
-    { name = "sleepecg", extras = ["full"] },
     { name = "types-pyyaml" },
     { name = "types-requests" },
     { name = "types-urllib3" },
+]
+docs = [
+    { name = "mkdocs-material", specifier = ">=9.5.0" },
+    { name = "mkdocstrings-python", specifier = ">=1.11.1" },
 ]
 
 [[package]]
