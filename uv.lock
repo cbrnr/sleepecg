@@ -3347,6 +3347,8 @@ full = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "mkdocs-material" },
+    { name = "mkdocstrings-python" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -3358,6 +3360,13 @@ dev = [
 docs = [
     { name = "mkdocs-material" },
     { name = "mkdocstrings-python" },
+]
+lint = [
+    { name = "mypy" },
+    { name = "ruff" },
+    { name = "types-pyyaml" },
+    { name = "types-requests" },
+    { name = "types-urllib3" },
 ]
 
 [package.metadata]
@@ -3381,6 +3390,8 @@ provides-extras = ["cibw", "full"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "mkdocs-material", specifier = ">=9.5.0" },
+    { name = "mkdocstrings-python", specifier = ">=1.11.1" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pytest", specifier = ">=6.2.0" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
@@ -3392,6 +3403,13 @@ dev = [
 docs = [
     { name = "mkdocs-material", specifier = ">=9.5.0" },
     { name = "mkdocstrings-python", specifier = ">=1.11.1" },
+]
+lint = [
+    { name = "mypy", specifier = ">=2.3.0" },
+    { name = "ruff", specifier = ">=0.16.1" },
+    { name = "types-pyyaml" },
+    { name = "types-requests" },
+    { name = "types-urllib3" },
 ]
 
 [[package]]
