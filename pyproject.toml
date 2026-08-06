@@ -41,10 +41,6 @@ cibw = [  # cibuildwheel uses this for running the test suite
     "numba >= 0.61.0",
     "wfdb >= 4.2.0",
 ]
-docs = [  # RTD uses this when building the documentation
-    "mkdocs-material >= 9.5.0",
-    "mkdocstrings-python >= 1.11.1",
-]
 full = [  # complete package functionality
     "edfio >= 0.4.4",
     "joblib >= 1.4.2",
@@ -56,13 +52,17 @@ full = [  # complete package functionality
 
 [dependency-groups]
 dev = [
-    "sleepecg[docs]",
     "sleepecg[full]",
     "pre-commit >= 2.13.0",
     "pytest >= 6.2.0",
     "pytest-cov >= 6.0.0",
     "types-requests",
     "types-pyyaml",
+    "group:docs",
+]
+docs = [
+    "mkdocs-material >= 9.5.0",
+    "mkdocstrings-python >= 1.11.1",
 ]
 
 [project.urls]
