@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import shutil
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -20,6 +21,53 @@ from sleepecg.config import get_config_value
 from sleepecg.feature_extraction import extract_features
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 from sleepecg.utils import _STAGE_NAMES, _merge_sleep_stages
+
+
+def _import_keras():
+    """Import Keras, defaulting to the PyTorch backend.
+
+    Keras reads `KERAS_BACKEND` (or `~/.keras/keras.json`, which defaults to
+    `'tensorflow'`) exactly once, at first import, so the environment variable has to be
+    set before that happens.
+    """
+    import os
+
+    os.environ.setdefault("KERAS_BACKEND", "torch")
+
+    import keras
+
+    if keras.backend.backend() != "torch":
+        warnings.warn(
+            f"Keras is using the {keras.backend.backend()!r} backend, but SleepECG is "
+            "tested with 'torch'. Set the KERAS_BACKEND environment variable to "
+            "'torch' before importing keras (or sleepecg) to avoid this.",
+            stacklevel=2,
+        )
+
+    return keras
+
+
+def _pad_sequences(
+    sequences: list[np.ndarray],
+    value: float = 0.0,
+    dtype: np.dtype | type | None = None,
+) -> np.ndarray:
+    """Pre-pad a list of arrays with `value` to a common length along axis 0."""
+    arrays = [np.asarray(seq) for seq in sequences]
+    if dtype is None:
+        dtype = arrays[0].dtype
+    max_len = max(len(array) for array in arrays)
+    padded = np.full((len(arrays), max_len, *arrays[0].shape[1:]), value, dtype=dtype)
+    for i, array in enumerate(arrays):
+        padded[i, max_len - len(array) :] = array
+    return padded
+
+
+def _to_categorical(y: np.ndarray) -> np.ndarray:
+    """One-hot encode integer labels; the number of classes is `y.max() + 1`."""
+    y = np.asarray(y, dtype=np.int64)
+    num_classes = int(y.max()) + 1
+    return np.eye(num_classes, dtype="float32")[y]
 
 
 def prepare_data_keras(
@@ -70,14 +118,11 @@ def prepare_data_keras(
     sample_weight : np.ndarray
         A 2D array of shape `(n_records, max_n_samples)`.
     """
-    from tensorflow.keras.preprocessing.sequence import pad_sequences
-    from tensorflow.keras.utils import to_categorical
-
     stages_merged = _merge_sleep_stages(stages, stages_mode)
-    stages_padded = pad_sequences(stages_merged, value=SleepStage.UNDEFINED)
-    stages_padded_onehot = to_categorical(stages_padded)
+    stages_padded = _pad_sequences(stages_merged, value=SleepStage.UNDEFINED)
+    stages_padded_onehot = _to_categorical(stages_padded)
 
-    features_padded = pad_sequences(features, dtype=float, value=mask_value)
+    features_padded = _pad_sequences(features, dtype=float, value=mask_value)
     features_padded[stages_padded == SleepStage.UNDEFINED, :] = mask_value
     features_padded[~np.isfinite(features_padded)] = mask_value
 
@@ -263,8 +308,9 @@ def load_classifier(
         taken from the configuration. If `'SleepECG'`, load classifiers from
         `site-packages/sleepecg/classifiers`.
     silence_tf_messages : bool, optional
-        Whether or not to silence messages from TensorFlow when loading a model. By
-        default `True`.
+        Whether or not to silence TensorFlow's log messages when loading a model. Only
+        relevant if Keras is running on the TensorFlow backend; has no effect on the
+        default PyTorch backend. By default `True`.
 
     Returns
     -------
@@ -294,11 +340,11 @@ def load_classifier(
 
             environ_orig = os.environ.copy()
             if silence_tf_messages:
-                os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
-            from tensorflow import keras
+                # harmless when Keras isn't running on the TensorFlow backend
+                os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
 
             try:
+                keras = _import_keras()
                 classifier = keras.models.load_model(f"{tmpdir}/classifier.keras")
             finally:
                 os.environ.clear()

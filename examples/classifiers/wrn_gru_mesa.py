@@ -1,6 +1,9 @@
+import os
 import warnings
 
-from tensorflow.keras import layers, models
+os.environ.setdefault("KERAS_BACKEND", "torch")
+
+from keras import layers, models
 from tqdm import tqdm
 
 from sleepecg import (

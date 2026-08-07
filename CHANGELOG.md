@@ -3,8 +3,12 @@
 - Add a reader for the CAP Sleep Database ([#35](https://github.com/cbrnr/sleepecg/issues/35) by [Daria Agafonova](https://github.com/viranovskaya))
 - Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 
+### Changed
+- Replace TensorFlow with standalone Keras 3 running on the PyTorch backend, so classifier functionality no longer lags behind new Python releases (by [Clemens Brunner](https://github.com/cbrnr))
+
 ### Removed
 - Remove support for macOS on Intel architecture (x86_64) ([#301](https://github.com/cbrnr/sleepecg/pull/301) by [Clemens Brunner](https://github.com/cbrnr))
+- Remove Python 3.10 support (by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Fixed
 - Avoid repeated searchback scans when heartbeat detection encounters long unusable ECG intervals ([#319](https://github.com/cbrnr/sleepecg/pull/319) by [Daria Agafonova](https://github.com/viranovskaya))
