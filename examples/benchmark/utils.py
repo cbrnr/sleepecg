@@ -22,8 +22,7 @@ class HeartpyWarning(Warning):
 
 
 def reader_dispatch(db_slug: str, data_dir: str | Path) -> Iterator[ECGRecord]:
-    """
-    Read ECG records from mitdb, ltdb or gudb.
+    """Read ECG records from mitdb, ltdb or gudb.
 
     Parameters
     ----------
@@ -50,8 +49,7 @@ def reader_dispatch(db_slug: str, data_dir: str | Path) -> Iterator[ECGRecord]:
 
 
 def detector_dispatch(ecg: np.ndarray, fs: float, detector: str) -> np.ndarray:
-    """
-    Provide a common interface for different heartbeat detectors.
+    """Provide a common interface for different heartbeat detectors.
 
     Parameters
     ----------
@@ -125,8 +123,7 @@ def evaluate_single(
     max_distance: float,
     calc_rri_similarity: bool,
 ) -> dict[str, Any]:
-    """
-    Evaluate a heartbeat detector on a given annotated ECG record.
+    """Evaluate a heartbeat detector on a given annotated ECG record.
 
     Optionally, similarity measures between detected and annotated RR intervals can be
     calculated. As this requires interpolation, it may take some time for long signals.
@@ -140,11 +137,11 @@ def evaluate_single(
     signal_len : int
         Length to which the signal should be sliced.
     max_distance : float
-        Maximum temporal distance in seconds between detected and annotated beats to count
-        as a successful detection.
+        Maximum temporal distance in seconds between detected and annotated beats to
+        count as a successful detection.
     calc_rri_similarity : bool
-        If `True`, calculate similarity measures between detected and annotated RR intervals
-        (computationally expensive for long signals).
+        If `True`, calculate similarity measures between detected and annotated RR
+        intervals (computationally expensive for long signals).
 
     Returns
     -------

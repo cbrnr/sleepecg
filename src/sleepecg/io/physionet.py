@@ -26,8 +26,7 @@ def _list_physionet(
     db_version: str = "1.0.0",
     pattern: str = "*",
 ) -> list[str]:
-    """
-    List record IDs for a PhysioNet database.
+    """List record IDs for a PhysioNet database.
 
     IDs can be filtered using a glob-like `pattern`.
 
@@ -69,11 +68,10 @@ def download_physionet(
     db_version: str = "1.0.0",
     data_dir: str | Path = ".",
 ) -> None:
-    """
-    Download requested files from PhysioNet.
+    """Download requested files from PhysioNet.
 
-    All files with `extensions` for record IDs in `requested_records` are downloaded from
-    the PhysioNet database `db_slug`.
+    All files with `extensions` for record IDs in `requested_records` are downloaded
+    from the PhysioNet database `db_slug`.
 
     Parameters
     ----------
@@ -110,8 +108,7 @@ def _get_physionet_checksums(
     db_slug: str,
     db_version: str = "1.0.0",
 ) -> dict[str, str]:
-    """
-    Parse PhysioNet checksums into a dictionary.
+    """Parse PhysioNet checksums into a dictionary.
 
     Reads a PhysioNet checksum file and parses it into a dictionary mapping filenames to
     checksums. Tries to download the checksum file if it is not available on disk.

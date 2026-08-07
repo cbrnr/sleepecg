@@ -20,8 +20,7 @@ _nsrr_token = None
 
 
 def set_nsrr_token(token: str) -> None:
-    """
-    Set and verify the [NSRR](https://sleepdata.org) download token.
+    """Set and verify the [NSRR](https://sleepdata.org) download token.
 
     Implemented according to the
     [NSRR API specs](https://github.com/nsrr/sleepdata.org/wiki/api-v1-account).
@@ -47,8 +46,7 @@ def set_nsrr_token(token: str) -> None:
 
 
 def _get_nsrr_url(db_slug: str) -> str:
-    """
-    Get the download URL for a given NSRR database.
+    """Get the download URL for a given NSRR database.
 
     The download token is a part of the URL, so it needs to be already set.
 
@@ -81,8 +79,7 @@ def _list_nsrr(
     pattern: str = "*",
     shallow: bool = False,
 ) -> list[tuple[str, str]]:
-    """
-    Recursively list filenames and checksums for a dataset.
+    """Recursively list filenames and checksums for a dataset.
 
     Specify a subfolder and/or a filename-pattern to filter results.
 
@@ -96,8 +93,8 @@ def _list_nsrr(
     subfolder : str, optional
         The folder at which to start the search, by default `''` (i.e. the root folder).
     pattern : str, optional
-        Glob-like pattern to select files (only applied to the basename, not the dirname),
-        by default `'*'`.
+        Glob-like pattern to select files (only applied to the basename, not the
+        dirname), by default `'*'`.
     shallow : bool, optional
         If `True`, only search in the given subfolder (i.e. no recursion), by default
         `False`.
@@ -105,8 +102,8 @@ def _list_nsrr(
     Returns
     -------
     list[tuple[str, str]]
-        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the full filename (i.e.
-        dirname and basename) and `<checksum>` the MD5 checksum.
+        A list of tuples `(<filename>, <checksum>)`; `<filename>` is the full filename
+        (i.e. dirname and basename) and `<checksum>` the MD5 checksum.
     """
     api_url = f"https://sleepdata.org/api/v1/datasets/{db_slug}/files.json"
 
@@ -130,11 +127,11 @@ def _download_nsrr_file(
     target_filepath: Path,
     checksum: str,
 ) -> None:
-    """
-    Download a file from `url` to `target_filepath` and verify `checksum`.
+    """Download a file from `url` to `target_filepath` and verify `checksum`.
 
-    This is a wrapper around `sleepecg.io.utils._download_file` to provide a helpful error
-    message in case the currently set token does not grant access to the requested file.
+    This is a wrapper around `sleepecg.io.utils._download_file` to provide a helpful
+    error message in case the currently set token does not grant access to the requested
+    file.
 
     Parameters
     ----------
@@ -148,8 +145,8 @@ def _download_nsrr_file(
     try:
         _download_file(url, target_filepath, checksum, "md5")
     except RuntimeError as error:
-        # If the token is invalid for the requested dataset, the request is redirected to a
-        # files overview page. The response is an HTML-page which doesn't have a
+        # If the token is invalid for the requested dataset, the request is redirected
+        # to a files overview page. The response is an HTML-page which doesn't have a
         # "content-disposition" header.
         response = _get(url, stream=True)
         if "content-disposition" not in response.headers:
@@ -166,11 +163,10 @@ def download_nsrr(
     shallow: bool = False,
     data_dir: str | Path = ".",
 ) -> None:
-    """
-    Recursively download files from [NSRR](https://sleepdata.org).
+    """Recursively download files from [NSRR](https://sleepdata.org).
 
-    Specify a subfolder and/or a filename pattern to filter results. Implemented according
-    to the [NSRR API specs](https://github.com/nsrr/sleepdata.org/wiki/api-v1-datasets).
+    Specify a subfolder and/or a filename pattern to filter results. Implemented
+    according to the [API](https://github.com/nsrr/sleepdata.org/wiki/api-v1-datasets).
 
     Parameters
     ----------
@@ -179,8 +175,8 @@ def download_nsrr(
     subfolder : str, optional
         The folder at which to start the search, by default `''` (i.e. the root folder).
     pattern : str, optional
-        Glob-like pattern to select files (only applied to the basename, not the dirname),
-        by default `'*'`.
+        Glob-like pattern to select files (only applied to the basename, not the
+        dirname), by default `'*'`.
     shallow : bool, optional
         If `True`, only download files in the given subfolder (i.e. no recursion), by
         default `False`.

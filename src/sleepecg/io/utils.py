@@ -28,8 +28,7 @@ _session.mount("http://", HTTPAdapter(max_retries=_retries))
 
 
 def _get(url: str, **kwargs: Any) -> requests.Response:
-    """
-    Send a GET request with a timeout and automatic retries on transient failures.
+    """Send a GET request with a timeout and automatic retries on transient failures.
 
     Parameters
     ----------
@@ -47,8 +46,7 @@ def _get(url: str, **kwargs: Any) -> requests.Response:
 
 
 def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
-    """
-    Calculate the checksum for a file.
+    """Calculate the checksum for a file.
 
     Parameters
     ----------
@@ -76,11 +74,10 @@ def _download_file(
     checksum_type: str | None = None,
     verbose: bool = False,
 ) -> None:
-    """
-    Download a single file from `url` to `target_filepath`.
+    """Download a single file from `url` to `target_filepath`.
 
-    In case `checksum` and `checksum_type` are provided, the downloaded file is verified.
-    Raises a `RuntimeError` if verification fails.
+    In case `checksum` and `checksum_type` are provided, the downloaded file is
+    verified. Raises a `RuntimeError` if verification fails.
 
     Parameters
     ----------

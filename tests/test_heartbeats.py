@@ -30,7 +30,7 @@ def mitdb_234_MLII():
     """Fetch record for detector tests."""
     pytest.importorskip("wfdb")
     # CI caches downloaded PhysioNet files across runs in this directory, see
-    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise.
+    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise
     data_dir = os.environ.get("SLEEPECG_TEST_DATA_DIR")
     return next(read_mitdb(records_pattern="234", data_dir=data_dir))
 
