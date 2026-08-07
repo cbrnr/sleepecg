@@ -359,9 +359,10 @@ def read_capslpdb(
             if not edf_was_available[record_id] and not keep_edfs:
                 edf_filepath.unlink()
 
-        heartbeat_times = heartbeat_times[
-            (heartbeat_times >= 0) & (heartbeat_times < scored_duration)
-        ]
+        else:
+            heartbeat_times = heartbeat_times[
+                (heartbeat_times >= 0) & (heartbeat_times < scored_duration)
+            ]
 
         yield SleepRecord(
             sleep_stages=parsed.sleep_stages,
