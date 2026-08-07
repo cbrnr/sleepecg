@@ -5,9 +5,12 @@ SleepECG provides reader functions for various datasets. All required files will
 ## Sleep readers
 |Reader|Dataset name|Annotated records|Raw data size|Access|
 |-|-|-|-|-|
+|[`read_capslpdb()`][sleepecg.read_capslpdb]|[CAP Sleep Database](https://physionet.org/content/capslpdb/)|108 (107 with ECG)|40.1 GB|open|
 |[`read_mesa()`][sleepecg.read_mesa]|[Multi-Ethnic Study of Atherosclerosis](https://sleepdata.org/datasets/mesa/)|2056|385 GB|[request](https://sleepdata.org/data/requests/mesa/start)|
 |[`read_shhs()`][sleepecg.read_shhs]|[Sleep Heart Health Study](https://sleepdata.org/datasets/shhs/)|8444|356 GB|[request](https://sleepdata.org/data/requests/shhs/start)|
 |[`read_slpdb()`][sleepecg.read_slpdb]|[MIT-BIH Polysomnographic Database](https://physionet.org/content/slpdb)|18|632 MB|open|
+
+CAPSLPDB record `n16` is skipped with a warning because it does not contain an ECG channel.
 
 
 ## ECG readers

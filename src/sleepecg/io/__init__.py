@@ -4,6 +4,7 @@
 
 """Functions for downloading and reading datasets."""
 
+from sleepecg.io.capslpdb import read_capslpdb
 from sleepecg.io.ecg_readers import (
     ECGRecord,
     export_ecg_record,
