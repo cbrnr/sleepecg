@@ -31,6 +31,31 @@ jobs:
     - name: Run ty
       run: uv run ty check
 
+  test_full:
+    name: Test full extras (Python ${{ matrix.python-version }})
+    needs: style
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v7
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache PhysioNet test data
+      uses: actions/cache@v5
+      with:
+        path: .cache/sleepecg-test-data
+        key: physionet-slpdb-slp01a-mitdb-234-v1
+    - name: Install the project with full extras (keras + torch)
+      run: uv sync --extra full --python ${{ matrix.python-version }}
+    - name: Run pytest
+      run: uv run pytest
+      env:
+        SLEEPECG_TEST_DATA_DIR: ${{ github.workspace }}/.cache/sleepecg-test-data
+
   build_wheels:
     needs: style
     name: Build wheel (${{ matrix.os }})

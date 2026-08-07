@@ -86,7 +86,7 @@ plt.show()
 
 ## Sleep staging custom data
 
-This example requires `edfio` and `tensorflow` packages. In addition, it uses an example file [`sleep.edf`](https://osf.io/download/mx7av/), which contains ECG data for a whole night. Download and save this file in your working directory before running this example.
+This example requires `edfio`, `keras`, and `torch` packages. In addition, it uses an example file [`sleep.edf`](https://osf.io/download/mx7av/), which contains ECG data for a whole night. Download and save this file in your working directory before running this example.
 
 ```python
 from datetime import datetime
@@ -112,7 +112,7 @@ fs = edf.get_signal("ECG").sampling_frequency
 beats = sleepecg.detect_heartbeats(ecg, fs)
 sleepecg.plot_ecg(ecg, fs, beats=beats)
 
-# load SleepECG classifier (requires tensorflow)
+# load SleepECG classifier (requires keras and torch)
 clf = sleepecg.load_classifier("wrn-gru-mesa", "SleepECG")
 
 # predict sleep stages
@@ -169,7 +169,7 @@ import matplotlib.pyplot as plt
 
 from sleepecg import load_classifier, plot_hypnogram, read_slpdb, stage
 
-# the model was built with tensorflow 2.16.1, running on higher versions might create
+# the model was built with Keras 3.3.3, running on higher versions might create
 # warnings, but should not influence the results
 clf = load_classifier("ws-gru-mesa", "SleepECG")
 
