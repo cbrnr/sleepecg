@@ -42,12 +42,10 @@ cibw = [  # cibuildwheel uses this for running the test suite
     "wfdb >= 4.2.0",
 ]
 full = [  # complete package functionality
-    "edfio >= 0.4.4",
+    "sleepecg[cibw]",
     "joblib >= 1.4.2",
     "matplotlib >= 3.9.2",
-    "numba >= 0.61.0",
-    "tensorflow >= 2.17.0; python_version < '3.13'",
-    "wfdb >= 4.2.0",
+    "tensorflow >= 2.21.0; python_version < '3.14'",
 ]
 
 [dependency-groups]
