@@ -196,7 +196,7 @@ def _create_dummy_shhs(data_dir: str, durations: list[float], random_state: int 
 
 
 def test_read_mesa(tmp_path):
-    """Basic sanity checks for records read via read_mesa."""
+    """Sanity checks for records read via read_mesa."""
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
@@ -211,7 +211,7 @@ def test_read_mesa(tmp_path):
 
 
 def test_read_mesa_actigraphy(tmp_path):
-    """Basic sanity checks for records read via read_mesa including actigraphy."""
+    """Sanity checks for records read via read_mesa including actigraphy."""
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
@@ -239,7 +239,7 @@ def test_read_mesa_actigraphy(tmp_path):
 
 
 def test_read_mesa_actigraphy_cached(tmp_path):
-    """Basic sanity checks for records read via read_mesa including cached actigraphy."""
+    """Sanity checks for records read via read_mesa including cached actigraphy."""
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
@@ -262,7 +262,7 @@ def test_read_mesa_actigraphy_cached(tmp_path):
 
 
 def test_read_shhs(tmp_path):
-    """Basic sanity checks for records read via read_shhs."""
+    """Sanity checks for records read via read_shhs."""
     durations = [0.1, 0.2]  # hours
     valid_stages = {int(s) for s in SleepStage}
 
@@ -280,7 +280,7 @@ def test_read_slpdb():
     """Basic test for read_slpdb."""
     pytest.importorskip("wfdb")
     # CI caches downloaded PhysioNet files across runs in this directory, see
-    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise.
+    # .github/workflows/cibuildwheel.yml; falls back to the configured default otherwise
     data_dir = os.environ.get("SLEEPECG_TEST_DATA_DIR")
     rec = next(read_slpdb(records_pattern="slp01a", data_dir=data_dir))
     assert rec.sleep_stages.shape == (240,)

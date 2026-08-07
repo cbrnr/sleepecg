@@ -370,12 +370,11 @@ _GUDB_MD5 = {
 
 
 def _generate_gudb_md5(data_dir: str | Path | None = None) -> dict[str, str]:
-    """
-    Compute checksums for files in GUDB.
+    """Compute checksums for files in GUDB.
 
-    This function can be used to compute the checksums from scratch if the data is already
-    available locally. The global `_GUDB_MD5` dictionary should be equal to the return value
-    of this function, so usually it is not necessary to run this function.
+    This function can be used to compute the checksums from scratch if the data is
+    already available locally. The global `_GUDB_MD5` dictionary should be equal to the
+    return value of this function, so usually it is not necessary to run this function.
 
     Parameters
     ----------

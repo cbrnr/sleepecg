@@ -30,10 +30,10 @@ from sleepecg.io.physionet import _list_physionet, download_physionet
 
 
 class SleepStage(IntEnum):
-    """
-    Mapping of AASM sleep stages to integers.
+    """Mapping of AASM sleep stages to integers.
 
-    To facilitate hypnogram plotting, values start with zero and increase with wakefulness.
+    To facilitate hypnogram plotting, values start with zero and increase with
+    wakefulness.
     """
 
     UNDEFINED = 0
@@ -53,8 +53,7 @@ class Gender(IntEnum):
 
 @dataclass
 class SubjectData:
-    """
-    Store data about a single subject.
+    """Store data about a single subject.
 
     Attributes
     ----------
@@ -74,8 +73,7 @@ class SubjectData:
 
 @dataclass
 class SleepRecord:
-    """
-    Store a single sleep record.
+    """Store a single sleep record.
 
     Attributes
     ----------
@@ -93,9 +91,9 @@ class SleepRecord:
     subject_data : SubjectData, optional
         Dataclass containing subject data (such as gender or age), by default `None`.
     activity_counts: np.ndarray, optional
-        One activity-count value per feature-extraction epoch, by default `None`. Activity
-        counts depend on the device and calculation method, so values produced by
-        different methods are not necessarily comparable.
+        One activity-count value per feature-extraction epoch, by default `None`.
+        Activity counts depend on the device and calculation method, so values produced
+        by different methods are not necessarily comparable.
     """
 
     sleep_stages: np.ndarray | None = None
@@ -115,8 +113,7 @@ class _ParseNsrrXmlResult(NamedTuple):
 
 
 def _parse_nsrr_xml(xml_filepath: Path) -> _ParseNsrrXmlResult:
-    """
-    Parse NSRR XML sleep stage annotation file.
+    """Parse NSRR XML sleep stage annotation file.
 
     Parameters
     ----------
@@ -189,13 +186,12 @@ def read_mesa(
     data_dir: str | Path | None = None,
     activity_source: str | None = None,
 ) -> Iterator[SleepRecord]:
-    """
-    Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
+    """Lazily read records from [MESA](https://sleepdata.org/datasets/mesa).
 
-    Each MESA record consists of an `.edf` file containing raw polysomnography data and an
-    `.xml` file containing annotated events. Since the entire MESA dataset requires about
-    385 GB of disk space, `.edf` files can be deleted after heartbeat times have been
-    extracted. Heartbeat times are cached in an `.npy` file in
+    Each MESA record consists of an `.edf` file containing raw polysomnography data and
+    an `.xml` file containing annotated events. Since the entire MESA dataset requires
+    about 385 GB of disk space, `.edf` files can be deleted after heartbeat times have
+    been extracted. Heartbeat times are cached in an `.npy` file in
     `<data_dir>/mesa/preprocessed/heartbeats`.
 
     Parameters
@@ -204,10 +200,11 @@ def read_mesa(
          Glob-like pattern to select record IDs, by default `'*'`.
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
-        `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not available for all
-        records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on the ECG contained in
-        `polysomnography/edfs/<record_id>.edf` and cache the result in
-        `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the cached heartbeats.
+        `polysomnography/annotations-rpoints/<record_id>-rpoints.csv` (not available for
+        all records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on the ECG
+        contained in `polysomnography/edfs/<record_id>.edf` and cache the result in
+        `preprocessed/heartbeats/<record_id>.npy`. If `'cached'`, get the cached
+        heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR API, by default
         `False`.
@@ -218,8 +215,8 @@ def read_mesa(
         taken from the configuration.
     activity_source : {'actigraphy', 'cached', None}, optional
         If `None` (default), actigraphy data will not be downloaded. If `'actigraphy'`,
-        download actigraphy data from MESA dataset. If `'cached'`, get the cached activity
-        counts.
+        download actigraphy data from MESA dataset. If `'cached'`, get the cached
+        activity counts.
 
     Yields
     ------
@@ -390,7 +387,7 @@ def read_mesa(
                 rpoints_filepath,
                 delimiter=",",
                 skiprows=1,
-                usecols=18,  # column 18 ('seconds') contains the annotated heartbeat times
+                usecols=18,
             )
             # for some reason some (39) records have unsorted annotations
             heartbeat_times.sort()
@@ -533,8 +530,7 @@ def read_slpdb(
     offline: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
-    """
-    Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
+    """Lazily read records from [SLPDB](https://physionet.org/content/slpdb).
 
     Required files are downloaded from PhysioNet to `<data_dir>/slpdb`.
 
@@ -620,8 +616,8 @@ def read_slpdb(
             if annotation[0] in STAGE_MAPPING:
                 sleep_stages[sample_time // (30 * fs)] = STAGE_MAPPING[annotation[0]]
 
-        # Age and weight are given in the last line of the header file, which is contained
-        # in record.comments[0] and looks like this:
+        # Age and weight are given in the last line of the header file, which is
+        # contained in record.comments[0] and looks like this:
         # '44 M 89 32-01-89' ('<age> <gender> <weight> <unspecified>')
         # For some records, age/weight is given as 'x'.
         age, _, weight, _ = record.comments[0].split()
@@ -648,13 +644,12 @@ def read_shhs(
     keep_edfs: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
-    """
-    Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).
+    """Lazily read records from [SHHS](https://sleepdata.org/datasets/shhs).
 
-    Each SHHS record consists of an `.edf` file containing raw polysomnography data and an
-    `.xml` file containing annotated events. Since the entire SHHS dataset requires about
-    356 GB of disk space, `.edf` files can be deleted after heartbeat times have been
-    extracted. Heartbeat times are cached in an `.npy` file in
+    Each SHHS record consists of an `.edf` file containing raw polysomnography data and
+    an `.xml` file containing annotated events. Since the entire SHHS dataset requires
+    about 356 GB of disk space, `.edf` files can be deleted after heartbeat times have
+    been extracted. Heartbeat times are cached in an `.npy` file in
     `<data_dir>/shhs/preprocessed/heartbeats`.
 
     Parameters
@@ -663,11 +658,11 @@ def read_shhs(
          Glob-like pattern to select record IDs, by default `'*'`.
     heartbeats_source : {'annotation', 'cached', 'ecg'}, optional
         If `'annotation'` (default), get heartbeat times from
-        `polysomnography/annotations-rpoints/shhsX/<record_id>-rpoints.csv`
-        (not available for all records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on
+        `polysomnography/annotations-rpoints/shhsX/<record_id>-rpoints.csv` (not
+        available for all records). If `'ecg'`, use `sleepecg.detect_heartbeats()` on
         the ECG contained in `polysomnography/edfs/shhsX/<record_id>.edf` and cache the
-        result in `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`, get the
-        cached heartbeats.
+        result in `preprocessed/heartbeats/shhsX/<record_id>.npy`. If `'cached'`, get
+        the cached heartbeats.
     offline : bool, optional
         If `True`, search for local files only instead of using the NSRR API, by default
         `False`.
@@ -803,7 +798,7 @@ def read_shhs(
                 rpoints_filepath,
                 delimiter=",",
                 skiprows=1,
-                usecols=19,  # column 19 ('seconds') contains the annotated heartbeat times
+                usecols=19,
             )
         elif heartbeats_source == "cached":
             if not heartbeats_file.is_file():

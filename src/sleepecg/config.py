@@ -31,12 +31,12 @@ def _read_yaml(path: Path) -> dict[str, Any]:
 
 
 def get_config() -> dict[str, str]:
-    """
-    Read SleepECG configuration.
+    """Read SleepECG configuration.
 
-    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
-    falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
-    [configuration](../configuration.md) for a list of possible settings.
+    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`),
+    this falls back to the default values defined in
+    `site-packages/sleepecg/config.yml`. See [configuration](../configuration.md) for a
+    list of possible settings.
 
     Returns
     -------
@@ -47,19 +47,20 @@ def get_config() -> dict[str, str]:
     user_config = _read_yaml(_USER_CONFIG_PATH)
     if invalid_keys := set(user_config) - set(config):
         raise ValueError(
-            f"Invalid key(s) found in user config at {_USER_CONFIG_PATH}: {invalid_keys}"
+            f"Invalid key(s) found in user config at {_USER_CONFIG_PATH}: "
+            f"{invalid_keys}"
         )
     config.update(user_config)
     return config
 
 
 def get_config_value(key: str) -> str:
-    """
-    Read specific SleepECG configuration value.
+    """Read specific SleepECG configuration value.
 
-    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`), this
-    falls back to the default values defined in `site-packages/sleepecg/config.yml`. See
-    [configuration](../configuration.md) for a list of possible settings.
+    For parameters not set in the user configuration file (`~/.sleepecg/config.yml`),
+    this falls back to the default values defined in
+    `site-packages/sleepecg/config.yml`. See [configuration](../configuration.md) for a
+    list of possible settings.
 
     Parameters
     ----------
@@ -82,11 +83,10 @@ def get_config_value(key: str) -> str:
 
 
 def set_config(**kwargs: Any) -> None:
-    """
-    Set SleepECG preferences and store them to the user configuration file.
+    """Set SleepECG preferences and store them to the user configuration file.
 
-    If a value is `None`, the corresponding key is deleted from the user configuration. See
-    [configuration](../configuration.md) for a list of possible settings.
+    If a value is `None`, the corresponding key is deleted from the user configuration.
+    See [configuration](../configuration.md) for a list of possible settings.
 
     Parameters
     ----------
@@ -105,7 +105,8 @@ def set_config(**kwargs: Any) -> None:
         if key not in default_config:
             options = ", ".join(default_config)
             raise ValueError(
-                f"Trying to set invalid config key: {key!r}, possible options: {options}"
+                f"Trying to set invalid config key: {key!r}, possible options: "
+                f"{options}"
             )
 
     for key, value in kwargs.items():

@@ -109,13 +109,16 @@ markers = ["c_extension"]
 filterwarnings = ["error"]
 
 [tool.ruff.lint]
-extend-select = ["C4", "D", "PERF", "W"]
+extend-select = ["C4", "D", "E501", "PERF", "W"]
 ignore = ["D105", "DTZ"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "**/examples/*.py" = ["D100"]
 "setup.py" = ["D10"]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 88
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

@@ -27,8 +27,7 @@ from sleepecg.plot import plot_ecg
 
 @dataclass
 class ECGRecord:
-    """
-    Store a single ECG record.
+    """Store a single ECG record.
 
     Attributes
     ----------
@@ -51,8 +50,7 @@ class ECGRecord:
     id: str | None = None
 
     def export(self, filename: str | Path) -> None:
-        """
-        Export ECG record to CSV.
+        """Export ECG record to CSV.
 
         Parameters
         ----------
@@ -62,14 +60,14 @@ class ECGRecord:
         export_ecg_record(self, filename)
 
     def plot(self, **kwargs: np.ndarray) -> tuple[Figure, Axes]:
-        """
-        Plot ECG time series with optional markers.
+        """Plot ECG time series with optional markers.
 
         Parameters
         ----------
         **kwargs : np.ndarray
-            Positions of annotations (i.e. heartbeats) in samples. If more than one marker
-            sequence is given, the keywords will be used as labels in the plot legend.
+            Positions of annotations (i.e. heartbeats) in samples. If more than one
+            marker sequence is given, the keywords will be used as labels in the plot
+            legend.
 
         Returns
         -------
@@ -84,8 +82,7 @@ class ECGRecord:
 
 
 def export_ecg_record(record: ECGRecord, filename: str | Path) -> None:
-    """
-    Export ECG record to CSV.
+    """Export ECG record to CSV.
 
     Parameters
     ----------
@@ -113,8 +110,7 @@ def read_ltdb(
     offline: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
-    """
-    Lazily read records from [LTDB](https://physionet.org/content/ltdb/).
+    """Lazily read records from [LTDB](https://physionet.org/content/ltdb/).
 
     Parameters
     ----------
@@ -144,8 +140,7 @@ def read_mitdb(
     offline: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
-    """
-    Lazily read records from [MITDB](https://physionet.org/content/mitdb/).
+    """Lazily read records from [MITDB](https://physionet.org/content/mitdb/).
 
     Parameters
     ----------
@@ -176,8 +171,7 @@ def _read_mitbih(
     offline: bool,
     data_dir: str | Path,
 ) -> Iterator[ECGRecord]:
-    """
-    Lazily reads records from MIT-BIH datasets (e.g. MITDB, LTDB).
+    """Lazily reads records from MIT-BIH datasets (e.g. MITDB, LTDB).
 
     Required files are downloaded if not present in `<data_dir>/<db_slug>`.
 
@@ -241,8 +235,7 @@ def read_gudb(
     offline: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[ECGRecord]:
-    """
-    Lazily read records from [GUDB](https://berndporr.github.io/ECG-GUDB/).
+    """Lazily read records from [GUDB](https://berndporr.github.io/ECG-GUDB/).
 
     Required files are downloaded if not present in `'<data_dir>/gudb'`.
 
@@ -293,7 +286,7 @@ def read_gudb(
                     ("chest", "II", "III"),
                     np.loadtxt(
                         db_dir / experiment_subdir / "ECG.tsv",
-                        delimiter=" ",  # space-separated (contrary to what .tsv suggests)
+                        delimiter=" ",  # space-separated
                         usecols=(0, 1, 2),
                         unpack=True,
                     ),

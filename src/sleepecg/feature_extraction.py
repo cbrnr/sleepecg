@@ -75,11 +75,10 @@ _TIME_DOMAIN_EXPECTED_WARNING_MESSAGES = (
 
 
 def _create_ragged_array(data: list[np.ndarray]) -> np.ndarray:
-    """
-    Convert a list of arrays with different lengths to a numpy array.
+    """Convert a list of arrays with different lengths to a numpy array.
 
-    Each element in `data` is a row in the resulting array. Rows shorter than the longest
-    row will be padded with `np.nan`.
+    Each element in `data` is a row in the resulting array. Rows shorter than the
+    longest row will be padded with `np.nan`.
 
     Parameters
     ----------
@@ -105,10 +104,10 @@ def _split_into_windows(
     lookback: int,
     lookforward: int,
 ) -> list[np.ndarray]:
-    """
-    Split (irregularly sampled) data into windows of equal temporal length.
+    """Split (irregularly sampled) data into windows of equal temporal length.
 
-    Make sure `data_times`, `window_times`, `lookback` and `lookforward` use the same units.
+    Make sure `data_times`, `window_times`, `lookback` and `lookforward` use the same
+    units.
 
     Parameters
     ----------
@@ -142,11 +141,10 @@ def _split_into_windows(
 def _nanpsd(
     x: np.ndarray, fs: float, max_nans: float = 0
 ) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Compute power spectral density (PSD) along axis 1, ignoring NaNs.
+    """Compute power spectral density (PSD) along axis 1, ignoring NaNs.
 
-    For rows containing a fraction of NaNs higher than `max_nans`, the output array `Pxx` is
-    filled with `np.nan`.
+    For rows containing a fraction of NaNs higher than `max_nans`, the output array
+    `Pxx` is filled with `np.nan`.
 
     Parameters
     ----------
@@ -156,7 +154,8 @@ def _nanpsd(
         Sampling frequency in Hz.
     max_nans : float, optional
         Maximum fraction of NaNs in a signal (i.e. row of `x`), for which the PSD
-        computation is attempted. Should be a value between `0.0` and `1.0`, by default `0`.
+        computation is attempted. Should be a value between `0.0` and `1.0`, by default
+        `0`.
 
     Returns
     -------
@@ -193,8 +192,7 @@ def _hrv_timedomain_features(
     lookback: int,
     lookforward: int,
 ) -> np.ndarray:
-    """
-    Calculate 26 time domain heart rate variability (HRV) features.
+    """Calculate 26 time domain heart rate variability (HRV) features.
 
     Features are implemented according to [1]_, [2]_ and [3]_.
 
@@ -219,16 +217,16 @@ def _hrv_timedomain_features(
 
     Notes
     -----
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
-       standards of measurement, physiological interpretation and clinical use. Circulation,
-       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate
+       variability: standards of measurement, physiological interpretation and clinical
+       use. Circulation, 93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
     .. [2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability
        metrics and norms. Frontiers in Public Health, 258.
        https://doi.org/10.3389/fpubh.2017.00258
     .. [3] Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of
-       assessing cardiac autonomic function and its comparison with spectral analysis and
-       coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
-       62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
+       assessing cardiac autonomic function and its comparison with spectral analysis
+       and coefficient of variation of R–R interval. Journal of the Autonomic Nervous
+       System, 62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
     """
     NN = _create_ragged_array(
         _split_into_windows(
@@ -315,8 +313,7 @@ def _hrv_frequencydomain_features(
     fs_rri_resample: float,
     max_nans: float,
 ) -> np.ndarray:
-    """
-    Calculate seven frequency domain heart rate variability (HRV) features.
+    """Calculate seven frequency domain heart rate variability (HRV) features.
 
     Features are implemented according to [1]_.
 
@@ -348,9 +345,9 @@ def _hrv_frequencydomain_features(
 
     Notes
     -----
-    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate variability:
-       standards of measurement, physiological interpretation and clinical use. Circulation,
-       93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    .. [1] Task Force of the European Society of Cardiology. (1996). Heart rate
+       variability: standards of measurement, physiological interpretation and clinical
+       use. Circulation, 93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
     """
     rri_interp_times = np.arange(
         stage_times[0] - lookback,
@@ -388,12 +385,11 @@ def _hrv_frequencydomain_features(
 
 
 def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
-    """
-    Create a feature matrix from record metadata.
+    """Create a feature matrix from record metadata.
 
-    Recording start time, gender, age, and weight are used as (constant) features. In case
-    of missing information (i.e. the required attribute of `SleepRecord` is `None`), the
-    corresponding column is filled with `np.nan`.
+    Recording start time, gender, age, and weight are used as (constant) features. In
+    case of missing information (i.e. the required attribute of `SleepRecord` is
+    `None`), the corresponding column is filled with `np.nan`.
 
     Parameters
     ----------
@@ -432,12 +428,11 @@ def _metadata_features(record: SleepRecord, num_stages: int) -> np.ndarray:
 def _parse_feature_selection(
     requested_ids: list[str],
 ) -> tuple[list[str], list[str], list[int]]:
-    """
-    Parse a list containing feature group names and single feature IDs.
+    """Parse a list containing feature group names and single feature IDs.
 
     Each feature group is expanded to all its feature identifiers as listed in
-    `feature_extraction._FEATURE_GROUPS`, preserving input order. If an invalid (group) ID
-    is found, a `ValueError` is raised.
+    `feature_extraction._FEATURE_GROUPS`, preserving input order. If an invalid (group)
+    ID is found, a `ValueError` is raised.
 
     Parameters
     ----------
@@ -483,11 +478,10 @@ def _parse_feature_selection(
 def _check_frequencydomain_window_time(
     window_time: int, feature_ids: list[str]
 ) -> None:
-    """
-    Warn if the duration of the analysis window is too short for a frequency domain feature.
+    """Warn if the analysis window is too short for frequency-domain features.
 
-    Each window duration should be at least 10 times the wavelength of the lower frequency
-    bound of the investigated component.
+    Each window duration should be at least 10 times the wavelength of the lower
+    frequency bound of the investigated component.
 
     Parameters
     ----------
@@ -521,19 +515,18 @@ def preprocess_rri(
     min_rri: float | None = None,
     max_rri: float | None = None,
 ) -> np.ndarray:
-    """
-    Replace invalid RRI samples with `np.nan`.
+    """Replace invalid RRI samples with `np.nan`.
 
     Parameters
     ----------
     rri : np.ndarray
         An array containing consecutive RR interval lengths in seconds.
     min_rri : float, optional
-        Minimum RRI in seconds to be considered valid. If `None` (default), no lower bounds
-        check is performed.
+        Minimum RRI in seconds to be considered valid. If `None` (default), no lower
+        bounds check is performed.
     max_rri : float, optional
-        Maximum RRI in seconds to be considered valid. If `None` (default), no upper bounds
-        check is performed.
+        Maximum RRI in seconds to be considered valid. If `None` (default), no upper
+        bounds check is performed.
 
     Returns
     -------
@@ -569,8 +562,7 @@ def _extract_features_single(
     feature_ids: list[str],
     col_indices: list[int],
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """
-    Calculate features for a single record.
+    """Calculate features for a single record.
 
     This function is required to allow parallelizing feature extraction.
 
@@ -599,9 +591,9 @@ def _extract_features_single(
         Maximum fraction of NaNs in an analysis window for which frequency features are
         computed. Should be a value between `0.0` and `1.0`.
     feature_ids : list[str]
-        A list containing the identifiers of all features to be extracted. This is only used
-        to avoid issuing a warning about the analysis window being too short for some
-        frequency range which is not requested.
+        A list containing the identifiers of all features to be extracted. This is only
+        used to avoid issuing a warning about the analysis window being too short for
+        some frequency range which is not requested.
     col_indices : list[int]
         The column indices of `feature_ids` in a list of all feature IDs in all
         `required_groups`. Required to select the columns corresponding to the requested
@@ -613,8 +605,8 @@ def _extract_features_single(
         The feature matrix of shape `(len(sleep_stages), <num_features>)` containing the
         extracted features.
     stages : np.ndarray | None
-        The label vector, i.e. the annotated sleep stages. For a `record` without annotated
-        stages, this will be `None`.
+        The label vector, i.e. the annotated sleep stages. For a `record` without
+        annotated stages, this will be `None`.
     """
     rri_required = "hrv-time" in required_groups or "hrv-frequency" in required_groups
 
@@ -681,7 +673,8 @@ def _extract_features_single(
             if len(record.activity_counts) != num_stages:
                 raise ValueError(
                     f"activity_counts for {record.id} contains "
-                    f"{len(record.activity_counts)} values, but {num_stages} are required."
+                    f"{len(record.activity_counts)} values, but {num_stages} are "
+                    "required."
                 )
             X.append(record.activity_counts.reshape(-1, 1))
     features = np.hstack(X)[:, col_indices]
@@ -719,41 +712,41 @@ def extract_features(
     max_nans: float = 0,
     n_jobs: int = 1,
 ) -> tuple[list[np.ndarray], list[np.ndarray | None], list[str]]:
-    """
-    Calculate features from sleep data (e.g. heart rate).
+    """Calculate features from sleep data (e.g. heart rate).
 
-    Time and frequency domain heart rate variability (HRV) features are calculated based on
-    the following publications (see [feature extraction](../feature_extraction.md) for
-    available features and feature groups.):
+    Time and frequency domain heart rate variability (HRV) features are calculated based
+    on the following publications (see [feature extraction](../feature_extraction.md)
+    for available features and feature groups.):
 
     - Task Force of the European Society of Cardiology. (1996). Heart rate variability:
-      standards of measurement, physiological interpretation and clinical use. Circulation,
-      93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
-    - Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability metrics
-      and norms. Frontiers in Public Health, 258. https://doi.org/10.3389/fpubh.2017.00258
-    - Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of assessing
-      cardiac autonomic function and its comparison with spectral analysis and coefficient
-      of variation of R–R interval. Journal of the Autonomic Nervous System, 62(1-2), 79-84.
-      https://doi.org/10.1016/S0165-1838(96)00112-9
+      standards of measurement, physiological interpretation and clinical use.
+      Circulation, 93, 1043-1065. https://doi.org/10.1161/01.CIR.93.5.1043
+    - Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability
+      metrics and norms. Frontiers in Public Health, 258.
+      https://doi.org/10.3389/fpubh.2017.00258
+    - Toichi, M., Sugiura, T., Murai, T., & Sengoku, A. (1997). A new method of
+      assessing cardiac autonomic function and its comparison with spectral analysis and
+      coefficient of variation of R–R interval. Journal of the Autonomic Nervous System,
+      62(1-2), 79-84. https://doi.org/10.1016/S0165-1838(96)00112-9
 
     Parameters
     ----------
     records : Iterable[SleepRecord]
-        An iterable of `SleepRecord` objects as yielded by the various reader functions in
-        SleepECG.
+        An iterable of `SleepRecord` objects as yielded by the various reader functions
+        in SleepECG.
     lookback : int, optional
-        Backward extension of the analysis window from each sleep stage time in seconds, by
-        default `0`.
+        Backward extension of the analysis window from each sleep stage time in seconds,
+        by default `0`.
     lookforward : int, optional
-        Forward extension of the analysis window from each sleep stage time in seconds, by
-        default `30`.
+        Forward extension of the analysis window from each sleep stage time in seconds,
+        by default `30`.
     sleep_stage_duration : int, optional
         Duration of a single sleep stage in the returned `stages` in seconds, by default
         `30`.
     feature_selection : list[str], optional
-        Which features to extract. Can be feature groups or single feature identifiers, as
-        listed in [feature extraction](../feature_extraction.md). If `None` (default), all
-        possible features are extracted.
+        Which features to extract. Can be feature groups or single feature identifiers,
+        as listed in [feature extraction](../feature_extraction.md). If `None`
+        (default), all possible features are extracted.
     fs_rri_resample : float, optional
         Frequency in Hz at which the RRI time series should be resampled before spectral
         analysis. Only relevant for frequency domain features, by default `4`.
@@ -774,14 +767,16 @@ def extract_features(
     -------
     features : list[np.ndarray]
         A list containing feature matrices, which are arrays of shape
-        `(len(sleep_stages), <num_features>)` and contain the extracted features per record.
+        `(len(sleep_stages), <num_features>)` and contain the extracted features per
+        record.
     stages : list[np.ndarray | None]
         A list containing label vectors, i.e. the annotated sleep stages. For any
-        `SleepRecord` without annotated stages, the corresponding list entry will be `None`.
+        `SleepRecord` without annotated stages, the corresponding list entry will be
+        `None`.
     feature_ids : list[str]
-        A list containing the identifiers of the extracted features. Feature groups passed
-        in `feature_selection` are expanded to all individual features they contain. The
-        order matches the column order of the feature matrix.
+        A list containing the identifiers of the extracted features. Feature groups
+        passed in `feature_selection` are expanded to all individual features they
+        contain. The order matches the column order of the feature matrix.
     """
     if feature_selection is None:
         feature_selection = list(_FEATURE_GROUPS)

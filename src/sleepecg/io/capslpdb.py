@@ -222,8 +222,7 @@ def read_capslpdb(
     keep_edfs: bool = False,
     data_dir: str | Path | None = None,
 ) -> Iterator[SleepRecord]:
-    """
-    Lazily read records from [CAPSLPDB](https://physionet.org/content/capslpdb/).
+    """Lazily read records from [CAPSLPDB](https://physionet.org/content/capslpdb/).
 
     Each record consists of an EDF file containing polysomnography signals and a text
     file containing sleep-stage annotations. Sleep stages are aligned to complete
@@ -241,8 +240,8 @@ def read_capslpdb(
         If `True`, search for local files only instead of downloading from PhysioNet, by
         default `False`.
     keep_edfs : bool, optional
-        If `False`, remove EDF files downloaded for heartbeat detection after processing,
-        by default `False`.
+        If `False`, remove EDF files downloaded for heartbeat detection after
+        processing, by default `False`.
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored. If `None` (default), the value will be
         taken from the configuration.
@@ -334,8 +333,8 @@ def read_capslpdb(
             ecg_data = _get_capslpdb_ecg(edf)
             if ecg_data is None:
                 warnings.warn(
-                    f"Skipping {record_id} because its EDF does not contain a supported "
-                    "ECG channel.",
+                    f"Skipping {record_id} because its EDF does not contain a supported"
+                    " ECG channel.",
                     RuntimeWarning,
                     stacklevel=2,
                 )

@@ -25,8 +25,7 @@ def plot_ecg(
     title: str | None = None,
     **kwargs: np.ndarray,
 ) -> tuple[Figure, Axes]:
-    """
-    Plot ECG time series with optional markers.
+    """Plot ECG time series with optional markers.
 
     Parameters
     ----------
@@ -61,9 +60,9 @@ def plot_ecg(
 
     >>> plot(ecg, fs, marker1=annotations, marker2=heartbeats)
 
-    The last example will create two annotation series, the first one labeled `marker1` with
-    positions given by `annotations`, and the second one labeled `marker2` with positions
-    given by `heartbeats`.
+    The last example will create two annotation series, the first one labeled `marker1`
+    with positions given by `annotations`, and the second one labeled `marker2` with
+    positions given by `heartbeats`.
     """
     import matplotlib.pyplot as plt
     from matplotlib import colormaps
@@ -108,8 +107,7 @@ def plot_hypnogram(
     merge_annotations: bool = False,
     show_bpm: bool = False,
 ) -> tuple[Figure, list[Axes]]:
-    """
-    Plot a hypnogram for a single record.
+    """Plot a hypnogram for a single record.
 
     Annotated sleep stages are included in the plot if available in `record`. If
     `stages_pred` contains probabilities, they are shown in an additional subplot.
@@ -122,16 +120,16 @@ def plot_hypnogram(
         The predicted stages, either as a 1D array of integers or a 2D array of
         probabilities.
     stages_mode : str
-        Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
-        `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
+        Identifier of the grouping mode. Can be any of `'wake-sleep'`,
+        `'wake-rem-nrem'`, `'wake-rem-light-n3'`, or `'wake-rem-n1-n2-n3'`.
     stages_pred_duration : int, optional
         Duration of the predicted sleep stages in seconds, by default `30`.
     merge_annotations : bool, optional
         If `True`, merge annotations according to `stages_mode`, otherwise plot original
         annotations. By default `False`.
     show_bpm : bool, optional
-        If `True`, include a subplot of the heart rate in bpm. This can be helpful to find
-        bad signal quality intervals, by default `False`.
+        If `True`, include a subplot of the heart rate in bpm. This can be helpful to
+        find bad signal quality intervals, by default `False`.
 
     Returns
     -------
@@ -238,8 +236,7 @@ def _plot_confusion_matrix(
     confmat: np.ndarray,
     stage_names: list[str],
 ) -> tuple[Figure, Axes]:
-    """
-    Create a labeled plot of a confusion matrix.
+    """Create a labeled plot of a confusion matrix.
 
     Parameters
     ----------

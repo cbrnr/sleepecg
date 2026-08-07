@@ -31,8 +31,7 @@ _sos_filters: dict[float, np.ndarray] = {}
 
 
 def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndarray:
-    """
-    Detect heartbeats in an ECG signal.
+    """Detect heartbeats in an ECG signal.
 
     This is a modified version of the beat detection algorithm using adaptive thresholds
     described by Pan & Tompkins in 1985.
@@ -44,19 +43,20 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
       Arrhythmia Database, a second order bandpass with cutoff frequencies 5 and 30 Hz
       created via `scipy.signal.butter()` is used.
     - A bidirectional filter is used to remove filter delay.
-    - The integration window is centered on the filtered signal, i.e. a peak in the filtered
-      signal corresponds to a plateau in the integrated signal, not a saddle in the rising
-      edge. This lets the adaptive threshold for the integrated signal remain at a higher
-      level, which is less susceptible to noise.
-    - Learning phase 1 is not described in detail in the original paper. This implementation
-      uses maximum and mean values inside the first two seconds to initialize
-      SPKI/SPKF/NPKI/NPKF. Details are provided in the `_thresholding` code.
-    - In addition to the original searchback criterion, a searchback is also performed if no
-      peak is found during the first second of the signal or no second peak is found 1.5 s
-      after the first one. This ensures correct behaviour at signal start in case an
-      unusually large peak during learning phase 1 messes up threshold initialization.
-    - After an unsuccessful searchback, the procedure is repeated in the same interval with
-      further reduced thresholds, up to 16 times.
+    - The integration window is centered on the filtered signal, i.e. a peak in the
+      filtered signal corresponds to a plateau in the integrated signal, not a saddle in
+      the rising edge. This lets the adaptive threshold for the integrated signal remain
+      at a higher level, which is less susceptible to noise.
+    - Learning phase 1 is not described in detail in the original paper. This
+      implementation uses maximum and mean values inside the first two seconds to
+      initialize SPKI/SPKF/NPKI/NPKF. Details are provided in the `_thresholding` code.
+    - In addition to the original searchback criterion, a searchback is also performed
+      if no peak is found during the first second of the signal or no second peak is
+      found 1.5 s after the first one. This ensures correct behaviour at signal start in
+      case an unusually large peak during learning phase 1 messes up threshold
+      initialization.
+    - After an unsuccessful searchback, the procedure is repeated in the same interval
+      with further reduced thresholds, up to 16 times.
 
     Parameters
     ----------
@@ -64,13 +64,13 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
         ECG signal. Note that the unit of the data does not matter (the algorithm will
         return similar results regardless of the scaling of the data).
     fs : float
-        Sampling frequency in Hz. For best results, a sampling frequency of at least 100 Hz
-        is recommended.
+        Sampling frequency in Hz. For best results, a sampling frequency of 100 Hz or
+        higher is recommended.
     backend : {'c', 'numba', 'python'}
-        Which implementation of the squared moving integration and thresholding algorithm to
-        use. If available, `'c'` is the fastest implementation, `'numba'` is about 25%
-        slower, and `'python'` is about 20 times slower but provided as a fallback. By
-        default `'c'`.
+        Which implementation of the squared moving integration and thresholding
+        algorithm to use. If available, `'c'` is the fastest implementation, `'numba'`
+        is about 25% slower, and `'python'` is about 20 times slower but provided as a
+        fallback. By default `'c'`.
 
     Returns
     -------
@@ -125,9 +125,9 @@ def detect_heartbeats(ecg: np.ndarray, fs: float, backend: str = "c") -> np.ndar
     # filtering the signal at the first non-flat index.
     filtered_ecg = scipy.signal.sosfiltfilt(sos, ecg[first_nonflat:])
 
-    # scipy.signal.sosfiltfilt returns an array with negative strides. Both `np.correlate`
-    # and `_thresholding` require contiguity, so ensuring this here once reduces total
-    # runtime.
+    # scipy.signal.sosfiltfilt returns an array with negative strides. Both
+    # `np.correlate` and `_thresholding` require contiguity, so ensuring this here once
+    # reduces total runtime.
     filtered_ecg = np.ascontiguousarray(filtered_ecg)
 
     # five-point derivative as described by Pan & Tompkins
@@ -167,14 +167,13 @@ def compare_heartbeats(
     annotation: np.ndarray,
     max_distance: int = 0,
 ) -> _CompareHeartbeatsResult:
-    """
-    Determine correctness of detection results.
+    """Determine correctness of detection results.
 
     Determine true positives (TP), false positives (FP) and false negatives (FN) for an
-    array of detected heartbeat indices based on an array of annotated heartbeat indices.
-    Since neither annotations nor automated detectors usually hit the peak perfectly,
-    detected peaks no further than `max_distance` in both directions from an annotated peak
-    are considered true positives.
+    array of detected heartbeat indices based on an array of annotated heartbeat
+    indices. Since neither annotations nor automated detectors usually hit the peak
+    perfectly, detected peaks no further than `max_distance` in both directions from an
+    annotated peak are considered true positives.
 
     Parameters
     ----------
@@ -229,13 +228,12 @@ def rri_similarity(
     annotation: np.ndarray,
     fs_resample: float = 4,
 ) -> _RRISimilarityResult:
-    """
-    Calculate measures of similarity between RR intervals.
+    """Calculate measures of similarity between RR intervals.
 
-    RR intervals are calculated from detected and annotated heartbeat indices. The RR time
-    series is then resampled to frequency `fs_resample` in the timespan common to both
-    detection and annotation. Pearson's and Spearman's correlation coefficients as well as
-    the root mean square error are returned.
+    RR intervals are calculated from detected and annotated heartbeat indices. The RR
+    time series is then resampled to frequency `fs_resample` in the timespan common to
+    both detection and annotation. Pearson's and Spearman's correlation coefficients as
+    well as the root mean square error are returned.
 
     Parameters
     ----------
@@ -276,8 +274,7 @@ def rri_similarity(
 
 
 def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndarray:
-    """
-    Perform squaring and moving integration of an array.
+    """Perform squaring and moving integration of an array.
 
     Parameters
     ----------
@@ -301,13 +298,13 @@ def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndar
     integration_buffer = np.zeros(window_length)
     sum = 0
 
-    # the integration window is centered on the original signal, for even window_length the
-    # behavior of np.convolve with a constant window of even length is replicated (i.e the
-    # window is off-center to the left)
+    # the integration window is centered on the original signal, for even window_length
+    # the behavior of np.convolve with a constant window of even length is replicated
+    # (i.e the window is off-center to the left)
     window_length_half = (window_length + 1) // 2
 
-    # during the first `window_length/2` samples there is no output since the integration
-    # window's center would be at a negative index of the input
+    # during the first `window_length/2` samples there is no output since the
+    # integration window's center would be at a negative index of the input
     for i in range(window_length_half):
         square = x[i] * x[i]
         integration_buffer[i % window_length] = square
@@ -320,8 +317,8 @@ def _squared_moving_integration_py(x: np.ndarray, window_length: int) -> np.ndar
         integration_buffer[i % window_length] = square
         sum += square
 
-    # the end of the x signal is reached, so the integration window is built down and the
-    # last `window_length/2` entries of the output are filled
+    # the end of the x signal is reached, so the integration window is built down and
+    # the last `window_length/2` entries of the output are filled
     for i in range(signal_len, signal_len + window_length_half):
         output[i - window_length_half] = sum
         sum -= integration_buffer[i % window_length]
@@ -334,8 +331,7 @@ def _thresholding_py(
     integrated_ecg: np.ndarray,
     fs: float,
 ) -> np.ndarray:
-    """
-    Perform adaptive thresholding based on Pan and Tompkin's algorithm.
+    """Perform adaptive thresholding based on Pan and Tompkin's algorithm.
 
     Parameters
     ----------
@@ -349,7 +345,8 @@ def _thresholding_py(
     Returns
     -------
     np.ndarray
-        Array containing `1` for every sample in `filtered_ecg` identified as a heartbeat.
+        Array containing `1` for every sample in `filtered_ecg` identified as a
+        heartbeat.
     """
     signal_len = len(filtered_ecg)
     beat_mask = np.zeros_like(filtered_ecg)  # numba can't work with dtype=bool
@@ -357,18 +354,18 @@ def _thresholding_py(
     REFRACTORY_SAMPLES = int(0.2 * fs)  # 200ms
     T_WAVE_WINDOW = int(0.36 * fs)  # 360ms
 
-    # --------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------
     # Learning Phase 1
-    # --------------------------------------------------------------------------------------
-    # Pan & Tompkins mention a learning phase to initialize detection thresholds based upon
-    # signal and noise peaks detected during the first two seconds. The exact initialization
-    # process is not described. The adaptive thresholds are calculated based on running
-    # estimates of signal and noise peaks (`SPKF` and `NPKF` for the filtered signal).
-    # Assuming constant peak amplitudes, those values converge towards the signal peak
-    # amplitude and noise peak amplitude, respectively. Therefore, SPKF/SPKI are assumed to
-    # be the maximum values of the filtered/integrated signal during the learning phase.
-    # Accordingly, NPKF/NPKI are initialized to the mean values during the first two
-    # seconds.
+    # ----------------------------------------------------------------------------------
+    # Pan & Tompkins mention a learning phase to initialize detection thresholds based
+    # upon signal and noise peaks detected during the first two seconds. The exact
+    # initialization process is not described. The adaptive thresholds are calculated
+    # based on running estimates of signal and noise peaks (`SPKF` and `NPKF` for the
+    # filtered signal). Assuming constant peak amplitudes, those values converge towards
+    # the signal peak amplitude and noise peak amplitude, respectively. Therefore,
+    # SPKF/SPKI are assumed to be the maximum values of the filtered/integrated signal
+    # during the learning phase. Accordingly, NPKF/NPKI are initialized to the mean
+    # values during the first two seconds.
     SPKF = np.max(filtered_ecg[: int(2 * fs)])
     NPKF = np.mean(filtered_ecg[: int(2 * fs)])
     SPKI = np.max(integrated_ecg[: int(2 * fs)])
@@ -377,14 +374,15 @@ def _thresholding_py(
     threshold_F1 = NPKF + 0.25 * (SPKF - NPKF)
 
     # According to the original paper, `RR AVERAGE2` is the average of the last 8 RR
-    # intervals that lie in a certain interval. In the worst case, this requires going back
-    # to the very first RR interval. Therefore, all RR intervals are stored. As the
-    # algorithm enforces a refractory period, the maximum number of heartbeats is equal to
-    # signal_len / refractory_samples.
+    # intervals that lie in a certain interval. In the worst case, this requires going
+    # back to the very first RR interval. Therefore, all RR intervals are stored. As the
+    # algorithm enforces a refractory period, the maximum number of heartbeats is equal
+    # to signal_len / refractory_samples.
     RR_intervals = np.zeros(signal_len // REFRACTORY_SAMPLES)
 
-    # tracking the number of peaks found is required to calculate the average RR intervals
-    # correctly during the first 8 beats (also needed for access to RR_intervals)
+    # tracking the number of peaks found is required to calculate the average RR
+    # intervals correctly during the first 8 beats (also needed for access to
+    # RR_intervals)
     num_peaks_found = 0
 
     RR_missed_limit = 0.0
@@ -405,33 +403,36 @@ def _thresholding_py(
 
         signal_peak_found = False
         noise_peak_found = False
-        # ----------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------
         # Searchback
-        # ----------------------------------------------------------------------------------
-        # During a "searchback", detection thresholds are reduced by one half. The peak with
-        # highest amplitude between 200ms (i.e. the refractory period) after the previous
-        # detected peak and the current index is considered as a peak candidate.
-        # Modifications compared to Pan & Tompkins' original method:
-        # - The original paper states that a searchback peak's amplitude has to be between
-        #   the original threshold and the reduced one. It can happen that this is the case
-        #   for the filtered signal, but not for the integrated one (if the raw signal
-        #   amplitude is suddenly considerably lower). Therefore, this implementation
-        #   requires both signals (filtered and integrated) to be above the reduced
-        #   threshold, but only one of them to be below the original threshold.
+        # ------------------------------------------------------------------------------
+        # During a "searchback", detection thresholds are reduced by one half. The peak
+        # with highest amplitude between 200ms (i.e. the refractory period) after the
+        # previous detected peak and the current index is considered as a peak
+        # candidate. Modifications compared to Pan & Tompkins' original method:
+        # - The original paper states that a searchback peak's amplitude has to be
+        #   between the original threshold and the reduced one. It can happen that this
+        #   is the case for the filtered signal, but not for the integrated one (if the
+        #   raw signal amplitude is suddenly considerably lower). Therefore, this
+        #   implementation requires both signals (filtered and integrated) to be above
+        #   the reduced threshold, but only one of them to be below the original
+        #   threshold.
         # - No further steps are specified for the case that no peak is found during
-        #   searchback. Since a searchback is triggered because (physiologically) there has
-        #   to be a heartbeat during the searchback interval, this implementation repeats
-        #   the process with further reduced thresholds. Up to 16 searchback runs are
-        #   performed, each time the thresholds are further reduced by 1/2. A hard limit of
-        #   16 runs avoids an endless loop in case there is really only noise.
+        #   searchback. Since a searchback is triggered because (physiologically) there
+        #   has to be a heartbeat during the searchback interval, this implementation
+        #   repeats the process with further reduced thresholds. Up to 16 searchback
+        #   runs are performed, each time the thresholds are further reduced by 1/2. A
+        #   hard limit of 16 runs avoids an endless loop in case there is really only
+        #   noise.
         # - Since the criterion for triggering a searchback is based on the average RR
         #   interval, in the original form this could only happen after at least two
-        #   detected heartbeats. An exceptionally large peak during the first learning phase
-        #   can throw the initial thresholds off, so peaks at the beginning are ignored -
-        #   which in turn invalidates learning phase 2. Therefore, in addition to the
-        #   original searchback criterion (no peak during 1.66 * "the average RR interval"),
-        #   a searchback is triggered in two cases: (1) if there is no peak during the first
-        #   second, and (2) if there is no peak 1.5s after the first peak.
+        #   detected heartbeats. An exceptionally large peak during the first learning
+        #   phase can throw the initial thresholds off, so peaks at the beginning are
+        #   ignored - which in turn invalidates learning phase 2. Therefore, in addition
+        #   to the original searchback criterion (no peak during 1.66 * "the average RR
+        #   interval"), a searchback is triggered in two cases: (1) if there is no peak
+        #   during the first second, and (2) if there is no peak 1.5s after the first
+        #   peak.
         if (
             (
                 num_peaks_found > 1
@@ -456,8 +457,8 @@ def _thresholding_py(
                         if PEAKF > filtered_ecg[searchback_index - 1]:
                             # it is a peak
                             PEAKI = integrated_ecg[searchback_index]
-                            # one signal is between the reduced and original threshold, the
-                            # other one above the reduced threshold
+                            # one signal is between the reduced and original threshold,
+                            # the other one above the reduced threshold
                             if (
                                 (
                                     threshold_F1 / searchback_divisor
@@ -479,8 +480,8 @@ def _thresholding_py(
                                 ]
                                 found_a_candidate = True
 
-                        # the amplitude of the next sample is lower, so it can't be a peak
-                        # -> skip it
+                        # the amplitude of the next sample is lower, so it can't be a
+                        # peak -> skip it
                         searchback_index += 1
 
                     searchback_index += 1
@@ -491,13 +492,14 @@ def _thresholding_py(
                     signal_peak_found = True
                     peak_index = best_searchback_index
 
-                    # don't perform a searchback until the next signal peak has been found
-                    # to avoid endless loops
+                    # don't perform a searchback until the next signal peak has been
+                    # found to avoid endless loops
                     do_searchback = False
                     break
 
-            # The thresholds do not change while searchback is active. If this pass found
-            # no candidate, the next pass only needs to inspect samples added since now.
+            # The thresholds do not change while searchback is active. If this pass
+            # found no candidate, the next pass only needs to inspect samples added
+            # since now.
             if not signal_peak_found:
                 searchback_start_index = index
 
@@ -507,9 +509,9 @@ def _thresholding_py(
                 PEAKF = filtered_ecg[index]
                 PEAKI = integrated_ecg[index]
                 if PEAKF > threshold_F1 and PEAKI > threshold_I1:
-                    # Both the filtered and the integrated signal are above their respective
-                    # thresholds. Thus the current peak is classified as a signal peak and
-                    # the running estimates SPKF and SPKI are updated.
+                    # Both the filtered and the integrated signal are above their
+                    # respective thresholds. Thus the current peak is classified as a
+                    # signal peak and the running estimates SPKF and SPKI are updated.
                     SPKF = 0.125 * PEAKF + 0.875 * SPKF
                     SPKI = 0.125 * PEAKI + 0.875 * SPKI
 
@@ -518,8 +520,8 @@ def _thresholding_py(
                 else:
                     noise_peak_found = True
 
-            # The next sample's amplitude is lower, meaning it can't be a peak, so we skip
-            # it. This is why there are two separate if-clauses for this block.
+            # The next sample's amplitude is lower, meaning it can't be a peak, so we
+            # skip it. This is why there are two separate if-clauses for this block.
             index += 1
 
         # Calculating the RR interval and comparing slopes only makes sense if there has
@@ -527,15 +529,15 @@ def _thresholding_py(
         if signal_peak_found and num_peaks_found > 0:
             RR = peak_index - previous_peak_index
 
-            # ------------------------------------------------------------------------------
+            # --------------------------------------------------------------------------
             # T Wave Identification
-            # ------------------------------------------------------------------------------
-            # "When an RR interval is less than 360 ms (it must be greater than the 200 ms
-            # latency), a judgment is made to determine whether the current QRS complex has
-            # been correctly identified or whether it is really a T wave. If the maximal
-            # slope that occurs during this waveform is less than half that of the QRS
-            # waveform that preceded it, it is identified to be a T wave; otherwise, it is
-            # called a QRS complex." (from Pan & Tompkins, 1985)
+            # --------------------------------------------------------------------------
+            # "When an RR interval is less than 360 ms (it must be greater than the 200
+            # ms latency), a judgment is made to determine whether the current QRS
+            # complex has been correctly identified or whether it is really a T wave. If
+            # the maximal slope that occurs during this waveform is less than half that
+            # of the QRS waveform that preceded it, it is identified to be a T wave;
+            # otherwise, it is called a QRS complex." (from Pan & Tompkins, 1985)
             if RR < T_WAVE_WINDOW:
                 reverse_index = peak_index
                 max_slope_in_this_peak = -1
@@ -565,9 +567,9 @@ def _thresholding_py(
                     noise_peak_found = True
 
         if signal_peak_found:
-            # What we know so far: we are at a local maximum, both thresholds are exceeded
-            # and it is not a T wave. Thus, the current sample can be considered as a
-            # "signal peak" and the adaptive thresholds are updated.
+            # What we know so far: we are at a local maximum, both thresholds are
+            # exceeded and it is not a T wave. Thus, the current sample can be
+            # considered as a "signal peak" and the adaptive thresholds are updated.
             num_peaks_found += 1
             beat_mask[peak_index] = 1
 
@@ -578,23 +580,23 @@ def _thresholding_py(
             if num_peaks_found > 1:
                 RR_intervals[num_peaks_found] = peak_index - previous_peak_index
 
-                # --------------------------------------------------------------------------
+                # ----------------------------------------------------------------------
                 # Learning phase 2
-                # --------------------------------------------------------------------------
+                # ----------------------------------------------------------------------
                 # "Learning phase 2 requires two heartbeats to initialize RR interval
                 # average and RR interval limit values." (from Pan & Tompkins, 1985)
                 if num_peaks_found == 2:
                     RR_low_limit = 0.92 * RR_intervals[num_peaks_found]
                     RR_high_limit = 1.16 * RR_intervals[num_peaks_found]
 
-                # --------------------------------------------------------------------------
+                # ----------------------------------------------------------------------
                 # RR Average 1 / RR Average 2
-                # --------------------------------------------------------------------------
-                # RR Average 2 is the average of the 8 most recent RR intervals which fell
-                # between RR_low_limit and RR_high_limit. In case of a regular heart rate,
-                # this equals RR Average 1 (the average over the 8 most recent RR intervals,
-                # independent of any limits). Therefore, RR Average 1 does not need to be
-                # calculated separately.
+                # ----------------------------------------------------------------------
+                # RR Average 2 is the average of the 8 most recent RR intervals which
+                # fell between RR_low_limit and RR_high_limit. In case of a regular
+                # heart rate, this equals RR Average 1 (the average over the 8 most
+                # recent RR intervals, independent of any limits). Therefore, RR Average
+                # 1 does not need to be calculated separately.
                 RR_sum = 0
                 RR_count = 0
                 irregular = False
@@ -614,9 +616,9 @@ def _thresholding_py(
                 RR_missed_limit = 1.66 * RR_average
 
                 if irregular:
-                    # "For irregular heart rates, the first threshold of each set is reduced
-                    # by half so as to increase the detection sensitivity and to avoid
-                    # missing beats."
+                    # "For irregular heart rates, the first threshold of each set is
+                    # reduced by half so as to increase the detection sensitivity and to
+                    # avoid missing beats."
                     threshold_F1 /= 2
                     threshold_I1 /= 2
 

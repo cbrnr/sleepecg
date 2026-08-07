@@ -25,11 +25,10 @@ def _parallel(
     *args: Any,
     **kwargs: Any,
 ) -> list[_Returnable]:
-    """
-    Apply a function to each element in an iterable in parallel.
+    """Apply a function to each element in an iterable in parallel.
 
-    This uses joblib for parallelism. If the package is not available, it falls back to a
-    pure Python loop.
+    This uses joblib for parallelism. If the package is not available, it falls back to
+    a pure Python loop.
 
     Parameters
     ----------
@@ -52,8 +51,8 @@ def _parallel(
 
     Warnings
     --------
-    Note that in case the `function` is very simple, the cost for spawning workers will make
-    the parallel execution slower than the standard execution.
+    Note that in case the `function` is very simple, the cost for spawning workers will
+    make the parallel execution slower than the standard execution.
 
     Examples
     --------
@@ -81,8 +80,7 @@ def _parallel(
 
 
 def _time_to_sec(time: datetime.time) -> int:
-    """
-    Convert a `datetime.time` to seconds.
+    """Convert a `datetime.time` to seconds.
 
     `00:00:00` corresponds to `0` and `23:59:59` to `86399`.
 
@@ -101,10 +99,11 @@ def _time_to_sec(time: datetime.time) -> int:
 
 # Classifiers don't always discriminate between all sleep stages defined by the AASM
 # guidelines. This dictionary is used to create a consistent mapping from groups of AASM
-# sleep stages (as defined in `SleepStage`) to integers. `SleepStage.UNDEFINED` is always
-# `0` and the actual stages' values increase with wakefulness, so they map correctly to the
-# y-axis in a hypnogram plot. Gaps between stage values are avoided as non-existing classes
-# in a one-hot encoding leads to issues when calculating class weights and losses.
+# sleep stages (as defined in `SleepStage`) to integers. `SleepStage.UNDEFINED` is
+# always `0` and the actual stages' values increase with wakefulness, so they map
+# correctly to the y-axis in a hypnogram plot. Gaps between stage values are avoided as
+# non-existing classes in a one-hot encoding leads to issues when calculating class
+# weights and losses.
 
 _SLEEP_STAGE_MAPPING = {
     "wake-sleep": {
@@ -142,17 +141,16 @@ _STAGE_INTS = {k: sorted(set(v.values())) for k, v in _SLEEP_STAGE_MAPPING.items
 
 
 def _merge_sleep_stages(stages: list[np.ndarray], stages_mode: str) -> list[np.ndarray]:
-    """
-    Merge sleep stage labels into groups.
+    """Merge sleep stage labels into groups.
 
     Parameters
     ----------
     stages : list[np.ndarray]
-        A list of 1D arrays containing AASM sleep stages as defined by `SleepStage`, e.g. as
-        returned by `extract_features()`.
+        A list of 1D arrays containing AASM sleep stages as defined by `SleepStage`,
+        e.g. as returned by `extract_features()`.
     stages_mode : str
-        Identifier of the grouping mode. Can be any of `'wake-sleep'`, `'wake-rem-nrem'`,
-        `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
+        Identifier of the grouping mode. Can be any of `'wake-sleep'`,
+        `'wake-rem-nrem'`, `'wake-rem-light-n3'`, `'wake-rem-n1-n2-n3'`.
 
     Returns
     -------
@@ -175,8 +173,7 @@ def _merge_sleep_stages(stages: list[np.ndarray], stages_mode: str) -> list[np.n
 
 
 def get_toy_ecg() -> tuple[np.ndarray, int]:
-    """
-    Load a 5 minute long electrocardigram sampled at 360 Hz.
+    """Load a 5 minute long electrocardigram sampled at 360 Hz.
 
     Data taken from scipy.datasets.electrocardiogram:
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.datasets.electrocardiogram.html
