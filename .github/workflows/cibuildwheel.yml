@@ -45,7 +45,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache PhysioNet test data
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: .cache/sleepecg-test-data
         key: physionet-slpdb-slp01a-mitdb-234-v1
@@ -67,7 +67,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Cache PhysioNet test data
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .cache/sleepecg-test-data
           key: physionet-slpdb-slp01a-mitdb-234-v1
