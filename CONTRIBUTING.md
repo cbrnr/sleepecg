@@ -46,10 +46,12 @@ We recommend using [uv](https://docs.astral.sh/uv/) to install and manage your P
 In a terminal, change to the `sleepecg` folder containing your fork and run the following command:
 
 ```
-uv sync --locked --all-extras --all-groups
+uv sync --locked --all-extras --all-groups --no-build-isolation-package sleepecg
 ```
 
 This installs SleepECG in editable mode together with all development dependencies (for style checking, testing, and building documentation). Any changes to the source code are directly reflected in the installed package. You can then run a command inside this environment with `uv run <command>`, for example `uv run pytest`.
+
+The `--no-build-isolation-package sleepecg` flag is required for editable installs: SleepECG's C extension is rebuilt on import using `meson`/`ninja`, which must come from this same environment (installed via the `dev` dependency group) rather than a temporary build environment that no longer exists afterwards. This flag must not be added to `pyproject.toml`, as that would also affect (and break) CI jobs that build wheels/sdists with normal build isolation.
 
 
 ## Build system

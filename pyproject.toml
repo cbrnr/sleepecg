@@ -79,11 +79,6 @@ changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 [tool.meson-python]
 limited-api = true
 
-[tool.uv]
-# build in-place using the dev group's meson/ninja/meson-python instead of an
-# isolated build environment, so the editable install's rebuild-on-import works
-no-build-isolation-package = ["sleepecg"]
-
 [tool.cibuildwheel]
 test-requires = "pytest"
 test-extras = "cibw"
