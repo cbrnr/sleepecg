@@ -7,6 +7,12 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.12"
+  jobs:
+    # reinstall sleepecg non-editably: an editable install rebuilds the C
+    # extension via ninja on every import, using build tools from an
+    # isolated temporary environment that no longer exists at doc-build time
+    post_install:
+      - uv sync --no-editable --group docs
 
 mkdocs:
   configuration: mkdocs.yml
