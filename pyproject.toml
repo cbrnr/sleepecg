@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=77.0.3", "setuptools-scm", "numpy>=2"]
-build-backend = "setuptools.build_meta"
+requires = ["meson-python>=0.15.0", "meson>=1.3.0", "numpy>=2"]
+build-backend = "mesonpy"
 
 [project]
 name = "sleepecg"
@@ -52,6 +52,9 @@ full = [  # complete package functionality
 dev = [
     "pytest >= 9.1.0",
     "pytest-cov >= 7.1.0",
+    "meson-python >= 0.15.0",
+    "meson >= 1.3.0",
+    "ninja",
     {include-group = "lint"},
     {include-group = "docs"},
 ]
@@ -72,6 +75,14 @@ homepage = "https://github.com/cbrnr/sleepecg"
 documentation = "https://sleepecg.readthedocs.io/en/latest/"
 repository = "https://github.com/cbrnr/sleepecg"
 changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
+
+[tool.meson-python]
+limited-api = true
+
+[tool.uv]
+# build in-place using the dev group's meson/ninja/meson-python instead of an
+# isolated build environment, so the editable install's rebuild-on-import works
+no-build-isolation-package = ["sleepecg"]
 
 [tool.cibuildwheel]
 test-requires = "pytest"
@@ -113,7 +124,6 @@ ignore = ["D105", "DTZ"]
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "**/examples/*.py" = ["D100"]
-"setup.py" = ["D10"]
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 88

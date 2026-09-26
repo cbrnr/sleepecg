@@ -52,6 +52,15 @@ uv sync --locked --all-extras --all-groups
 This installs SleepECG in editable mode together with all development dependencies (for style checking, testing, and building documentation). Any changes to the source code are directly reflected in the installed package. You can then run a command inside this environment with `uv run <command>`, for example `uv run pytest`.
 
 
+## Build system
+
+SleepECG uses [Meson](https://mesonbuild.com/) and [meson-python](https://mesonbuild.com/meson-python/) to compile the C extension and package the project, configured via `meson.build` files at the repository root and inside `src/sleepecg/` and `src/sleepecg/io/`.
+
+Unlike the previous setuptools-based setup, Meson does **not** auto-discover files. If you add a new Python module, or a non-code file such as a data file, you must also add it to the relevant `meson.build` file, otherwise it won't be installed (or importable, even in editable mode).
+
+Changes to the C extension source (`_heartbeat_detection.c`) are automatically recompiled the next time the package is imported, no manual rebuild step is needed.
+
+
 ## Code style
 
 SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Ruff](https://astral.sh/ruff), with the following exceptions/specifications:
@@ -113,7 +122,7 @@ uv run pytest -m "not c_extension"
 
 Follow these steps to make a new [PyPI](https://pypi.org/project/sleepecg/) release (requires write permissions for GitHub and PyPI project sites):
 
-- Remove the `.dev0` suffix from the `version` field in `pyproject.toml` (and/or adapt the version to be released if necessary)
+- Remove the `.dev0` suffix from the `version` field in `pyproject.toml` (and/or adapt the version to be released if necessary); update the `version` field in `meson.build` to match
 - Update the section in `CHANGELOG.md` corresponding to the new release with the version and current date
 - Run `uv lock` to update the lockfile
 - Commit these changes and push
@@ -122,7 +131,7 @@ Follow these steps to make a new [PyPI](https://pypi.org/project/sleepecg/) rele
 
 This concludes the new release. Now prepare the source for the next planned release as follows:
 
-- Update the `version` field to the next planned release and append `.dev0`
+- Update the `version` field (in `pyproject.toml` and `meson.build`) to the next planned release and append `.dev0`
 - Start a new section at the top of `CHANGELOG.md` titled `## [UNRELEASED] - YYYY-MM-DD`
 - Run `uv lock` to update the lockfile
 
