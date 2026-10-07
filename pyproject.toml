@@ -74,7 +74,7 @@ repository = "https://github.com/cbrnr/sleepecg"
 changelog = "https://github.com/cbrnr/sleepecg/blob/main/CHANGELOG.md"
 
 [tool.setuptools.package-data]
-sleepecg = ["*.yml", "data/*"]
+sleepecg = ["*.yml", "data/*", "classifiers/*.zip"]
 
 [tool.cibuildwheel]
 test-requires = "pytest"
