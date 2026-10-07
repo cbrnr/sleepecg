@@ -1,3 +1,5 @@
+## [UNRELEASED] - YYYY-MM-DD
+
 ## [0.6.0] - 2026-10-07
 ### Added
 - Add a reader for the CAP Sleep Database ([#35](https://github.com/cbrnr/sleepecg/issues/35) by [Daria Agafonova](https://github.com/viranovskaya))
