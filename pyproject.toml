@@ -22,49 +22,50 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
 ]
 keywords = ["sleep", "ecg", "qrs", "peak"]
 dependencies = [
-    "numpy >= 1.26.0",
-    "pyyaml >= 6.0.0",
+    "numpy >= 2.3.2",
+    "pyyaml >= 6.0.3",
     "requests >= 2.32.3",
-    "scipy >= 1.13.0",
-    "tqdm >= 4.66.0",
+    "scipy >= 1.16.1",
+    "tqdm >= 4.67.0",
 ]
 
 [project.optional-dependencies]
 cibw = [  # cibuildwheel uses this for running the test suite
     "edfio >= 0.4.4",
-    "numba >= 0.61.0",
-    "wfdb >= 4.2.0",
+    "numba >= 0.63.0",
+    "wfdb >= 4.3.1",
 ]
 full = [  # complete package functionality
     "sleepecg[cibw]",
     "joblib >= 1.4.2",
-    "matplotlib >= 3.9.2",
+    "matplotlib >= 3.10.5",
     "keras >= 3.15.0",
-    "torch >= 2.9.0",
+    "torch >= 2.12.0",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest >= 9.1.0",
+    "pytest >= 9.1.1",
     "pytest-cov >= 7.1.0",
     {include-group = "lint"},
     {include-group = "docs"},
 ]
 lint = [
-    "ruff >= 0.16.1",
-    "ty >= 0.0.67",
+    "ruff >= 0.16.10",
+    "ty >= 0.0.85",
     "types-pyyaml",
     "types-requests",
     "types-urllib3",
 ]
 docs = [  # RTD uses this when building the documentation
-    "mkdocs-material >= 9.5.0",
-    "mkdocstrings-python >= 1.11.1",
+    "mkdocs-material >= 9.7.7",
+    "mkdocstrings-python >= 2.0.9",
 ]
 
 [project.urls]
