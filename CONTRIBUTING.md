@@ -61,18 +61,18 @@ SleepECG adheres to [PEP 8](https://www.python.org/dev/peps/pep-0008/) and [Ruff
     #
     # License: BSD (3-clause)
     ```
-- The maximum line length is `92`.
+- The maximum line length is `88`.
 - [Type hints](https://www.python.org/dev/peps/pep-0484/) are encouraged.
 
-Coding and documentation style are checked via a CI job using [Ruff](https://docs.astral.sh/ruff/) and [mypy](https://mypy-lang.org/). To make sure your contribution passes those checks, run the following commands inside your local clone before pushing:
+Coding and documentation style are checked via a CI job using [Ruff](https://docs.astral.sh/ruff/) and [ty](https://docs.astral.sh/ty/). To make sure your contribution passes those checks, run the following commands inside your local clone before pushing:
 
 ```
 uv run ruff check
 uv run ruff format
-uv run mypy src
+uv run ty check
 ```
 
-`ruff check` reports linting issues (many can be fixed automatically with `uv run ruff check --fix`), and `ruff format` reformats the code in place.
+`ruff check` reports linting issues (many can be fixed automatically with `uv run ruff check --fix`), `ruff format` reformats the code in place, and `ty check` type-checks the code in `src/`.
 
 
 ## Public API
@@ -80,13 +80,13 @@ uv run mypy src
 - Every non-public member (i.e. every member not intended to be accessed by an end user) is prefixed with an underscore `_`.
 - Inside a (sub-)package's `__init__.py`, public module members are imported explicitly.
 - `__all__` is never set.
-- To add a function or class to the API reference, list its _public_ name (e.g. `sleepecg.detect_heartbeats`, not `sleepecg.heartbeat_detection.detect_heartbeats`) in `doc/source/api.rst`.
+- To add a function or class to the API reference, list its _public_ name (e.g. `sleepecg.detect_heartbeats`, not `sleepecg.heartbeat_detection.detect_heartbeats`) in the matching page in `docs/api/` (e.g. `docs/api/heartbeat_detection.md`) using the syntax `::: sleepecg.detect_heartbeats`.
 
 
 ## Documentation
 
 For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html), with the following exceptions/specifications:
-- The maximum line length is `92`.
+- The maximum line length is `88`.
 - For parameters that may take multiple types, pipe characters are used instead of the word `or`, for example `param_name : int | float`.
 - For single return values, only the type is stated (no name).
 - For multiple return values, both a name and a type are stated.
@@ -95,7 +95,7 @@ For docstrings, SleepECG mainly follows [numpydoc](https://numpydoc.readthedocs.
 
 ## Tests
 
-SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The structure of `sleepecg/tests/` follows that of the package itself, e.g. the test module for `sleepecg.io.nsrr` would be `sleepecg/tests/io/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies, make sure to add it to the optional requirement categories `dev` and `cibw`.
+SleepECG uses [`pytest`](https://docs.pytest.org/) for testing. The tests live in a flat `tests/` folder with one module per source module, e.g. the test module for `sleepecg.io.nsrr` is `tests/test_nsrr.py`. If a new test requires a package that is not part of the core dependencies, make sure to add it to the optional dependencies group `cibw` in `pyproject.toml` (which is also used by the wheel builds in CI).
 
 To run the tests, execute
 
@@ -103,7 +103,7 @@ To run the tests, execute
 uv run pytest
 ```
 
-in the project or package root. The tests for the C extension can be excluded using
+in the project root. The tests for the C extension can be excluded using
 
 ```
 uv run pytest -m "not c_extension"
