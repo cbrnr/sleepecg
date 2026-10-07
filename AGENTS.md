@@ -52,6 +52,12 @@ CI (`.github/workflows/cibuildwheel.yml`) runs `ruff check`, `ruff format --chec
 - New test dependencies go into the `cibw` extra (used by cibuildwheel) and, if needed, the dev groups.
 - User-facing changes get an entry in `CHANGELOG.md` under `[UNRELEASED]`, formatted like the existing entries (PR link and author).
 
+## Commit messages
+
+- Use the imperative mood and start with a capital letter (e.g., `Fix crash with long data sets`).
+- Keep the subject line concise (72 characters or fewer).
+- Do not credit yourself as an AI agent anywhere. This means no `Co-Authored-By` trailers or other attribution lines in commits, and no "Generated with" notes or similar in pull requests, issues, comments, or changelog entries.
+
 ## Testing notes
 
 - `tests/conftest.py` autouse fixture redirects the user config path to a temp file, so tests never touch `~/.sleepecg`. Keep it that way for any new config-related code.
