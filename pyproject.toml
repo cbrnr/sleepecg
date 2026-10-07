@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sleepecg"
-version = "0.6.0.dev0"
+version = "0.6.0"
 description = "A package for sleep stage classification using ECG data"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]

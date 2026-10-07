@@ -1,5 +1,5 @@
-## [UNRELEASED] - YYYY-MM-DD
-## Added
+## [0.6.0] - 2026-10-07
+### Added
 - Add a reader for the CAP Sleep Database ([#35](https://github.com/cbrnr/sleepecg/issues/35) by [Daria Agafonova](https://github.com/viranovskaya))
 - Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
 - Add Python 3.14 support ([#346](https://github.com/cbrnr/sleepecg/pull/346) by [Clemens Brunner](https://github.com/cbrnr))
