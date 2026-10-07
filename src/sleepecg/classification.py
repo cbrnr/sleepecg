@@ -66,7 +66,7 @@ def _pad_sequences(
 def _to_categorical(y: np.ndarray) -> np.ndarray:
     """One-hot encode integer labels; the number of classes is `y.max() + 1`."""
     y = np.asarray(y, dtype=np.int64)
-    num_classes = int(y.max()) + 1
+    num_classes = int(np.max(y)) + 1
     return np.eye(num_classes, dtype="float32")[y]
 
 

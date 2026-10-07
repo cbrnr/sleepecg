@@ -295,7 +295,7 @@ def read_gudb(
             annotations_chest_file = db_dir / experiment_subdir / "annotation_cs.tsv"
             if annotations_chest_file.is_file():
                 yield ECGRecord(
-                    ecg=ecg_data["chest"].to_numpy(),
+                    ecg=np.asarray(ecg_data["chest"]),
                     fs=FS,
                     annotation=np.loadtxt(annotations_chest_file, dtype=np.int32),
                     lead="chest",
@@ -308,7 +308,7 @@ def read_gudb(
                 annotations = np.loadtxt(annotations_chest_file, dtype=np.int32)
                 for lead in ("II", "III"):
                     yield ECGRecord(
-                        ecg=ecg_data[lead].to_numpy(),
+                        ecg=np.asarray(ecg_data[lead]),
                         fs=FS,
                         annotation=annotations,
                         lead=lead,

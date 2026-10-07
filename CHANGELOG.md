@@ -2,15 +2,18 @@
 ## Added
 - Add a reader for the CAP Sleep Database ([#35](https://github.com/cbrnr/sleepecg/issues/35) by [Daria Agafonova](https://github.com/viranovskaya))
 - Add support for activity counts feature ([#262](https://github.com/cbrnr/sleepecg/pull/262) by [Simon Pusterhofer](https://github.com/simon-p-2000))
+- Add Python 3.14 support ([#346](https://github.com/cbrnr/sleepecg/pull/346) by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Changed
 - Replace TensorFlow with standalone Keras 3 running on the PyTorch backend (by [Clemens Brunner](https://github.com/cbrnr))
+- Raise minimum versions of NumPy (2.3.2), SciPy (1.16.1), PyYAML (6.0.3), tqdm (4.67.0), Numba (0.63.0), Matplotlib (3.10.5), wfdb (4.3.1), and PyTorch (2.12.0) to ensure compatibility with Python 3.11 through 3.14 ([#346](https://github.com/cbrnr/sleepecg/pull/346) by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Removed
 - Remove support for macOS on Intel architecture (x86_64) ([#301](https://github.com/cbrnr/sleepecg/pull/301) by [Clemens Brunner](https://github.com/cbrnr))
 - Remove Python 3.10 support (by [Clemens Brunner](https://github.com/cbrnr))
 
 ### Fixed
+- Fix `read_gudb` raising an `AttributeError` because it called `.to_numpy()` on NumPy arrays ([#346](https://github.com/cbrnr/sleepecg/pull/346) by [Clemens Brunner](https://github.com/cbrnr))
 - Avoid repeated searchback scans when heartbeat detection encounters long unusable ECG intervals ([#319](https://github.com/cbrnr/sleepecg/pull/319) by [Daria Agafonova](https://github.com/viranovskaya))
 
 ## [0.5.9] - 2025-02-01
