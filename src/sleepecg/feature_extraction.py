@@ -247,17 +247,19 @@ def _hrv_timedomain_features(
     SD = np.diff(NN)
     RMSSD = np.sqrt(np.nanmean(SD**2, axis=1))
     SDSD = np.nanstd(SD, axis=1, ddof=1)
-    NN50 = np.nansum(np.abs(SD) > 0.05, axis=1)
-    NN20 = np.nansum(np.abs(SD) > 0.02, axis=1)
-    pNN50 = np.nanmean(np.abs(SD) > 0.05, axis=1)
-    pNN20 = np.nanmean(np.abs(SD) > 0.02, axis=1)
+    # count only valid differences (rows are NaN-padded to equal length)
+    num_SD = np.sum(~np.isnan(SD), axis=1)
+    NN50 = np.where(num_SD > 0, np.sum(np.abs(SD) > 0.05, axis=1), np.nan)
+    NN20 = np.where(num_SD > 0, np.sum(np.abs(SD) > 0.02, axis=1), np.nan)
+    pNN50 = NN50 / num_SD
+    pNN20 = NN20 / num_SD
 
     medianNN = np.nanmedian(NN, axis=1)
     madNN = np.nanmedian(np.abs(NN - medianNN[:, np.newaxis]), axis=1)
     iqrNN = np.nanpercentile(NN, 75, axis=1) - np.nanpercentile(NN, 25, axis=1)
 
     cvNN = SDNN / meanNN
-    cvSD = SDSD / np.nanmean(SD, axis=1)
+    cvSD = RMSSD / meanNN
 
     meanHR = 60 / meanNN
     maxHR = 60 / minNN

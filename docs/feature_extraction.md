@@ -26,13 +26,13 @@ All time domain HRV features are either derived from normal-to-normal (NN) inter
 |`SDSD`|standard deviation of differences between adjacent NN intervals|SD|
 |`NN50`|number of pairs of adjacent NN intervals differing by more than 50 ms|SD|
 |`NN20`|number of pairs of adjacent NN intervals differing by more than 20 ms|SD|
-|`pNN50`|percentage of pairs of adjacent NN intervals differing by more than 50 ms|SD|
-|`pNN20`|percentage of pairs of adjacent NN intervals differing by more than 20 ms|SD|
+|`pNN50`|fraction of pairs of adjacent NN intervals differing by more than 50 ms|SD|
+|`pNN20`|fraction of pairs of adjacent NN intervals differing by more than 20 ms|SD|
 |`medianNN`|median of the NN intervals|NN|
 |`madNN`|median absolute deviation of the NN intervals|NN|
 |`iqrNN`|interquartile range (IQR) of the NN intervals|NN|
 |`cvNN`|coefficient of variation of the NN intervals|NN|
-|`cvSD`|coefficient of variation of differences between adjacent NN intervals|SD|
+|`cvSD`|coefficient of variation of differences between adjacent NN intervals (`RMSSD` divided by `meanNN`)|SD|
 |`meanHR`|average heart rate (HR = 60 / NN)|NN|
 |`maxHR`|maximum heart rate|NN|
 |`minHR`|minimum heart rate|NN|

@@ -127,3 +127,52 @@ def test_actigraphy_features_invalid(activity_counts, message):
 
     with pytest.raises(ValueError, match=message):
         extract_features([record], feature_selection=["actigraphy"])
+
+
+def _extract_hrv_time(heartbeat_times, **kwargs):
+    """Extract time domain HRV features in 30 s windows as a dict of columns."""
+    record = SleepRecord(sleep_stage_duration=30, heartbeat_times=heartbeat_times)
+    features, _, feature_ids = extract_features(
+        [record], lookback=0, lookforward=30, feature_selection=["hrv-time"], **kwargs
+    )
+    return dict(zip(feature_ids, features[0].T))
+
+
+def test_pnn_windows_with_different_lengths():
+    """Normalize pNN50/pNN20 by the number of differences in each window (#347)."""
+    rri = np.concatenate([np.tile([1.0, 1.1], 15), np.tile([0.5, 0.6], 30)])
+    heartbeat_times = np.concatenate([[0], np.cumsum(rri)])
+    X = _extract_hrv_time(heartbeat_times)
+    assert np.array_equal(X["NN50"][:2], [27, 52])
+    assert np.array_equal(X["NN20"][:2], [27, 52])
+    assert np.array_equal(X["pNN50"][:2], [1, 1])
+    assert np.array_equal(X["pNN20"][:2], [1, 1])
+
+
+def test_pnn_invalid_rri():
+    """Ignore RR intervals removed by preprocessing when calculating pNN50/pNN20."""
+    rri = np.tile([1.0, 1.1], 60)
+    rri[5] = 0.2
+    heartbeat_times = np.concatenate([[0], np.cumsum(rri)])
+    X = _extract_hrv_time(heartbeat_times, min_rri=0.3)
+    assert X["NN50"][0] == 26
+    assert X["pNN50"][0] == 1
+    assert X["pNN20"][0] == 1
+
+
+def test_pnn_empty_window():
+    """Return NaN for NN50/NN20/pNN50/pNN20 in windows without heartbeats."""
+    heartbeat_times = np.arange(0, 120, 0.8)
+    heartbeat_times = heartbeat_times[(heartbeat_times < 30) | (heartbeat_times >= 60)]
+    X = _extract_hrv_time(heartbeat_times)
+    for feature_id in ("NN50", "NN20", "pNN50", "pNN20"):
+        assert np.isnan(X[feature_id][1])
+        assert not np.isnan(X[feature_id][0])
+
+
+def test_cvsd():
+    """Calculate cvSD as RMSSD divided by meanNN."""
+    rng = np.random.default_rng(42)
+    heartbeat_times = np.cumsum(rng.uniform(0.7, 1.1, 300))
+    X = _extract_hrv_time(heartbeat_times)
+    assert np.allclose(X["cvSD"], X["RMSSD"] / X["meanNN"], equal_nan=True)
