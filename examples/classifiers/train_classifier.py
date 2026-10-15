@@ -6,7 +6,9 @@
 
 Each classifier is trained on MESA and evaluated on SHHS. Both datasets are downloaded
 from NSRR, which requires a download token (https://sleepdata.org/token) in the
-environment variable `NSRR_TOKEN`.
+environment variable `NSRR_TOKEN`. Only the heartbeat annotations, sleep stage
+annotations, and subject data are downloaded (no `.edf` files), which amounts to about
+11 GB (7.0 GB for MESA and 4.4 GB for SHHS). Downloads are cached in `data_dir`.
 
 Usage examples (run from the repository root):
 
