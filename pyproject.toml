@@ -108,7 +108,11 @@ testpaths = ["tests"]
 log_level = "INFO"
 strict = true
 markers = ["c_extension"]
-filterwarnings = ["error"]
+filterwarnings = [
+    "error",
+    # wfdb still passes inplace= to pandas, which pandas >= 3.1 deprecates
+    "ignore:The inplace keyword:pandas.errors.Pandas4Warning",
+]
 
 [tool.ruff.lint]
 extend-select = ["C4", "D", "E501", "PERF", "W"]
