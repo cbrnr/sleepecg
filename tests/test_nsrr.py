@@ -45,6 +45,7 @@ def test_get_nsrr_url_function_nsrr_token_set(monkeypatch):
 def test_download_nsrr_expands_user_directory(monkeypatch, tmp_path):
     """Ensure NSRR downloads expand a leading tilde."""
     monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
     monkeypatch.setattr("sleepecg.io.nsrr._get_nsrr_url", lambda db_slug: "url/")
     monkeypatch.setattr(
         "sleepecg.io.nsrr._list_nsrr",

@@ -29,6 +29,7 @@ def test_compare_heartbeats():
 def test_export_ecg_record_expands_user_directory(monkeypatch, tmp_path):
     """Ensure ECG exports expand a leading tilde."""
     monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
     record = ECGRecord(
         ecg=np.array([1.0, 2.0]),
         fs=100.0,
