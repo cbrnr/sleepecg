@@ -21,7 +21,7 @@ _CHECKSUM_TYPE = "sha256"
 
 
 def _list_physionet(
-    data_dir: Path,
+    data_dir: str | Path,
     db_slug: str,
     db_version: str = "1.0.0",
     pattern: str = "*",
@@ -46,7 +46,7 @@ def _list_physionet(
     list[str]
         List containing record IDs as strings.
     """
-    data_dir = Path(data_dir)
+    data_dir = Path(data_dir).expanduser()
 
     records_filepath = data_dir / db_slug / _RECORDS_FILENAME
     records_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_RECORDS_FILENAME}"
@@ -86,7 +86,7 @@ def download_physionet(
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored, by default `'.'`.
     """
-    data_dir = Path(data_dir)
+    data_dir = Path(data_dir).expanduser()
     checksums = _get_physionet_checksums(data_dir, db_slug, db_version)
     db_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}"
 
@@ -104,7 +104,7 @@ def download_physionet(
 
 
 def _get_physionet_checksums(
-    data_dir: Path,
+    data_dir: str | Path,
     db_slug: str,
     db_version: str = "1.0.0",
 ) -> dict[str, str]:
@@ -127,6 +127,7 @@ def _get_physionet_checksums(
     dict[str, str]
         Mapping of filenames to checksums.
     """
+    data_dir = Path(data_dir).expanduser()
     checksum_url = f"{_PHYSIONET_FILES_URL}/{db_slug}/{db_version}/{_CHECKSUM_FILENAME}"
     checksum_filepath = data_dir / db_slug / _CHECKSUM_FILENAME
 

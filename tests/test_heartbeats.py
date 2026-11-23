@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 
 from sleepecg import compare_heartbeats, detect_heartbeats, read_mitdb
+from sleepecg.io.ecg_readers import ECGRecord, export_ecg_record
 
 
 def test_compare_heartbeats():
@@ -23,6 +24,20 @@ def test_compare_heartbeats():
     assert np.all(TP == np.array([20, 33, 73]))
     assert np.all(FP == np.array([43, 53]))
     assert np.all(FN == np.array([58, 99]))
+
+
+def test_export_ecg_record_expands_user_directory(monkeypatch, tmp_path):
+    """Ensure ECG exports expand a leading tilde."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    record = ECGRecord(
+        ecg=np.array([1.0, 2.0]),
+        fs=100.0,
+        annotation=np.array([1]),
+    )
+
+    export_ecg_record(record, "~/record")
+
+    assert (tmp_path / "record.csv").is_file()
 
 
 @pytest.fixture(scope="session")
