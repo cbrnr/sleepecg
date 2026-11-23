@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 from sleepecg.config import get_config_value
 from sleepecg.heartbeats import detect_heartbeats
-from sleepecg.io.physionet import _list_physionet, download_physionet
+from sleepecg.io.physionet import _list_capslpdb_records, download_physionet
 from sleepecg.io.sleep_readers import SleepRecord, SleepStage
 
 
@@ -265,21 +265,7 @@ def read_capslpdb(
     heartbeats_dir = db_dir / "preprocessed/heartbeats"
     heartbeats_dir.mkdir(parents=True, exist_ok=True)
 
-    requested_records = [
-        Path(filename).stem
-        for filename in _list_physionet(
-            data_dir=data_dir,
-            db_slug=db_slug,
-            pattern=f"{records_pattern}.edf",
-        )
-    ]
-    if "n16" in requested_records:
-        warnings.warn(
-            "Skipping n16 because its EDF does not contain an ECG channel.",
-            RuntimeWarning,
-            stacklevel=2,
-        )
-        requested_records.remove("n16")
+    requested_records = _list_capslpdb_records(data_dir, records_pattern)
     if not offline:
         download_physionet(
             db_slug=db_slug,

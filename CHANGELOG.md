@@ -1,4 +1,7 @@
 ## [UNRELEASED] - YYYY-MM-DD
+### Added
+- List record IDs that can be passed directly to the PhysioNet and NSRR readers without downloading recordings ([#334](https://github.com/cbrnr/sleepecg/issues/334) by [Daria Agafonova](https://github.com/viranovskaya))
+
 ### Fixed
 - Fix `pNN50` and `pNN20` being too low when windows contain different numbers of RR intervals ([#347](https://github.com/cbrnr/sleepecg/issues/347) by [Clemens Brunner](https://github.com/cbrnr))
 - Compute `cvSD` as `RMSSD` divided by `meanNN` because the previous definition was numerically unstable ([#347](https://github.com/cbrnr/sleepecg/issues/347) by [Clemens Brunner](https://github.com/cbrnr))

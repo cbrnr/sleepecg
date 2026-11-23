@@ -9,12 +9,20 @@ from __future__ import annotations
 import datetime
 import os
 from pathlib import Path
+from unittest.mock import Mock
 
 import numpy as np
 import pytest
 from edfio import Edf, EdfSignal
 
-from sleepecg import SleepStage, get_toy_ecg, read_mesa, read_shhs, read_slpdb
+from sleepecg import (
+    SleepStage,
+    get_toy_ecg,
+    list_nsrr_records,
+    read_mesa,
+    read_shhs,
+    read_slpdb,
+)
 from sleepecg.io.sleep_readers import Gender
 
 
@@ -193,6 +201,56 @@ def _create_dummy_shhs(data_dir: str, durations: list[float], random_state: int 
         csv.write("nsrrid,age_s2,gender,weight\n")
         for i in range(len(durations)):
             csv.write(f"2{i:05},61,2,\n")
+
+
+@pytest.mark.parametrize(
+    ("dataset", "setup", "reader", "pattern", "expected"),
+    [
+        ("mesa", _create_dummy_mesa, read_mesa, "000?", ["0000", "0001"]),
+        (
+            "shhs",
+            _create_dummy_shhs,
+            read_shhs,
+            "*-200001",
+            ["shhs1-200001", "shhs2-200001"],
+        ),
+    ],
+)
+def test_list_and_read_nsrr_records(
+    dataset, setup, reader, pattern, expected, tmp_path, monkeypatch
+):
+    """Feed each discovered ID unmodified into the corresponding reader."""
+    setup(tmp_path, durations=[0.1, 0.1])
+    root = tmp_path / dataset
+    monkeypatch.delenv("NSRR_TOKEN", raising=False)
+
+    def get_folder(url, *, params):
+        assert url == f"https://sleepdata.org/api/v1/datasets/{dataset}/files.json"
+        folder = root / params["path"]
+        assert "annotations-events-nsrr" in folder.parts
+        entries = [
+            {
+                "is_file": p.is_file(),
+                "file_name": p.name,
+                "full_path": p.relative_to(root).as_posix(),
+                "file_checksum_md5": "0" * 32,
+            }
+            for p in folder.iterdir()
+        ]
+        return Mock(json=lambda: entries)
+
+    monkeypatch.setattr("sleepecg.io.nsrr._get", get_folder)
+    ids = list_nsrr_records(dataset, pattern)
+    assert sorted(ids) == expected
+    for selector in ids:
+        records = reader(
+            records_pattern=selector,
+            data_dir=tmp_path,
+            offline=True,
+            heartbeats_source="ecg",
+        )
+        expected_id = f"mesa-sleep-{selector}" if dataset == "mesa" else selector
+        assert [record.id for record in records] == [expected_id]
 
 
 def test_read_mesa(tmp_path):
