@@ -183,7 +183,7 @@ def download_nsrr(
     data_dir : str | pathlib.Path, optional
         Directory where all datasets are stored, by default `'.'`.
     """
-    db_dir = Path(data_dir) / db_slug
+    db_dir = Path(data_dir).expanduser() / db_slug
 
     download_url = _get_nsrr_url(db_slug)
     files_to_download = _list_nsrr(db_slug, subfolder, pattern, shallow)

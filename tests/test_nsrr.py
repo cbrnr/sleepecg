@@ -8,7 +8,7 @@ import pytest
 
 import sleepecg.config
 import sleepecg.io.nsrr
-from sleepecg.io.nsrr import _get_nsrr_url
+from sleepecg.io.nsrr import _get_nsrr_url, download_nsrr
 
 
 def test_get_nsrr_url_no_nsrr_token_set(monkeypatch):
@@ -40,3 +40,26 @@ def test_get_nsrr_url_function_nsrr_token_set(monkeypatch):
     monkeypatch.setattr("sleepecg.io.nsrr._nsrr_token", "token")
     nsrr_url = _get_nsrr_url("mesa")
     assert nsrr_url == "https://sleepdata.org/datasets/mesa/files/a/token/m/sleepecg/"
+
+
+def test_download_nsrr_expands_user_directory(monkeypatch, tmp_path):
+    """Ensure NSRR downloads expand a leading tilde."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    monkeypatch.setattr("sleepecg.io.nsrr._get_nsrr_url", lambda db_slug: "url/")
+    monkeypatch.setattr(
+        "sleepecg.io.nsrr._list_nsrr",
+        lambda *args, **kwargs: [("record.edf", "checksum")],
+    )
+
+    downloaded = []
+    monkeypatch.setattr(
+        "sleepecg.io.nsrr._download_nsrr_file",
+        lambda url, target, checksum: downloaded.append(target),
+    )
+
+    download_nsrr("mesa", data_dir="~/.sleepecg/datasets")
+
+    assert downloaded == [
+        tmp_path / ".sleepecg/datasets/mesa/record.edf",
+    ]
