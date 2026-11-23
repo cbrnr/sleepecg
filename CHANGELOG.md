@@ -1,6 +1,6 @@
 ## [UNRELEASED] - YYYY-MM-DD
 ### Added
-- List record IDs that can be passed directly to the PhysioNet and NSRR readers without downloading recordings ([#334](https://github.com/cbrnr/sleepecg/issues/334) by [Daria Agafonova](https://github.com/viranovskaya))
+- List record IDs that can be passed directly to the PhysioNet and NSRR readers without downloading recordings ([#360](https://github.com/cbrnr/sleepecg/pull/360) by [Daria Agafonova](https://github.com/viranovskaya))
 
 ### Fixed
 - Fix `pNN50` and `pNN20` being too low when windows contain different numbers of RR intervals ([#347](https://github.com/cbrnr/sleepecg/issues/347) by [Clemens Brunner](https://github.com/cbrnr))
