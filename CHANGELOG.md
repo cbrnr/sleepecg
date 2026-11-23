@@ -5,6 +5,7 @@
 ### Fixed
 - Fix `pNN50` and `pNN20` being too low when windows contain different numbers of RR intervals ([#347](https://github.com/cbrnr/sleepecg/issues/347) by [Clemens Brunner](https://github.com/cbrnr))
 - Compute `cvSD` as `RMSSD` divided by `meanNN` because the previous definition was numerically unstable ([#347](https://github.com/cbrnr/sleepecg/issues/347) by [Clemens Brunner](https://github.com/cbrnr))
+- Expand leading `~` in dataset, classifier, and ECG export paths ([#361](https://github.com/cbrnr/sleepecg/issues/361) by [Clemens Brunner](https://github.com/cbrnr))
 
 ## [0.6.0] - 2026-10-07
 ### Added

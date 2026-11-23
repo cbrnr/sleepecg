@@ -91,7 +91,7 @@ def export_ecg_record(record: ECGRecord, filename: str | Path) -> None:
     filename : str | pathlib.Path
         File name to write to.
     """
-    filename = Path(filename).with_suffix(".csv")
+    filename = Path(filename).expanduser().with_suffix(".csv")
 
     rpeaks = np.zeros_like(record.ecg, dtype=int)
     rpeaks[record.annotation] = 1

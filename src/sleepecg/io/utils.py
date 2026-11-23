@@ -69,7 +69,7 @@ def _calculate_checksum(filepath: Path, checksum_type: str) -> str:
 
 def _download_file(
     url: str,
-    target_filepath: Path,
+    target_filepath: str | Path,
     checksum: str | None = None,
     checksum_type: str | None = None,
     verbose: bool = False,
@@ -92,6 +92,8 @@ def _download_file(
     verbose : bool, optional
         If `True`, output information during download. By default `False`.
     """
+    target_filepath = Path(target_filepath).expanduser()
+
     if target_filepath.is_file() and checksum is not None and checksum_type is not None:
         calculated_checksum = _calculate_checksum(target_filepath, checksum_type)
         if calculated_checksum == checksum:
