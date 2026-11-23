@@ -265,7 +265,9 @@ def read_capslpdb(
     heartbeats_dir = db_dir / "preprocessed/heartbeats"
     heartbeats_dir.mkdir(parents=True, exist_ok=True)
 
-    requested_records = _list_capslpdb_records(data_dir, records_pattern)
+    requested_records = _list_capslpdb_records(
+        data_dir, records_pattern, warn_on_skip=True
+    )
     if not offline:
         download_physionet(
             db_slug=db_slug,

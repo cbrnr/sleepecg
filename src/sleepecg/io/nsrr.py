@@ -136,21 +136,22 @@ def _list_nsrr_annotations(db_slug: str, pattern: str) -> list[tuple[str, str]]:
 
 
 def list_nsrr_records(db_slug: str, pattern: str = "*") -> list[str]:
-    """List IDs accepted by the MESA or SHHS reader without a download token.
+    """List selectors for the MESA or SHHS reader without a download token.
 
     Parameters
     ----------
     db_slug : {'mesa', 'shhs'}
         Dataset identifier.
     pattern : str, optional
-        Glob matched against record IDs, by default `'*'`.
+        Glob matched against the selectors, by default `'*'`.
 
     Returns
     -------
     list[str]
-        IDs to pass as `records_pattern`, e.g. `'0001'` (MESA) or `'shhs1-200001'`
-        (SHHS). Event annotations determine this list; heartbeat annotations are
-        not available for every record.
+        Selectors to pass as `records_pattern`. For MESA, use `'0001'` to read the
+        record whose `SleepRecord.id` is `'mesa-sleep-0001'`. For SHHS, the selector
+        and record ID are the same (e.g. `'shhs1-200001'`). Event annotations determine
+        this list; heartbeat annotations are not available for every record.
     """
     if db_slug not in {"mesa", "shhs"}:
         raise ValueError(f"No SleepECG NSRR reader for {db_slug!r}.")

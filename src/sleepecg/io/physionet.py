@@ -63,18 +63,21 @@ def _list_physionet(
     return fnmatch.filter(all_records, pattern)
 
 
-def _list_capslpdb_records(data_dir: Path, pattern: str) -> list[str]:
-    """Return CAP IDs with an ECG and warn at the reader or listing call site."""
+def _list_capslpdb_records(
+    data_dir: Path, pattern: str, *, warn_on_skip: bool = False
+) -> list[str]:
+    """Return CAP IDs with an ECG, optionally warning when skipping n16."""
     files = _list_physionet(
         data_dir=data_dir, db_slug="capslpdb", pattern=f"{pattern}.edf"
     )
     records = [Path(name).stem for name in files]
     if "n16" in records:
-        warnings.warn(
-            "Skipping n16 because its EDF does not contain an ECG channel.",
-            RuntimeWarning,
-            stacklevel=3,
-        )
+        if warn_on_skip:
+            warnings.warn(
+                "Skipping n16 because its EDF does not contain an ECG channel.",
+                RuntimeWarning,
+                stacklevel=3,
+            )
         records.remove("n16")
     return records
 
@@ -102,7 +105,7 @@ def list_physionet_records(
     -------
     list[str]
         IDs to pass as `records_pattern`. CAP IDs omit the EDF extension; record n16
-        is skipped with a warning because it has no ECG channel.
+        is omitted because it has no ECG channel.
     """
     if db_slug not in {"capslpdb", "ltdb", "mitdb", "slpdb"}:
         raise ValueError(f"No SleepECG PhysioNet reader for {db_slug!r}.")

@@ -26,7 +26,7 @@ PhysioNet listing supports CAPSLPDB, LTDB, MITDB, and SLPDB. NSRR listing suppor
 |[`read_shhs()`][sleepecg.read_shhs]|[Sleep Heart Health Study](https://sleepdata.org/datasets/shhs/)|8444|356 GB|[request](https://sleepdata.org/data/requests/shhs/start)|
 |[`read_slpdb()`][sleepecg.read_slpdb]|[MIT-BIH Polysomnographic Database](https://physionet.org/content/slpdb)|18|632 MB|open|
 
-CAPSLPDB record `n16` is skipped with a warning because it does not contain an ECG channel.
+CAPSLPDB record `n16` has no ECG channel. It is omitted from the record list; `read_capslpdb` warns when the requested pattern includes it.
 
 
 ## ECG readers

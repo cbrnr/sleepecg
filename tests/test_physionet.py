@@ -13,16 +13,22 @@ from sleepecg import list_physionet_records, set_config
 
 
 @pytest.mark.parametrize(
-    ("dataset", "entries", "pattern", "expected"),
+    ("dataset", "entries", "expected", "pattern", "filtered"),
     [
-        ("capslpdb", "n1.edf\nn16.edf\nn1.txt\nbrux1.edf\n", "n1", ["n1"]),
-        ("mitdb", "100\n101\n200\n", "10?", ["100", "101"]),
-        ("ltdb", "14046\n14134\n", "140*", ["14046"]),
-        ("slpdb", "slp01a\nslp01b\n", "*a", ["slp01a"]),
+        (
+            "capslpdb",
+            "n1.edf\nn16.edf\nn1.txt\nbrux1.edf\n",
+            ["n1", "brux1"],
+            "n1",
+            ["n1"],
+        ),
+        ("mitdb", "100\n101\n200\n", ["100", "101", "200"], "10?", ["100", "101"]),
+        ("ltdb", "14046\n14134\n", ["14046", "14134"], "140*", ["14046"]),
+        ("slpdb", "slp01a\nslp01b\n", ["slp01a", "slp01b"], "*a", ["slp01a"]),
     ],
 )
 def test_list_physionet_records(
-    dataset, entries, pattern, expected, tmp_path, monkeypatch
+    dataset, entries, expected, pattern, filtered, tmp_path, monkeypatch
 ):
     """Return reader selectors and consult only metadata, even on an empty cache."""
     records = entries.encode()
@@ -35,11 +41,9 @@ def test_list_physionet_records(
         "sleepecg.io.utils._get", lambda url: Mock(content=files.pop(url))
     )
     set_config(data_dir=str(tmp_path))
-    assert list_physionet_records(dataset, pattern) == expected
+    assert list_physionet_records(dataset) == expected
     set_config(data_dir=str(tmp_path / "other"))
-    assert (
-        list_physionet_records(dataset, expected[0], data_dir=tmp_path) == expected[:1]
-    )
+    assert list_physionet_records(dataset, pattern, data_dir=tmp_path) == filtered
 
 
 def test_unknown_physionet_dataset(tmp_path):
