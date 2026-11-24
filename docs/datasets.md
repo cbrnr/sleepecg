@@ -12,6 +12,8 @@ SleepECG provides reader functions for various datasets. All required files will
 
 CAPSLPDB record `n16` is skipped with a warning because it does not contain an ECG channel.
 
+The raw data size is the size of the entire dataset, including the raw polysomnography `.edf` files. With the default `heartbeats_source="annotation"`, [`read_mesa()`][sleepecg.read_mesa] and [`read_shhs()`][sleepecg.read_shhs] do not download any `.edf` files. They only fetch the sleep stage annotations, the annotated heartbeat times (R-peaks), and the subject data tables, and skip records without R-peak annotations. As listed by NSRR in October 2026, this amounts to about 7.0 GB for MESA (1970 records) and about 4.4 GB for SHHS (1000 records). Using `heartbeats_source="ecg"` downloads the `.edf` files instead.
+
 
 ## ECG readers
 |Reader|Dataset name|Records|Signals|Raw data size|
