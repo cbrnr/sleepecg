@@ -5,6 +5,8 @@ See [Datasets](../datasets.md) for information about available datasets and inst
 ::: sleepecg.download_nsrr
 ::: sleepecg.download_physionet
 ::: sleepecg.export_ecg_record
+::: sleepecg.list_nsrr_records
+::: sleepecg.list_physionet_records
 ::: sleepecg.read_capslpdb
 ::: sleepecg.read_gudb
 ::: sleepecg.read_ltdb

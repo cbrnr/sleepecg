@@ -17,6 +17,7 @@ from sleepecg.config import get_config_value
 from sleepecg.io.utils import _download_file, _get
 
 _nsrr_token = None
+_NSRR_ANNOTATIONS_DIR = "polysomnography/annotations-events-nsrr"
 
 
 def set_nsrr_token(token: str) -> None:
@@ -120,6 +121,44 @@ def _list_nsrr(
         elif fnmatch(item["file_name"], pattern):
             files.append((item["full_path"], item["file_checksum_md5"]))
     return files
+
+
+def _list_nsrr_annotations(db_slug: str, pattern: str) -> list[tuple[str, str]]:
+    """List event annotations used by the MESA and SHHS readers."""
+    return _list_nsrr(
+        db_slug,
+        _NSRR_ANNOTATIONS_DIR,
+        f"mesa-sleep-{pattern}-nsrr.xml"
+        if db_slug == "mesa"
+        else f"{pattern}-nsrr.xml",
+        shallow=db_slug == "mesa",
+    )
+
+
+def list_nsrr_records(db_slug: str, pattern: str = "*") -> list[str]:
+    """List selectors for the MESA or SHHS reader without a download token.
+
+    Parameters
+    ----------
+    db_slug : {'mesa', 'shhs'}
+        Dataset identifier.
+    pattern : str, optional
+        Glob matched against the selectors, by default `'*'`.
+
+    Returns
+    -------
+    list[str]
+        Selectors to pass as `records_pattern`. For MESA, use `'0001'` to read the
+        record whose `SleepRecord.id` is `'mesa-sleep-0001'`. For SHHS, the selector
+        and record ID are the same (e.g. `'shhs1-200001'`). Event annotations determine
+        this list; heartbeat annotations are not available for every record.
+    """
+    if db_slug not in {"mesa", "shhs"}:
+        raise ValueError(f"No SleepECG NSRR reader for {db_slug!r}.")
+    return [
+        Path(path).name.removesuffix("-nsrr.xml").removeprefix("mesa-sleep-")
+        for path, _ in _list_nsrr_annotations(db_slug, pattern)
+    ]
 
 
 def _download_nsrr_file(

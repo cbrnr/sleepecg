@@ -12,8 +12,8 @@ from sleepecg.io.ecg_readers import (
     read_ltdb,
     read_mitdb,
 )
-from sleepecg.io.nsrr import download_nsrr, set_nsrr_token
-from sleepecg.io.physionet import download_physionet
+from sleepecg.io.nsrr import download_nsrr, list_nsrr_records, set_nsrr_token
+from sleepecg.io.physionet import download_physionet, list_physionet_records
 from sleepecg.io.sleep_readers import (
     Gender,
     SleepRecord,

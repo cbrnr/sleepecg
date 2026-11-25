@@ -7,11 +7,13 @@
 from __future__ import annotations
 
 import fnmatch
+import warnings
 from collections.abc import Iterable
 from pathlib import Path
 
 from tqdm import tqdm
 
+from sleepecg.config import get_config_value
 from sleepecg.io.utils import _download_file
 
 _PHYSIONET_FILES_URL = "https://physionet.org/files"
@@ -59,6 +61,60 @@ def _list_physionet(
 
     all_records = records_filepath.read_text().splitlines()
     return fnmatch.filter(all_records, pattern)
+
+
+def _list_capslpdb_records(
+    data_dir: Path, pattern: str, *, warn_on_skip: bool = False
+) -> list[str]:
+    """Return CAP IDs with an ECG, optionally warning when skipping n16."""
+    files = _list_physionet(
+        data_dir=data_dir, db_slug="capslpdb", pattern=f"{pattern}.edf"
+    )
+    records = [Path(name).stem for name in files]
+    if "n16" in records:
+        if warn_on_skip:
+            warnings.warn(
+                "Skipping n16 because its EDF does not contain an ECG channel.",
+                RuntimeWarning,
+                stacklevel=3,
+            )
+        records.remove("n16")
+    return records
+
+
+def list_physionet_records(
+    db_slug: str,
+    pattern: str = "*",
+    data_dir: str | Path | None = None,
+) -> list[str]:
+    """List IDs accepted by the corresponding SleepECG PhysioNet reader.
+
+    On first use, fetch the index and checksums for database version 1.0.0.
+
+    Parameters
+    ----------
+    db_slug : {'capslpdb', 'ltdb', 'mitdb', 'slpdb'}
+        Database identifier.
+    pattern : str, optional
+        Glob matched against record IDs, by default `'*'`.
+    data_dir : str | pathlib.Path | None, optional
+        Directory used to cache the index and checksums. Defaults to the configured
+        `data_dir`.
+
+    Returns
+    -------
+    list[str]
+        IDs to pass as `records_pattern`. CAP IDs omit the EDF extension; record n16
+        is omitted because it has no ECG channel.
+    """
+    if db_slug not in {"capslpdb", "ltdb", "mitdb", "slpdb"}:
+        raise ValueError(f"No SleepECG PhysioNet reader for {db_slug!r}.")
+    if data_dir is None:
+        data_dir = get_config_value("data_dir")
+    data_dir = Path(data_dir).expanduser()
+    if db_slug == "capslpdb":
+        return _list_capslpdb_records(data_dir, pattern)
+    return _list_physionet(data_dir, db_slug, pattern=pattern)
 
 
 def download_physionet(

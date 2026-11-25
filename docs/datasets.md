@@ -2,6 +2,22 @@
 SleepECG provides reader functions for various datasets. All required files will be downloaded to the location specified by the `data_dir` argument (by default `~/.sleepecg/datasets`). While all supported [PhysioNet](https://physionet.org/about/database/) datasets are publicly accessible, all [NSRR](https://sleepdata.org/datasets) datasets require [submitting a data access request](#nsrr-data-access).
 
 
+## Listing available records
+
+List record IDs before downloading any recordings. The returned strings can be passed directly to the corresponding reader's `records_pattern` argument:
+
+```python
+from sleepecg import list_nsrr_records, list_physionet_records, read_capslpdb, read_mesa
+
+cap_ids = list_physionet_records("capslpdb", pattern="brux*")  # e.g. "brux1"
+cap = read_capslpdb(records_pattern=cap_ids[0])
+
+mesa_ids = list_nsrr_records("mesa", pattern="00*")  # e.g. "0001"
+mesa = read_mesa(records_pattern=mesa_ids[0])
+```
+
+PhysioNet listing supports CAPSLPDB, LTDB, MITDB, and SLPDB. NSRR listing supports MESA and SHHS; it uses public event annotation filenames and needs no token. MESA IDs retain their leading zeros, and SHHS IDs include the visit (e.g. `shhs1-200001`). Downloading NSRR records still requires [data access](#nsrr-data-access); not all records have heartbeat annotations.
+
 ## Sleep readers
 |Reader|Dataset name|Annotated records|Raw data size|Access|
 |-|-|-|-|-|
@@ -10,7 +26,7 @@ SleepECG provides reader functions for various datasets. All required files will
 |[`read_shhs()`][sleepecg.read_shhs]|[Sleep Heart Health Study](https://sleepdata.org/datasets/shhs/)|8444|356 GB|[request](https://sleepdata.org/data/requests/shhs/start)|
 |[`read_slpdb()`][sleepecg.read_slpdb]|[MIT-BIH Polysomnographic Database](https://physionet.org/content/slpdb)|18|632 MB|open|
 
-CAPSLPDB record `n16` is skipped with a warning because it does not contain an ECG channel.
+CAPSLPDB record `n16` has no ECG channel. It is omitted from the record list; `read_capslpdb` warns when the requested pattern includes it.
 
 
 ## ECG readers
@@ -43,11 +59,11 @@ set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa()  # note that this is a generator
 ```
 
-Instead of always using [`set_nsrr_token()`](sleepecg.set_nsrr_token), you can set the NSRR token via [`set_config(nsrr_token="YOUR_TOKEN")`](sleepecg.set_config) or as an environment variable (`NSRR_TOKEN`).
+Instead of always using [`set_nsrr_token()`][sleepecg.set_nsrr_token], you can set the NSRR token via [`set_config(nsrr_token="YOUR_TOKEN")`][sleepecg.set_config] or as an environment variable (`NSRR_TOKEN`).
 
 SleepECG checks for the NSRR token in the following order:
 
-1. Token set via [`set_nsrr_token()`](sleepecg.set_nsrr_token)
+1. Token set via [`set_nsrr_token()`][sleepecg.set_nsrr_token]
 2. Token set via environment variable `NSRR_TOKEN`
 3. Token set in the user configuration
 
@@ -62,7 +78,7 @@ set_nsrr_token("<your-download-token-here>")
 mesa = read_mesa(records_pattern="00*")  # note that this is a generator
 ```
 
-SleepECG supports downloading and storing activity counts for the MESA dataset. These metrics quantify a subject's movement based on accelerometer measurements recorded and processed using a proprietary algorithm in Philips Actiware. To access activity counts, call [`read_mesa()`](sleepecg.read_mesa) with `activity_source='actigraphy'` to download the data or `activity_source='cached'` to use previously downloaded counts.
+SleepECG supports downloading and storing activity counts for the MESA dataset. These metrics quantify a subject's movement based on accelerometer measurements recorded and processed using a proprietary algorithm in Philips Actiware. To access activity counts, call [`read_mesa()`][sleepecg.read_mesa] with `activity_source='actigraphy'` to download the data or `activity_source='cached'` to use previously downloaded counts.
 
 !!! note
     Reader functions are generators, so they do not return the data directly. To access the data, you need to consume the generator, either by iterating over it or with subsequent calls of `next()`.

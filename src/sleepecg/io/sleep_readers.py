@@ -21,9 +21,11 @@ import numpy as np
 from sleepecg.config import get_config_value
 from sleepecg.heartbeats import detect_heartbeats
 from sleepecg.io.nsrr import (
+    _NSRR_ANNOTATIONS_DIR,
     _download_nsrr_file,
     _get_nsrr_url,
     _list_nsrr,
+    _list_nsrr_annotations,
     download_nsrr,
 )
 from sleepecg.io.physionet import _list_physionet, download_physionet
@@ -226,7 +228,6 @@ def read_mesa(
     from edfio import read_edf
 
     DB_SLUG = "mesa"
-    ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
     ACTIVITY_DIRNAME = "actigraphy"
     OVERLAP_DIRNAME = "overlap"
@@ -254,7 +255,7 @@ def read_mesa(
         data_dir = get_config_value("data_dir")
 
     db_dir = Path(data_dir).expanduser() / DB_SLUG
-    annotations_dir = db_dir / ANNOTATION_DIRNAME
+    annotations_dir = db_dir / _NSRR_ANNOTATIONS_DIR
     edf_dir = db_dir / EDF_DIRNAME
     heartbeats_dir = db_dir / HEARTBEATS_DIRNAME
 
@@ -284,12 +285,7 @@ def read_mesa(
             checksum=subject_data_checksum,
         )
 
-        xml_files = _list_nsrr(
-            DB_SLUG,
-            ANNOTATION_DIRNAME,
-            f"mesa-sleep-{records_pattern}-nsrr.xml",
-            shallow=True,
-        )
+        xml_files = _list_nsrr_annotations(DB_SLUG, records_pattern)
         checksums = dict(xml_files)
         requested_records = [Path(file).stem[:-5] for file, _ in xml_files]
 
@@ -415,7 +411,7 @@ def read_mesa(
             if not edf_was_available and not keep_edfs:
                 edf_filepath.unlink()
 
-        xml_filename = ANNOTATION_DIRNAME + f"/{record_id}-nsrr.xml"
+        xml_filename = f"{_NSRR_ANNOTATIONS_DIR}/{record_id}-nsrr.xml"
         xml_filepath = db_dir / xml_filename
         if not offline:
             _download_nsrr_file(
@@ -680,7 +676,6 @@ def read_shhs(
     from edfio import read_edf
 
     DB_SLUG = "shhs"
-    ANNOTATION_DIRNAME = "polysomnography/annotations-events-nsrr"
     EDF_DIRNAME = "polysomnography/edfs"
     HEARTBEATS_DIRNAME = "preprocessed/heartbeats"
     RPOINTS_DIRNAME = "polysomnography/annotations-rpoints"
@@ -700,7 +695,7 @@ def read_shhs(
 
     data_dir = Path(data_dir).expanduser()
     db_dir = data_dir / DB_SLUG
-    annotations_dir = db_dir / ANNOTATION_DIRNAME
+    annotations_dir = db_dir / _NSRR_ANNOTATIONS_DIR
     edf_dir = db_dir / EDF_DIRNAME
     heartbeats_dir = db_dir / HEARTBEATS_DIRNAME
 
@@ -718,12 +713,7 @@ def read_shhs(
             data_dir=data_dir,
         )
 
-        xml_files = _list_nsrr(
-            DB_SLUG,
-            ANNOTATION_DIRNAME,
-            f"{records_pattern}-nsrr.xml",
-            shallow=False,
-        )
+        xml_files = _list_nsrr_annotations(DB_SLUG, records_pattern)
         checksums = dict(xml_files)
         requested_records = [file[-27:-9] for file, _ in xml_files]
 
@@ -825,7 +815,7 @@ def read_shhs(
             if not edf_was_available and not keep_edfs:
                 edf_filepath.unlink()
 
-        xml_filename = ANNOTATION_DIRNAME + f"/{record_id}-nsrr.xml"
+        xml_filename = f"{_NSRR_ANNOTATIONS_DIR}/{record_id}-nsrr.xml"
         xml_filepath = db_dir / xml_filename
         if not offline:
             _download_nsrr_file(

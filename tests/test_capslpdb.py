@@ -204,7 +204,7 @@ def test_read_capslpdb_rebases_heartbeats(monkeypatch, tmp_path):
         ],
     )
     monkeypatch.setattr(
-        "sleepecg.io.capslpdb._list_physionet",
+        "sleepecg.io.physionet._list_physionet",
         lambda **kwargs: ["record.edf"],
     )
     monkeypatch.setattr(
@@ -267,7 +267,7 @@ def test_read_capslpdb_cached_does_not_download_or_read_edf(monkeypatch, tmp_pat
         )
 
     monkeypatch.setattr(
-        "sleepecg.io.capslpdb._list_physionet",
+        "sleepecg.io.physionet._list_physionet",
         lambda **kwargs: ["record.edf"],
     )
     monkeypatch.setattr("sleepecg.io.capslpdb.download_physionet", _download)
@@ -302,15 +302,16 @@ def test_read_capslpdb_skips_n16(monkeypatch, tmp_path):
         return ["n16.edf"]
 
     monkeypatch.setattr(
-        "sleepecg.io.capslpdb._list_physionet",
+        "sleepecg.io.physionet._list_physionet",
         _list,
     )
 
-    with pytest.warns(RuntimeWarning, match="Skipping n16"):
+    with pytest.warns(RuntimeWarning, match="Skipping n16") as caught:
         records = list(
             read_capslpdb(records_pattern="n16", offline=True, data_dir=tmp_path)
         )
 
+    assert caught[0].filename == __file__
     assert records == []
 
 
@@ -330,7 +331,7 @@ def test_read_capslpdb_removes_downloaded_edf(monkeypatch, tmp_path):
             )
 
     monkeypatch.setattr(
-        "sleepecg.io.capslpdb._list_physionet",
+        "sleepecg.io.physionet._list_physionet",
         lambda **kwargs: ["record.edf"],
     )
     monkeypatch.setattr("sleepecg.io.capslpdb.download_physionet", _download)

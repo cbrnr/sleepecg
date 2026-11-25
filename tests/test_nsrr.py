@@ -11,6 +11,12 @@ import sleepecg.io.nsrr
 from sleepecg.io.nsrr import _get_nsrr_url, download_nsrr
 
 
+def test_unknown_nsrr_dataset():
+    """Do not enumerate an arbitrary dataset as if SleepECG could read it."""
+    with pytest.raises(ValueError, match="NSRR"):
+        sleepecg.list_nsrr_records("unknown")
+
+
 def test_get_nsrr_url_no_nsrr_token_set(monkeypatch):
     """Test the _get_nsrr_url method with no token set."""
     monkeypatch.delenv("NSRR_TOKEN", raising=False)
